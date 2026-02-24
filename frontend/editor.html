@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shaqyrtu.kz - Редактор</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+<div class="editor-layout">
+    <aside class="preview-side">
+        <div class="preview-wrap">
+            <article class="invite-preview">
+                <div class="preview-frame">
+                    <img id="preview-photo" class="preview-photo" src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=80" alt="Preview">
+                </div>
+
+                <button class="play-btn" type="button" aria-label="Музыка ойнату">▶</button>
+
+                <section class="preview-text-box">
+                    <h2 id="preview-title">Тақырып 1</h2>
+                    <p id="preview-description">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+                    <p id="preview-datetime">24.02.2026 • 19:19</p>
+                    <p id="preview-place">Astana, Farhi Hall</p>
+                </section>
+            </article>
+        </div>
+    </aside>
+
+    <section class="form-side">
+        <header class="editor-header">
+            <a id="back-link" class="back-link" href="dashboard.html">‹ Артқа</a>
+            <h1><span class="mini-logo">sh</span> Шақыртуды өзгерту</h1>
+        </header>
+
+        <form id="editor-form" class="editor-form" novalidate>
+            <section class="section-box">
+                <h3>Шаблоны</h3>
+                <div class="template-list">
+                    <button class="template-item is-active" type="button" data-image="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=80">
+                        <img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=320&q=80" alt="Template 1">
+                    </button>
+                    <button class="template-item" type="button" data-image="https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?auto=format&fit=crop&w=900&q=80">
+                        <img src="https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?auto=format&fit=crop&w=320&q=80" alt="Template 2">
+                    </button>
+                    <button class="template-item" type="button" data-image="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80">
+                        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=320&q=80" alt="Template 3">
+                    </button>
+                </div>
+            </section>
+
+            <label class="upload-zone" for="photo-input">
+                Фото таңдаңыз
+            </label>
+            <input id="photo-input" class="hidden-input" type="file" accept="image/*">
+
+            <label class="field">
+                <span>Өлеңді таңдаңыз</span>
+                <select id="song" name="song">
+                    <option value="">Өлеңді таңдаңыз</option>
+                    <option value="classic">Классикалық күй</option>
+                    <option value="folk">Қазақы халық әуені</option>
+                    <option value="modern">Заманауи әуен</option>
+                </select>
+            </label>
+
+            <section class="section-box">
+                <label class="field">
+                    <span>Тақырып 1</span>
+                    <input id="title" name="title" type="text" value="Адлет" maxlength="120">
+                </label>
+            </section>
+
+            <section class="section-box">
+                <label class="field">
+                    <span>Сипаттама</span>
+                    <textarea id="description" name="description" rows="4">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</textarea>
+                </label>
+            </section>
+
+            <section class="section-box">
+                <label class="field">
+                    <span>Күн</span>
+                    <input id="date" name="date" type="date" value="2026-02-24">
+                </label>
+
+                <label class="field">
+                    <span>Уақыт</span>
+                    <input id="time" name="time" type="time" value="19:19">
+                </label>
+
+                <label class="field">
+                    <span>Той өтетін орын</span>
+                    <input id="place" name="place" type="text" value="Astana, Farhi Hall" maxlength="150">
+                </label>
+
+                <label class="field">
+                    <span>2gis сілтемесі</span>
+                    <input id="map-link" name="mapLink" type="url" value="https://go.2gis.com/aednh" maxlength="250">
+                </label>
+
+                <label class="field">
+                    <span>Той иелері</span>
+                    <input id="hosts" name="hosts" type="text" value="Сырымбетовтар әулеті" maxlength="160">
+                </label>
+
+                <label class="field">
+                    <span>1 шақыртумен ең көбі қанша адам келе алады</span>
+                    <input id="max-guests" name="maxGuests" type="number" min="1" max="20" value="3">
+                </label>
+            </section>
+
+            <button id="save-btn" class="action-btn save" type="button">Сақтау</button>
+            <button id="share-btn" class="action-btn share" type="button">Бөлісу</button>
+            <button id="pay-btn" class="action-btn pay" type="button">Төлем</button>
+
+            <p id="editor-message" class="editor-message" aria-live="polite"></p>
+
+            <div class="editor-brand">
+                <span class="mini-logo">sh</span>
+                <strong>shaqyrtu.kz</strong>
+            </div>
+        </form>
+    </section>
+</div>
+
+<a class="wa-float" href="https://wa.me/87056842747" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">🟢</a>
+
+<script src="editor.js"></script>
+</body>
+</html>

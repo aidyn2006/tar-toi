@@ -22,74 +22,73 @@
 
 <main class="hero">
     <section class="hero-copy">
-        <p class="eyebrow">TOI PLATFORM</p>
         <h1>Дизайнды таңда, мәтінді қос, қонақтарға жібер.</h1>
         <p class="lead">Тойға шақыруды тегін жаса, тек қана тіркел.</p>
 
         <div class="cta-row">
-            <a id="cta-btn" class="cta-btn" href="auth.html">Тіркелу</a>
+            <button id="open-invite" class="cta-btn" type="button">Шақырту жасау</button>
             <p class="price">Тегін</p>
         </div>
 
         <ul class="benefits">
-            <li>3 минутта шақыру жасау</li>
-            <li>Фото және музыка қосу</li>
-            <li>Қонақтарға бірден жіберу</li>
-            <li>Телефоннан басқару</li>
+            <li>3 минутта шақырту жаса</li>
+            <li>Фото және музыка қос</li>
+            <li>Қонақтарға тез жібер</li>
+            <li>Телефонмен ыңғайлы басқар</li>
         </ul>
     </section>
 
     <section class="cards" aria-label="Той түрлері">
-        <a class="card" href="auth.html?type=uzatu">
+        <button class="card" type="button" data-category="Ұзату">
             <div class="icon">👰</div>
             <h3>Ұзату</h3>
             <p>4 үлгі</p>
-        </a>
-        <a class="card" href="auth.html?type=wedding">
+        </button>
+        <button class="card" type="button" data-category="Үйлену тойы">
             <div class="icon">💍</div>
             <h3>Үйлену тойы</h3>
             <p>9 үлгі</p>
-        </a>
-        <a class="card" href="auth.html?type=sundet">
+        </button>
+        <button class="card" type="button" data-category="Сүндет той">
             <div class="icon">👶</div>
             <h3>Сүндет той</h3>
             <p>3 үлгі</p>
-        </a>
-        <a class="card" href="auth.html?type=tusau">
+        </button>
+        <button class="card" type="button" data-category="Тұсаукесер">
             <div class="icon">👟</div>
             <h3>Тұсаукесер</h3>
             <p>4 үлгі</p>
-        </a>
-        <a class="card" href="auth.html?type=merei">
+        </button>
+        <button class="card" type="button" data-category="Мерейтой">
             <div class="icon">🎂</div>
             <h3>Мерейтой</h3>
             <p>3 үлгі</p>
-        </a>
-        <a class="card" href="auth.html?type=besik">
+        </button>
+        <button class="card" type="button" data-category="Бесік той">
             <div class="icon">🍼</div>
             <h3>Бесік той</h3>
             <p>3 үлгі</p>
-        </a>
+        </button>
     </section>
 </main>
 
 <section class="contact-section" aria-label="Байланыс">
     <h2>Бізбен байланыста болыңыз</h2>
     <div class="contact-grid">
-        <a class="contact-card insta" href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+        <a class="contact-card" href="https://instagram.com/codejaz.kz" target="_blank" rel="noopener noreferrer">
             <div class="contact-icon">ig</div>
             <div>
                 <h3>Instagram</h3>
-                <p>@shaqyrtu.kz</p>
+                <p>@codejaz.kz</p>
                 <small>Жаңалықтар мен үлгілерді көріңіз</small>
             </div>
             <span class="contact-arrow">→</span>
         </a>
-        <a class="contact-card wa" href="https://wa.me/77083527432" target="_blank" rel="noopener noreferrer">
+        <a class="contact-card" href="https://wa.me/87056842747" target="_blank" rel="noopener noreferrer">
             <div class="contact-icon">wa</div>
             <div>
                 <h3>WhatsApp</h3>
-                <p>+7 708 352 74 32</p>
+                <p>87056842747</p>
                 <small>Сұрақтарыңызға жауап береміз</small>
             </div>
             <span class="contact-arrow">→</span>
@@ -104,11 +103,68 @@
                 <span class="logo-mark">sh</span>
                 <span class="footer-logo">shaqyrtu.kz</span>
             </div>
-            <p class="footer-contact">Байланыс: +7 (708) 352 74 32</p>
+            <p class="footer-contact">Байланыс: 87056842747</p>
         </div>
         <p class="footer-copy">© <span id="year"></span> Барлық құқықтар қорғалған.</p>
     </div>
 </footer>
+
+<div id="auth-modal" class="modal is-hidden" aria-hidden="true">
+    <div id="modal-overlay" class="modal-overlay"></div>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button id="close-modal" class="modal-close" type="button" aria-label="Жабу">×</button>
+        <h3 id="modal-title">Шақырту жасау</h3>
+        <p id="modal-caption" class="modal-caption">Тек бірнеше қадам қалды.</p>
+
+        <div class="mode-switch" role="tablist" aria-label="Auth mode">
+            <button id="mode-register" class="mode-btn is-active" type="button">Тіркелу</button>
+            <button id="mode-login" class="mode-btn" type="button">Кіру</button>
+        </div>
+
+        <form id="auth-form" class="auth-form" novalidate>
+            <label class="field register-only">
+                <span>Сіздің атыңыз</span>
+                <input id="full-name" name="fullName" type="text" maxlength="80" autocomplete="name" placeholder="Сіздің атыңыз">
+            </label>
+
+            <label class="field register-only">
+                <span>Телефон</span>
+                <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Телефон">
+            </label>
+
+            <label class="field register-only">
+                <span>Категорияны таңдаңыз</span>
+                <select id="category" name="category">
+                    <option value="Ұзату">Ұзату</option>
+                    <option value="Үйлену тойы">Үйлену тойы</option>
+                    <option value="Сүндет той">Сүндет той</option>
+                    <option value="Тұсаукесер">Тұсаукесер</option>
+                    <option value="Мерейтой">Мерейтой</option>
+                    <option value="Бесік той">Бесік той</option>
+                </select>
+            </label>
+
+            <label class="field register-only">
+                <span>Құпиясөз</span>
+                <input id="register-password" name="registerPassword" type="password" minlength="6" maxlength="100" autocomplete="new-password" placeholder="Құпиясөз">
+            </label>
+
+            <label class="field login-only is-hidden">
+                <span>Логин</span>
+                <input id="login-username" name="loginUsername" type="text" minlength="3" maxlength="50" autocomplete="username" placeholder="Логин">
+            </label>
+
+            <label class="field login-only is-hidden">
+                <span>Құпиясөз</span>
+                <input id="login-password" name="loginPassword" type="password" minlength="6" maxlength="100" autocomplete="current-password" placeholder="Құпиясөз">
+            </label>
+
+            <button id="submit-btn" class="submit-btn" type="submit">Шақырту жасау</button>
+            <button id="secondary-btn" class="secondary-btn" type="button">Басқару тақтасы</button>
+            <p id="form-message" class="form-message" aria-live="polite"></p>
+        </form>
+    </section>
+</div>
 
 <script src="app.js"></script>
 </body>
