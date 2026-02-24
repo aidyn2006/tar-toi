@@ -1,0 +1,8 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://2.133.130.153:8443/realms/fire-realm
+server:
+  port: 9191
