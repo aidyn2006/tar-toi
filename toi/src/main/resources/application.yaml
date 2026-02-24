@@ -1,8 +1,27 @@
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://2.133.130.153:8443/realms/fire-realm
 server:
   port: 9191
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/toi_db}
+    username: ${DB_USERNAME:toi_user}
+    password: ${DB_PASSWORD:toi_pass}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        format_sql: false
+
+jwt:
+  secret: ${JWT_SECRET:replace-with-very-strong-secret-key-at-least-32-char}
+  expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+  issuer: ${JWT_ISSUER:toi-api}
+
+app:
+  default-admin-username: ${DEFAULT_ADMIN_USERNAME:admin}
+  default-admin-full-name: ${DEFAULT_ADMIN_FULL_NAME:TOI Administrator}
+  default-admin-password: ${DEFAULT_ADMIN_PASSWORD:admin123}

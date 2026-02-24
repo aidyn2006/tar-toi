@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: toi-db
+    environment:
+      POSTGRES_DB: toi_db
+      POSTGRES_USER: toi_user
+      POSTGRES_PASSWORD: toi_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - toi_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U toi_user -d toi_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./toi
+    container_name: toi-backend
+    ports:
+      - "9191:9191"
+    environment:
+      JWT_SECRET: "replace-with-very-strong-secret-key-at-least-32-char"
+      JWT_EXPIRATION_MINUTES: "120"
+      JWT_ISSUER: "toi-api"
+      DEFAULT_ADMIN_USERNAME: "admin"
+      DEFAULT_ADMIN_FULL_NAME: "TOI Administrator"
+      DEFAULT_ADMIN_PASSWORD: "admin123"
+      DB_URL: "jdbc:postgresql://db:5432/toi_db"
+      DB_USERNAME: "toi_user"
+      DB_PASSWORD: "toi_pass"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    image: node:20-alpine
+    container_name: toi-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "7171:7171"
+    volumes:
+      - ./frontend:/app
+      - toi_frontend_node_modules:/app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  toi_pg_data:
+  toi_frontend_node_modules:
