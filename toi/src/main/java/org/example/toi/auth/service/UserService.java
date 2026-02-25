@@ -68,7 +68,7 @@ public class UserService {
 
         UserAccountEntity user = userAccountRepository.findByUsernameNormalized(normalizeUsername(username))
                 .orElse(null);
-        if (user == null || user.getPasswordHash().equals(password)) {
+        if (user == null || !user.getPasswordHash().equals(password)) {
             throw new BadCredentialsException("Неверный логин или пароль");
         }
         return toAuthenticated(user);
@@ -127,6 +127,7 @@ public class UserService {
         entity.setFullName(normalizeFullName(fullName));
         entity.setPasswordHash(password);
         entity.setRoles(normalizeRoles(roles));
+        // новые пользователи неапрувнуты; админ по умолчанию апрувнут
         entity.setApproved(entity.getRoles().contains("ROLE_ADMIN"));
 
         try {
@@ -184,7 +185,7 @@ public class UserService {
                 user.getUsername(),
                 user.getFullName(),
                 Set.copyOf(user.getRoles()),
-                user.isApproved()
+                Boolean.TRUE.equals(user.getApproved())
         );
     }
 }
