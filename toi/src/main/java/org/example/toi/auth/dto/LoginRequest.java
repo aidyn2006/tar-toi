@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 public record LoginRequest(
         @NotBlank(message = "Телефон обязателен")
         @Size(min = 10, max = 20, message = "Телефон должен быть корректным")
-        @Pattern(regexp = "^\\D*7\\D*\\d{10}\\D*$", message = "Телефон должен быть в формате Казахстана")
         String phone,
 
         @NotBlank(message = "Пароль обязателен")

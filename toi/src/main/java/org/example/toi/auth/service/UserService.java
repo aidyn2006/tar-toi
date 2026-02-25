@@ -61,7 +61,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public AuthenticatedUser authenticate(String phone, String password) {
         String normalizedPhone = normalizePhone(phone);
-        validatePhone(normalizedPhone);
         validatePassword(password);
 
         UserAccountEntity user = userAccountRepository.findByPhone(normalizedPhone)
@@ -93,7 +92,6 @@ public class UserService {
     @Transactional
     public AuthenticatedUser approveUser(String phone) {
         String normalized = normalizePhone(phone);
-        validatePhone(normalized);
         UserAccountEntity user = userAccountRepository.findByPhone(normalized)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
         user.setApproved(true);
@@ -110,7 +108,6 @@ public class UserService {
     ) {
         validateFullName(fullName);
         String normalizedPhone = normalizePhone(phone);
-        validatePhone(normalizedPhone);
         validatePassword(password);
 
         Optional<UserAccountEntity> existing = userAccountRepository.findByPhone(normalizedPhone);
@@ -174,11 +171,7 @@ public class UserService {
         return digits;
     }
 
-    private void validatePhone(String normalizedPhone) {
-        if (normalizedPhone == null || !normalizedPhone.matches("^7\\d{10}$")) {
-            throw new IllegalArgumentException("Телефон должен быть в формате Казахстана");
-        }
-    }
+
 
     private void validatePassword(String password) {
         int length = password == null ? 0 : password.length();
