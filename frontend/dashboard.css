@@ -246,6 +246,44 @@ body {
     cursor: pointer;
 }
 
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 16px;
+}
+
+.admin-table th,
+.admin-table td {
+    border-bottom: 1px solid #ccd2da;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.admin-table th {
+    font-weight: 700;
+}
+
+.admin-table td:last-child {
+    text-align: right;
+}
+
+.admin-table__approve-btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--blue);
+    color: var(--white);
+}
+
+.admin-table__approve-btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+}
+
 @media (max-width: 820px) {
     .dash-header {
         padding: 12px 14px;

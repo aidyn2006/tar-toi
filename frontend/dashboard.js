@@ -12,6 +12,7 @@ const accessModal = document.getElementById("access-modal");
 const accessModalClose = document.getElementById("access-modal-close");
 
 let currentParams = new URLSearchParams();
+let isApproved = false;
 
 function setMessage(text) {
     messageEl.textContent = text || "";
@@ -52,6 +53,9 @@ function openAccessModal() {
 
 function closeAccessModal() {
     if (!accessModal) {
+        return;
+    }
+    if (!isApproved) {
         return;
     }
     accessModal.setAttribute("aria-hidden", "true");
@@ -100,13 +104,21 @@ async function ensureApproved() {
 
     try {
         const me = await request("/auth/me");
-        const approved = !!(me && me.user && me.user.approved);
-        if (!approved) {
+        const user = me && me.user ? me.user : null;
+        const roles = Array.isArray(user?.roles) ? user.roles : [];
+        const isAdmin = roles.includes("ROLE_ADMIN");
+        const approvedFlag = !!user?.approved;
+
+        // Админу модалка никогда не нужна
+        isApproved = isAdmin || approvedFlag;
+
+        if (!isApproved) {
             openAccessModal();
         } else {
             closeAccessModal();
         }
     } catch {
+        isApproved = false;
         openAccessModal();
     }
 }

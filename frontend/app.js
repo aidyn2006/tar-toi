@@ -199,16 +199,37 @@ async function request(path, options = {}) {
     return payload;
 }
 
-openInviteBtn.addEventListener("click", () => {
+async function handleOpenInvite(categoryName) {
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    // Если уже есть токен – пробуем сразу отправить на дашборд
+    if (token) {
+        try {
+            const me = await request("/auth/me");
+            const fullName = me && me.user && me.user.fullName ? me.user.fullName : "";
+            window.location.href = buildDashboardUrl({
+                name: fullName,
+                category: categoryName || categorySelect.value
+            });
+            return;
+        } catch {
+            // токен битый – очищаем и показываем регистрацию
+            localStorage.removeItem(TOKEN_KEY);
+        }
+    }
+
     setMode("register");
-    openModal(categorySelect.value);
+    openModal(categoryName || categorySelect.value);
+}
+
+openInviteBtn.addEventListener("click", () => {
+    handleOpenInvite(categorySelect.value);
 });
 
 cardButtons.forEach((card) => {
     card.addEventListener("click", () => {
         const categoryName = card.getAttribute("data-category");
-        setMode("register");
-        openModal(categoryName);
+        handleOpenInvite(categoryName);
     });
 });
 
