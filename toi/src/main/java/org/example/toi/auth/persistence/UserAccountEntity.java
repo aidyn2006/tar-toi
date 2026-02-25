@@ -38,6 +38,9 @@ public class UserAccountEntity {
     @Column(name = "password_hash", nullable = false, length = 120)
     private String passwordHash;
 
+    @Column(name = "approved", nullable = false)
+    private boolean approved;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "app_user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false, length = 32)
@@ -89,5 +92,13 @@ public class UserAccountEntity {
 
     public void setRoles(Set<String> roles) {
         this.roles = new LinkedHashSet<>(roles);
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

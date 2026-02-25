@@ -5,6 +5,7 @@ import java.util.Set;
 public record AuthenticatedUser(
         String username,
         String fullName,
-        Set<String> roles
+        Set<String> roles,
+        boolean approved
 ) {
 }

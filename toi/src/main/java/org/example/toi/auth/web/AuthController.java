@@ -57,8 +57,8 @@ public class AuthController {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
         AuthUserView userView = userService.findByUsername(username)
-                .map(user -> new AuthUserView(user.username(), user.fullName(), roles))
-                .orElseGet(() -> new AuthUserView(username, username, roles));
+                .map(user -> new AuthUserView(user.username(), user.fullName(), roles, user.approved()))
+                .orElseGet(() -> new AuthUserView(username, username, roles, false));
 
         return new MeResponse(userView);
     }

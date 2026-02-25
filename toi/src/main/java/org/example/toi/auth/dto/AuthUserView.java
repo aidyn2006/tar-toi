@@ -5,6 +5,7 @@ import java.util.Set;
 public record AuthUserView(
         String username,
         String fullName,
-        Set<String> roles
+        Set<String> roles,
+        boolean approved
 ) {
 }

@@ -1,3 +1,4 @@
+const API_BASE = "/api/v1";
 const TOKEN_KEY = "toi_token";
 
 const titleEl = document.getElementById("invite-title");
@@ -7,6 +8,8 @@ const copyLinkBtn = document.getElementById("copy-link-btn");
 const newInviteBtn = document.getElementById("new-invite-btn");
 const editBtn = document.getElementById("edit-btn");
 const viewBtn = document.getElementById("view-btn");
+const accessModal = document.getElementById("access-modal");
+const accessModalClose = document.getElementById("access-modal-close");
 
 let currentParams = new URLSearchParams();
 
@@ -38,6 +41,74 @@ function parseParams() {
 function withCurrentParams(path) {
     const query = currentParams.toString();
     return query ? `${path}?${query}` : path;
+}
+
+function openAccessModal() {
+    if (!accessModal) {
+        return;
+    }
+    accessModal.setAttribute("aria-hidden", "false");
+}
+
+function closeAccessModal() {
+    if (!accessModal) {
+        return;
+    }
+    accessModal.setAttribute("aria-hidden", "true");
+}
+
+async function request(path, options = {}) {
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+    };
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers
+    });
+
+    const text = await response.text();
+    let payload = {};
+
+    if (text) {
+        try {
+            payload = JSON.parse(text);
+        } catch {
+            payload = { message: text };
+        }
+    }
+
+    if (!response.ok) {
+        throw new Error(payload.error || payload.message || `HTTP ${response.status}`);
+    }
+
+    return payload;
+}
+
+async function ensureApproved() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    try {
+        const me = await request("/auth/me");
+        const approved = !!(me && me.user && me.user.approved);
+        if (!approved) {
+            openAccessModal();
+        } else {
+            closeAccessModal();
+        }
+    } catch {
+        openAccessModal();
+    }
 }
 
 async function copyInviteLink() {
@@ -84,3 +155,14 @@ viewBtn.addEventListener("click", () => {
 });
 
 parseParams();
+
+if (accessModal) {
+    ensureApproved();
+
+    accessModalClose.addEventListener("click", closeAccessModal);
+    accessModal.addEventListener("click", (event) => {
+        if (event.target.classList.contains("dash-modal__overlay")) {
+            closeAccessModal();
+        }
+    });
+}

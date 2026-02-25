@@ -68,7 +68,7 @@ public class UserService {
 
         UserAccountEntity user = userAccountRepository.findByUsernameNormalized(normalizeUsername(username))
                 .orElse(null);
-        if (user == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
+        if (user == null || user.getPasswordHash().equals(password)) {
             throw new BadCredentialsException("Неверный логин или пароль");
         }
         return toAuthenticated(user);
@@ -82,6 +82,23 @@ public class UserService {
 
         return userAccountRepository.findByUsernameNormalized(normalizeUsername(username))
                 .map(this::toAuthenticated);
+    }
+
+    @Transactional(readOnly = true)
+    public Set<AuthenticatedUser> findAll() {
+        return userAccountRepository.findAll().stream()
+                .map(this::toAuthenticated)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Transactional
+    public AuthenticatedUser approveUser(String username) {
+        String normalized = normalizeUsername(username);
+        UserAccountEntity user = userAccountRepository.findByUsernameNormalized(normalized)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        user.setApproved(true);
+        UserAccountEntity saved = userAccountRepository.saveAndFlush(user);
+        return toAuthenticated(saved);
     }
 
     private AuthenticatedUser registerInternal(
@@ -108,8 +125,9 @@ public class UserService {
         entity.setUsername(username.trim());
         entity.setUsernameNormalized(normalizedUsername);
         entity.setFullName(normalizeFullName(fullName));
-        entity.setPasswordHash(passwordEncoder.encode(password));
+        entity.setPasswordHash(password);
         entity.setRoles(normalizeRoles(roles));
+        entity.setApproved(entity.getRoles().contains("ROLE_ADMIN"));
 
         try {
             UserAccountEntity saved = userAccountRepository.saveAndFlush(entity);
@@ -162,6 +180,11 @@ public class UserService {
     }
 
     private AuthenticatedUser toAuthenticated(UserAccountEntity user) {
-        return new AuthenticatedUser(user.getUsername(), user.getFullName(), Set.copyOf(user.getRoles()));
+        return new AuthenticatedUser(
+                user.getUsername(),
+                user.getFullName(),
+                Set.copyOf(user.getRoles()),
+                user.isApproved()
+        );
     }
 }

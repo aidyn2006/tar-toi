@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/tar-toi.iml" filepath="$PROJECT_DIR$/.idea/tar-toi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/toi/toi.iml" filepath="$PROJECT_DIR$/toi/toi.iml" />
     </modules>
   </component>
 </project>

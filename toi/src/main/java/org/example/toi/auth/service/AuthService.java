@@ -33,6 +33,6 @@ public class AuthService {
     }
 
     public AuthUserView toView(AuthenticatedUser user) {
-        return new AuthUserView(user.username(), user.fullName(), user.roles());
+        return new AuthUserView(user.username(), user.fullName(), user.roles(), user.approved());
     }
 }

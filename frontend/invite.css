@@ -1,0 +1,574 @@
+:root {
+    --cream: #ece7d5;
+    --maroon: #934955;
+    --maroon-dark: #87404b;
+    --ivory: #f8ecd6;
+    --ink: #121212;
+    --line: #d3d0c1;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Manrope, "Segoe UI", sans-serif;
+    background: #ececef;
+    color: var(--ink);
+}
+
+.invite-page {
+    padding: 0;
+    display: grid;
+    place-items: center;
+}
+
+.invite-shell {
+    width: min(100%, 1020px);
+    margin: 0 auto;
+    background: var(--cream);
+}
+
+.invite-paper {
+    position: relative;
+    width: min(100%, 920px);
+    margin: 0 auto;
+    padding: 0 86px 28px;
+    background: var(--cream);
+    overflow: hidden;
+}
+
+.invite-paper::before,
+.invite-paper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 52px;
+    background: url("assets/border.png") center top / 30px auto repeat-y;
+    pointer-events: none;
+}
+
+.invite-paper::before {
+    left: 0;
+}
+
+.invite-paper::after {
+    right: 0;
+}
+
+.photo-block {
+    position: relative;
+    z-index: 1;
+    margin: 24px auto 14px;
+    width: min(100%, 620px);
+    border-radius: 44px;
+    overflow: hidden;
+    border: 6px solid var(--maroon);
+    box-shadow: 0 10px 30px rgba(66, 30, 37, 0.22);
+}
+
+.photo-block.is-hidden {
+    display: none;
+}
+
+.invite-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+}
+
+.panel {
+    position: relative;
+    z-index: 1;
+    background: var(--maroon);
+    color: var(--ivory);
+    margin: 0 auto 24px;
+    text-align: center;
+    padding: 34px 34px 28px;
+}
+
+.panel-hero {
+    margin-top: 0;
+    border-radius: 140px 140px 48px 48px;
+    min-height: 420px;
+}
+
+.hero-top {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(30px, 3.2vw, 54px);
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.hero-sub {
+    margin: 30px 0 8px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(30px, 2.6vw, 46px);
+    letter-spacing: 0.04em;
+}
+
+.panel-hero h1 {
+    margin: 0;
+    font-family: "Marck Script", cursive;
+    font-weight: 400;
+    font-size: clamp(60px, 5.8vw, 96px);
+    line-height: 1;
+}
+
+.hero-description {
+    margin: 28px 0 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(34px, 3vw, 52px);
+    line-height: 1.16;
+    letter-spacing: 0.03em;
+}
+
+.panel-date {
+    border-radius: 56px;
+    min-height: 560px;
+}
+
+.panel-date h2 {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(42px, 3.8vw, 66px);
+    letter-spacing: 0.03em;
+}
+
+.date-long {
+    margin: 22px 0 28px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(36px, 3vw, 54px);
+    letter-spacing: 0.04em;
+}
+
+.calendar-title {
+    margin: 0 0 8px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(34px, 2.6vw, 44px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.calendar-weekdays {
+    width: min(100%, 720px);
+    margin: 0 auto 10px;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.calendar-weekdays span {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(24px, 2vw, 34px);
+    letter-spacing: 0.08em;
+}
+
+.calendar-grid {
+    width: min(100%, 720px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 12px 18px;
+}
+
+.calendar-day {
+    min-height: 54px;
+    display: grid;
+    place-items: center;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(38px, 3.2vw, 56px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ivory);
+    position: relative;
+}
+
+.calendar-day.is-empty {
+    opacity: 0;
+}
+
+.calendar-day.is-event {
+    font-weight: 700;
+}
+
+.calendar-day.is-event::before {
+    content: "";
+    position: absolute;
+    width: 78px;
+    height: 78px;
+    border: 4px solid #e53f3f;
+    border-radius: 50%;
+}
+
+.calendar-day.is-event::after {
+    content: "";
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-left: 4px solid #e53f3f;
+    border-bottom: 4px solid #e53f3f;
+    transform: rotate(-45deg);
+    bottom: -24px;
+}
+
+.panel-location {
+    border-radius: 56px;
+    min-height: 440px;
+}
+
+.time-head {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(42px, 3.3vw, 62px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.panel-location h3 {
+    margin: 28px 0 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(44px, 3.5vw, 66px);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+
+.place {
+    margin: 8px 0 24px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(42px, 3.3vw, 58px);
+    letter-spacing: 0.04em;
+}
+
+.map-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 20px;
+    border: 2px solid #e4dfcb;
+    background: var(--cream);
+    color: var(--maroon);
+    font-weight: 800;
+    font-size: clamp(20px, 2vw, 34px);
+    padding: 12px 28px;
+    letter-spacing: 0.04em;
+}
+
+.countdown {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+}
+
+.count-item {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    place-items: center;
+}
+
+.count-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 8px;
+    width: 2px;
+    height: 62px;
+    background: rgba(248, 236, 214, 0.72);
+}
+
+.count-item strong {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(44px, 3.6vw, 62px);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.count-item span {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(28px, 2.2vw, 38px);
+    letter-spacing: 0.04em;
+}
+
+.panel-hosts {
+    border-radius: 56px;
+    min-height: 280px;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+}
+
+.ornament {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 70px;
+    line-height: 1;
+}
+
+.hosts-label {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(44px, 3.5vw, 58px);
+    letter-spacing: 0.04em;
+}
+
+.hosts-name {
+    margin: 0;
+    font-family: "Marck Script", cursive;
+    font-size: clamp(46px, 3.8vw, 66px);
+    line-height: 1.1;
+}
+
+.rsvp-section {
+    position: relative;
+    z-index: 1;
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 10px 0 16px;
+}
+
+.rsvp-section h3 {
+    margin: 0 0 14px;
+    text-align: center;
+    font-family: "Marck Script", cursive;
+    font-size: clamp(54px, 5vw, 86px);
+    font-weight: 400;
+    color: #121212;
+}
+
+.rsvp-form {
+    width: min(100%, 680px);
+    margin: 0 auto;
+    display: grid;
+    gap: 16px;
+}
+
+.field {
+    display: grid;
+    gap: 8px;
+}
+
+.field span {
+    font-size: clamp(24px, 2vw, 34px);
+    font-weight: 700;
+}
+
+input {
+    width: 100%;
+    border: 2px solid #c1c6d1;
+    border-radius: 14px;
+    background: #f6f7fb;
+    color: #273246;
+    padding: 14px 16px;
+    font-size: clamp(24px, 2vw, 32px);
+    font-family: Manrope, "Segoe UI", sans-serif;
+}
+
+input:focus {
+    outline: none;
+    border-color: #8d4753;
+}
+
+textarea {
+    width: 100%;
+    border: 2px solid #c1c6d1;
+    border-radius: 14px;
+    background: #f6f7fb;
+    color: #273246;
+    padding: 14px 16px;
+    font-size: clamp(22px, 1.8vw, 28px);
+    font-family: Manrope, "Segoe UI", sans-serif;
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #8d4753;
+}
+
+.guest-count {
+    display: grid;
+    grid-template-columns: 52px 1fr 52px;
+    align-items: center;
+    gap: 10px;
+    width: min(100%, 360px);
+}
+
+.count-btn {
+    border: 0;
+    background: transparent;
+    color: #1c1c1c;
+    font-size: 52px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#guest-count {
+    text-align: center;
+    font-weight: 700;
+    background: #ffffff;
+    border-color: #1b212e;
+}
+
+.status-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px solid #adb5c4;
+    border-radius: 14px;
+    background: #f5f7fb;
+    padding: 10px 8px;
+    cursor: pointer;
+    font-size: clamp(16px, 1.4vw, 22px);
+    font-weight: 700;
+}
+
+.status-item input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    accent-color: #8d4753;
+}
+
+.submit-btn {
+    border: 0;
+    border-radius: 20px;
+    height: 78px;
+    font-size: clamp(34px, 2.5vw, 44px);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--ivory);
+    background: var(--maroon);
+    cursor: pointer;
+}
+
+.invite-message {
+    margin: 0;
+    min-height: 32px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: #224741;
+}
+
+@media (max-width: 980px) {
+    .invite-paper {
+        padding: 0 54px 22px;
+    }
+
+    .invite-paper::before,
+    .invite-paper::after {
+        width: 34px;
+        background-size: 22px auto;
+    }
+
+    .panel {
+        padding: 24px 18px 22px;
+    }
+
+    .panel-hero {
+        min-height: 360px;
+    }
+
+    .panel-date {
+        min-height: 420px;
+    }
+
+    .panel-location {
+        min-height: 370px;
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        background: var(--cream);
+    }
+
+    .invite-shell {
+        width: 100%;
+    }
+
+    .invite-paper {
+        width: 100%;
+        padding: 0 28px 14px;
+    }
+
+    .invite-paper::before,
+    .invite-paper::after {
+        width: 22px;
+        background-size: 14px auto;
+    }
+
+    .panel {
+        margin-bottom: 14px;
+        border-radius: 28px;
+    }
+
+    .panel-hero {
+        border-radius: 52px 52px 22px 22px;
+        min-height: 250px;
+    }
+
+    .calendar-grid {
+        gap: 8px 4px;
+    }
+
+    .calendar-weekdays {
+        margin-bottom: 6px;
+    }
+
+    .calendar-day {
+        min-height: 38px;
+    }
+
+    .calendar-day.is-event::before {
+        width: 44px;
+        height: 44px;
+        border-width: 2px;
+    }
+
+    .calendar-day.is-event::after {
+        width: 14px;
+        height: 14px;
+        border-left-width: 2px;
+        border-bottom-width: 2px;
+        bottom: -13px;
+    }
+
+    .count-item:not(:last-child)::after {
+        height: 30px;
+    }
+
+    .rsvp-form {
+        width: 100%;
+    }
+
+    .guest-count {
+        width: min(100%, 260px);
+    }
+
+    .submit-btn {
+        height: 60px;
+        border-radius: 14px;
+    }
+
+    .status-row {
+        grid-template-columns: 1fr;
+    }
+}

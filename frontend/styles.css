@@ -2,10 +2,10 @@
     --white: #ffffff;
     --green-900: #173f33;
     --green-700: #1f5b46;
-    --green-500: #2b8a64;
-    --green-100: #e8f5ee;
-    --yellow-500: #f3c94f;
-    --yellow-300: #f8da7b;
+    --green-500: #287a5a;
+    --green-100: #edf6f1;
+    --yellow-500: #e8b739;
+    --yellow-300: #f3cf68;
     --yellow-100: #fff8dd;
     --line: #d7e9df;
     --ink: #1d2c25;
@@ -122,7 +122,7 @@ h1 {
     cursor: pointer;
     color: var(--green-900);
     background: linear-gradient(110deg, var(--yellow-500), var(--yellow-300));
-    box-shadow: 0 10px 20px rgba(31, 91, 70, 0.14);
+    box-shadow: 0 8px 18px rgba(31, 91, 70, 0.1);
 }
 
 .price {
@@ -168,14 +168,14 @@ h1 {
     place-items: center;
     text-align: center;
     padding: 18px;
-    box-shadow: 0 8px 18px rgba(31, 91, 70, 0.08);
+    box-shadow: 0 6px 14px rgba(31, 91, 70, 0.07);
     cursor: pointer;
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 24px rgba(31, 91, 70, 0.12);
+    box-shadow: 0 10px 22px rgba(31, 91, 70, 0.1);
 }
 
 .icon {
@@ -232,7 +232,7 @@ h1 {
     width: 58px;
     height: 58px;
     border-radius: 50%;
-    background: var(--yellow-500);
+    background: var(--yellow-300);
     display: grid;
     place-items: center;
     font-weight: 800;
