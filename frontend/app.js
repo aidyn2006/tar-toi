@@ -155,62 +155,9 @@ function setMode(nextMode) {
     setMessage("");
 }
 
-function normalizeKzDigits(value) {
-    const digitsOnly = (value || "").replace(/\D+/g, "");
-    if (!digitsOnly) {
-        return "";
-    }
-    if (digitsOnly.startsWith("8")) {
-        return `7${digitsOnly.slice(1, 11)}`;
-    }
-    if (digitsOnly.length === 10) {
-        return `7${digitsOnly}`;
-    }
-    if (digitsOnly.startsWith("7")) {
-        return digitsOnly.slice(0, 11);
-    }
-    return digitsOnly.slice(0, 10);
-}
-
-function formatKzPhone(digits) {
-    const normalized = normalizeKzDigits(digits);
-    if (!normalized) {
-        return "";
-    }
-    if (normalized.length === 1 && normalized === "7") {
-        return "+7";
-    }
-    if (!normalized.startsWith("7")) {
-        return normalized;
-    }
-
-    const rest = normalized.slice(1);
-    let formatted = "+7";
-    if (rest.length > 0) formatted += ` (${rest.slice(0, 3)}`;
-    if (rest.length >= 3) formatted += `)`;
-    if (rest.length > 3) formatted += ` ${rest.slice(3, 6)}`;
-    if (rest.length > 6) formatted += ` ${rest.slice(6, 8)}`;
-    if (rest.length > 8) formatted += ` ${rest.slice(8, 10)}`;
-    return formatted;
-}
-
-function bindKzPhoneInputs(...inputs) {
-    inputs.filter(Boolean).forEach((input) => {
-        input.addEventListener("input", () => {
-            input.value = formatKzPhone(input.value);
-        });
-    });
-}
-
 function sanitizePhone(phone) {
-    return normalizeKzDigits(phone);
+    return (phone || "").trim();
 }
-
-function isKzPhone(phone) {
-    return /^7\\d{10}$/.test(normalizeKzDigits(phone));
-}
-
-bindKzPhoneInputs(phoneInput, loginPhoneInput);
 
 function buildDashboardUrl({ name, category }) {
     const params = new URLSearchParams();
@@ -320,9 +267,6 @@ form.addEventListener("submit", async (event) => {
             if (!phone) {
                 throw new Error(t("error_phone_empty"));
             }
-            if (!isKzPhone(phone)) {
-                throw new Error(t("error_phone_invalid"));
-            }
             if (!password || password.length < 6) {
                 throw new Error(t("error_password_short"));
             }
@@ -360,9 +304,6 @@ form.addEventListener("submit", async (event) => {
 
         if (!phone || !password) {
             throw new Error(t("error_login_fields"));
-        }
-        if (!isKzPhone(phone)) {
-            throw new Error(t("error_phone_invalid"));
         }
 
         const loginResult = await request("/auth/login", {
