@@ -106,7 +106,7 @@ public class InviteService {
         InviteResponseEntity response = new InviteResponseEntity();
         response.setInvite(invite);
         response.setGuestName(safeTrim(request.name()));
-        response.setPhone(safeTrim(request.phone()));
+        response.setPhone(normalizeKzPhone(request.phone()));
         response.setGuestsCount(guests);
         response.setStatus(safeTrim(request.status()));
         response.setNote(safeTrim(request.note()));
@@ -213,5 +213,23 @@ public class InviteService {
         }
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private String normalizeKzPhone(String phone) {
+        String trimmed = safeTrim(phone);
+        if (trimmed == null) {
+            return null;
+        }
+        String digits = trimmed.replaceAll("\\D", "");
+        if (digits.isEmpty()) {
+            return null;
+        }
+        if (digits.length() == 11 && digits.startsWith("8")) {
+            return "7" + digits.substring(1);
+        }
+        if (digits.length() == 11 && digits.startsWith("7")) {
+            return digits;
+        }
+        return digits;
     }
 }

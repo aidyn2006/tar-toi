@@ -1,7 +1,7 @@
 package org.example.toi.auth.dto;
 
 public record AuthUserView(
-        String username,
+        String phone,
         String fullName,
         String role,
         Boolean approved

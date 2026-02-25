@@ -34,7 +34,7 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         RegisterResponse response = authService.register(
                 request.fullName(),
-                request.username(),
+                request.phone(),
                 request.password(),
                 request.confirmPassword()
         );
@@ -43,20 +43,20 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
-        return authService.login(request.username(), request.password());
+        return authService.login(request.phone(), request.password());
     }
 
     @GetMapping("/me")
     public MeResponse me(Authentication authentication) {
-        String username = authentication.getName();
+        String phone = authentication.getName();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElse(null);
 
-        AuthUserView userView = userService.findByUsername(username)
-                .map(user -> new AuthUserView(user.username(), user.fullName(), user.role(), user.approved()))
-                .orElseGet(() -> new AuthUserView(username, username, role, false));
+        AuthUserView userView = userService.findByPhone(phone)
+                .map(user -> new AuthUserView(user.phone(), user.fullName(), user.role(), user.approved()))
+                .orElseGet(() -> new AuthUserView(phone, phone, role, false));
 
         return new MeResponse(userView);
     }

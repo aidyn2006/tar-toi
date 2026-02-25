@@ -31,13 +31,13 @@ public class AdminUserController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/{username}/approve")
-    public ResponseEntity<AuthUserView> approve(@PathVariable("username") String username) {
-        AuthenticatedUser user = userService.approveUser(username);
+    @PostMapping("/{phone}/approve")
+    public ResponseEntity<AuthUserView> approve(@PathVariable("phone") String phone) {
+        AuthenticatedUser user = userService.approveUser(phone);
         return ResponseEntity.ok(toView(user));
     }
 
     private AuthUserView toView(AuthenticatedUser user) {
-        return new AuthUserView(user.username(), user.fullName(), user.role(), user.approved());
+        return new AuthUserView(user.phone(), user.fullName(), user.role(), user.approved());
     }
 }

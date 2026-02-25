@@ -1,7 +1,7 @@
 package org.example.toi.auth.model;
 
 public record AuthenticatedUser(
-        String username,
+        String phone,
         String fullName,
         String role,
         Boolean approved

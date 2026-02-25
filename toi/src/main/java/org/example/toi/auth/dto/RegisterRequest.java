@@ -8,9 +8,9 @@ public record RegisterRequest(
         @Size(min = 2, max = 80, message = "Имя должно быть от 2 до 80 символов")
         String fullName,
 
-        @NotBlank(message = "Логин обязателен")
-        @Size(min = 3, max = 50, message = "Логин должен быть от 3 до 50 символов")
-        String username,
+        @NotBlank(message = "Телефон обязателен")
+        @Size(min = 10, max = 20, message = "Телефон должен быть корректным")
+        String phone,
 
         @NotBlank(message = "Пароль обязателен")
         @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 100 символов")

@@ -16,13 +16,13 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public RegisterResponse register(String fullName, String username, String password, String confirmPassword) {
-        AuthenticatedUser user = userService.register(fullName, username, password, confirmPassword);
+    public RegisterResponse register(String fullName, String phone, String password, String confirmPassword) {
+        AuthenticatedUser user = userService.register(fullName, phone, password, confirmPassword);
         return new RegisterResponse("Аккаунт создан", toView(user));
     }
 
-    public AuthResponse login(String username, String password) {
-        AuthenticatedUser user = userService.authenticate(username, password);
+    public AuthResponse login(String phone, String password) {
+        AuthenticatedUser user = userService.authenticate(phone, password);
         String accessToken = jwtService.createAccessToken(user);
         return new AuthResponse(
                 accessToken,
@@ -33,6 +33,6 @@ public class AuthService {
     }
 
     public AuthUserView toView(AuthenticatedUser user) {
-        return new AuthUserView(user.username(), user.fullName(), user.role(), user.approved());
+        return new AuthUserView(user.phone(), user.fullName(), user.role(), user.approved());
     }
 }

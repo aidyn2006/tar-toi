@@ -55,7 +55,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .issuer(issuer)
-                .subject(user.username())
+                .subject(user.phone())
                 .issuedAt(java.util.Date.from(now))
                 .expiration(java.util.Date.from(expiresAt))
                 .claim(ROLES_CLAIM, user.role())
@@ -75,12 +75,12 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        String username = claims.getSubject();
-        if (username == null || username.isBlank()) {
+        String phone = claims.getSubject();
+        if (phone == null || phone.isBlank()) {
             throw new JwtException("Токен не содержит subject");
         }
 
-        return new JwtPrincipal(username, (String) claims.get(ROLES_CLAIM));
+        return new JwtPrincipal(phone, (String) claims.get(ROLES_CLAIM));
     }
 
     public long getExpirationSeconds() {

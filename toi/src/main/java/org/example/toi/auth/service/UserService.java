@@ -1,7 +1,6 @@
 package org.example.toi.auth.service;
 
 import jakarta.annotation.PostConstruct;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -19,24 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[A-Za-z0-9._-]{3,50}$");
     private static final Pattern FULL_NAME_PATTERN = Pattern.compile("^[\\p{L}][\\p{L} .'-]{1,79}$");
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final String defaultAdminUsername;
+    private final String defaultAdminPhone;
     private final String defaultAdminFullName;
     private final String defaultAdminPassword;
 
     public UserService(
             UserAccountRepository userAccountRepository,
             PasswordEncoder passwordEncoder,
-            @Value("${app.default-admin-username:admin}") String defaultAdminUsername,
+            @Value("${app.default-admin-phone:${app.default-admin-username:admin}}") String defaultAdminPhone,
             @Value("${app.default-admin-full-name:TOI Administrator}") String defaultAdminFullName,
             @Value("${app.default-admin-password:admin123}") String defaultAdminPassword
     ) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
-        this.defaultAdminUsername = defaultAdminUsername;
+        this.defaultAdminPhone = defaultAdminPhone;
         this.defaultAdminFullName = defaultAdminFullName;
         this.defaultAdminPassword = defaultAdminPassword;
     }
@@ -45,7 +43,7 @@ public class UserService {
     void initDefaultAdmin() {
         registerInternal(
                 defaultAdminFullName,
-                defaultAdminUsername,
+                defaultAdminPhone,
                 defaultAdminPassword,
                 "ROLE_ADMIN",
                 true
@@ -53,33 +51,35 @@ public class UserService {
     }
 
     @Transactional
-    public AuthenticatedUser register(String fullName, String username, String password, String confirmPassword) {
+    public AuthenticatedUser register(String fullName, String phone, String password, String confirmPassword) {
         if (!Objects.equals(password, confirmPassword)) {
             throw new IllegalArgumentException("Пароли не совпадают");
         }
-        return registerInternal(fullName, username, password, "ROLE_USER", false);
+        return registerInternal(fullName, phone, password, "ROLE_USER", false);
     }
 
     @Transactional(readOnly = true)
-    public AuthenticatedUser authenticate(String username, String password) {
-        validateUsername(username);
+    public AuthenticatedUser authenticate(String phone, String password) {
+        String normalizedPhone = normalizePhone(phone);
+        validatePhone(normalizedPhone);
         validatePassword(password);
 
-        UserAccountEntity user = userAccountRepository.findByUsernameNormalized(normalizeUsername(username))
+        UserAccountEntity user = userAccountRepository.findByPhone(normalizedPhone)
                 .orElse(null);
         if (user == null || !user.getPasswordHash().equals(password)) {
-            throw new BadCredentialsException("Неверный логин или пароль");
+            throw new BadCredentialsException("Неверный телефон или пароль");
         }
         return toAuthenticated(user);
     }
 
     @Transactional(readOnly = true)
-    public Optional<AuthenticatedUser> findByUsername(String username) {
-        if (username == null || username.isBlank()) {
+    public Optional<AuthenticatedUser> findByPhone(String phone) {
+        String normalizedPhone = normalizePhone(phone);
+        if (normalizedPhone == null) {
             return Optional.empty();
         }
 
-        return userAccountRepository.findByUsernameNormalized(normalizeUsername(username))
+        return userAccountRepository.findByPhone(normalizedPhone)
                 .map(this::toAuthenticated);
     }
 
@@ -91,9 +91,10 @@ public class UserService {
     }
 
     @Transactional
-    public AuthenticatedUser approveUser(String username) {
-        String normalized = normalizeUsername(username);
-        UserAccountEntity user = userAccountRepository.findByUsernameNormalized(normalized)
+    public AuthenticatedUser approveUser(String phone) {
+        String normalized = normalizePhone(phone);
+        validatePhone(normalized);
+        UserAccountEntity user = userAccountRepository.findByPhone(normalized)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
         user.setApproved(true);
         UserAccountEntity saved = userAccountRepository.saveAndFlush(user);
@@ -102,17 +103,17 @@ public class UserService {
 
     private AuthenticatedUser registerInternal(
             String fullName,
-            String username,
+            String phone,
             String password,
             String role,
             boolean skipIfExists
     ) {
         validateFullName(fullName);
-        validateUsername(username);
+        String normalizedPhone = normalizePhone(phone);
+        validatePhone(normalizedPhone);
         validatePassword(password);
 
-        String normalizedUsername = normalizeUsername(username);
-        Optional<UserAccountEntity> existing = userAccountRepository.findByUsernameNormalized(normalizedUsername);
+        Optional<UserAccountEntity> existing = userAccountRepository.findByPhone(normalizedPhone);
         if (existing.isPresent()) {
             if (skipIfExists) {
                 return toAuthenticated(existing.get());
@@ -121,8 +122,7 @@ public class UserService {
         }
 
         UserAccountEntity entity = new UserAccountEntity();
-        entity.setUsername(username.trim());
-        entity.setUsernameNormalized(normalizedUsername);
+        entity.setPhone(normalizedPhone);
         entity.setFullName(normalizeFullName(fullName));
         entity.setPasswordHash(password);
         entity.setRole(normalizeRole(role));
@@ -134,16 +134,12 @@ public class UserService {
             return toAuthenticated(saved);
         } catch (DataIntegrityViolationException ex) {
             if (skipIfExists) {
-                return userAccountRepository.findByUsernameNormalized(normalizedUsername)
+                return userAccountRepository.findByPhone(normalizedPhone)
                         .map(this::toAuthenticated)
                         .orElseThrow(() -> ex);
             }
             throw new IllegalStateException("Пользователь уже существует");
         }
-    }
-
-    private String normalizeUsername(String username) {
-        return username.trim().toLowerCase(Locale.ROOT);
     }
 
     private String normalizeFullName(String fullName) {
@@ -157,10 +153,29 @@ public class UserService {
         }
     }
 
-    private void validateUsername(String username) {
-        String value = username == null ? "" : username.trim();
-        if (!USERNAME_PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("Логин должен содержать 3-50 символов: буквы, цифры, ., _, -");
+    private String normalizePhone(String phone) {
+        if (phone == null) {
+            return null;
+        }
+        String digits = phone.replaceAll("\\D", "");
+        if (digits.isEmpty()) {
+            return null;
+        }
+        if (digits.length() == 10) {
+            return "7" + digits;
+        }
+        if (digits.length() == 11 && digits.startsWith("8")) {
+            return "7" + digits.substring(1);
+        }
+        if (digits.length() == 11 && digits.startsWith("7")) {
+            return digits;
+        }
+        return digits;
+    }
+
+    private void validatePhone(String normalizedPhone) {
+        if (normalizedPhone == null || !normalizedPhone.matches("^7\\d{10}$")) {
+            throw new IllegalArgumentException("Телефон должен быть в формате Казахстана");
         }
     }
 
@@ -181,7 +196,7 @@ public class UserService {
 
     private AuthenticatedUser toAuthenticated(UserAccountEntity user) {
         return new AuthenticatedUser(
-                user.getUsername(),
+                user.getPhone(),
                 user.getFullName(),
                 user.getRole(),
                 Boolean.TRUE.equals(user.getApproved())

@@ -20,7 +20,7 @@ import lombok.Setter;
 @Table(
         name = "app_users",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_app_users_username_norm", columnNames = "username_normalized")
+                @UniqueConstraint(name = "uk_app_users_phone", columnNames = "phone")
         }
 )
 @Getter
@@ -30,11 +30,8 @@ public class UserAccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false, length = 50)
-    private String username;
-
-    @Column(name = "username_normalized", nullable = false, length = 50)
-    private String usernameNormalized;
+    @Column(name = "phone", nullable = false, length = 20)
+    private String phone;
 
     @Column(name = "full_name", nullable = false, length = 80)
     private String fullName;
