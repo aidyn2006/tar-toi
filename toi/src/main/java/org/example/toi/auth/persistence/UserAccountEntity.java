@@ -13,6 +13,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(
@@ -21,6 +23,8 @@ import java.util.Set;
                 @UniqueConstraint(name = "uk_app_users_username_norm", columnNames = "username_normalized")
         }
 )
+@Getter
+@Setter
 public class UserAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,59 +50,7 @@ public class UserAccountEntity {
     @Column(name = "role", nullable = false, length = 32)
     private Set<String> roles = new LinkedHashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUsernameNormalized() {
-        return usernameNormalized;
-    }
-
-    public void setUsernameNormalized(String usernameNormalized) {
-        this.usernameNormalized = usernameNormalized;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
     public void setRoles(Set<String> roles) {
         this.roles = new LinkedHashSet<>(roles);
-    }
-
-    public Boolean getApproved() {
-        return approved;
-    }
-
-    public void setApproved(Boolean approved) {
-        this.approved = approved;
     }
 }

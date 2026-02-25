@@ -26,7 +26,6 @@ const previewPlace = document.getElementById("preview-place");
 
 const saveBtn = document.getElementById("save-btn");
 const shareBtn = document.getElementById("share-btn");
-const payBtn = document.getElementById("pay-btn");
 const messageEl = document.getElementById("editor-message");
 
 function setMessage(text) {
@@ -184,8 +183,4 @@ shareBtn.addEventListener("click", async () => {
     } catch {
         setMessage("Сілтемені көшіру мүмкін болмады");
     }
-});
-
-payBtn.addEventListener("click", () => {
-    setMessage("Төлем модулі кейін қосылады");
 });

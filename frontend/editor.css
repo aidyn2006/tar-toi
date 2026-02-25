@@ -249,11 +249,6 @@ textarea:focus {
     color: var(--blue);
 }
 
-.action-btn.pay {
-    background: var(--danger);
-    color: var(--white);
-}
-
 .editor-message {
     margin: 2px 0 0;
     min-height: 18px;
@@ -280,10 +275,15 @@ textarea:focus {
     border-radius: 50%;
     display: grid;
     place-items: center;
-    font-size: 33px;
     text-decoration: none;
     background: var(--green);
     box-shadow: 0 12px 22px rgba(27, 187, 128, 0.38);
+    color: #fff;
+}
+
+.wa-float svg {
+    width: 32px;
+    height: 32px;
 }
 
 @media (max-width: 1080px) {

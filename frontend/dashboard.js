@@ -10,9 +10,77 @@ const editBtn = document.getElementById("edit-btn");
 const viewBtn = document.getElementById("view-btn");
 const accessModal = document.getElementById("access-modal");
 const accessModalClose = document.getElementById("access-modal-close");
+const langToggle = document.querySelector("[data-lang-toggle]");
 
 let currentParams = new URLSearchParams();
 let isApproved = false;
+let currentLang = localStorage.getItem("toi_lang") || "kk";
+
+const translations = {
+    kk: {
+        dash_admin: "Admin",
+        dash_logout: "Шығу",
+        dash_home: "Басты бет",
+        dash_subtitle: "Редактор мен шақырту сілтемесін басқару",
+        dash_edit: "Шақыртуды өзгерту",
+        dash_edit_hint: "Мәтін, фото, музыка, қонақ саны",
+        dash_view: "Шақыртуды көру",
+        dash_view_hint: "Қонақтарға қалай көрінетінін тексеру",
+        dash_guests: "Қонақтар тізімі",
+        dash_guests_hint: "Кім жауап берді — осы жерден",
+        dash_copy: "Шақырту сілтемесін көшіру",
+        dash_copy_hint: "Сілтемені WhatsApp/Telegram-ға жіберу",
+        dash_soon: "Жақында",
+        dash_new_title: "Жаңа шақырту сайтын жасау",
+        dash_access_title: "Редакторға қолжетімділік",
+        dash_access_text: "Толық редакторға кіру үшін Telegram арқылы @nur_kun немесе WhatsApp нөміріне 87056842747 жазыңыз. Қолжетімділік тегін беріледі.",
+        dash_wa: "WhatsApp-қа жазу",
+        dash_tg: "Telegram-ға жазу",
+        msg_copy_ok: "Шақырту сілтемесі көшірілді",
+        msg_copy_fail: "Сілтемені көшіру мүмкін болмады"
+    },
+    ru: {
+        dash_admin: "Admin",
+        dash_logout: "Выйти",
+        dash_home: "Главная",
+        dash_subtitle: "Управляйте редактором и ссылкой приглашения",
+        dash_edit: "Редактировать приглашение",
+        dash_edit_hint: "Текст, фото, музыка, число гостей",
+        dash_view: "Посмотреть приглашение",
+        dash_view_hint: "Проверить, как видят гости",
+        dash_guests: "Список гостей",
+        dash_guests_hint: "Кто ответил — будет здесь",
+        dash_copy: "Скопировать ссылку",
+        dash_copy_hint: "Отправьте ссылку в WhatsApp/Telegram",
+        dash_soon: "Скоро",
+        dash_new_title: "Создать новый сайт‑приглашение",
+        dash_access_title: "Доступ к редактору",
+        dash_access_text: "Чтобы открыть полный редактор, напишите в Telegram @nur_kun или в WhatsApp на номер 87056842747. Доступ предоставляется бесплатно.",
+        dash_wa: "Написать в WhatsApp",
+        dash_tg: "Написать в Telegram",
+        msg_copy_ok: "Ссылка на приглашение скопирована",
+        msg_copy_fail: "Не удалось скопировать ссылку"
+    }
+};
+
+function t(key) {
+    const langPack = translations[currentLang] || translations.kk;
+    return langPack[key] || translations.kk[key] || key;
+}
+
+function applyTranslations() {
+    document.documentElement.lang = currentLang === "ru" ? "ru" : "kk";
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.dataset.i18n;
+        const value = t(key);
+        if (value) {
+            el.textContent = value;
+        }
+    });
+    if (langToggle) {
+        langToggle.textContent = currentLang === "ru" ? "ҚАЗ" : "РУС";
+    }
+}
 
 function setMessage(text) {
     messageEl.textContent = text || "";
@@ -128,7 +196,7 @@ async function copyInviteLink() {
     try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(link);
-            setMessage("Шақырту сілтемесі көшірілді");
+            setMessage(t("msg_copy_ok"));
             return;
         }
 
@@ -138,9 +206,9 @@ async function copyInviteLink() {
         textarea.select();
         document.execCommand("copy");
         textarea.remove();
-        setMessage("Шақырту сілтемесі көшірілді");
+        setMessage(t("msg_copy_ok"));
     } catch {
-        setMessage("Сілтемені көшіру мүмкін болмады");
+        setMessage(t("msg_copy_fail"));
     }
 }
 
@@ -167,11 +235,22 @@ viewBtn.addEventListener("click", () => {
 });
 
 parseParams();
+applyTranslations();
+
+if (langToggle) {
+    langToggle.addEventListener("click", () => {
+        currentLang = currentLang === "ru" ? "kk" : "ru";
+        localStorage.setItem("toi_lang", currentLang);
+        applyTranslations();
+    });
+}
 
 if (accessModal) {
     ensureApproved();
 
-    accessModalClose.addEventListener("click", closeAccessModal);
+    if (accessModalClose) {
+        accessModalClose.addEventListener("click", closeAccessModal);
+    }
     accessModal.addEventListener("click", (event) => {
         if (event.target.classList.contains("dash-modal__overlay")) {
             closeAccessModal();

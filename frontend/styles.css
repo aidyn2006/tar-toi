@@ -179,7 +179,18 @@ h1 {
 }
 
 .icon {
-    font-size: 38px;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: #f3f6f2;
+    display: grid;
+    place-items: center;
+    color: var(--green-700);
+}
+
+.icon svg {
+    width: 30px;
+    height: 30px;
 }
 
 .card h3 {
@@ -237,6 +248,12 @@ h1 {
     place-items: center;
     font-weight: 800;
     text-transform: lowercase;
+    color: #1e3a2f;
+}
+
+.contact-icon svg {
+    width: 28px;
+    height: 28px;
 }
 
 .contact-card h3 {

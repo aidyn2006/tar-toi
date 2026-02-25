@@ -7,9 +7,13 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "invites")
+@Getter
+@Setter
 public class InviteEntity {
 
     @Id
@@ -65,140 +69,4 @@ public class InviteEntity {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getOwnerUsername() {
-        return ownerUsername;
-    }
-
-    public void setOwnerUsername(String ownerUsername) {
-        this.ownerUsername = ownerUsername;
-    }
-
-    public String getOwnerUsernameNormalized() {
-        return ownerUsernameNormalized;
-    }
-
-    public void setOwnerUsernameNormalized(String ownerUsernameNormalized) {
-        this.ownerUsernameNormalized = ownerUsernameNormalized;
-    }
-
-    public String getCategoryKey() {
-        return categoryKey;
-    }
-
-    public void setCategoryKey(String categoryKey) {
-        this.categoryKey = categoryKey;
-    }
-
-    public String getCategoryLabel() {
-        return categoryLabel;
-    }
-
-    public void setCategoryLabel(String categoryLabel) {
-        this.categoryLabel = categoryLabel;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDate eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public String getEventTime() {
-        return eventTime;
-    }
-
-    public void setEventTime(String eventTime) {
-        this.eventTime = eventTime;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public String getSong() {
-        return song;
-    }
-
-    public void setSong(String song) {
-        this.song = song;
-    }
-
-    public String getMapLink() {
-        return mapLink;
-    }
-
-    public void setMapLink(String mapLink) {
-        this.mapLink = mapLink;
-    }
-
-    public String getHosts() {
-        return hosts;
-    }
-
-    public void setHosts(String hosts) {
-        this.hosts = hosts;
-    }
-
-    public Integer getMaxGuests() {
-        return maxGuests;
-    }
-
-    public void setMaxGuests(Integer maxGuests) {
-        this.maxGuests = maxGuests;
-    }
-
-    public String getPreviewPhoto() {
-        return previewPhoto;
-    }
-
-    public void setPreviewPhoto(String previewPhoto) {
-        this.previewPhoto = previewPhoto;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
