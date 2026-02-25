@@ -21,7 +21,7 @@ import javax.crypto.SecretKey;
 
 @Service
 public class JwtService {
-    private static final String ROLES_CLAIM = "roles";
+    private static final String ROLES_CLAIM = "role";
     private final String secret;
     private final long expirationMinutes;
     private final String issuer;
@@ -58,7 +58,7 @@ public class JwtService {
                 .subject(user.username())
                 .issuedAt(java.util.Date.from(now))
                 .expiration(java.util.Date.from(expiresAt))
-                .claim(ROLES_CLAIM, user.roles())
+                .claim(ROLES_CLAIM, user.role())
                 .signWith(signingKey)
                 .compact();
     }
@@ -80,27 +80,12 @@ public class JwtService {
             throw new JwtException("Токен не содержит subject");
         }
 
-        return new JwtPrincipal(username, extractRoles(claims.get(ROLES_CLAIM)));
+        return new JwtPrincipal(username, (String) claims.get(ROLES_CLAIM));
     }
 
     public long getExpirationSeconds() {
         return expirationMinutes * 60;
     }
 
-    private Set<String> extractRoles(Object rawRoles) {
-        if (!(rawRoles instanceof Collection<?> collection)) {
-            return Set.of();
-        }
 
-        LinkedHashSet<String> roles = new LinkedHashSet<>();
-        for (Object item : collection) {
-            if (item != null) {
-                String role = item.toString().trim();
-                if (!role.isEmpty()) {
-                    roles.add(role);
-                }
-            }
-        }
-        return roles.stream().filter(Objects::nonNull).collect(java.util.stream.Collectors.toUnmodifiableSet());
-    }
 }

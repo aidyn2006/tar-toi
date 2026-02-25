@@ -45,12 +45,6 @@ public class UserAccountEntity {
     @Column(name = "approved")
     private Boolean approved;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "app_user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role", nullable = false, length = 32)
-    private Set<String> roles = new LinkedHashSet<>();
-
-    public void setRoles(Set<String> roles) {
-        this.roles = new LinkedHashSet<>(roles);
-    }
+    @Column(name = "role")
+    private String role;
 }

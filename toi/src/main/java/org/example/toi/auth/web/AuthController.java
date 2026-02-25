@@ -1,9 +1,6 @@
 package org.example.toi.auth.web;
 
 import jakarta.validation.Valid;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.example.toi.auth.dto.AuthUserView;
 import org.example.toi.auth.dto.AuthResponse;
 import org.example.toi.auth.dto.LoginRequest;
@@ -52,13 +49,14 @@ public class AuthController {
     @GetMapping("/me")
     public MeResponse me(Authentication authentication) {
         String username = authentication.getName();
-        Set<String> roles = authentication.getAuthorities().stream()
+        String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .findFirst()
+                .orElse(null);
 
         AuthUserView userView = userService.findByUsername(username)
-                .map(user -> new AuthUserView(user.username(), user.fullName(), roles, user.approved()))
-                .orElseGet(() -> new AuthUserView(username, username, roles, false));
+                .map(user -> new AuthUserView(user.username(), user.fullName(), user.role(), user.approved()))
+                .orElseGet(() -> new AuthUserView(username, username, role, false));
 
         return new MeResponse(userView);
     }

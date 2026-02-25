@@ -1,7 +1,6 @@
 package org.example.toi.auth.service;
 
 import jakarta.annotation.PostConstruct;
-import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class UserService {
                 defaultAdminFullName,
                 defaultAdminUsername,
                 defaultAdminPassword,
-                Set.of("ROLE_ADMIN", "ROLE_USER"),
+                "ROLE_ADMIN",
                 true
         );
     }
@@ -58,7 +57,7 @@ public class UserService {
         if (!Objects.equals(password, confirmPassword)) {
             throw new IllegalArgumentException("Пароли не совпадают");
         }
-        return registerInternal(fullName, username, password, Set.of("ROLE_USER"), false);
+        return registerInternal(fullName, username, password, "ROLE_USER", false);
     }
 
     @Transactional(readOnly = true)
@@ -105,7 +104,7 @@ public class UserService {
             String fullName,
             String username,
             String password,
-            Set<String> roles,
+            String role,
             boolean skipIfExists
     ) {
         validateFullName(fullName);
@@ -126,9 +125,9 @@ public class UserService {
         entity.setUsernameNormalized(normalizedUsername);
         entity.setFullName(normalizeFullName(fullName));
         entity.setPasswordHash(password);
-        entity.setRoles(normalizeRoles(roles));
+        entity.setRole(normalizeRole(role));
         // новые пользователи неапрувнуты; админ по умолчанию апрувнут
-        entity.setApproved(entity.getRoles().contains("ROLE_ADMIN"));
+        entity.setApproved("ROLE_ADMIN".equals(entity.getRole()));
 
         try {
             UserAccountEntity saved = userAccountRepository.saveAndFlush(entity);
@@ -172,19 +171,19 @@ public class UserService {
         }
     }
 
-    private Set<String> normalizeRoles(Set<String> roles) {
-        return roles.stream()
-                .filter(Objects::nonNull)
-                .map(String::trim)
-                .filter(role -> !role.isEmpty())
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+    private String normalizeRole(String role) {
+        if (role == null) {
+            return "ROLE_USER";
+        }
+        String value = role.trim();
+        return value.isEmpty() ? "ROLE_USER" : value;
     }
 
     private AuthenticatedUser toAuthenticated(UserAccountEntity user) {
         return new AuthenticatedUser(
                 user.getUsername(),
                 user.getFullName(),
-                Set.copyOf(user.getRoles()),
+                user.getRole(),
                 Boolean.TRUE.equals(user.getApproved())
         );
     }

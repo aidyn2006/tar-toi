@@ -1,7 +1,6 @@
 package org.example.toi.auth.web;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.example.toi.auth.dto.AuthUserView;
 import org.example.toi.auth.model.AuthenticatedUser;
@@ -39,8 +38,6 @@ public class AdminUserController {
     }
 
     private AuthUserView toView(AuthenticatedUser user) {
-        Set<String> roles = user.roles();
-        return new AuthUserView(user.username(), user.fullName(), roles, user.approved());
+        return new AuthUserView(user.username(), user.fullName(), user.role(), user.approved());
     }
 }
-
