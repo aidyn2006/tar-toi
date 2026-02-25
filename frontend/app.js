@@ -22,13 +22,13 @@ const loginOnly = document.querySelectorAll(".login-only");
 
 const fullNameInput = document.getElementById("full-name");
 const phoneInput = document.getElementById("phone");
-const categorySelect = document.getElementById("category");
 const registerPasswordInput = document.getElementById("register-password");
-const loginUsernameInput = document.getElementById("login-username");
+const loginPhoneInput = document.getElementById("login-phone");
 const loginPasswordInput = document.getElementById("login-password");
 
 let mode = "register";
 let currentLang = "kk";
+let selectedCategory = null;
 
 const translations = {
     kk: {
@@ -43,16 +43,16 @@ const translations = {
 
         modal_title_register: "Шақырту жасау",
         modal_title_login: "Басқару тақтасына кіру",
-        modal_caption_register: "Атыңызды, телефоныңызды және категорияны толтырыңыз.",
-        modal_caption_login: "Логин мен құпиясөз арқылы кіріңіз.",
-        submit_register: "Шақырту жасау",
+        modal_caption_register: "Атыңызды және телефоныңызды толтырыңыз.",
+        modal_caption_login: "Телефон мен құпиясөз арқылы кіріңіз.",
+        submit_register: "Тіркелу",
         submit_login: "Кіру",
 
         error_full_name: "Сіздің атыңызды енгізіңіз",
         error_phone_empty: "Телефон нөмірін енгізіңіз",
         error_phone_invalid: "Телефон нөмірі дұрыс емес",
         error_password_short: "Құпиясөз кемінде 6 таңба болуы керек",
-        error_login_fields: "Логин мен құпиясөзді толтырыңыз",
+        error_login_fields: "Телефон мен құпиясөзді толтырыңыз",
         error_generic: "Қате шықты"
     },
     ru: {
@@ -67,16 +67,16 @@ const translations = {
 
         modal_title_register: "Создать приглашение",
         modal_title_login: "Войти в панель управления",
-        modal_caption_register: "Укажите имя, телефон и категорию тоя.",
-        modal_caption_login: "Войдите по логину и паролю.",
-        submit_register: "Создать приглашение",
+        modal_caption_register: "Укажите имя и телефон.",
+        modal_caption_login: "Войдите по телефону и паролю.",
+        submit_register: "Регистрация",
         submit_login: "Войти",
 
         error_full_name: "Введите ваше имя",
         error_phone_empty: "Введите номер телефона",
         error_phone_invalid: "Неверный номер телефона",
         error_password_short: "Пароль должен быть не менее 6 символов",
-        error_login_fields: "Введите логин и пароль",
+        error_login_fields: "Введите телефон и пароль",
         error_generic: "Произошла ошибка"
     }
 };
@@ -106,14 +106,20 @@ if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
 }
 
+function enforceDigits(input, maxLen = 11) {
+    if (!input) return;
+    input.addEventListener("input", () => {
+        const digits = input.value.replace(/\D+/g, "").slice(0, maxLen);
+        input.value = digits;
+    });
+}
+
 function setMessage(text) {
     messageEl.textContent = text || "";
 }
 
 function openModal(categoryName) {
-    if (categoryName) {
-        categorySelect.value = categoryName;
-    }
+    selectedCategory = categoryName || selectedCategory;
     modal.classList.remove("is-hidden");
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
@@ -139,7 +145,7 @@ function setMode(nextMode) {
     phoneInput.required = isRegister;
     registerPasswordInput.required = isRegister;
 
-    loginUsernameInput.required = !isRegister;
+    loginPhoneInput.required = !isRegister;
     loginPasswordInput.required = !isRegister;
 
     modalTitle.textContent = isRegister ? t("modal_title_register") : t("modal_title_login");
@@ -149,9 +155,62 @@ function setMode(nextMode) {
     setMessage("");
 }
 
-function sanitizePhone(phone) {
-    return phone.replace(/\D+/g, "");
+function normalizeKzDigits(value) {
+    const digitsOnly = (value || "").replace(/\D+/g, "");
+    if (!digitsOnly) {
+        return "";
+    }
+    if (digitsOnly.startsWith("8")) {
+        return `7${digitsOnly.slice(1, 11)}`;
+    }
+    if (digitsOnly.length === 10) {
+        return `7${digitsOnly}`;
+    }
+    if (digitsOnly.startsWith("7")) {
+        return digitsOnly.slice(0, 11);
+    }
+    return digitsOnly.slice(0, 10);
 }
+
+function formatKzPhone(digits) {
+    const normalized = normalizeKzDigits(digits);
+    if (!normalized) {
+        return "";
+    }
+    if (normalized.length === 1 && normalized === "7") {
+        return "+7";
+    }
+    if (!normalized.startsWith("7")) {
+        return normalized;
+    }
+
+    const rest = normalized.slice(1);
+    let formatted = "+7";
+    if (rest.length > 0) formatted += ` (${rest.slice(0, 3)}`;
+    if (rest.length >= 3) formatted += `)`;
+    if (rest.length > 3) formatted += ` ${rest.slice(3, 6)}`;
+    if (rest.length > 6) formatted += ` ${rest.slice(6, 8)}`;
+    if (rest.length > 8) formatted += ` ${rest.slice(8, 10)}`;
+    return formatted;
+}
+
+function bindKzPhoneInputs(...inputs) {
+    inputs.filter(Boolean).forEach((input) => {
+        input.addEventListener("input", () => {
+            input.value = formatKzPhone(input.value);
+        });
+    });
+}
+
+function sanitizePhone(phone) {
+    return normalizeKzDigits(phone);
+}
+
+function isKzPhone(phone) {
+    return /^7\\d{10}$/.test(normalizeKzDigits(phone));
+}
+
+bindKzPhoneInputs(phoneInput, loginPhoneInput);
 
 function buildDashboardUrl({ name, category }) {
     const params = new URLSearchParams();
@@ -201,6 +260,7 @@ async function request(path, options = {}) {
 
 async function handleOpenInvite(categoryName) {
     const token = localStorage.getItem(TOKEN_KEY);
+    selectedCategory = categoryName || selectedCategory;
 
     // Если уже есть токен – пробуем сразу отправить на дашборд
     if (token) {
@@ -209,7 +269,7 @@ async function handleOpenInvite(categoryName) {
             const fullName = me && me.user && me.user.fullName ? me.user.fullName : "";
             window.location.href = buildDashboardUrl({
                 name: fullName,
-                category: categoryName || categorySelect.value
+                category: selectedCategory
             });
             return;
         } catch {
@@ -219,11 +279,11 @@ async function handleOpenInvite(categoryName) {
     }
 
     setMode("register");
-    openModal(categoryName || categorySelect.value);
+    openModal(selectedCategory);
 }
 
 openInviteBtn.addEventListener("click", () => {
-    handleOpenInvite(categorySelect.value);
+    handleOpenInvite(null);
 });
 
 cardButtons.forEach((card) => {
@@ -260,7 +320,7 @@ form.addEventListener("submit", async (event) => {
             if (!phone) {
                 throw new Error(t("error_phone_empty"));
             }
-            if (phone.length < 10) {
+            if (!isKzPhone(phone)) {
                 throw new Error(t("error_phone_invalid"));
             }
             if (!password || password.length < 6) {
@@ -269,7 +329,7 @@ form.addEventListener("submit", async (event) => {
 
             const registerPayload = {
                 fullName,
-                username: phone,
+                phone,
                 password,
                 confirmPassword: password
             };
@@ -281,7 +341,7 @@ form.addEventListener("submit", async (event) => {
 
             const loginAfterRegister = await request("/auth/login", {
                 method: "POST",
-                body: JSON.stringify({ username: phone, password })
+                body: JSON.stringify({ phone, password })
             });
 
             if (loginAfterRegister.accessToken) {
@@ -290,21 +350,24 @@ form.addEventListener("submit", async (event) => {
 
             window.location.href = buildDashboardUrl({
                 name: fullName,
-                category: categorySelect.value
+                category: selectedCategory
             });
             return;
         }
 
-        const username = (loginUsernameInput.value || "").trim();
+        const phone = sanitizePhone(loginPhoneInput.value || "");
         const password = (loginPasswordInput.value || "").trim();
 
-        if (!username || !password) {
+        if (!phone || !password) {
             throw new Error(t("error_login_fields"));
+        }
+        if (!isKzPhone(phone)) {
+            throw new Error(t("error_phone_invalid"));
         }
 
         const loginResult = await request("/auth/login", {
             method: "POST",
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ phone, password })
         });
 
         if (loginResult.accessToken) {
@@ -312,8 +375,8 @@ form.addEventListener("submit", async (event) => {
         }
 
         window.location.href = buildDashboardUrl({
-            name: username,
-            category: categorySelect.value
+            name: phone,
+            category: selectedCategory
         });
     } catch (error) {
         setMessage(error.message || t("error_generic"));

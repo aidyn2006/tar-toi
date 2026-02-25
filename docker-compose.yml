@@ -27,7 +27,7 @@ services:
       JWT_SECRET: "replace-with-very-strong-secret-key-at-least-32-char"
       JWT_EXPIRATION_MINUTES: "120"
       JWT_ISSUER: "toi-api"
-      DEFAULT_ADMIN_USERNAME: "admin"
+      DEFAULT_ADMIN_PHONE: "77000000000"
       DEFAULT_ADMIN_FULL_NAME: "TOI Administrator"
       DEFAULT_ADMIN_PASSWORD: "admin123"
       DB_URL: "jdbc:postgresql://db:5432/toi_db"

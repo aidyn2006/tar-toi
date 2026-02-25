@@ -46,8 +46,8 @@ async function request(path, options = {}) {
 async function ensureAdmin() {
     try {
         const me = await request("/auth/me");
-        const roles = Array.isArray(me?.user?.roles) ? me.user.roles : [];
-        if (!roles.includes("ROLE_ADMIN")) {
+        const role = me?.user?.role;
+        if (role !== "ROLE_ADMIN") {
             window.location.href = "index.html";
             return;
         }
@@ -60,11 +60,11 @@ function renderUsers(users) {
     usersTableBody.innerHTML = "";
     users.forEach((user) => {
         const tr = document.createElement("tr");
-        const rolesText = Array.isArray(user.roles) ? user.roles.join(", ") : "";
+        const rolesText = user.role ? user.role : "";
         const approved = !!user.approved;
 
         tr.innerHTML = `
-            <td>${user.username}</td>
+            <td>${user.phone}</td>
             <td>${user.fullName}</td>
             <td>${rolesText}</td>
             <td>${approved ? "YES" : "NO"}</td>
@@ -79,13 +79,13 @@ function renderUsers(users) {
 
         approveBtn.addEventListener("click", async () => {
             try {
-                const updated = await request(`/admin/users/${encodeURIComponent(user.username)}/approve`, {
+                const updated = await request(`/admin/users/${encodeURIComponent(user.phone)}/approve`, {
                     method: "POST"
                 });
                 approveBtn.textContent = "Approved";
                 approveBtn.disabled = true;
                 tr.children[3].textContent = "YES";
-                setMessage(`Пользователь ${updated.username} подтверждён`);
+                setMessage(`Пользователь ${updated.phone} подтверждён`);
             } catch (error) {
                 setMessage(error.message || "Қате шықты");
             }
@@ -119,4 +119,3 @@ logoutBtn.addEventListener("click", () => {
     await ensureAdmin();
     await loadUsers();
 })();
-

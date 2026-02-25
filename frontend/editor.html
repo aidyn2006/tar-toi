@@ -6,75 +6,121 @@
     <title>shaqyrtu.kz - Редактор</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="editor.css">
 </head>
 <body>
 <div class="editor-layout">
     <aside class="preview-side">
         <div class="preview-wrap">
+            <div class="preview-header">
+                <span class="badge">Жанды алдын ала көру</span>
+                <button class="ghost-btn" type="button">Той көрінісі</button>
+            </div>
+
             <article class="invite-preview">
                 <div class="preview-frame">
                     <img id="preview-photo" class="preview-photo" src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=80" alt="Preview">
                 </div>
 
-                <button class="play-btn" type="button" aria-label="Музыка ойнату">▶</button>
+                <button class="play-btn" type="button" aria-label="Музыка ойнату">
+                    <span>▶</span>
+                </button>
 
                 <section class="preview-text-box">
                     <h2 id="preview-title">Тақырып 1</h2>
                     <p id="preview-description">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
-                    <p id="preview-datetime">24.02.2026 • 19:19</p>
-                    <p id="preview-place">Astana, Farhi Hall</p>
+                    <div class="preview-meta">
+                        <p id="preview-datetime">24.02.2026 • 19:19</p>
+                        <p id="preview-place">Astana, Farhi Hall</p>
+                    </div>
                 </section>
             </article>
+
+            <div class="preview-tips">
+                <div>
+                    <strong>Кеңес</strong>
+                    <p>Әр бөлімді толтырған сайын шақырту жаңарады.</p>
+                </div>
+                <button class="ghost-btn" type="button">Нұсқаулық</button>
+            </div>
         </div>
     </aside>
 
     <section class="form-side">
         <header class="editor-header">
-            <a id="back-link" class="back-link" href="dashboard.html">‹ Артқа</a>
-            <h1><span class="mini-logo">sh</span> Шақыртуды өзгерту</h1>
+            <a id="back-link" class="back-link" href="dashboard.html">← Артқа</a>
+            <div class="title-wrap">
+                <span class="mini-logo">sh</span>
+                <div>
+                    <p class="eyebrow">Редактор</p>
+                    <h1>Шақыртуды өңдеу</h1>
+                </div>
+            </div>
         </header>
 
         <form id="editor-form" class="editor-form" novalidate>
             <section class="section-box">
-                <h3>Шаблоны</h3>
+                <div class="section-title">
+                    <h3>Шаблонды таңдаңыз</h3>
+                    <span class="section-note">Суреттің түсі мен стилін өзгертіңіз.</span>
+                </div>
                 <div class="template-list">
                     <button class="template-item is-active" type="button" data-image="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=80">
                         <img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=320&q=80" alt="Template 1">
+                        <span>Classic</span>
                     </button>
                     <button class="template-item" type="button" data-image="https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?auto=format&fit=crop&w=900&q=80">
                         <img src="https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?auto=format&fit=crop&w=320&q=80" alt="Template 2">
+                        <span>Warm</span>
                     </button>
                     <button class="template-item" type="button" data-image="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80">
                         <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=320&q=80" alt="Template 3">
+                        <span>Modern</span>
                     </button>
                 </div>
             </section>
 
-            <label class="upload-zone" for="photo-input">
-                Фото таңдаңыз
-            </label>
-            <input id="photo-input" class="hidden-input" type="file" accept="image/*">
-
-            <label class="field">
-                <span>Өлеңді таңдаңыз</span>
-                <select id="song" name="song">
-                    <option value="">Өлеңді таңдаңыз</option>
-                    <option value="classic">Классикалық күй</option>
-                    <option value="folk">Қазақы халық әуені</option>
-                    <option value="modern">Заманауи әуен</option>
-                </select>
-            </label>
+            <section class="section-box upload-box">
+                <div class="section-title">
+                    <h3>Негізгі фото</h3>
+                    <span class="section-note">Үлкен өлшем, айқын кадр.</span>
+                </div>
+                <label class="upload-zone" for="photo-input">
+                    <span class="upload-icon">⬆</span>
+                    <div>
+                        <strong>Фото таңдаңыз</strong>
+                        <p>JPG/PNG, 10MB дейін</p>
+                    </div>
+                </label>
+                <input id="photo-input" class="hidden-input" type="file" accept="image/*">
+            </section>
 
             <section class="section-box">
+                <div class="section-title">
+                    <h3>Музыка</h3>
+                    <span class="section-note">Шақыртуға әуен қосыңыз.</span>
+                </div>
                 <label class="field">
-                    <span>Тақырып 1</span>
-                    <input id="title" name="title" type="text" value="Адлет" maxlength="120">
+                    <span>Өлеңді таңдаңыз</span>
+                    <select id="song" name="song">
+                        <option value="">Өлеңді таңдаңыз</option>
+                        <option value="classic">Классикалық күй</option>
+                        <option value="folk">Қазақы халық әуені</option>
+                        <option value="modern">Заманауи әуен</option>
+                    </select>
                 </label>
             </section>
 
             <section class="section-box">
+                <div class="section-title">
+                    <h3>Мәтін</h3>
+                    <span class="section-note">Негізгі хабарламаны жазыңыз.</span>
+                </div>
+                <label class="field">
+                    <span>Тақырып</span>
+                    <input id="title" name="title" type="text" value="Адлет" maxlength="120">
+                </label>
                 <label class="field">
                     <span>Сипаттама</span>
                     <textarea id="description" name="description" rows="4">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</textarea>
@@ -82,15 +128,21 @@
             </section>
 
             <section class="section-box">
-                <label class="field">
-                    <span>Күн</span>
-                    <input id="date" name="date" type="date" value="2026-02-24">
-                </label>
+                <div class="section-title">
+                    <h3>Іс-шара мәліметі</h3>
+                    <span class="section-note">Күні, уақыты және орын.</span>
+                </div>
+                <div class="grid-2">
+                    <label class="field">
+                        <span>Күн</span>
+                        <input id="date" name="date" type="date" value="2026-02-24">
+                    </label>
 
-                <label class="field">
-                    <span>Уақыт</span>
-                    <input id="time" name="time" type="time" value="19:19">
-                </label>
+                    <label class="field">
+                        <span>Уақыт</span>
+                        <input id="time" name="time" type="time" value="19:19">
+                    </label>
+                </div>
 
                 <label class="field">
                     <span>Той өтетін орын</span>
@@ -98,7 +150,7 @@
                 </label>
 
                 <label class="field">
-                    <span>2gis сілтемесі</span>
+                    <span>2GIS сілтемесі</span>
                     <input id="map-link" name="mapLink" type="url" value="https://go.2gis.com/aednh" maxlength="250">
                 </label>
 
@@ -108,13 +160,25 @@
                 </label>
 
                 <label class="field">
-                    <span>1 шақыртумен ең көбі қанша адам келе алады</span>
+                    <span>1 шақыртуға келетін қонақ саны</span>
                     <input id="max-guests" name="maxGuests" type="number" min="1" max="20" value="3">
                 </label>
             </section>
 
-            <button id="save-btn" class="action-btn save" type="button">Сақтау</button>
-            <button id="share-btn" class="action-btn share" type="button">Бөлісу</button>
+            <section class="action-bar">
+                <div>
+                    <p class="status-title">Дайын ба?</p>
+                    <p class="status-sub">Сақтаңыз немесе бөлісіңіз.</p>
+                </div>
+                <div class="action-buttons">
+                    <button id="save-btn" class="action-btn save" type="button">
+                        <span>Сақтау</span>
+                    </button>
+                    <button id="share-btn" class="action-btn share" type="button">
+                        <span>Бөлісу</span>
+                    </button>
+                </div>
+            </section>
 
             <p id="editor-message" class="editor-message" aria-live="polite"></p>
 

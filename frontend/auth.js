@@ -9,9 +9,7 @@ const messageEl = document.getElementById("form-message");
 const selectedTypeEl = document.getElementById("selected-type");
 const registerOnly = document.querySelectorAll(".register-only");
 const loginOnly = document.querySelectorAll(".login-only");
-const loginLabel = document.getElementById("login-label");
 
-const usernameInput = document.getElementById("username");
 const fullNameInput = document.getElementById("full-name");
 const phoneInput = document.getElementById("phone");
 
@@ -39,12 +37,10 @@ function setMode(nextMode) {
   registerOnly.forEach((el) => el.classList.toggle("is-hidden", isLogin));
   loginOnly.forEach((el) => el.classList.toggle("is-hidden", !isLogin));
 
-  loginLabel.textContent = "Логин";
   submitBtn.textContent = isLogin ? "Кіру" : "Тіркелу";
 
-  usernameInput.required = isLogin;
+  phoneInput.required = true;
   fullNameInput.required = !isLogin;
-  phoneInput.required = !isLogin;
 
   form.reset();
   setMessage("");
@@ -56,9 +52,61 @@ function readSelectedType() {
   selectedTypeEl.textContent = typeMap[value] || "Шақыру жасау үшін аккаунтқа кіріңіз.";
 }
 
-function sanitizePhone(phone) {
-  return phone.replace(/\s+/g, "").trim();
+function normalizeKzDigits(value) {
+  const digitsOnly = (value || "").replace(/\\D+/g, "");
+  if (!digitsOnly) {
+    return "";
+  }
+  if (digitsOnly.startsWith("8")) {
+    return `7${digitsOnly.slice(1, 11)}`;
+  }
+  if (digitsOnly.length === 10) {
+    return `7${digitsOnly}`;
+  }
+  if (digitsOnly.startsWith("7")) {
+    return digitsOnly.slice(0, 11);
+  }
+  return digitsOnly.slice(0, 10);
 }
+
+function formatKzPhone(digits) {
+  const normalized = normalizeKzDigits(digits);
+  if (!normalized) {
+    return "";
+  }
+  if (normalized.length === 1 && normalized === "7") {
+    return "+7";
+  }
+  if (!normalized.startsWith("7")) {
+    return normalized;
+  }
+  const rest = normalized.slice(1);
+  let formatted = "+7";
+  if (rest.length > 0) formatted += ` (${rest.slice(0, 3)}`;
+  if (rest.length >= 3) formatted += `)`;
+  if (rest.length > 3) formatted += ` ${rest.slice(3, 6)}`;
+  if (rest.length > 6) formatted += ` ${rest.slice(6, 8)}`;
+  if (rest.length > 8) formatted += ` ${rest.slice(8, 10)}`;
+  return formatted;
+}
+
+function bindKzPhoneInputs(...inputs) {
+  inputs.filter(Boolean).forEach((input) => {
+    input.addEventListener("input", () => {
+      input.value = formatKzPhone(input.value);
+    });
+  });
+}
+
+function sanitizePhone(phone) {
+  return normalizeKzDigits(phone);
+}
+
+function isKzPhone(phone) {
+  return /^7\\d{10}$/.test(normalizeKzDigits(phone));
+}
+
+bindKzPhoneInputs(phoneInput);
 
 async function request(path, options = {}) {
   const headers = {
@@ -98,11 +146,15 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(form);
-  const username = (formData.get("username") || "").toString().trim();
+  const phone = sanitizePhone((formData.get("phone") || "").toString());
   const password = (formData.get("password") || "").toString();
 
-  if (mode === "login" && (!username || !password)) {
-    setMessage("Логин мен құпиясөзді толтырыңыз");
+  if (mode === "login" && (!phone || !password)) {
+    setMessage("Телефон мен құпиясөзді толтырыңыз");
+    return;
+  }
+  if (mode === "login" && !isKzPhone(phone)) {
+    setMessage("Телефон нөмірі дұрыс емес");
     return;
   }
 
@@ -114,21 +166,19 @@ form.addEventListener("submit", async (event) => {
   try {
     if (mode === "register") {
       const fullName = (formData.get("fullName") || "").toString().trim();
-      const phone = sanitizePhone((formData.get("phone") || "").toString());
-
       if (!fullName) {
         throw new Error("Аты-жөніңізді енгізіңіз");
       }
       if (!phone) {
         throw new Error("Телефон нөмірін енгізіңіз");
       }
-      if (phone.length < 10) {
+      if (!isKzPhone(phone)) {
         throw new Error("Телефон нөмірі дұрыс емес");
       }
 
       const registerPayload = {
         fullName,
-        username: phone,
+        phone,
         password,
         confirmPassword: password
       };
@@ -139,13 +189,13 @@ form.addEventListener("submit", async (event) => {
       });
 
       setMode("login");
-      usernameInput.value = phone;
+      phoneInput.value = phone;
       setMessage(result.message || "Тіркелу сәтті аяқталды. Енді кіре аласыз.");
       return;
     }
 
     const loginPayload = {
-      username,
+      phone,
       password
     };
 

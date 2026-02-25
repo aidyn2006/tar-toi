@@ -22,6 +22,6 @@ jwt:
   issuer: ${JWT_ISSUER:toi-api}
 
 app:
-  default-admin-username: ${DEFAULT_ADMIN_USERNAME:admin}
+  default-admin-phone: ${DEFAULT_ADMIN_PHONE:77000000000}
   default-admin-full-name: ${DEFAULT_ADMIN_FULL_NAME:TOI Administrator}
   default-admin-password: ${DEFAULT_ADMIN_PASSWORD:admin123}

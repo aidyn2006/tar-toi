@@ -123,6 +123,7 @@ public class UserService {
 
         UserAccountEntity entity = new UserAccountEntity();
         entity.setPhone(normalizedPhone);
+        entity.setPhoneNormalized(normalizedPhone);
         entity.setFullName(normalizeFullName(fullName));
         entity.setPasswordHash(password);
         entity.setRole(normalizeRole(role));
