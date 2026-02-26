@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5433/toi_db}
+    url: ${DB_URL:jdbc:postgresql://localhost:5435/toi_db_fresh}
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME:toi_user}
     password: ${DB_PASSWORD:toi_pass}

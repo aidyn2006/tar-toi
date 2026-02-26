@@ -43,6 +43,8 @@ services:
     container_name: toi-frontend
     working_dir: /app
     command: sh -c "npm install && npm run dev"
+    environment:
+      VITE_API_PROXY_TARGET: "http://host.docker.internal:9191"
     ports:
       - "7171:7171"
     volumes:

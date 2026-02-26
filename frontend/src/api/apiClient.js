@@ -22,7 +22,16 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (!originalRequest) {
+            return Promise.reject(error);
+        }
+
+        const status = error.response?.status;
+        const requestUrl = originalRequest.url || '';
+        const isAuthRequest = requestUrl.includes('/auth/login') || requestUrl.includes('/auth/register');
+
+        // Let auth form handle invalid credentials without forced redirect/close.
+        if (status === 401 && !isAuthRequest && !originalRequest._retry) {
             originalRequest._retry = true;
             const refreshToken = localStorage.getItem('refresh_token');
             if (refreshToken) {

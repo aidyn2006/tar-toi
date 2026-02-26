@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { inviteService } from '../api/inviteService';
 import {
     Save, Share2, Eye, X, Download, Users, MapPin, Music,
@@ -8,17 +8,17 @@ import {
 
 /* ─── Design tokens ──────────────────────────────────────── */
 const C = {
-    cream: '#fdfaf5',
-    burgundy: '#8b4b4b',
-    burgundyDark: '#6b3535',
-    burgundyLight: '#c07878',
+    cream: '#f7fff9',
+    burgundy: '#173f33',
+    burgundyDark: '#0f2f25',
+    burgundyLight: '#2b8a64',
     gold: '#f3c94f',
     green: '#173f33',
-    border: '#e8d5c4',
-    text: '#2d1a1a',
-    textMuted: '#9a7a7a',
+    border: '#d7e9df',
+    text: '#173f33',
+    textMuted: '#5f7f73',
     white: '#ffffff',
-    surface: '#fff9f2',
+    surface: '#fff8dd',
 };
 
 const TEMPLATES = [
@@ -34,6 +34,43 @@ const AUDIO_TRACKS = [
     { id: 'track2', label: 'Лирикалық' },
     { id: 'track3', label: 'Домбыра' },
 ];
+
+const EMPTY_INVITE_DATA = {
+    title: '',
+    description: '',
+    maxGuests: 50,
+    eventDate: '',
+    previewPhotoUrl: '',
+    topic1: '',
+    topic2: '',
+    locationName: '',
+    locationUrl: '',
+    toiOwners: '',
+    template: 'classic',
+    audioTrack: '',
+};
+
+const CATEGORY_PRESETS = {
+    uzatu: { title: 'Ұзату тойы', template: 'classic' },
+    wedding: { title: 'Үйлену тойы', template: 'royal' },
+    sundet: { title: 'Сүндет той', template: 'nature' },
+    tusaukeser: { title: 'Тұсаукесер', template: 'nature' },
+    merei: { title: 'Мерейтой', template: 'royal' },
+    besik: { title: 'Бесік той', template: 'modern' },
+};
+
+function getNewInviteDefaults(search) {
+    const params = new URLSearchParams(search);
+    const category = params.get('category') || '';
+    const customTitle = (params.get('title') || '').trim();
+    const preset = CATEGORY_PRESETS[category] || null;
+
+    return {
+        ...EMPTY_INVITE_DATA,
+        title: customTitle || '',
+        template: preset?.template || 'classic',
+    };
+}
 
 /* ─── Helpers ─────────────────────────────────────────────── */
 const today = new Date();
@@ -297,14 +334,10 @@ const inputStyle = {
 const EditInvitePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const isNew = !id;
 
-    const [data, setData] = useState({
-        title: '', description: '', maxGuests: 50, eventDate: '',
-        previewPhotoUrl: '', topic1: '', topic2: '',
-        locationName: '', locationUrl: '', toiOwners: '',
-        template: 'classic', audioTrack: '',
-    });
+    const [data, setData] = useState(() => (isNew ? getNewInviteDefaults(location.search) : EMPTY_INVITE_DATA));
     const [loading, setLoading] = useState(!isNew);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -336,6 +369,12 @@ const EditInvitePage = () => {
             }
         }).finally(() => setLoading(false));
     }, [id]);
+
+    useEffect(() => {
+        if (isNew) {
+            setData(getNewInviteDefaults(location.search));
+        }
+    }, [isNew, location.search]);
 
     const set = useCallback((k) => (e) => setData(prev => ({ ...prev, [k]: e.target.value })), []);
 

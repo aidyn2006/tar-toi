@@ -18,6 +18,15 @@ const C = {
     text: '#173f33',
 };
 
+const INVITE_CATEGORIES = [
+    { id: 'uzatu', label: 'Ұзату тойы', icon: '✨' },
+    { id: 'wedding', label: 'Үйлену тойы', icon: '💍' },
+    { id: 'sundet', label: 'Сүндет той', icon: '👦' },
+    { id: 'tusaukeser', label: 'Тұсаукесер', icon: '👣' },
+    { id: 'merei', label: 'Мерейтой', icon: '🎂' },
+    { id: 'besik', label: 'Бесік той', icon: '👶' },
+];
+
 /* ─── Pending Approval Modal ──────────────────────────── */
 const PendingModal = () => (
     <div style={{
@@ -53,19 +62,17 @@ const PendingModal = () => (
 );
 
 /* ─── Create Invite Modal ─────────────────────────────── */
-const CreateInviteModal = ({ onClose, onCreated }) => {
-    const [form, setForm] = useState({ title: '', description: '', maxGuests: 50, eventDate: '', previewPhotoUrl: '' });
+const CreateInviteModal = ({ onClose }) => {
+    const navigate = useNavigate();
+    const [form, setForm] = useState({ category: INVITE_CATEGORIES[0].id, title: '' });
     const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [apiErr, setApiErr] = useState('');
 
     const set = (k) => (e) => { setForm(f => ({ ...f, [k]: e.target.value })); setErrors(er => ({ ...er, [k]: '' })); };
 
     const validate = () => {
         const e = {};
+        if (!form.category) e.category = 'Санатты таңдаңыз';
         if (!form.title.trim()) e.title = 'Атауды енгізіңіз';
-        if (!form.eventDate) e.eventDate = 'Күнін таңдаңыз';
-        if (form.maxGuests < 1) e.maxGuests = 'Ең кемі 1 қонақ';
         setErrors(e);
         return !Object.values(e).some(Boolean);
     };
@@ -73,71 +80,67 @@ const CreateInviteModal = ({ onClose, onCreated }) => {
     const handleSubmit = async (ev) => {
         ev.preventDefault();
         if (!validate()) return;
-        setLoading(true);
-        setApiErr('');
-        try {
-            const payload = {
-                title: form.title,
-                description: form.description || null,
-                maxGuests: parseInt(form.maxGuests),
-                eventDate: new Date(form.eventDate).toISOString().replace('Z', ''),
-                previewPhotoUrl: form.previewPhotoUrl || null,
-            };
-            await inviteService.createInvite(payload);
-            onCreated();
-            onClose();
-        } catch (err) {
-            setApiErr(err.response?.data?.message || 'Қате шықты');
-        } finally {
-            setLoading(false);
-        }
+        const params = new URLSearchParams({
+            category: form.category,
+            title: form.title.trim(),
+        });
+        navigate(`/invite/new?${params.toString()}`);
+        onClose();
     };
 
     return (
         <div className="create-invite-overlay" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(23,63,51,0.45)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
             <div className="create-invite-card" onClick={e => e.stopPropagation()} style={{ background: C.bg, borderRadius: '24px', padding: '2rem', width: '100%', maxWidth: '30rem', border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.15)' }}>
                 <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', fontWeight: 700, color: C.green900, marginBottom: '1.5rem' }}>
-                    Жаңа шақырту жасау
+                    Шақырту форматы
                 </h2>
                 <form onSubmit={handleSubmit}>
-                    {/* Title */}
+                    {/* Category */}
                     <div style={{ marginBottom: '1.25rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Атауы *</label>
-                        <input value={form.title} onChange={set('title')} placeholder="Үйлену тойы — Айдын & Айгүл"
+                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.6rem', fontSize: '0.9rem' }}>Санат *</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: '0.5rem' }}>
+                            {INVITE_CATEGORIES.map((cat) => {
+                                const selected = form.category === cat.id;
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        type="button"
+                                        onClick={() => { setForm((f) => ({ ...f, category: cat.id })); setErrors((er) => ({ ...er, category: '' })); }}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            justifyContent: 'center',
+                                            padding: '0.65rem 0.5rem',
+                                            borderRadius: '10px',
+                                            border: `1.5px solid ${selected ? C.green500 : C.line}`,
+                                            background: selected ? C.green100 : '#fff',
+                                            color: C.green900,
+                                            fontWeight: 700,
+                                            fontSize: '0.82rem',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <span>{cat.icon}</span>
+                                        <span>{cat.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {errors.category && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{errors.category}</span>}
+                    </div>
+
+                    {/* Template name */}
+                    <div style={{ marginBottom: '1.25rem' }}>
+                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Шаблон атауы *</label>
+                        <input value={form.title} onChange={set('title')} placeholder="Мысалы: Үйлену тойы — Айдын & Айгүл"
                             style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${errors.title ? '#ef4444' : C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, background: '#fff' }} />
                         {errors.title && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{errors.title}</span>}
                     </div>
-                    {/* Description */}
-                    <div style={{ marginBottom: '1.25rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Сипаттама</label>
-                        <textarea value={form.description} onChange={set('description')} placeholder="Шақыртуда шығатын мәтін..."
-                            rows={3} style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, resize: 'none', background: '#fff' }} />
-                    </div>
-                    {/* Event Date */}
-                    <div style={{ marginBottom: '1.25rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Той күні мен уақыты *</label>
-                        <input type="datetime-local" value={form.eventDate} onChange={set('eventDate')}
-                            style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${errors.eventDate ? '#ef4444' : C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, background: '#fff' }} />
-                        {errors.eventDate && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{errors.eventDate}</span>}
-                    </div>
-                    {/* Max Guests */}
-                    <div style={{ marginBottom: '1.25rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Максималды қонақтар саны *</label>
-                        <input type="number" min={1} value={form.maxGuests} onChange={set('maxGuests')}
-                            style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${errors.maxGuests ? '#ef4444' : C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, background: '#fff' }} />
-                        {errors.maxGuests && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{errors.maxGuests}</span>}
-                    </div>
-                    {/* Photo URL */}
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Сурет URL (міндетті емес)</label>
-                        <input value={form.previewPhotoUrl} onChange={set('previewPhotoUrl')} placeholder="https://..."
-                            style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, background: '#fff' }} />
-                    </div>
-                    {apiErr && <div style={{ padding: '0.75rem 1rem', background: '#fef2f2', color: '#991b1b', borderRadius: '12px', marginBottom: '1rem', fontSize: '0.9rem' }}>{apiErr}</div>}
                     <div className="create-invite-actions" style={{ display: 'flex', gap: '0.75rem' }}>
                         <button type="button" onClick={onClose} style={{ flex: 1, padding: '0.875rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, cursor: 'pointer' }}>Бас тарту</button>
-                        <button type="submit" disabled={loading} style={{ flex: 2, padding: '0.875rem', borderRadius: '12px', border: 'none', background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`, color: C.green900, fontWeight: 800, fontSize: '1rem', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
-                            {loading ? 'Жасалуда...' : 'Шақырту жасау'}
+                        <button type="submit" style={{ flex: 2, padding: '0.875rem', borderRadius: '12px', border: 'none', background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`, color: C.green900, fontWeight: 800, fontSize: '1rem', cursor: 'pointer' }}>
+                            Жалғастыру
                         </button>
                     </div>
                 </form>
@@ -271,7 +274,7 @@ const Dashboard = () => {
             {!approved && <PendingModal />}
 
             {/* Create Invite Modal */}
-            {showCreate && <CreateInviteModal onClose={() => setShowCreate(false)} onCreated={loadInvites} />}
+            {showCreate && <CreateInviteModal onClose={() => setShowCreate(false)} />}
 
             {/* Top strip (matching original design) */}
             <div style={{ height: '10px', background: C.green900 }} />
