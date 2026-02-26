@@ -2,7 +2,7 @@ package org.example.toi.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
-import org.example.toi.auth.dto.ErrorResponse;
+import org.example.toi.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

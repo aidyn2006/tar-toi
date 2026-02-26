@@ -1,11 +1,20 @@
 {
   "name": "toi-frontend",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 7171 --strictPort"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
     "vite": "^5.4.11"
+  },
+  "dependencies": {
+    "axios": "^1.13.5",
+    "lucide-react": "^0.575.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.1"
   }
 }
