@@ -16,8 +16,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collections;
 
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
 @Configuration
 @RequiredArgsConstructor
+@EnableJpaAuditing
 public class ApplicationConfig {
 
     private final UserRepository userRepository;

@@ -102,10 +102,11 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
 
     return (
         /* overlay */
-        <div onClick={onClose} style={{
+        <div onClick={!loading && !status ? onClose : undefined} style={{
             position: 'fixed', inset: 0, zIndex: 1000,
             background: 'rgba(6,78,59,0.3)', backdropFilter: 'blur(6px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem',
+            cursor: !loading && !status ? 'pointer' : 'default'
         }}>
             {/* card */}
             <div onClick={e => e.stopPropagation()} style={{
