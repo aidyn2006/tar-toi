@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import EditInvitePage from './pages/EditInvitePage';
 import PublicInvitePage from './pages/PublicInvitePage';
+import GuestListPage from './pages/GuestListPage';
 import { authService } from './api/authService';
 
 const ProtectedRoute = ({ children }) => {
@@ -20,6 +21,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/invite/:id/guests"
+                    element={
+                        <ProtectedRoute>
+                            <GuestListPage />
                         </ProtectedRoute>
                     }
                 />

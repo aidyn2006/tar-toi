@@ -241,8 +241,8 @@ const CRMTable = ({ inviteId }) => {
                     <p style={{ color: C.textMuted, fontSize: '0.9rem' }}>Әлі ешкім жауап бермеді</p>
                 </div>
             ) : (
-                <div style={{ borderRadius: '16px', border: `1px solid ${C.border}`, overflow: 'hidden' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+                <div style={{ borderRadius: '16px', border: `1px solid ${C.border}`, overflowX: 'auto', overflowY: 'hidden' }}>
+                    <table style={{ width: '100%', minWidth: '560px', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                         <thead>
                             <tr style={{ background: C.burgundy, color: '#fff' }}>
                                 {['Есім', 'Телефон', 'Қонақ саны', 'Келеді?'].map(h => (
@@ -394,13 +394,13 @@ const EditInvitePage = () => {
     const previewData = { ...data, eventDate: data.eventDate ? new Date(data.eventDate) : null };
 
     return (
-        <div style={{ minHeight: '100vh', background: C.cream, fontFamily: 'Manrope, sans-serif' }}>
+        <div className="edit-page" style={{ minHeight: '100vh', background: C.cream, fontFamily: 'Manrope, sans-serif' }}>
             {/* Google fonts */}
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Great+Vibes&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
 
             {/* ── Top bar ── */}
-            <header style={{
+            <header className="edit-topbar" style={{
                 position: 'sticky', top: 0, zIndex: 200,
                 background: C.white, borderBottom: `1px solid ${C.border}`,
                 padding: '0.75rem 1.5rem', display: 'flex',
@@ -416,7 +416,7 @@ const EditInvitePage = () => {
                     </span>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                <div className="edit-topbar-actions" style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
                     {/* Mobile preview button */}
                     <button onClick={() => setPreviewOpen(true)} style={{
                         display: 'none', alignItems: 'center', gap: '0.3rem',
@@ -453,7 +453,7 @@ const EditInvitePage = () => {
             </header>
 
             {/* ── Two-panel layout ── */}
-            <div style={{
+            <div className="edit-layout" style={{
                 display: 'grid',
                 gridTemplateColumns: 'minmax(0,1fr) 380px',
                 gap: '0',
@@ -461,7 +461,7 @@ const EditInvitePage = () => {
                 margin: '0 auto',
             }}>
                 {/* ── Left: Controls ── */}
-                <div style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
+                <div className="edit-controls" style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
 
                     {/* Templates */}
                     <section style={{ marginBottom: '1.75rem', paddingBottom: '1.75rem', borderBottom: `1px solid ${C.border}` }}>
@@ -511,7 +511,7 @@ const EditInvitePage = () => {
                         <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
                             Мәтін
                         </h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                        <div className="edit-names-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                             <Field label="Тақырып 1 (Күйеу)">
                                 <input value={data.topic1} onChange={set('topic1')} placeholder="Адлет"
                                     style={inputStyle} />
@@ -574,7 +574,7 @@ const EditInvitePage = () => {
                 </div>
 
                 {/* ── Right: Sticky phone preview ── */}
-                <div style={{
+                <div className="edit-preview-panel" data-phone-panel style={{
                     position: 'sticky', top: '60px', height: 'calc(100vh - 60px)',
                     display: 'flex', flexDirection: 'column', alignItems: 'center',
                     justifyContent: 'center', padding: '1.5rem',
@@ -584,7 +584,7 @@ const EditInvitePage = () => {
                         Алдын ала қарау
                     </p>
                     {/* Phone frame */}
-                    <div style={{
+                    <div className="edit-phone-frame" style={{
                         width: '300px', height: '580px',
                         border: `8px solid #1a1a1a`,
                         borderRadius: '36px',
@@ -614,7 +614,7 @@ const EditInvitePage = () => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     padding: '1rem',
                 }}>
-                    <div style={{ position: 'relative', width: '300px' }}>
+                    <div className="edit-preview-modal-inner" style={{ position: 'relative', width: '300px' }}>
                         <button onClick={() => setPreviewOpen(false)} style={{
                             position: 'absolute', top: '-12px', right: '-12px', zIndex: 10,
                             width: '32px', height: '32px', borderRadius: '50%',
@@ -623,7 +623,7 @@ const EditInvitePage = () => {
                         }}>
                             <X size={16} />
                         </button>
-                        <div style={{
+                        <div className="edit-phone-frame" style={{
                             width: '300px', height: '580px',
                             border: `8px solid #1a1a1a`, borderRadius: '36px',
                             overflow: 'hidden', overflowY: 'auto',
@@ -640,11 +640,77 @@ const EditInvitePage = () => {
 
             {/* Responsive styles */}
             <style>{`
-                @media (max-width: 900px) {
-                    .mobile-preview-btn { display: flex !important; }
+                .edit-page {
+                    overflow-x: hidden;
                 }
+
+                @media (max-width: 1024px) {
+                    .edit-layout {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .edit-controls {
+                        border-right: none !important;
+                    }
+                }
+
                 @media (max-width: 900px) {
-                    [data-phone-panel] { display: none !important; }
+                    .mobile-preview-btn {
+                        display: flex !important;
+                    }
+
+                    .edit-preview-panel {
+                        display: none !important;
+                    }
+                }
+
+                @media (max-width: 760px) {
+                    .edit-topbar {
+                        padding: 0.75rem 1rem !important;
+                        flex-direction: column;
+                        align-items: flex-start !important;
+                        gap: 0.75rem;
+                    }
+
+                    .edit-topbar-actions {
+                        width: 100%;
+                        display: grid !important;
+                        grid-template-columns: repeat(3, minmax(0, 1fr));
+                    }
+
+                    .edit-topbar-actions button {
+                        justify-content: center;
+                        font-size: 0.78rem !important;
+                        padding-left: 0.65rem !important;
+                        padding-right: 0.65rem !important;
+                    }
+
+                    .edit-controls {
+                        padding: 1rem !important;
+                    }
+
+                    .edit-names-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+
+                @media (max-width: 520px) {
+                    .edit-topbar-actions {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+
+                    .mobile-preview-btn {
+                        grid-column: 1 / -1;
+                    }
+
+                    .edit-preview-modal-inner {
+                        width: calc(100vw - 2rem) !important;
+                    }
+
+                    .edit-phone-frame {
+                        width: calc(100vw - 2rem) !important;
+                        height: min(580px, calc(100vh - 4rem)) !important;
+                    }
                 }
             `}</style>
         </div>

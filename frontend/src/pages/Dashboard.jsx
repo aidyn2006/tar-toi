@@ -94,8 +94,8 @@ const CreateInviteModal = ({ onClose, onCreated }) => {
     };
 
     return (
-        <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(23,63,51,0.45)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-            <div onClick={e => e.stopPropagation()} style={{ background: C.bg, borderRadius: '24px', padding: '2rem', width: '100%', maxWidth: '30rem', border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.15)' }}>
+        <div className="create-invite-overlay" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(23,63,51,0.45)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+            <div className="create-invite-card" onClick={e => e.stopPropagation()} style={{ background: C.bg, borderRadius: '24px', padding: '2rem', width: '100%', maxWidth: '30rem', border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.15)' }}>
                 <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', fontWeight: 700, color: C.green900, marginBottom: '1.5rem' }}>
                     Жаңа шақырту жасау
                 </h2>
@@ -134,7 +134,7 @@ const CreateInviteModal = ({ onClose, onCreated }) => {
                             style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, background: '#fff' }} />
                     </div>
                     {apiErr && <div style={{ padding: '0.75rem 1rem', background: '#fef2f2', color: '#991b1b', borderRadius: '12px', marginBottom: '1rem', fontSize: '0.9rem' }}>{apiErr}</div>}
-                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <div className="create-invite-actions" style={{ display: 'flex', gap: '0.75rem' }}>
                         <button type="button" onClick={onClose} style={{ flex: 1, padding: '0.875rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, cursor: 'pointer' }}>Бас тарту</button>
                         <button type="submit" disabled={loading} style={{ flex: 2, padding: '0.875rem', borderRadius: '12px', border: 'none', background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`, color: C.green900, fontWeight: 800, fontSize: '1rem', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
                             {loading ? 'Жасалуда...' : 'Шақырту жасау'}
@@ -168,17 +168,22 @@ const InviteCard = ({ invite }) => {
                     <Users size={14} /> {invite.responsesCount || 0} / {invite.maxGuests} қонақ
                 </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <button
                     onClick={() => navigate(`/invite/edit/${invite.id}`)}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.75rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: C.green500, color: 'white', fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
-                    <Edit3 size={13} /> Редакциялау
+                    style={{ flex: 1, minWidth: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.5rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: C.green500, color: 'white', fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
+                    <Edit3 size={13} /> Өңдеу
+                </button>
+                <button
+                    onClick={() => navigate(`/invite/${invite.id}/guests`)}
+                    style={{ flex: 1, minWidth: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.5rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
+                    <Users size={13} /> Қонақтар
                 </button>
                 {invite.slug && (
                     <button
                         onClick={() => window.open(`/invite/${invite.slug}`, '_blank')}
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.55rem 0.75rem', borderRadius: '10px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
-                        <Eye size={13} /> Көру
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.75rem', borderRadius: '10px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.text, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
+                        <Eye size={13} />
                     </button>
                 )}
             </div>
@@ -261,7 +266,7 @@ const Dashboard = () => {
     useEffect(() => { loadInvites(); }, [approved]);
 
     return (
-        <div style={{ minHeight: '100vh', background: `radial-gradient(circle at 10% 10%, ${C.yellow100}, transparent 40%), radial-gradient(circle at 90% 5%, ${C.green100}, transparent 35%), ${C.bg}`, fontFamily: 'Manrope, sans-serif' }}>
+        <div className="dashboard-page" style={{ minHeight: '100vh', background: `radial-gradient(circle at 10% 10%, ${C.yellow100}, transparent 40%), radial-gradient(circle at 90% 5%, ${C.green100}, transparent 35%), ${C.bg}`, fontFamily: 'Manrope, sans-serif' }}>
             {/* Pending Approval Modal */}
             {!approved && <PendingModal />}
 
@@ -272,12 +277,12 @@ const Dashboard = () => {
             <div style={{ height: '10px', background: C.green900 }} />
 
             {/* Header */}
-            <header style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.125rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${C.line}` }}>
+            <header className="dashboard-header" style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.125rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${C.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: C.yellow500, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '13px', color: C.green900 }}>sh</div>
                     <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 2vw, 28px)', color: C.green900 }}>shaqyrtu.kz</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div className="dashboard-user" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ fontSize: '0.9rem', color: C.green700, fontWeight: 600 }}>
                         {user?.fullName || user?.phone}
                     </div>
@@ -287,9 +292,9 @@ const Dashboard = () => {
                 </div>
             </header>
 
-            <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+            <main className="dashboard-main" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem' }}>
                 {/* Tabs */}
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
+                <div className="dashboard-tabs" style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
                     {[
                         { id: 'invites', label: 'Менің шақыртуларым' },
                         ...(isAdmin ? [{ id: 'admin', label: '🛡 Админ' }] : []),
@@ -306,7 +311,7 @@ const Dashboard = () => {
                 {tab === 'invites' && (
                     <div>
                         {/* Header row */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                        <div className="dashboard-toprow" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                             <div>
                                 <h1 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: 'clamp(1.25rem, 3vw, 1.875rem)', fontWeight: 700, color: C.green900, margin: 0 }}>Шақыртулар</h1>
                                 <p style={{ color: C.green700, margin: '0.375rem 0 0', fontSize: '0.9375rem' }}>
@@ -347,7 +352,7 @@ const Dashboard = () => {
                                 )}
                             </div>
                         ) : (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+                            <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
                                 {invites.map(inv => <InviteCard key={inv.id} invite={inv} />)}
                             </div>
                         )}
@@ -357,6 +362,71 @@ const Dashboard = () => {
                 {/* Admin Tab */}
                 {tab === 'admin' && <AdminPanel />}
             </main>
+            <style>{`
+                .dashboard-page {
+                    overflow-x: hidden;
+                }
+
+                @media (max-width: 900px) {
+                    .dashboard-header {
+                        padding: 1rem !important;
+                    }
+
+                    .dashboard-main {
+                        padding: 1.25rem 1rem !important;
+                    }
+
+                    .dashboard-tabs {
+                        overflow-x: auto;
+                        padding-bottom: 0.35rem;
+                    }
+
+                    .dashboard-tabs button {
+                        white-space: nowrap;
+                    }
+
+                    .dashboard-toprow {
+                        flex-direction: column;
+                        align-items: flex-start !important;
+                        gap: 1rem;
+                    }
+                }
+
+                @media (max-width: 720px) {
+                    .dashboard-header {
+                        flex-direction: column;
+                        align-items: flex-start !important;
+                        gap: 0.85rem;
+                    }
+
+                    .dashboard-user {
+                        width: 100%;
+                        justify-content: space-between;
+                    }
+
+                    .dashboard-toprow > button {
+                        width: 100%;
+                        justify-content: center;
+                    }
+
+                    .dashboard-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .create-invite-overlay {
+                        padding: 0.75rem !important;
+                    }
+
+                    .create-invite-card {
+                        padding: 1.15rem !important;
+                        border-radius: 1rem !important;
+                    }
+
+                    .create-invite-actions {
+                        flex-direction: column;
+                    }
+                }
+            `}</style>
         </div>
     );
 };

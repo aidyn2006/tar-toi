@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ children, onClick, type = "button", variant = "primary", disabled, style: extraStyle = {} }) => {
+const Button = ({ children, onClick, type = "button", variant = "primary", disabled, style: extraStyle = {}, className = '' }) => {
     const baseStyle = {
         display: 'inline-flex',
         alignItems: 'center',
@@ -41,7 +41,7 @@ const Button = ({ children, onClick, type = "button", variant = "primary", disab
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className="btn"
+            className={`btn ${className}`.trim()}
             style={{ ...baseStyle, ...variants[variant] }}
         >
             {children}

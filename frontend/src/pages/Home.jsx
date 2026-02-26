@@ -102,14 +102,14 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
 
     return (
         /* overlay */
-        <div onClick={!loading && !status ? onClose : undefined} style={{
+        <div className="home-auth-overlay" onClick={!loading && !status ? onClose : undefined} style={{
             position: 'fixed', inset: 0, zIndex: 1000,
             background: 'rgba(6,78,59,0.3)', backdropFilter: 'blur(6px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem',
             cursor: !loading && !status ? 'pointer' : 'default'
         }}>
             {/* card */}
-            <div onClick={e => e.stopPropagation()} style={{
+            <div className="home-auth-modal-card" onClick={e => e.stopPropagation()} style={{
                 background: 'white', borderRadius: '2rem', padding: '2.5rem',
                 width: '100%', maxWidth: '26rem',
                 boxShadow: '0 24px 64px rgba(16,185,129,0.2)',
@@ -253,11 +253,11 @@ const Home = () => {
     const [modal, setModal] = useState(null); // null | 'login' | 'register'
 
     return (
-        <div style={{ minHeight: '100vh', background: '#f8fffe', fontFamily: "'Manrope', sans-serif" }}>
+        <div className="home-page" style={{ minHeight: '100vh', background: '#f8fffe', fontFamily: "'Manrope', sans-serif" }}>
             {modal && <AuthModal onClose={() => setModal(null)} defaultMode={modal} />}
 
             {/* ── HEADER ───────────────────────────────────────── */}
-            <header style={{
+            <header className="home-header" style={{
                 position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
                 padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 background: 'rgba(248,255,254,0.9)', backdropFilter: 'blur(12px)',
@@ -265,19 +265,19 @@ const Home = () => {
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                     <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', background: '#10b981', color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(16,185,129,0.3)', fontSize: '0.875rem' }}>sh</div>
-                    <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#064e3b' }}>shaqyrtu.kz</span>
+                    <span className="home-logo-text" style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#064e3b' }}>shaqyrtu.kz</span>
                 </div>
-                <nav style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <a href="#features" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>Мүмкіндіктер</a>
-                    <a href="#categories" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>Үлгілер</a>
-                    <a href="#contact" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>Байланыс</a>
-                    <Button variant="outline" onClick={() => setModal('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>Кіру</Button>
-                    <Button onClick={() => setModal('register')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>Тіркелу</Button>
+                <nav className="home-nav" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <a className="home-nav-link" href="#features" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>Мүмкіндіктер</a>
+                    <a className="home-nav-link" href="#categories" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>Үлгілер</a>
+                    <a className="home-nav-link" href="#contact" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>Байланыс</a>
+                    <Button className="home-nav-btn" variant="outline" onClick={() => setModal('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>Кіру</Button>
+                    <Button className="home-nav-btn" onClick={() => setModal('register')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>Тіркелу</Button>
                 </nav>
             </header>
 
             {/* ── HERO ─────────────────────────────────────────── */}
-            <section style={{ paddingTop: '7.5rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '72rem', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
+            <section className="home-hero" style={{ paddingTop: '7.5rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '72rem', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
                 <div>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', background: '#ecfdf5', color: '#065f46', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, marginBottom: '1.5rem' }}>
                         ✨ Жаңа мүмкіндіктер қосылды
@@ -289,7 +289,7 @@ const Home = () => {
                     <p style={{ fontSize: '1.125rem', color: '#64748b', marginBottom: '2rem', lineHeight: 1.7, maxWidth: '34rem' }}>
                         Тіркеліп, шаблонды таңдаңыз, мәтінді қосып, шақыртуды WhatsApp арқылы жіберіңіз.
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
+                    <div className="home-hero-cta" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
                         <Button onClick={() => setModal('register')} style={{ padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}>
                             Тегін бастау
                         </Button>
@@ -298,7 +298,7 @@ const Home = () => {
                             <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f59e0b' }}>Тегін</div>
                         </div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div className="home-hero-points" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                         {['3 мин тіркелу', 'Фото мен музыка', 'WhatsApp жіберу', 'Жауаптарды бақылау'].map((item, i) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#054535', fontWeight: 600, fontSize: '0.9rem' }}>
                                 <span style={{ color: '#10b981', fontSize: '1.1rem' }}>✓</span> {item}
@@ -307,7 +307,7 @@ const Home = () => {
                     </div>
                 </div>
                 {/* category cards preview */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="home-hero-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     {categories.map(cat => (
                         <div key={cat.id} onClick={() => setModal('register')} style={{
                             padding: '1.75rem', borderRadius: '1.75rem', background: cat.bg, cursor: 'pointer',
@@ -337,7 +337,7 @@ const Home = () => {
                             Шақырту жасаудан бастап, жауаптарды бақылауға дейін.
                         </p>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+                    <div className="home-features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
                         {features.map((f, i) => (
                             <div key={i} style={{ padding: '2rem 1.5rem', borderRadius: '1.5rem', border: '1px solid rgba(16,185,129,0.1)', background: '#f8fffe', textAlign: 'center' }}>
                                 <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{f.icon}</div>
@@ -358,7 +358,7 @@ const Home = () => {
                         </h2>
                         <p style={{ color: '#64748b', fontSize: '1.0625rem' }}>30-дан астам дайын шаблон</p>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
+                    <div className="home-categories-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
                         {categories.map(cat => (
                             <div key={cat.id} onClick={() => setModal('register')} style={{
                                 padding: '2rem', borderRadius: '2rem', background: cat.bg, cursor: 'pointer',
@@ -390,7 +390,7 @@ const Home = () => {
                         Қалай жұмыс жасайды?
                     </h2>
                     <p style={{ color: '#a7f3d0', marginBottom: '3.5rem', fontSize: '1.0625rem' }}>Тек 3 қадам</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5rem' }}>
+                    <div className="home-steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5rem' }}>
                         {[
                             { step: '01', title: 'Тіркеліңіз', desc: 'Телефон нөміріңізбен тіркеліп, аккаунт ашыңыз.' },
                             { step: '02', title: 'Үлгі таңдаңыз', desc: 'Той түріне сай шаблонды таңдап, деректерді толтырыңыз.' },
@@ -418,7 +418,7 @@ const Home = () => {
                     <p style={{ color: '#64748b', marginBottom: '3rem', fontSize: '1.0625rem' }}>
                         Сұрақтарыңыз болса, бізбен хабарласыңыз
                     </p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                    <div className="home-contact-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
                         {/* WhatsApp */}
                         <a href="https://wa.me/77001234567" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                             <div style={{ padding: '2rem', borderRadius: '1.5rem', background: '#f0fdf4', border: '1px solid rgba(16,185,129,0.15)', cursor: 'pointer', transition: 'all 0.25s ease' }}
@@ -455,7 +455,7 @@ const Home = () => {
 
             {/* ── FOOTER ───────────────────────────────────────── */}
             <footer style={{ background: '#022c22', color: '#a7f3d0', padding: '2rem 1.5rem', textAlign: 'center', fontSize: '0.875rem' }}>
-                <div style={{ maxWidth: '72rem', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div className="home-footer-inner" style={{ maxWidth: '72rem', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <div style={{ width: '2rem', height: '2rem', borderRadius: '0.5rem', background: '#10b981', color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>sh</div>
                         <span style={{ color: 'white', fontWeight: 700 }}>shaqyrtu.kz</span>
@@ -467,6 +467,88 @@ const Home = () => {
                     </div>
                 </div>
             </footer>
+            <style>{`
+                .home-page {
+                    overflow-x: hidden;
+                }
+
+                @media (max-width: 1120px) {
+                    .home-nav-link {
+                        display: none !important;
+                    }
+                }
+
+                @media (max-width: 900px) {
+                    .home-header {
+                        padding: 0.8rem 1rem !important;
+                    }
+
+                    .home-logo-text {
+                        font-size: 0.95rem !important;
+                    }
+
+                    .home-nav {
+                        gap: 0.45rem !important;
+                    }
+
+                    .home-nav .home-nav-btn {
+                        padding: 0.45rem 0.8rem !important;
+                        font-size: 0.8rem !important;
+                    }
+
+                    .home-hero {
+                        grid-template-columns: 1fr !important;
+                        gap: 2rem !important;
+                        padding-top: 6rem !important;
+                        padding-bottom: 3.25rem !important;
+                        padding-left: 1rem !important;
+                        padding-right: 1rem !important;
+                    }
+
+                    .home-hero-cta {
+                        flex-wrap: wrap;
+                        gap: 1rem !important;
+                        margin-bottom: 2rem !important;
+                    }
+
+                    .home-hero-points {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .home-features-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    }
+
+                    .home-categories-grid,
+                    .home-steps-grid,
+                    .home-contact-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .home-auth-overlay {
+                        padding: 0.75rem !important;
+                    }
+
+                    .home-auth-modal-card {
+                        padding: 1.25rem !important;
+                        border-radius: 1.25rem !important;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .home-hero-cards {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .home-features-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .home-footer-inner {
+                        justify-content: center !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 };
