@@ -1,0 +1,45 @@
+-- Users Table
+CREATE TABLE app_users (
+    id BIGSERIAL PRIMARY KEY,
+    phone VARCHAR(20) NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    approved BOOLEAN NOT NULL DEFAULT FALSE,
+    role VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    version BIGINT,
+    CONSTRAINT uk_users_phone UNIQUE (phone)
+);
+
+-- Invites Table
+CREATE TABLE invites (
+    id UUID PRIMARY KEY,
+    owner_id BIGINT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description VARCHAR(500),
+    preview_photo_url VARCHAR(255),
+    max_guests INT NOT NULL,
+    event_date TIMESTAMP,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    version BIGINT,
+    CONSTRAINT fk_invites_owner FOREIGN KEY (owner_id) REFERENCES app_users(id)
+);
+
+CREATE INDEX idx_invites_owner ON invites(owner_id);
+
+-- Invite Responses Table
+CREATE TABLE invite_responses (
+    id BIGSERIAL PRIMARY KEY,
+    invite_id UUID NOT NULL,
+    guest_name VARCHAR(100) NOT NULL,
+    guests_count INT NOT NULL,
+    attending BOOLEAN NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    version BIGINT,
+    CONSTRAINT fk_responses_invite FOREIGN KEY (invite_id) REFERENCES invites(id)
+);
+
+CREATE INDEX idx_responses_invite ON invite_responses(invite_id);
