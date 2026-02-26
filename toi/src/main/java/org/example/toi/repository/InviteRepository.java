@@ -10,10 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InviteRepository extends JpaRepository<Invite, UUID> {
-    
+
     @EntityGraph(attributePaths = {"owner"})
     List<Invite> findAllByOwnerId(Long ownerId);
 
     @EntityGraph(attributePaths = {"owner"})
     Optional<Invite> findById(UUID id);
+
+    @EntityGraph(attributePaths = {"owner"})
+    Optional<Invite> findBySlug(String slug);
 }

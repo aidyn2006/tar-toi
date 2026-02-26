@@ -7,7 +7,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "invites", indexes = {
-    @Index(name = "idx_invites_owner", columnList = "owner_id")
+    @Index(name = "idx_invites_owner", columnList = "owner_id"),
+    @Index(name = "idx_invites_slug", columnList = "slug", unique = true)
 })
 @Getter
 @Setter
@@ -38,4 +39,32 @@ public class Invite extends BaseEntity {
 
     @Column(name = "event_date")
     private LocalDateTime eventDate;
+
+    /** Unique slug for the public URL: /invite/{slug} */
+    @Column(unique = true, length = 80)
+    private String slug;
+
+    /** Тақырып 1 — groom / bride name 1 */
+    @Column(name = "topic1", length = 100)
+    private String topic1;
+
+    /** Тақырып 2 — groom / bride name 2 */
+    @Column(name = "topic2", length = 100)
+    private String topic2;
+
+    /** Name of the venue / wedding hall */
+    @Column(name = "location_name", length = 200)
+    private String locationName;
+
+    /** 2GIS or Google Maps URL */
+    @Column(name = "location_url", length = 500)
+    private String locationUrl;
+
+    /** Той иелері — host family name */
+    @Column(name = "toi_owners", length = 200)
+    private String toiOwners;
+
+    /** Chosen invite template/theme identifier */
+    @Column(name = "template", length = 50)
+    private String template;
 }

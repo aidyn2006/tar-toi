@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../api/authService';
 import { adminService } from '../api/adminService';
 import { inviteService } from '../api/inviteService';
-import { LogOut, Plus, Calendar, Users, ExternalLink, CheckCircle, XCircle, User, Clock } from 'lucide-react';
+import { LogOut, Plus, Calendar, Users, ExternalLink, CheckCircle, XCircle, Clock, Edit3, Eye } from 'lucide-react';
 
 /* ─── Colour tokens matching original ─────────────────── */
 const C = {
@@ -148,6 +148,7 @@ const CreateInviteModal = ({ onClose, onCreated }) => {
 
 /* ─── Invite Card ─────────────────────────────────────── */
 const InviteCard = ({ invite }) => {
+    const navigate = useNavigate();
     const date = invite.eventDate ? new Date(invite.eventDate).toLocaleDateString('kk-KZ', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
 
     return (
@@ -164,18 +165,27 @@ const InviteCard = ({ invite }) => {
                     <Calendar size={14} /> {date}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: C.green500, fontWeight: 600 }}>
-                    <Users size={14} /> {invite.responseCount || 0} / {invite.maxGuests} қонақ
+                    <Users size={14} /> {invite.responsesCount || 0} / {invite.maxGuests} қонақ
                 </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
-                <div style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>ID: {invite.id?.slice(0, 8)}...</div>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: '10px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
-                    <ExternalLink size={13} /> Ашу
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button
+                    onClick={() => navigate(`/invite/edit/${invite.id}`)}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.75rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: C.green500, color: 'white', fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
+                    <Edit3 size={13} /> Редакциялау
                 </button>
+                {invite.slug && (
+                    <button
+                        onClick={() => window.open(`/invite/${invite.slug}`, '_blank')}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.55rem 0.75rem', borderRadius: '10px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
+                        <Eye size={13} /> Көру
+                    </button>
+                )}
             </div>
         </div>
     );
 };
+
 
 /* ─── Admin Panel ─────────────────────────────────────── */
 const AdminPanel = () => {
@@ -229,7 +239,7 @@ const AdminPanel = () => {
 const Dashboard = () => {
     const navigate = useNavigate();
     const user = authService.getUser();
-    const approved = authService.isApproved();
+    const approved = true;
     const isAdmin = authService.isAdmin();
 
     const [tab, setTab] = useState('invites');

@@ -25,6 +25,9 @@ public class InviteResponse extends BaseEntity {
     @Column(name = "guest_name", nullable = false, length = 100)
     private String guestName;
 
+    @Column(name = "phone", length = 30)
+    private String phone;
+
     @Column(name = "guests_count", nullable = false)
     private int guestsCount;
 

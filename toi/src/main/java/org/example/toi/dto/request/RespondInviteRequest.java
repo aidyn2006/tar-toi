@@ -9,6 +9,8 @@ public record RespondInviteRequest(
     @Size(max = 100)
     String guestName,
 
+    String phone,
+
     @Min(value = 1, message = "Guests count must be at least 1")
     int guestsCount,
 

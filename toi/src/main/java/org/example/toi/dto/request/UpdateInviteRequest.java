@@ -2,12 +2,10 @@ package org.example.toi.dto.request;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-public record CreateInviteRequest(
-    @NotBlank(message = "Title is required")
+public record UpdateInviteRequest(
     @Size(max = 100)
     String title,
 
@@ -17,26 +15,19 @@ public record CreateInviteRequest(
     @Min(value = 1, message = "Max guests must be at least 1")
     int maxGuests,
 
-    @Future(message = "Event date must be in the future")
     LocalDateTime eventDate,
 
     String previewPhotoUrl,
 
-    /** Тақырып 1 — groom / bride name 1 */
     String topic1,
 
-    /** Тақырып 2 — groom / bride name 2 */
     String topic2,
 
-    /** Venue / wedding hall name */
     String locationName,
 
-    /** 2GIS or Google Maps URL */
     String locationUrl,
 
-    /** Той иелері — host family name */
     String toiOwners,
 
-    /** Template/theme identifier */
     String template
 ) {}

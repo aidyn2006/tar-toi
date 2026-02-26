@@ -5,11 +5,18 @@ import java.util.UUID;
 
 public record InviteResponseDTO(
     UUID id,
+    String slug,
     String title,
     String description,
     int maxGuests,
     LocalDateTime eventDate,
     String previewPhotoUrl,
     String ownerName,
-    long responsesCount
+    long responsesCount,
+    String topic1,
+    String topic2,
+    String locationName,
+    String locationUrl,
+    String toiOwners,
+    String template
 ) {}
