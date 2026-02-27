@@ -62,9 +62,24 @@ function parseNames(invite) {
     return { groom: 'Жігіт', bride: 'Қалыңдық' };
 }
 
+function normalizeUrl(url) {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    if (typeof window === 'undefined') return url;
+    const isUpload = url.startsWith('/uploads/');
+    const origin = isUpload
+        ? `${window.location.protocol}//${window.location.hostname}:9191`
+        : window.location.origin;
+    return origin + url;
+}
+
 function buildConfig(invite) {
     const eventDate = invite?.eventDate ? new Date(invite.eventDate) : null;
     const { groom, bride } = parseNames(invite);
+
+    const gallery = Array.isArray(invite?.gallery)
+        ? invite.gallery.filter(Boolean).map(normalizeUrl)
+        : [];
 
     const day = eventDate
         ? `${pad2(eventDate.getDate())}-${pad2(eventDate.getMonth() + 1)}-${eventDate.getFullYear()}`
@@ -79,9 +94,11 @@ function buildConfig(invite) {
         hour,
         location: (invite?.locationName || 'Зал мерекесі').trim(),
         music: {
-            title: (invite?.title || 'Наша Песня').trim(),
+            title: (invite?.musicTitle || invite?.title || 'Наша Песня').trim(),
             artist: (invite?.toiOwners || '— загрузите аудио файл —').trim(),
+            url: normalizeUrl(invite?.musicUrl || ''),
         },
+        gallery,
     };
 }
 
@@ -106,9 +123,11 @@ function applyPalette(html, palette) {
 
 function injectPhoto(html, url) {
     if (!url) return html;
+    const absoluteUrl = normalizeUrl(url);
+    const safeUrl = absoluteUrl.replace(/"/g, '&quot;');
     return html.replace(
         /<div class="hero-photo-placeholder">[\s\S]*?<\/div>/,
-        `<img class="hero-photo-img" src="${url.replace(/"/g, '&quot;')}" alt="photo">`
+        `<img class="hero-photo-img" src="${safeUrl}" alt="photo">`
     );
 }
 
@@ -205,6 +224,7 @@ function localizeTemplate(html, lang) {
         ['Загрузить музыку', 'Музыканы жүктеу'],
         ['Перемотать', 'Артқа'],
         ['Вперёд', 'Алға'],
+        ['Фото', 'Фотолар'],
         ['Ваш ответ', 'Сіздің жауабыңыз'],
         ['Пожалуйста, подтвердите присутствие', 'Қатысатыныңызды растаңыз'],
         ['Ваше имя', 'Атыңыз'],
@@ -219,6 +239,7 @@ function localizeTemplate(html, lang) {
         ['Подтвердить присутствие', 'Қатысамын деп растау'],
         ['Спасибо! Ждём вас на нашем торжестве.', 'Рахмет! Тойда күтеміз.'],
         ['Начало в ${CONFIG.hour}  ·  ${CONFIG.location}', 'Басталуы ${CONFIG.hour}  ·  ${CONFIG.location}'],
+        ['Добавьте несколько фотографий — карусель появится здесь.', 'Бірнеше фото жүктеңіз — галерея осында шығады.'],
     ];
 
     pairs.forEach(([ru, kk]) => {
@@ -245,11 +266,12 @@ function localizeTemplate(html, lang) {
 function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk' } = {}) {
     const palette = PALETTES[invite?.template] || PALETTES.classic;
     const config = buildConfig(invite || {});
+    const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
     let html = templateHtmlRaw;
     html = applyPalette(html, palette);
     html = injectConfig(html, config);
-    html = injectPhoto(html, invite?.previewPhotoUrl || '');
+    html = injectPhoto(html, heroUrl);
     if (enableRsvp) {
         html = injectRsvpApi(html, inviteId);
     }

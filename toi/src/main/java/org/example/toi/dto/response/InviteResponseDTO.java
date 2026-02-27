@@ -1,6 +1,7 @@
 package org.example.toi.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record InviteResponseDTO(
@@ -18,5 +19,8 @@ public record InviteResponseDTO(
     String locationName,
     String locationUrl,
     String toiOwners,
-    String template
+    String template,
+    List<String> gallery,
+    String musicUrl,
+    String musicTitle
 ) {}

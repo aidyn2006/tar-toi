@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { inviteService } from '../api/inviteService';
 import Template2Frame from '../components/Template2Frame';
+import { uploadService } from '../api/uploadService';
 import {
-    Save, Share2, Eye, X, Users, MapPin, Music,
-    Image, Calendar, Clock, ChevronDown, ArrowLeft, Check
+    Save, Share2, Eye, X, MapPin, Music,
+    Image, Calendar, Clock, ArrowLeft, Check, UploadCloud, Trash2
 } from 'lucide-react';
 
 /* ─── Design tokens ──────────────────────────────────────── */
@@ -22,6 +23,16 @@ const C = {
     surface: '#fff8dd',
 };
 
+const normalizeUrl = (url) => {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    if (typeof window === 'undefined') return url;
+    if (url.startsWith('/uploads/')) {
+        return `${window.location.protocol}//${window.location.hostname}:9191${url}`;
+    }
+    return window.location.origin + url;
+};
+
 const TEMPLATES = [
     { id: 'classic', label: 'Классикалық', color: '#8b4b4b', bg: '#fdfaf5' },
     { id: 'royal', label: 'Роял', color: '#2c3e6b', bg: '#f5f7ff' },
@@ -29,26 +40,21 @@ const TEMPLATES = [
     { id: 'modern', label: 'Модерн', color: '#1a1a1a', bg: '#f9f9f9' },
 ];
 
-const AUDIO_TRACKS = [
-    { id: '', label: '— Таңдамаңыз —' },
-    { id: 'track1', label: 'Казахская классика' },
-    { id: 'track2', label: 'Лирикалық' },
-    { id: 'track3', label: 'Домбыра' },
-];
-
 const EMPTY_INVITE_DATA = {
     title: '',
     description: '',
-    maxGuests: 50,
+    maxGuests: 0,
     eventDate: '',
     previewPhotoUrl: '',
+    gallery: [],
     topic1: '',
     topic2: '',
     locationName: '',
     locationUrl: '',
     toiOwners: '',
     template: 'classic',
-    audioTrack: '',
+    musicUrl: '',
+    musicTitle: '',
 };
 
 const CATEGORY_PRESETS = {
@@ -99,6 +105,7 @@ const PhonePreview = ({ data }) => {
     const cal = buildCalendar(data.eventDate);
     const eventHour = data.eventDate ? new Date(data.eventDate).toLocaleTimeString('kk-KZ', { hour: '2-digit', minute: '2-digit' }) : '';
     const template = TEMPLATES.find(t => t.id === data.template) || TEMPLATES[0];
+    const heroPhoto = normalizeUrl(data.previewPhotoUrl || (data.gallery?.[0] || ''));
 
     const ornamentBorder = {
         position: 'absolute',
@@ -121,9 +128,9 @@ const PhonePreview = ({ data }) => {
             <div style={{ padding: '0 28px' }}>
                 {/* Photo */}
                 <div style={{ textAlign: 'center', paddingTop: '16px' }}>
-                    {data.previewPhotoUrl ? (
+                    {heroPhoto ? (
                         <img
-                            src={data.previewPhotoUrl} alt="preview"
+                            src={heroPhoto} alt="preview"
                             style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '16px', border: `3px solid ${template.color}` }}
                             onError={e => { e.target.style.display = 'none'; }}
                         />
@@ -259,6 +266,9 @@ const EditInvitePage = () => {
     const [copied, setCopied] = useState(false);
     const [slug, setSlug] = useState('');
     const [previewOpen, setPreviewOpen] = useState(false); // mobile modal
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
+    const [uploadingGallery, setUploadingGallery] = useState(false);
+    const [uploadingAudio, setUploadingAudio] = useState(false);
 
     /* Load existing invite */
     useEffect(() => {
@@ -270,16 +280,18 @@ const EditInvitePage = () => {
                 setData({
                     title: inv.title || '',
                     description: inv.description || '',
-                    maxGuests: inv.maxGuests || 50,
+                    maxGuests: inv.maxGuests ?? 0,
                     eventDate: inv.eventDate ? inv.eventDate.slice(0, 16) : '',
                     previewPhotoUrl: inv.previewPhotoUrl || '',
+                    gallery: inv.gallery || [],
                     topic1: inv.topic1 || '',
                     topic2: inv.topic2 || '',
                     locationName: inv.locationName || '',
                     locationUrl: inv.locationUrl || '',
                     toiOwners: inv.toiOwners || '',
                     template: inv.template || 'classic',
-                    audioTrack: '',
+                    musicUrl: inv.musicUrl || '',
+                    musicTitle: inv.musicTitle || '',
                 });
             }
         }).finally(() => setLoading(false));
@@ -293,21 +305,73 @@ const EditInvitePage = () => {
 
     const set = useCallback((k) => (e) => setData(prev => ({ ...prev, [k]: e.target.value })), []);
 
+    const handleMainPhotoUpload = async (file) => {
+        if (!file) return;
+        setUploadingPhoto(true);
+        try {
+            const { url } = await uploadService.uploadImage(file);
+            setData(prev => ({ ...prev, previewPhotoUrl: url || prev.previewPhotoUrl }));
+        } catch (e) {
+            alert('Суретті жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
+
+    const handleGalleryUpload = async (files) => {
+        if (!files || files.length === 0) return;
+        setUploadingGallery(true);
+        try {
+            const uploads = [];
+            for (const f of files) {
+                const { url } = await uploadService.uploadImage(f);
+                if (url) uploads.push(url);
+            }
+            if (uploads.length) {
+                setData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...uploads] }));
+            }
+        } catch (e) {
+            alert('Галереяға жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
+        } finally {
+            setUploadingGallery(false);
+        }
+    };
+
+    const removeGalleryPhoto = (url) => {
+        setData(prev => ({ ...prev, gallery: (prev.gallery || []).filter(p => p !== url) }));
+    };
+
+    const handleAudioUpload = async (file) => {
+        if (!file) return;
+        setUploadingAudio(true);
+        try {
+            const { url } = await uploadService.uploadAudio(file);
+            setData(prev => ({ ...prev, musicUrl: url, musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle }));
+        } catch (e) {
+            alert('Аудио жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
+        } finally {
+            setUploadingAudio(false);
+        }
+    };
+
     const saveInvite = async () => {
         setSaving(true);
         try {
             const payload = {
                 title: data.title || 'Той шақыртуы',
                 description: data.description,
-                maxGuests: parseInt(data.maxGuests) || 50,
+                maxGuests: Number.isNaN(parseInt(data.maxGuests, 10)) ? 0 : parseInt(data.maxGuests, 10),
                 eventDate: data.eventDate ? new Date(data.eventDate).toISOString().slice(0, 19) : null,
                 previewPhotoUrl: data.previewPhotoUrl || null,
+                gallery: data.gallery || [],
                 topic1: data.topic1 || null,
                 topic2: data.topic2 || null,
                 locationName: data.locationName || null,
                 locationUrl: data.locationUrl || null,
                 toiOwners: data.toiOwners || null,
                 template: data.template,
+                musicUrl: data.musicUrl || null,
+                musicTitle: data.musicTitle || null,
             };
             let result;
             if (isNew) {
@@ -417,45 +481,88 @@ const EditInvitePage = () => {
                 {/* ── Left: Controls ── */}
                 <div className="edit-controls" style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
 
-                    {/* Templates */}
-                    <section style={{ marginBottom: '1.75rem', paddingBottom: '1.75rem', borderBottom: `1px solid ${C.border}` }}>
-                        <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
-                            Шаблоны
-                        </h3>
-                        <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-                            {TEMPLATES.map(t => (
-                                <button key={t.id} onClick={() => setData(d => ({ ...d, template: t.id }))} style={{
-                                    flex: '0 0 90px', border: `2.5px solid ${data.template === t.id ? t.color : 'transparent'}`,
-                                    borderRadius: '12px', padding: '8px', background: t.bg, cursor: 'pointer',
-                                    outline: data.template === t.id ? `3px solid ${t.color}44` : 'none', transition: 'all 0.2s',
-                                }}>
-                                    <div style={{ height: '50px', borderRadius: '8px', background: t.color, marginBottom: '5px' }} />
-                                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: t.color }}>{t.label}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </section>
-
                     {/* Media */}
                     <section style={{ marginBottom: '1.75rem', paddingBottom: '1.75rem', borderBottom: `1px solid ${C.border}` }}>
                         <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
                             Медиа
                         </h3>
-                        <Field label="Сурет URL (фото)">
-                            <div style={{ position: 'relative' }}>
-                                <Image size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
-                                <input value={data.previewPhotoUrl} onChange={set('previewPhotoUrl')}
-                                    placeholder="https://example.com/photo.jpg"
-                                    style={{ ...inputStyle, paddingLeft: '30px' }} />
+                        <Field label="Басты фото">
+                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                                <label style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                    padding: '0.65rem 1rem', borderRadius: '10px',
+                                    border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                    background: '#fff', color: C.burgundy, fontWeight: 700
+                                }}>
+                                    <UploadCloud size={16} /> {uploadingPhoto ? 'Жүктелуде...' : 'Жүктеу'}
+                                    <input type="file" accept="image/*" style={{ display: 'none' }}
+                                        onChange={e => { if (e.target.files?.[0]) handleMainPhotoUpload(e.target.files[0]); e.target.value = ''; }} />
+                                </label>
+                                {data.previewPhotoUrl && (
+                                    <div style={{ position: 'relative' }}>
+                                        <img src={data.previewPhotoUrl} alt="preview" style={{ width: '110px', height: '80px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
+                                        <button onClick={() => setData(d => ({ ...d, previewPhotoUrl: '' }))} style={{
+                                            position: 'absolute', top: 4, right: 4, border: 'none', background: 'rgba(0,0,0,0.45)',
+                                            color: '#fff', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer'
+                                        }}>&times;</button>
+                                    </div>
+                                )}
                             </div>
                         </Field>
-                        <Field label="Өлеңді таңдаңыз">
-                            <div style={{ position: 'relative' }}>
-                                <Music size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
-                                <select value={data.audioTrack} onChange={set('audioTrack')} style={{ ...inputStyle, paddingLeft: '30px', appearance: 'none' }}>
-                                    {AUDIO_TRACKS.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
-                                </select>
-                                <ChevronDown size={14} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: C.textMuted, pointerEvents: 'none' }} />
+
+                        <Field label="Галерея фотолары">
+                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+                                <label style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                    padding: '0.65rem 1rem', borderRadius: '10px',
+                                    border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                    background: '#fff', color: C.burgundy, fontWeight: 700
+                                }}>
+                                    <Image size={16} /> {uploadingGallery ? 'Жүктелуде...' : 'Файлдарды қосу'}
+                                    <input type="file" accept="image/*" multiple style={{ display: 'none' }}
+                                        onChange={e => { if (e.target.files?.length) handleGalleryUpload(e.target.files); e.target.value = ''; }} />
+                                </label>
+                                <span style={{ color: C.textMuted, fontSize: '0.9rem' }}>Кемінде 1-2 фото қосыңыз</span>
+                            </div>
+                            {(data.gallery?.length || 0) > 0 && (
+                                <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                                    {data.gallery.map(urlRaw => {
+                                        const url = normalizeUrl(urlRaw);
+                                        return (
+                                        <div key={url} style={{ position: 'relative' }}>
+                                            <img src={url} alt="g" style={{ width: '90px', height: '70px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
+                                            <button onClick={() => removeGalleryPhoto(urlRaw)} style={{
+                                                position: 'absolute', top: 3, right: 3, border: 'none', background: 'rgba(0,0,0,0.5)',
+                                                color: '#fff', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer'
+                                            }}>
+                                                <Trash2 size={12} />
+                                            </button>
+                                        </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </Field>
+
+                        <Field label="Музыка (қаласаңыз)">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                <label style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                    padding: '0.65rem 1rem', borderRadius: '10px',
+                                    border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                    background: '#fff', color: C.burgundy, fontWeight: 700
+                                }}>
+                                    <Music size={16} /> {uploadingAudio ? 'Жүктелуде...' : 'MP3 жүктеу'}
+                                    <input type="file" accept="audio/*" style={{ display: 'none' }}
+                                        onChange={e => { if (e.target.files?.[0]) handleAudioUpload(e.target.files[0]); e.target.value = ''; }} />
+                                </label>
+                                {data.musicUrl && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', background: '#fff', border: `1px solid ${C.border}` }}>
+                                        <Music size={16} color={C.burgundy} />
+                                        <span style={{ fontWeight: 700, color: C.burgundy }}>{data.musicTitle || 'Аудио файл'}</span>
+                                        <button onClick={() => setData(d => ({ ...d, musicUrl: '', musicTitle: '' }))} style={{ border: 'none', background: 'transparent', color: C.textMuted, cursor: 'pointer' }}>Өшіру</button>
+                                    </div>
+                                )}
                             </div>
                         </Field>
                     </section>
@@ -506,20 +613,6 @@ const EditInvitePage = () => {
                             </div>
                             <input value={data.locationUrl} onChange={set('locationUrl')} placeholder="2GIS немесе Google Maps сілтемесі"
                                 style={inputStyle} />
-                        </Field>
-                    </section>
-
-                    {/* Guest limit */}
-                    <section style={{ marginBottom: '1.75rem' }}>
-                        <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
-                            Лимит
-                        </h3>
-                        <Field label="Лимит гостей на одно приглашение">
-                            <div style={{ position: 'relative' }}>
-                                <Users size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
-                                <input type="number" min={1} value={data.maxGuests} onChange={set('maxGuests')}
-                                    style={{ ...inputStyle, paddingLeft: '30px' }} />
-                            </div>
                         </Field>
                     </section>
 

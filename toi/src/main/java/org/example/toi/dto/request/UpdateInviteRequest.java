@@ -1,9 +1,9 @@
 package org.example.toi.dto.request;
 
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record UpdateInviteRequest(
     @Size(max = 100)
@@ -12,12 +12,14 @@ public record UpdateInviteRequest(
     @Size(max = 500)
     String description,
 
-    @Min(value = 1, message = "Max guests must be at least 1")
-    int maxGuests,
+    /** Zero or negative means unlimited */
+    Integer maxGuests,
 
     LocalDateTime eventDate,
 
     String previewPhotoUrl,
+
+    List<String> gallery,
 
     String topic1,
 
@@ -29,5 +31,9 @@ public record UpdateInviteRequest(
 
     String toiOwners,
 
-    String template
+    String template,
+
+    String musicUrl,
+
+    String musicTitle
 ) {}

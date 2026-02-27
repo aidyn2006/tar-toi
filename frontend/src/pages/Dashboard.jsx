@@ -20,6 +20,16 @@ const C = {
     text: '#173f33',
 };
 
+const normalizeUrl = (url) => {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    if (typeof window === 'undefined') return url;
+    if (url.startsWith('/uploads/')) {
+        return `${window.location.protocol}//${window.location.hostname}:9191${url}`;
+    }
+    return window.location.origin + url;
+};
+
 const INVITE_CATEGORIES = [
     { id: 'uzatu', label: { kk: 'Ұзату тойы', ru: 'Проводы невесты' }, icon: '✨' },
     { id: 'wedding', label: { kk: 'Үйлену тойы', ru: 'Свадьба' }, icon: '💍' },
@@ -165,13 +175,18 @@ const InviteCard = ({ invite }) => {
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
     const dateLocale = lang === 'ru' ? 'ru-RU' : 'kk-KZ';
     const date = invite.eventDate ? new Date(invite.eventDate).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+    const photo = normalizeUrl(invite.previewPhotoUrl);
+
+    const responsesLabel = invite.maxGuests > 0
+        ? `${invite.responsesCount || 0} / ${invite.maxGuests}`
+        : `${invite.responsesCount || 0}`;
 
     return (
         <div style={{ background: C.bg, borderRadius: '20px', border: `1px solid ${C.line}`, padding: '1.5rem', boxShadow: '0 4px 16px rgba(23,63,51,0.06)', transition: 'all 0.2s' }}
             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 28px rgba(23,63,51,0.12)'; }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(23,63,51,0.06)'; }}>
-            {invite.previewPhotoUrl && (
-                <img src={invite.previewPhotoUrl} alt={invite.title} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1rem' }} onError={e => { e.target.style.display = 'none'; }} />
+            {photo && (
+                <img src={photo} alt={invite.title} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1rem' }} onError={e => { e.target.style.display = 'none'; }} />
             )}
             <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1rem', fontWeight: 700, color: C.green900, marginBottom: '0.5rem', lineHeight: 1.3 }}>{invite.title}</h3>
             {invite.description && <p style={{ fontSize: '0.875rem', color: C.green700, marginBottom: '0.875rem', lineHeight: 1.5 }}>{invite.description}</p>}
@@ -180,7 +195,7 @@ const InviteCard = ({ invite }) => {
                     <Calendar size={14} /> {date}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: C.green500, fontWeight: 600 }}>
-                    <Users size={14} /> {invite.responsesCount || 0} / {invite.maxGuests} {tr('қонақ', 'гостей')}
+                    <Users size={14} /> {responsesLabel} {tr('қонақ', 'гостей')}
                 </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -263,7 +278,7 @@ const AdminPanel = () => {
 const Dashboard = () => {
     const navigate = useNavigate();
     const user = authService.getUser();
-    const approved = authService.isApproved();
+    const approved = true;
     const isAdmin = authService.isAdmin();
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);

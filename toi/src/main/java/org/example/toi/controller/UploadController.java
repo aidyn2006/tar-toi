@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +27,8 @@ public class UploadController {
 
     @Value("${uploads.dir:uploads}")
     private String uploadDir;
+    @Value("${uploads.public-url:}")
+    private String publicUrl;
 
     private Path ensureDir(String sub) throws IOException {
         Path dir = Paths.get(uploadDir, sub).toAbsolutePath().normalize();
@@ -42,8 +45,7 @@ public class UploadController {
         if (contentType == null || !contentType.startsWith("image/")) {
             return ResponseEntity.badRequest().body(Map.of("error", "Тек сурет файлы қажет"));
         }
-        String url = storeFile(file, "images");
-        return ResponseEntity.ok(Map.of("url", url));
+        return ResponseEntity.ok(storeFile(file, "images"));
     }
 
     @PostMapping(path = "/audio", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -55,11 +57,10 @@ public class UploadController {
         if (contentType == null || !contentType.startsWith("audio/")) {
             return ResponseEntity.badRequest().body(Map.of("error", "Тек аудио файлды жүктеңіз"));
         }
-        String url = storeFile(file, "audio");
-        return ResponseEntity.ok(Map.of("url", url));
+        return ResponseEntity.ok(storeFile(file, "audio"));
     }
 
-    private String storeFile(MultipartFile file, String subfolder) throws IOException {
+    private Map<String, String> storeFile(MultipartFile file, String subfolder) throws IOException {
         String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "" : file.getOriginalFilename());
         String ext = "";
         int dot = original.lastIndexOf('.');
@@ -70,6 +71,15 @@ public class UploadController {
         Path dir = ensureDir(subfolder);
         Path target = dir.resolve(filename);
         file.transferTo(target);
-        return "/uploads/" + subfolder + "/" + filename;
+        String relative = "/uploads/" + subfolder + "/" + filename;
+        String base = publicUrl != null && !publicUrl.isBlank()
+                ? publicUrl.replaceAll("/+$", "")
+                : ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        if (base.endsWith("/")) base = base.substring(0, base.length() - 1);
+        String absolute = base + relative;
+        return Map.of(
+                "url", absolute,
+                "path", relative
+        );
     }
 }

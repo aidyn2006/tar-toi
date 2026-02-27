@@ -2,6 +2,8 @@ package org.example.toi.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.*;
 
@@ -31,11 +33,20 @@ public class Invite extends BaseEntity {
     @Column(length = 500)
     private String description;
 
-    @Column(name = "preview_photo_url")
+    @Column(name = "preview_photo_url", length = 500)
     private String previewPhotoUrl;
 
+    /** Optional gallery images (stored as URLs) */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "invite_gallery", joinColumns = @JoinColumn(name = "invite_id"))
+    @Column(name = "photo_url", length = 500)
+    @Builder.Default
+    private List<String> gallery = new ArrayList<>();
+
+    /** Unlimited when zero or negative */
     @Column(name = "max_guests", nullable = false)
-    private int maxGuests;
+    @Builder.Default
+    private int maxGuests = 0;
 
     @Column(name = "event_date")
     private LocalDateTime eventDate;
@@ -67,4 +78,11 @@ public class Invite extends BaseEntity {
     /** Chosen invite template/theme identifier */
     @Column(name = "template", length = 50)
     private String template;
+
+    /** Optional background music */
+    @Column(name = "music_url", length = 500)
+    private String musicUrl;
+
+    @Column(name = "music_title", length = 150)
+    private String musicTitle;
 }

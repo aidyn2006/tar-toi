@@ -7,7 +7,7 @@ export const uploadService = {
         const res = await apiClient.post('/uploads/image', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
-        return res.data;
+        return normalize(res.data);
     },
     uploadAudio: async (file) => {
         const formData = new FormData();
@@ -15,6 +15,13 @@ export const uploadService = {
         const res = await apiClient.post('/uploads/audio', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
-        return res.data;
+        return normalize(res.data);
     },
 };
+
+function normalize(data = {}) {
+    return {
+        url: data.url || data.path || '',
+        path: data.path || data.url || '',
+    };
+}

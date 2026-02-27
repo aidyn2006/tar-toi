@@ -43,6 +43,7 @@ public class InviteService {
                 .maxGuests(request.maxGuests())
                 .eventDate(request.eventDate())
                 .previewPhotoUrl(request.previewPhotoUrl())
+                .gallery(request.gallery() == null ? List.of() : request.gallery())
                 .slug(slug)
                 .topic1(request.topic1())
                 .topic2(request.topic2())
@@ -50,6 +51,8 @@ public class InviteService {
                 .locationUrl(request.locationUrl())
                 .toiOwners(request.toiOwners())
                 .template(request.template())
+                .musicUrl(request.musicUrl())
+                .musicTitle(request.musicTitle())
                 .build();
 
         return mapToDTO(inviteRepository.save(invite));
@@ -90,15 +93,18 @@ public class InviteService {
 
         if (request.title() != null) invite.setTitle(request.title());
         if (request.description() != null) invite.setDescription(request.description());
-        if (request.maxGuests() > 0) invite.setMaxGuests(request.maxGuests());
+        if (request.maxGuests() != null) invite.setMaxGuests(request.maxGuests());
         if (request.eventDate() != null) invite.setEventDate(request.eventDate());
         if (request.previewPhotoUrl() != null) invite.setPreviewPhotoUrl(request.previewPhotoUrl());
+        if (request.gallery() != null) invite.setGallery(request.gallery());
         if (request.topic1() != null) invite.setTopic1(request.topic1());
         if (request.topic2() != null) invite.setTopic2(request.topic2());
         if (request.locationName() != null) invite.setLocationName(request.locationName());
         if (request.locationUrl() != null) invite.setLocationUrl(request.locationUrl());
         if (request.toiOwners() != null) invite.setToiOwners(request.toiOwners());
         if (request.template() != null) invite.setTemplate(request.template());
+        if (request.musicUrl() != null) invite.setMusicUrl(request.musicUrl());
+        if (request.musicTitle() != null) invite.setMusicTitle(request.musicTitle());
 
         return mapToDTO(inviteRepository.save(invite));
     }
@@ -134,13 +140,15 @@ public class InviteService {
         Invite invite = inviteRepository.findById(inviteId)
                 .orElseThrow(() -> new RuntimeException("Invite not found"));
 
-        long currentGuests = responseRepository.findAllByInviteId(inviteId).stream()
-                .filter(InviteResponse::isAttending)
-                .mapToLong(InviteResponse::getGuestsCount)
-                .sum();
+        if (invite.getMaxGuests() > 0) {
+            long currentGuests = responseRepository.findAllByInviteId(inviteId).stream()
+                    .filter(InviteResponse::isAttending)
+                    .mapToLong(InviteResponse::getGuestsCount)
+                    .sum();
 
-        if (request.attending() && (currentGuests + request.guestsCount() > invite.getMaxGuests())) {
-            throw new RuntimeException("Cannot exceed max guests limit");
+            if (request.attending() && (currentGuests + request.guestsCount() > invite.getMaxGuests())) {
+                throw new RuntimeException("Cannot exceed max guests limit");
+            }
         }
 
         InviteResponse response = InviteResponse.builder()
@@ -192,7 +200,10 @@ public class InviteService {
                 invite.getLocationName(),
                 invite.getLocationUrl(),
                 invite.getToiOwners(),
-                invite.getTemplate()
+                invite.getTemplate(),
+                invite.getGallery() == null ? List.of() : invite.getGallery(),
+                invite.getMusicUrl(),
+                invite.getMusicTitle()
         );
     }
 }
