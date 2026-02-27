@@ -140,12 +140,15 @@ public class InviteService {
         Invite invite = inviteRepository.findById(inviteId)
                 .orElseThrow(() -> new RuntimeException("Invite not found"));
 
+        int guests = request.guestsCount() == null || request.guestsCount() < 1 ? 1 : request.guestsCount();
+        boolean attending = request.attending() == null ? true : request.attending();
+
         InviteResponse response = InviteResponse.builder()
                 .invite(invite)
                 .guestName(request.guestName())
                 .phone(request.phone())
-                .guestsCount(request.guestsCount())
-                .attending(request.attending())
+                .guestsCount(guests)
+                .attending(attending)
                 .note(request.note())
                 .build();
 
