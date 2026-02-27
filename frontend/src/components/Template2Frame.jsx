@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
-import templateHtmlRaw from '../templates/template2.0.html?raw';
+
+const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
+const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
 
 const PALETTES = {
     classic: {
@@ -71,6 +73,13 @@ function normalizeUrl(url) {
         ? `${window.location.protocol}//${window.location.hostname}:9191`
         : window.location.origin;
     return origin + url;
+}
+
+function normalizeTemplateKey(key) {
+    if (!key) return DEFAULT_TEMPLATE_KEY;
+    if (key.startsWith('../templates/')) return key;
+    if (key.startsWith('templates/')) return `../${key}`;
+    return `../templates/${key}`;
 }
 
 function buildConfig(invite) {
@@ -264,11 +273,14 @@ function localizeTemplate(html, lang) {
 }
 
 function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk' } = {}) {
-    const palette = PALETTES[invite?.template] || PALETTES.classic;
+    const templateId = (invite?.template || '').split('/').pop()?.replace('.html', '');
+    const palette = PALETTES[templateId] || PALETTES.classic;
     const config = buildConfig(invite || {});
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
-    let html = templateHtmlRaw;
+    const tplKey = normalizeTemplateKey(invite?.template);
+    const htmlSource = TEMPLATE_RAW_MAP[tplKey] || TEMPLATE_RAW_MAP[DEFAULT_TEMPLATE_KEY];
+    let html = htmlSource;
     html = applyPalette(html, palette);
     html = injectConfig(html, config);
     html = injectPhoto(html, heroUrl);

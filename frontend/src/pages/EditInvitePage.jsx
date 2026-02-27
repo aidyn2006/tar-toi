@@ -8,6 +8,8 @@ import {
     Image, Calendar, Clock, ArrowLeft, Check, UploadCloud, Trash2
 } from 'lucide-react';
 
+const TEMPLATE_FILES = Object.keys(import.meta.glob('../templates/**/*.html'));
+
 /* ─── Design tokens ──────────────────────────────────────── */
 const C = {
     cream: '#f7fff9',
@@ -40,6 +42,33 @@ const TEMPLATES = [
     { id: 'modern', label: 'Модерн', color: '#1a1a1a', bg: '#f9f9f9' },
 ];
 
+function buildTemplateOptions() {
+    const groups = {};
+    TEMPLATE_FILES.forEach((path) => {
+        const m = path.match(/\.\.\/templates\/([^/]+)\/(.+\.html)$/);
+        if (!m) return;
+        const category = m[1];
+        const file = m[2];
+        const id = `${category}/${file}`;
+        const label = file.replace(/\.html$/, '').replace(/[-_]/g, ' ');
+        if (!groups[category]) groups[category] = [];
+        groups[category].push({ id, label });
+    });
+    Object.values(groups).forEach(list => list.sort((a, b) => a.label.localeCompare(b.label, 'ru')));
+    return groups;
+}
+
+const TEMPLATE_OPTIONS = buildTemplateOptions();
+
+const DEFAULT_TEMPLATE_KEY = 'common/default.html';
+
+const getCategoryDefault = (category) => {
+    if (category && TEMPLATE_OPTIONS[category]?.length) {
+        return TEMPLATE_OPTIONS[category][0].id;
+    }
+    return DEFAULT_TEMPLATE_KEY;
+};
+
 const EMPTY_INVITE_DATA = {
     title: '',
     description: '',
@@ -52,18 +81,18 @@ const EMPTY_INVITE_DATA = {
     locationName: '',
     locationUrl: '',
     toiOwners: '',
-    template: 'classic',
+    template: DEFAULT_TEMPLATE_KEY,
     musicUrl: '',
     musicTitle: '',
 };
 
 const CATEGORY_PRESETS = {
-    uzatu: { title: 'Ұзату тойы', template: 'classic' },
-    wedding: { title: 'Үйлену тойы', template: 'royal' },
-    sundet: { title: 'Сүндет той', template: 'nature' },
-    tusaukeser: { title: 'Тұсаукесер', template: 'nature' },
-    merei: { title: 'Мерейтой', template: 'royal' },
-    besik: { title: 'Бесік той', template: 'modern' },
+    uzatu: { title: 'Ұзату тойы', template: 'uzatu/default.html' },
+    wedding: { title: 'Үйлену тойы', template: 'wedding/default.html' },
+    sundet: { title: 'Сүндет той', template: 'sundet/default.html' },
+    tusaukeser: { title: 'Тұсаукесер', template: 'tusaukeser/default.html' },
+    merei: { title: 'Мерейтой', template: 'merei/default.html' },
+    besik: { title: 'Бесік той', template: 'besik/default.html' },
 };
 
 function getNewInviteDefaults(search) {
@@ -71,11 +100,12 @@ function getNewInviteDefaults(search) {
     const category = params.get('category') || '';
     const customTitle = (params.get('title') || '').trim();
     const preset = CATEGORY_PRESETS[category] || null;
+    const template = preset?.template || getCategoryDefault(category);
 
     return {
         ...EMPTY_INVITE_DATA,
         title: customTitle || '',
-        template: preset?.template || 'classic',
+        template,
     };
 }
 
@@ -104,7 +134,8 @@ const KZ_MONTHS = ['Қаңтар', 'Ақпан', 'Наурыз', 'Сәуір', '
 const PhonePreview = ({ data }) => {
     const cal = buildCalendar(data.eventDate);
     const eventHour = data.eventDate ? new Date(data.eventDate).toLocaleTimeString('kk-KZ', { hour: '2-digit', minute: '2-digit' }) : '';
-    const template = TEMPLATES.find(t => t.id === data.template) || TEMPLATES[0];
+    const templateId = (data.template || '').split('/').pop()?.replace('.html', '');
+    const template = TEMPLATES.find(t => t.id === templateId) || TEMPLATES[0];
     const heroPhoto = normalizeUrl(data.previewPhotoUrl || (data.gallery?.[0] || ''));
 
     const ornamentBorder = {
@@ -263,6 +294,13 @@ const useIsMobile = (breakpoint = 768) => {
     return isMobile;
 };
 
+const normalizeTemplateKey = (tpl) => {
+    if (!tpl) return DEFAULT_TEMPLATE_KEY;
+    if (tpl.includes('/')) return tpl;
+    // legacy values -> map to default
+    return DEFAULT_TEMPLATE_KEY;
+};
+
 const Section = ({ title, children, border = true, isMobile }) => {
     if (isMobile) {
         return (
@@ -339,7 +377,7 @@ const EditInvitePage = () => {
                     locationName: inv.locationName || '',
                     locationUrl: inv.locationUrl || '',
                     toiOwners: inv.toiOwners || '',
-                    template: inv.template || 'classic',
+                    template: normalizeTemplateKey(inv.template),
                     musicUrl: inv.musicUrl || '',
                     musicTitle: inv.musicTitle || '',
                 });
@@ -461,6 +499,14 @@ const EditInvitePage = () => {
     /* ── Shared preview data (normalize datetime) ── */
     const previewData = { ...data, eventDate: data.eventDate ? new Date(data.eventDate) : null };
 
+    const currentCategory = (data.template && data.template.includes('/'))
+        ? data.template.split('/')[0]
+        : (new URLSearchParams(location.search).get('category') || 'common');
+    const templateOptions = TEMPLATE_OPTIONS[currentCategory] || TEMPLATE_OPTIONS.common || [];
+    const templateValue = data.template || DEFAULT_TEMPLATE_KEY;
+    const hasCurrentInList = templateOptions.some(o => o.id === templateValue);
+    const selectableTemplates = hasCurrentInList ? templateOptions : [{ id: templateValue, label: templateValue }, ...templateOptions];
+
     return (
         <div className="edit-page" style={{ minHeight: '100vh', background: C.cream, fontFamily: 'Manrope, sans-serif' }}>
             {/* Google fonts */}
@@ -530,6 +576,51 @@ const EditInvitePage = () => {
             }}>
                 {/* ── Left: Controls ── */}
                 <div className="edit-controls" style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
+
+                    {/* Template selector */}
+                    <Section title="Шаблон" isMobile={isMobile}>
+                        <Field label="Файл шаблона">
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.65rem' }}>
+                                {selectableTemplates.map(opt => {
+                                    const active = templateValue === opt.id;
+                                    const pretty = opt.label.trim() || 'Template';
+                                    const shortPath = opt.id.replace(/\.html$/, '').replace(/^([^/]+)\//, '');
+                                    return (
+                                        <button
+                                            key={opt.id}
+                                            type="button"
+                                            onClick={() => setData(d => ({ ...d, template: opt.id }))}
+                                            style={{
+                                                textAlign: 'left',
+                                                padding: '0.75rem',
+                                                borderRadius: '12px',
+                                                border: `1.5px solid ${active ? C.burgundy : C.border}`,
+                                                background: active ? `${C.burgundy}10` : '#fff',
+                                                cursor: 'pointer',
+                                                boxShadow: active ? '0 8px 20px rgba(23,63,51,0.12)' : 'none',
+                                                transition: 'all 0.15s',
+                                            }}
+                                        >
+                                            <div style={{ width: '100%', height: '70px', borderRadius: '10px', background: `${C.burgundy}0f`, border: `1px dashed ${C.border}`, marginBottom: '0.55rem', position: 'relative', overflow: 'hidden' }}>
+                                                <div style={{
+                                                    position: 'absolute', inset: 0, display: 'grid', placeItems: 'center',
+                                                    color: C.textMuted, fontSize: '0.75rem', letterSpacing: '0.5px'
+                                                }}>
+                                                    {pretty}
+                                                </div>
+                                            </div>
+                                            <div style={{ fontWeight: 700, color: C.burgundy, fontSize: '0.9rem', textTransform: 'capitalize' }}>
+                                                {pretty}
+                                            </div>
+                                            <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '0.1rem' }}>
+                                                {shortPath}
+                                            </div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </Field>
+                    </Section>
 
                     {/* Media */}
                     <Section title="Медиа" isMobile={isMobile}>
