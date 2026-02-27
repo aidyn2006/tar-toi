@@ -30,7 +30,7 @@ services:
       DEFAULT_ADMIN_PHONE: "77000000000"
       DEFAULT_ADMIN_FULL_NAME: "TOI Administrator"
       DEFAULT_ADMIN_PASSWORD: "admin123"
-      DB_URL: "jdbc:postgresql://db:5432/toi_db"
+      DB_URL: "jdbc:postgresql://db:5432/toi_db_fresh"
       DB_USERNAME: "toi_user"
       DB_PASSWORD: "toi_pass"
     depends_on:
@@ -55,5 +55,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  toi_pg_data:
+  toi_pg_data_fresh:
   toi_frontend_node_modules:
