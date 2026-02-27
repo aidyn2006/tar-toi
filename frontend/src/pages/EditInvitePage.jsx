@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { inviteService } from '../api/inviteService';
+import Template2Frame from '../components/Template2Frame';
 import {
-    Save, Share2, Eye, X, Download, Users, MapPin, Music,
+    Save, Share2, Eye, X, Users, MapPin, Music,
     Image, Calendar, Clock, ChevronDown, ArrowLeft, Check
 } from 'lucide-react';
 
@@ -226,92 +227,6 @@ const PhonePreview = ({ data }) => {
     );
 };
 
-/* ─── CRM Table ───────────────────────────────────────────── */
-const CRMTable = ({ inviteId }) => {
-    const [guests, setGuests] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!inviteId) return;
-        inviteService.getResponses(inviteId)
-            .then(setGuests)
-            .catch(() => setGuests([]))
-            .finally(() => setLoading(false));
-    }, [inviteId]);
-
-    const exportExcel = () => {
-        const headers = ['Есім', 'Телефон', 'Қонақ саны', 'Келеді?'];
-        const rows = guests.map(g => [g.guestName, g.phone || '—', g.guestsCount, g.attending ? 'Иә' : 'Жоқ']);
-        const csv = [headers, ...rows].map(r => r.join('\t')).join('\n');
-        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'qonaqtar.csv'; a.click();
-        URL.revokeObjectURL(url);
-    };
-
-    return (
-        <div style={{ marginTop: '2.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <div>
-                    <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.1rem', color: C.burgundy, margin: 0 }}>
-                        Келетін қонақтар
-                    </h2>
-                    <p style={{ fontSize: '0.8rem', color: C.textMuted, margin: '0.25rem 0 0' }}>
-                        {guests.length} адам жауап берді
-                    </p>
-                </div>
-                <button onClick={exportExcel} style={{
-                    display: 'flex', alignItems: 'center', gap: '0.4rem',
-                    padding: '0.6rem 1rem', borderRadius: '10px',
-                    background: '#1D6F42', color: '#fff', border: 'none',
-                    fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer'
-                }}>
-                    <Download size={14} /> Списокты Excel-ге жүктеу
-                </button>
-            </div>
-
-            {loading ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: C.textMuted }}>Жүктелуде...</div>
-            ) : guests.length === 0 ? (
-                <div style={{ padding: '2.5rem', textAlign: 'center', background: C.surface, borderRadius: '16px', border: `1px dashed ${C.border}` }}>
-                    <Users size={32} color={C.border} style={{ marginBottom: '0.75rem' }} />
-                    <p style={{ color: C.textMuted, fontSize: '0.9rem' }}>Әлі ешкім жауап бермеді</p>
-                </div>
-            ) : (
-                <div style={{ borderRadius: '16px', border: `1px solid ${C.border}`, overflowX: 'auto', overflowY: 'hidden' }}>
-                    <table style={{ width: '100%', minWidth: '560px', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-                        <thead>
-                            <tr style={{ background: C.burgundy, color: '#fff' }}>
-                                {['Есім', 'Телефон', 'Қонақ саны', 'Келеді?'].map(h => (
-                                    <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', fontWeight: 700, fontSize: '0.8rem' }}>{h}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {guests.map((g, i) => (
-                                <tr key={g.id} style={{ background: i % 2 === 0 ? C.white : C.surface, borderBottom: `1px solid ${C.border}` }}>
-                                    <td style={{ padding: '0.75rem 1rem', color: C.text, fontWeight: 600 }}>{g.guestName}</td>
-                                    <td style={{ padding: '0.75rem 1rem', color: C.textMuted }}>{g.phone || '—'}</td>
-                                    <td style={{ padding: '0.75rem 1rem', color: C.text }}>{g.guestsCount}</td>
-                                    <td style={{ padding: '0.75rem 1rem' }}>
-                                        <span style={{
-                                            padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700,
-                                            background: g.attending ? '#ecfdf5' : '#fef2f2',
-                                            color: g.attending ? '#065f46' : '#991b1b'
-                                        }}>
-                                            {g.attending ? 'Иә' : 'Жоқ'}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-        </div>
-    );
-};
-
 /* ─── Field ───────────────────────────────────────────────── */
 const Field = ({ label, children }) => (
     <div style={{ marginBottom: '1.1rem' }}>
@@ -494,9 +409,9 @@ const EditInvitePage = () => {
             {/* ── Two-panel layout ── */}
             <div className="edit-layout" style={{
                 display: 'grid',
-                gridTemplateColumns: 'minmax(0,1fr) 380px',
+                gridTemplateColumns: 'minmax(0,1fr) minmax(420px, 44vw)',
                 gap: '0',
-                maxWidth: '1400px',
+                maxWidth: '1600px',
                 margin: '0 auto',
             }}>
                 {/* ── Left: Controls ── */}
@@ -608,39 +523,30 @@ const EditInvitePage = () => {
                         </Field>
                     </section>
 
-                    {/* CRM Table */}
-                    {!isNew && <CRMTable inviteId={id} />}
                 </div>
 
-                {/* ── Right: Sticky phone preview ── */}
-                <div className="edit-preview-panel" data-phone-panel style={{
+                {/* ── Right: Full preview panel ── */}
+                <div className="edit-preview-panel" style={{
                     position: 'sticky', top: '60px', height: 'calc(100vh - 60px)',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    justifyContent: 'center', padding: '1.5rem',
+                    display: 'flex', flexDirection: 'column',
+                    justifyContent: 'stretch', padding: '1.25rem',
                     background: `linear-gradient(135deg, ${C.burgundy}08, ${C.gold}08)`,
                 }}>
                     <p style={{ fontSize: '0.75rem', color: C.textMuted, marginBottom: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
                         Алдын ала қарау
                     </p>
-                    {/* Phone frame */}
-                    <div className="edit-phone-frame" style={{
-                        width: '300px', height: '580px',
-                        border: `8px solid #1a1a1a`,
-                        borderRadius: '36px',
-                        overflow: 'hidden', overflowY: 'auto',
-                        boxShadow: '0 24px 60px rgba(0,0,0,0.3), inset 0 0 0 2px #333',
-                        position: 'relative',
-                        scrollbarWidth: 'none',
+                    <div className="edit-preview-canvas" style={{
+                        flex: 1,
+                        width: '100%',
+                        minHeight: 0,
+                        borderRadius: '16px',
+                        overflow: 'auto',
+                        background: C.white,
+                        border: `1px solid ${C.border}`,
+                        boxShadow: '0 18px 40px rgba(16,46,36,0.16)',
+                        scrollbarWidth: 'thin',
                     }}>
-                        {/* Notch */}
-                        <div style={{
-                            position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-                            width: '100px', height: '20px', background: '#1a1a1a',
-                            borderRadius: '0 0 12px 12px', zIndex: 10,
-                        }} />
-                        <div style={{ paddingTop: '20px', minHeight: '100%' }}>
-                            <PhonePreview data={previewData} />
-                        </div>
+                        <Template2Frame invite={previewData} />
                     </div>
                 </div>
             </div>
@@ -653,25 +559,30 @@ const EditInvitePage = () => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     padding: '1rem',
                 }}>
-                    <div className="edit-preview-modal-inner" style={{ position: 'relative', width: '300px' }}>
+                    <div className="edit-preview-modal-inner" style={{
+                        position: 'relative',
+                        width: 'min(980px, calc(100vw - 2rem))',
+                        height: 'calc(100vh - 2rem)',
+                    }}>
                         <button onClick={() => setPreviewOpen(false)} style={{
-                            position: 'absolute', top: '-12px', right: '-12px', zIndex: 10,
-                            width: '32px', height: '32px', borderRadius: '50%',
+                            position: 'absolute', top: '0.5rem', right: '0.5rem', zIndex: 10,
+                            width: '36px', height: '36px', borderRadius: '50%',
                             border: 'none', background: '#fff', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                             <X size={16} />
                         </button>
-                        <div className="edit-phone-frame" style={{
-                            width: '300px', height: '580px',
-                            border: `8px solid #1a1a1a`, borderRadius: '36px',
-                            overflow: 'hidden', overflowY: 'auto',
-                            boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
-                            scrollbarWidth: 'none',
+                        <div className="edit-preview-canvas" style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '14px',
+                            overflow: 'auto',
+                            background: C.white,
+                            border: `1px solid ${C.border}`,
+                            boxShadow: '0 24px 60px rgba(0,0,0,0.45)',
+                            scrollbarWidth: 'thin',
                         }}>
-                            <div style={{ paddingTop: '20px', minHeight: '100%' }}>
-                                <PhonePreview data={previewData} />
-                            </div>
+                            <Template2Frame invite={previewData} />
                         </div>
                     </div>
                 </div>
@@ -744,11 +655,11 @@ const EditInvitePage = () => {
 
                     .edit-preview-modal-inner {
                         width: calc(100vw - 2rem) !important;
+                        height: calc(100vh - 2rem) !important;
                     }
 
-                    .edit-phone-frame {
-                        width: calc(100vw - 2rem) !important;
-                        height: min(580px, calc(100vh - 4rem)) !important;
+                    .edit-preview-canvas {
+                        border-radius: 12px !important;
                     }
                 }
             `}</style>
