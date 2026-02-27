@@ -48,11 +48,24 @@
 
 <section class="rsvp">
     <h3>Ваш ответ</h3>
-    <input id="rName" placeholder="Ваше имя">
-    <input id="rPhone" placeholder="+7 (___) ___-__-__">
-    <input id="rGuests" type="number" min="1" value="1" placeholder="Количество гостей">
-    <button onclick="submitRSVP && submitRSVP()">Подтвердить</button>
-    <div id="rsvpMsg" style="margin-top:8px;font-size:14px;color:var(--wine);display:none;">Спасибо!</div>
+    <div id="rsvpForm">
+        <div class="form-group">
+            <input id="rName" placeholder="Ваше имя">
+        </div>
+        <div class="form-group">
+            <input id="rPhone" placeholder="+7 (___) ___-__-__">
+        </div>
+        <div class="form-group">
+            <input id="rGuests" type="number" min="1" value="1" placeholder="Количество гостей">
+            <!-- hidden guest-opt, чтобы submitRSVP видел выбранный вариант -->
+            <button class="guest-opt selected" data-val="1" style="display:none"></button>
+        </div>
+        <div class="form-group">
+            <textarea id="rNote" placeholder="Аллергии, особые пожелания..."></textarea>
+        </div>
+        <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Подтвердить</button>
+    </div>
+    <div id="successMsg" style="margin-top:8px;font-size:14px;color:var(--wine);display:none;">Спасибо! Ждём вас на нашем торжестве.</div>
 </section>
 
 <script>

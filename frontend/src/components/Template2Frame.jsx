@@ -210,7 +210,8 @@ function injectRsvpApi(html, inviteId) {
             err.textContent = '';
 
             const active = document.querySelector('.guest-opt.selected');
-            const guestsCount = Number(active?.dataset?.val || 1);
+            const guestsInput = document.getElementById('rGuests');
+            const guestsCount = Number(guestsInput?.value || active?.dataset?.val || 1);
 
             try {
                 const res = await fetch('/api/v1/invites/${inviteId}/respond', {
