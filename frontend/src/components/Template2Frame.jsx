@@ -187,7 +187,62 @@ function injectRsvpApi(html, inviteId) {
     return html.replace('</body>', `${script}\n</body>`);
 }
 
-function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null } = {}) {
+function localizeTemplate(html, lang) {
+    if (lang !== 'kk') return html;
+    let out = html.replace('<html lang="ru">', '<html lang="kk">');
+
+    const pairs = [
+        ['Приглашение на свадьбу', 'Үйлену тойына шақыру'],
+        ['Прокрутите вниз', 'Төмен қарай жылжытыңыз'],
+        ['До торжества осталось', 'Тойға дейін'],
+        ['Дней', 'Күн'],
+        ['Часов', 'Сағат'],
+        ['Минут', 'Минут'],
+        ['Секунд', 'Секунд'],
+        ['Наша музыка', 'Біздің музыка'],
+        ['Наша Песня', 'Біздің ән'],
+        ['— загрузите аудио файл —', '— аудио файлын жүктеңіз —'],
+        ['Загрузить музыку', 'Музыканы жүктеу'],
+        ['Перемотать', 'Артқа'],
+        ['Вперёд', 'Алға'],
+        ['Ваш ответ', 'Сіздің жауабыңыз'],
+        ['Пожалуйста, подтвердите присутствие', 'Қатысатыныңызды растаңыз'],
+        ['Ваше имя', 'Атыңыз'],
+        ['Введите ваше имя', 'Атыңызды жазыңыз'],
+        ['Телефон', 'Телефон'],
+        ['Количество гостей', 'Қонақ саны'],
+        ['1 Гость', '1 қонақ'],
+        ['2 Гостя', '2 қонақ'],
+        ['3 Гостя', '3 қонақ'],
+        ['Пожелания / Меню', 'Тілектер / Мәзір'],
+        ['Аллергии, особые пожелания...', 'Аллергия, тілектер...'],
+        ['Подтвердить присутствие', 'Қатысамын деп растау'],
+        ['Спасибо! Ждём вас на нашем торжестве.', 'Рахмет! Тойда күтеміз.'],
+        ['Начало в ${CONFIG.hour}  ·  ${CONFIG.location}', 'Басталуы ${CONFIG.hour}  ·  ${CONFIG.location}'],
+    ];
+
+    pairs.forEach(([ru, kk]) => {
+        out = out.replace(new RegExp(ru, 'g'), kk);
+    });
+
+    out = out.replace(
+        /<span>Пн<\/span><span>Вт<\/span><span>Ср<\/span>\s*<span>Чт<\/span><span>Пт<\/span><span>Сб<\/span><span>Вс<\/span>/,
+        '<span>Дс</span><span>Сс</span><span>Ср</span><span>Бс</span><span>Жм</span><span>Сб</span><span>Жс</span>'
+    );
+
+    out = out.replace(
+        /const MONTHS_RU = \[[^\]]+\];/,
+        'const MONTHS_RU = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];'
+    );
+    out = out.replace(
+        /const MONTHS_GEN = \[[^\]]+\];/,
+        'const MONTHS_GEN = ["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"];'
+    );
+
+    return out;
+}
+
+function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk' } = {}) {
     const palette = PALETTES[invite?.template] || PALETTES.classic;
     const config = buildConfig(invite || {});
 
@@ -198,13 +253,14 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null } = {}
     if (enableRsvp) {
         html = injectRsvpApi(html, inviteId);
     }
+    html = localizeTemplate(html, lang);
     return html;
 }
 
-const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className }) => {
+const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk' }) => {
     const srcDoc = useMemo(
-        () => buildTemplate2Html(invite, { enableRsvp, inviteId }),
-        [invite, enableRsvp, inviteId]
+        () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang }),
+        [invite, enableRsvp, inviteId, lang]
     );
 
     return (

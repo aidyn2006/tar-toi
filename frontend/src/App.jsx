@@ -6,6 +6,7 @@ import EditInvitePage from './pages/EditInvitePage';
 import PublicInvitePage from './pages/PublicInvitePage';
 import GuestListPage from './pages/GuestListPage';
 import { authService } from './api/authService';
+import { LanguageProvider } from './context/LanguageContext';
 
 const ProtectedRoute = ({ children }) => {
     return authService.isLoggedIn() ? children : <Navigate to="/" />;
@@ -13,48 +14,50 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/invite/:id/guests"
-                    element={
-                        <ProtectedRoute>
-                            <GuestListPage />
-                        </ProtectedRoute>
-                    }
-                />
-                {/* Protected: edit existing invite */}
-                <Route
-                    path="/invite/edit/:id"
-                    element={
-                        <ProtectedRoute>
-                            <EditInvitePage />
-                        </ProtectedRoute>
-                    }
-                />
-                {/* Protected: create new invite */}
-                <Route
-                    path="/invite/new"
-                    element={
-                        <ProtectedRoute>
-                            <EditInvitePage />
-                        </ProtectedRoute>
-                    }
-                />
-                {/* Public: view invite by slug */}
-                <Route path="/invite/:slug" element={<PublicInvitePage />} />
-                <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-        </Router>
+        <LanguageProvider>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/invite/:id/guests"
+                        element={
+                            <ProtectedRoute>
+                                <GuestListPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* Protected: edit existing invite */}
+                    <Route
+                        path="/invite/edit/:id"
+                        element={
+                            <ProtectedRoute>
+                                <EditInvitePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* Protected: create new invite */}
+                    <Route
+                        path="/invite/new"
+                        element={
+                            <ProtectedRoute>
+                                <EditInvitePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* Public: view invite by slug */}
+                    <Route path="/invite/:slug" element={<PublicInvitePage />} />
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+            </Router>
+        </LanguageProvider>
     );
 }
 

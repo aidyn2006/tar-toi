@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { inviteService } from '../api/inviteService';
 import { ArrowLeft, Download, Users } from 'lucide-react';
+import { useLang } from '../context/LanguageContext';
+import LanguageSwitch from '../components/LanguageSwitch';
 
 const C = {
     cream: '#fdfaf5',
@@ -19,6 +21,8 @@ const GuestListPage = () => {
     const [guests, setGuests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [inviteTitle, setInviteTitle] = useState('');
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
 
     useEffect(() => {
         if (!id) return;
@@ -36,8 +40,18 @@ const GuestListPage = () => {
     }, [id]);
 
     const exportExcel = () => {
-        const headers = ['Есім', 'Телефон', 'Қонақ саны', 'Келеді?'];
-        const rows = guests.map(g => [g.guestName, g.phone || '—', g.guestsCount, g.attending ? 'Иә' : 'Жоқ']);
+        const headers = [
+            tr('Есім', 'Имя'),
+            tr('Телефон', 'Телефон'),
+            tr('Қонақ саны', 'Количество гостей'),
+            tr('Келеді?', 'Присутствует?'),
+        ];
+        const rows = guests.map(g => [
+            g.guestName,
+            g.phone || '—',
+            g.guestsCount,
+            g.attending ? tr('Иә', 'Да') : tr('Жоқ', 'Нет'),
+        ]);
         const csv = [headers, ...rows].map(r => r.join('\t')).join('\n');
         const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -57,38 +71,39 @@ const GuestListPage = () => {
                     </button>
                     <div>
                         <h1 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.2rem', color: C.burgundy, margin: 0 }}>
-                            Қонақтар тізімі
+                            {tr('Қонақтар тізімі', 'Список гостей')}
                         </h1>
                         <p style={{ fontSize: '0.85rem', color: C.textMuted, margin: '0.2rem 0 0' }}>
-                            {inviteTitle || 'Шақырту'}
+                            {inviteTitle || tr('Шақырту', 'Приглашение')}
                         </p>
                     </div>
                 </div>
+                <LanguageSwitch compact />
                 <button className="guest-export-btn" onClick={exportExcel} style={{
                     display: 'flex', alignItems: 'center', gap: '0.5rem',
                     padding: '0.6rem 1.25rem', borderRadius: '10px',
                     background: '#1D6F42', color: '#fff', border: 'none',
                     fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer',
                 }}>
-                    <Download size={16} /> <span className="hide-mobile">Excel-ге жүктеу</span>
+                    <Download size={16} /> <span className="hide-mobile">{tr('Excel-ге жүктеу', 'Выгрузить в Excel')}</span>
                 </button>
             </header>
 
             <main className="guest-main" style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.1rem', color: C.text, margin: 0 }}>
-                        Жауап бергендер ({guests.length})
+                        {tr('Жауап бергендер', 'Полученные ответы')} ({guests.length})
                     </h2>
                 </div>
 
                 {loading ? (
-                    <div style={{ padding: '3rem', textAlign: 'center', color: C.textMuted }}>Жүктелуде...</div>
+                    <div style={{ padding: '3rem', textAlign: 'center', color: C.textMuted }}>{tr('Жүктелуде...', 'Загрузка...')}</div>
                 ) : guests.length === 0 ? (
                     <div style={{ padding: '4rem 2rem', textAlign: 'center', background: C.white, borderRadius: '20px', border: `1px solid ${C.border}` }}>
                         <Users size={40} color={C.border} style={{ marginBottom: '1rem' }} />
-                        <h3 style={{ margin: '0 0 0.5rem', color: C.text }}>Әлі ешкім жауап бермеді</h3>
+                        <h3 style={{ margin: '0 0 0.5rem', color: C.text }}>{tr('Әлі ешкім жауап бермеді', 'Пока нет ответов')}</h3>
                         <p style={{ color: C.textMuted, fontSize: '0.95rem', margin: 0 }}>
-                            Қонақтар сіздің шақыртуыңыздағы форманы толтырғанда, олар осында көрінеді.
+                            {tr('Қонақтар сіздің шақыртуыңыздағы форманы толтырғанда, олар осында көрінеді.', 'Когда гости заполнят форму в приглашении, ответы появятся здесь.')}
                         </p>
                     </div>
                 ) : (
@@ -96,7 +111,7 @@ const GuestListPage = () => {
                         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
                             <thead>
                                 <tr style={{ background: C.burgundy, color: '#fff' }}>
-                                    {['Есім', 'Телефон', 'Қонақ саны', 'Келеді?'].map(h => (
+                                    {[tr('Есім', 'Имя'), tr('Телефон', 'Телефон'), tr('Қонақ саны', 'Количество гостей'), tr('Келеді?', 'Присутствует?')].map(h => (
                                         <th key={h} style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, fontSize: '0.9rem' }}>{h}</th>
                                     ))}
                                 </tr>
@@ -106,14 +121,14 @@ const GuestListPage = () => {
                                     <tr key={g.id} style={{ borderBottom: i < guests.length - 1 ? `1px solid ${C.border}` : 'none' }}>
                                         <td style={{ padding: '1rem', color: C.text, fontWeight: 600 }}>{g.guestName}</td>
                                         <td style={{ padding: '1rem', color: C.textMuted }}>{g.phone || '—'}</td>
-                                        <td style={{ padding: '1rem', color: C.text }}>{g.guestsCount} адам</td>
+                                        <td style={{ padding: '1rem', color: C.text }}>{g.guestsCount} {tr('адам', 'чел.')}</td>
                                         <td style={{ padding: '1rem' }}>
                                             <span style={{
                                                 padding: '0.3rem 0.8rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700,
                                                 background: g.attending ? '#ecfdf5' : '#fef2f2',
                                                 color: g.attending ? '#065f46' : '#991b1b'
                                             }}>
-                                                {g.attending ? 'Иә, келеді' : 'Келе алмайды'}
+                                                {g.attending ? tr('Иә, келеді', 'Да, придёт') : tr('Келе алмайды', 'Не придёт')}
                                             </span>
                                         </td>
                                     </tr>

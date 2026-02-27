@@ -4,6 +4,8 @@ import { authService } from '../api/authService';
 import { adminService } from '../api/adminService';
 import { inviteService } from '../api/inviteService';
 import { LogOut, Plus, Calendar, Users, ExternalLink, CheckCircle, XCircle, Clock, Edit3, Eye } from 'lucide-react';
+import { useLang } from '../context/LanguageContext';
+import LanguageSwitch from '../components/LanguageSwitch';
 
 /* ─── Colour tokens matching original ─────────────────── */
 const C = {
@@ -19,60 +21,67 @@ const C = {
 };
 
 const INVITE_CATEGORIES = [
-    { id: 'uzatu', label: 'Ұзату тойы', icon: '✨' },
-    { id: 'wedding', label: 'Үйлену тойы', icon: '💍' },
-    { id: 'sundet', label: 'Сүндет той', icon: '👦' },
-    { id: 'tusaukeser', label: 'Тұсаукесер', icon: '👣' },
-    { id: 'merei', label: 'Мерейтой', icon: '🎂' },
-    { id: 'besik', label: 'Бесік той', icon: '👶' },
+    { id: 'uzatu', label: { kk: 'Ұзату тойы', ru: 'Проводы невесты' }, icon: '✨' },
+    { id: 'wedding', label: { kk: 'Үйлену тойы', ru: 'Свадьба' }, icon: '💍' },
+    { id: 'sundet', label: { kk: 'Сүндет той', ru: 'Сүндет той' }, icon: '👦' },
+    { id: 'tusaukeser', label: { kk: 'Тұсаукесер', ru: 'Тұсаукесер' }, icon: '👣' },
+    { id: 'merei', label: { kk: 'Мерейтой', ru: 'Юбилей' }, icon: '🎂' },
+    { id: 'besik', label: { kk: 'Бесік той', ru: 'Бесік той' }, icon: '👶' },
 ];
 
 /* ─── Pending Approval Modal ──────────────────────────── */
-const PendingModal = () => (
-    <div style={{
-        position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'rgba(23,63,51,0.55)', backdropFilter: 'blur(6px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
-    }}>
+const PendingModal = () => {
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+
+    return (
         <div style={{
-            background: C.bg, borderRadius: '24px', padding: '2.5rem', width: '100%', maxWidth: '26rem',
-            border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.2)', textAlign: 'center'
+            position: 'fixed', inset: 0, zIndex: 1000,
+            background: 'rgba(23,63,51,0.55)', backdropFilter: 'blur(6px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
         }}>
-            <div style={{ fontSize: '3.5rem', marginBottom: '1.25rem' }}>⏳</div>
-            <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', fontWeight: 700, color: C.green900, marginBottom: '0.75rem' }}>
-                Аккаунтыңыз расталу күтілуде
-            </h2>
-            <p style={{ color: C.green700, fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-                Доступ алу үшін осы Telegram админіне жазыңыз — біз сізге баяндаймыз.
-            </p>
-            <a href="https://t.me/nur_kun" target="_blank" rel="noopener noreferrer" style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
-                padding: '0.875rem 2rem', borderRadius: '999px', textDecoration: 'none',
-                background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`,
-                color: C.green900, fontWeight: 800, fontSize: '1rem',
-                boxShadow: '0 8px 20px rgba(31,91,70,0.14)', marginBottom: '0.75rem'
+            <div style={{
+                background: C.bg, borderRadius: '24px', padding: '2.5rem', width: '100%', maxWidth: '26rem',
+                border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.2)', textAlign: 'center'
             }}>
-                ✈️ Telegram-ға жазу: @nur_kun
-            </a>
-            <button onClick={() => authService.logout()} style={{
-                background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '1rem'
-            }}>Шығу</button>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.25rem' }}>⏳</div>
+                <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', fontWeight: 700, color: C.green900, marginBottom: '0.75rem' }}>
+                    {tr('Аккаунтыңыз расталу күтілуде', 'Ваш аккаунт ожидает подтверждения')}
+                </h2>
+                <p style={{ color: C.green700, fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+                    {tr('Доступ алу үшін осы Telegram админіне жазыңыз — біз сізге баяндаймыз.', 'Чтобы получить доступ, напишите нашему Telegram-админу — мы подскажем.')}
+                </p>
+                <a href="https://t.me/nur_kun" target="_blank" rel="noopener noreferrer" style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
+                    padding: '0.875rem 2rem', borderRadius: '999px', textDecoration: 'none',
+                    background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`,
+                    color: C.green900, fontWeight: 800, fontSize: '1rem',
+                    boxShadow: '0 8px 20px rgba(31,91,70,0.14)', marginBottom: '0.75rem'
+                }}>
+                    ✈️ {tr('Telegram-ға жазу', 'Написать в Telegram')}: @nur_kun
+                </a>
+                <button onClick={() => authService.logout()} style={{
+                    background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '1rem'
+                }}>{tr('Шығу', 'Выйти')}</button>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 /* ─── Create Invite Modal ─────────────────────────────── */
 const CreateInviteModal = ({ onClose }) => {
     const navigate = useNavigate();
     const [form, setForm] = useState({ category: INVITE_CATEGORIES[0].id, title: '' });
     const [errors, setErrors] = useState({});
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
 
     const set = (k) => (e) => { setForm(f => ({ ...f, [k]: e.target.value })); setErrors(er => ({ ...er, [k]: '' })); };
 
     const validate = () => {
         const e = {};
-        if (!form.category) e.category = 'Санатты таңдаңыз';
-        if (!form.title.trim()) e.title = 'Атауды енгізіңіз';
+        if (!form.category) e.category = tr('Санатты таңдаңыз', 'Выберите категорию');
+        if (!form.title.trim()) e.title = tr('Атауды енгізіңіз', 'Введите название');
         setErrors(e);
         return !Object.values(e).some(Boolean);
     };
@@ -92,12 +101,12 @@ const CreateInviteModal = ({ onClose }) => {
         <div className="create-invite-overlay" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(23,63,51,0.45)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
             <div className="create-invite-card" onClick={e => e.stopPropagation()} style={{ background: C.bg, borderRadius: '24px', padding: '2rem', width: '100%', maxWidth: '30rem', border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.15)' }}>
                 <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', fontWeight: 700, color: C.green900, marginBottom: '1.5rem' }}>
-                    Шақырту форматы
+                    {tr('Шақырту форматы', 'Формат приглашения')}
                 </h2>
                 <form onSubmit={handleSubmit}>
                     {/* Category */}
                     <div style={{ marginBottom: '1.25rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.6rem', fontSize: '0.9rem' }}>Санат *</label>
+                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.6rem', fontSize: '0.9rem' }}>{tr('Санат *', 'Категория *')}</label>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: '0.5rem' }}>
                             {INVITE_CATEGORIES.map((cat) => {
                                 const selected = form.category === cat.id;
@@ -122,25 +131,25 @@ const CreateInviteModal = ({ onClose }) => {
                                         }}
                                     >
                                         <span>{cat.icon}</span>
-                                        <span>{cat.label}</span>
+                                        <span>{tr(cat.label.kk, cat.label.ru)}</span>
                                     </button>
                                 );
                             })}
                         </div>
-                        {errors.category && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{errors.category}</span>}
+                        {errors.category && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{tr('Санатты таңдаңыз', 'Выберите категорию')}</span>}
                     </div>
 
                     {/* Template name */}
                     <div style={{ marginBottom: '1.25rem' }}>
-                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>Шаблон атауы *</label>
-                        <input value={form.title} onChange={set('title')} placeholder="Мысалы: Үйлену тойы — Айдын & Айгүл"
+                        <label style={{ display: 'block', fontWeight: 600, color: C.green900, marginBottom: '0.5rem', fontSize: '0.9rem' }}>{tr('Шаблон атауы *', 'Название приглашения *')}</label>
+                        <input value={form.title} onChange={set('title')} placeholder={tr('Мысалы: Үйлену тойы — Айдын & Айгүл', 'Напр.: Свадьба — Айдын & Айгүл')}
                             style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: `1.5px solid ${errors.title ? '#ef4444' : C.line}`, fontSize: '0.95rem', outline: 'none', color: C.text, background: '#fff' }} />
-                        {errors.title && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{errors.title}</span>}
+                        {errors.title && <span style={{ fontSize: '0.8rem', color: '#ef4444' }}>{tr('Атауды енгізіңіз', 'Введите название')}</span>}
                     </div>
                     <div className="create-invite-actions" style={{ display: 'flex', gap: '0.75rem' }}>
-                        <button type="button" onClick={onClose} style={{ flex: 1, padding: '0.875rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, cursor: 'pointer' }}>Бас тарту</button>
+                        <button type="button" onClick={onClose} style={{ flex: 1, padding: '0.875rem', borderRadius: '12px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, cursor: 'pointer' }}>{tr('Бас тарту', 'Отмена')}</button>
                         <button type="submit" style={{ flex: 2, padding: '0.875rem', borderRadius: '12px', border: 'none', background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`, color: C.green900, fontWeight: 800, fontSize: '1rem', cursor: 'pointer' }}>
-                            Жалғастыру
+                            {tr('Жалғастыру', 'Продолжить')}
                         </button>
                     </div>
                 </form>
@@ -152,7 +161,10 @@ const CreateInviteModal = ({ onClose }) => {
 /* ─── Invite Card ─────────────────────────────────────── */
 const InviteCard = ({ invite }) => {
     const navigate = useNavigate();
-    const date = invite.eventDate ? new Date(invite.eventDate).toLocaleDateString('kk-KZ', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+    const dateLocale = lang === 'ru' ? 'ru-RU' : 'kk-KZ';
+    const date = invite.eventDate ? new Date(invite.eventDate).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
 
     return (
         <div style={{ background: C.bg, borderRadius: '20px', border: `1px solid ${C.line}`, padding: '1.5rem', boxShadow: '0 4px 16px rgba(23,63,51,0.06)', transition: 'all 0.2s' }}
@@ -168,19 +180,19 @@ const InviteCard = ({ invite }) => {
                     <Calendar size={14} /> {date}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: C.green500, fontWeight: 600 }}>
-                    <Users size={14} /> {invite.responsesCount || 0} / {invite.maxGuests} қонақ
+                    <Users size={14} /> {invite.responsesCount || 0} / {invite.maxGuests} {tr('қонақ', 'гостей')}
                 </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <button
                     onClick={() => navigate(`/invite/edit/${invite.id}`)}
                     style={{ flex: 1, minWidth: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.5rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: C.green500, color: 'white', fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
-                    <Edit3 size={13} /> Өңдеу
+                    <Edit3 size={13} /> {tr('Өңдеу', 'Редактировать')}
                 </button>
                 <button
                     onClick={() => navigate(`/invite/${invite.id}/guests`)}
                     style={{ flex: 1, minWidth: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.5rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
-                    <Users size={13} /> Қонақтар
+                    <Users size={13} /> {tr('Қонақтар', 'Гости')}
                 </button>
                 {invite.slug && (
                     <button
@@ -199,6 +211,8 @@ const InviteCard = ({ invite }) => {
 const AdminPanel = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
 
     const load = async () => {
         setLoading(true);
@@ -207,13 +221,15 @@ const AdminPanel = () => {
     useEffect(() => { load(); }, []);
 
     const approve = async (id) => { await adminService.approveUser(id); load(); };
-    const remove = async (id) => { if (window.confirm('Пайдаланушыны жою?')) { await adminService.deleteUser(id); load(); } };
+    const remove = async (id) => { if (window.confirm(tr('Пайдаланушыны жою?', 'Удалить пользователя?'))) { await adminService.deleteUser(id); load(); } };
 
-    if (loading) return <div style={{ padding: '3rem', textAlign: 'center', color: C.green700 }}>Жүктелуде...</div>;
+    if (loading) return <div style={{ padding: '3rem', textAlign: 'center', color: C.green700 }}>{tr('Жүктелуде...', 'Загрузка...')}</div>;
 
     return (
         <div>
-            <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: C.green900, marginBottom: '1.5rem' }}>Пайдаланушылар — {users.length}</h2>
+            <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: C.green900, marginBottom: '1.5rem' }}>
+                {tr('Пайдаланушылар', 'Пользователи')} — {users.length}
+            </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {users.map(u => (
                     <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: C.bg, borderRadius: '16px', border: `1px solid ${C.line}`, flexWrap: 'wrap' }}>
@@ -225,11 +241,11 @@ const AdminPanel = () => {
                             <div style={{ fontSize: '0.85rem', color: C.green700 }}>{u.phone}</div>
                         </div>
                         <span style={{ padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, background: u.approved ? C.green100 : C.yellow100, color: u.approved ? C.green700 : '#92400e' }}>
-                            {u.approved ? 'Расталған' : 'Күтілуде'}
+                            {u.approved ? tr('Расталған', 'Подтвержден') : tr('Күтілуде', 'В ожидании')}
                         </span>
                         {!u.approved && (
                             <button onClick={() => approve(u.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: '10px', border: 'none', background: C.green500, color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
-                                <CheckCircle size={14} /> Растау
+                                <CheckCircle size={14} /> {tr('Растау', 'Подтвердить')}
                             </button>
                         )}
                         <button onClick={() => remove(u.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 0.75rem', borderRadius: '10px', border: 'none', background: '#fef2f2', color: '#ef4444', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
@@ -237,7 +253,7 @@ const AdminPanel = () => {
                         </button>
                     </div>
                 ))}
-                {users.length === 0 && <div style={{ textAlign: 'center', padding: '3rem', color: C.green700 }}>Пайдаланушылар жоқ</div>}
+                {users.length === 0 && <div style={{ textAlign: 'center', padding: '3rem', color: C.green700 }}>{tr('Пайдаланушылар жоқ', 'Пользователей нет')}</div>}
             </div>
         </div>
     );
@@ -249,6 +265,8 @@ const Dashboard = () => {
     const user = authService.getUser();
     const approved = authService.isApproved();
     const isAdmin = authService.isAdmin();
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
 
     const [tab, setTab] = useState('invites');
     const [invites, setInvites] = useState([]);
@@ -286,11 +304,12 @@ const Dashboard = () => {
                     <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 2vw, 28px)', color: C.green900 }}>shaqyrtu.kz</span>
                 </div>
                 <div className="dashboard-user" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <LanguageSwitch compact />
                     <div style={{ fontSize: '0.9rem', color: C.green700, fontWeight: 600 }}>
                         {user?.fullName || user?.phone}
                     </div>
                     <button onClick={() => authService.logout()} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', borderRadius: '10px', border: `1px solid ${C.line}`, background: 'white', color: C.green700, fontWeight: 700, cursor: 'pointer', fontSize: '0.875rem' }}>
-                        <LogOut size={15} /> Шығу
+                        <LogOut size={15} /> {tr('Шығу', 'Выйти')}
                     </button>
                 </div>
             </header>
@@ -299,8 +318,8 @@ const Dashboard = () => {
                 {/* Tabs */}
                 <div className="dashboard-tabs" style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
                     {[
-                        { id: 'invites', label: 'Менің шақыртуларым' },
-                        ...(isAdmin ? [{ id: 'admin', label: '🛡 Админ' }] : []),
+                        { id: 'invites', label: tr('Менің шақыртуларым', 'Мои приглашения') },
+                        ...(isAdmin ? [{ id: 'admin', label: '🛡 ' + tr('Админ', 'Админ') }] : []),
                     ].map(t => (
                         <button key={t.id} onClick={() => setTab(t.id)} style={{
                             padding: '0.625rem 1.5rem', borderRadius: '999px', border: `1.5px solid ${tab === t.id ? C.green500 : C.line}`,
@@ -316,9 +335,9 @@ const Dashboard = () => {
                         {/* Header row */}
                         <div className="dashboard-toprow" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                             <div>
-                                <h1 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: 'clamp(1.25rem, 3vw, 1.875rem)', fontWeight: 700, color: C.green900, margin: 0 }}>Шақыртулар</h1>
+                                <h1 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: 'clamp(1.25rem, 3vw, 1.875rem)', fontWeight: 700, color: C.green900, margin: 0 }}>{tr('Шақыртулар', 'Приглашения')}</h1>
                                 <p style={{ color: C.green700, margin: '0.375rem 0 0', fontSize: '0.9375rem' }}>
-                                    {invites.length > 0 ? `${invites.length} шақырту жасалған` : 'Әлі шақырту жасалмаған'}
+                                    {invites.length > 0 ? tr(`${invites.length} шақырту жасалған`, `${invites.length} приглашений создано`) : tr('Әлі шақырту жасалмаған', 'Пока нет приглашений')}
                                 </p>
                             </div>
                             {approved && (
@@ -329,19 +348,19 @@ const Dashboard = () => {
                                     color: C.green900, fontWeight: 800, fontSize: '1rem', cursor: 'pointer',
                                     boxShadow: '0 8px 20px rgba(31,91,70,0.14)'
                                 }}>
-                                    <Plus size={18} /> Шақырту жасау
+                                    <Plus size={18} /> {tr('Шақырту жасау', 'Создать приглашение')}
                                 </button>
                             )}
                         </div>
 
                         {/* Invite grid */}
                         {loadingInvites ? (
-                            <div style={{ textAlign: 'center', padding: '4rem', color: C.green700 }}>Жүктелуде...</div>
+                            <div style={{ textAlign: 'center', padding: '4rem', color: C.green700 }}>{tr('Жүктелуде...', 'Загрузка...')}</div>
                         ) : invites.length === 0 ? (
                             <div style={{ textAlign: 'center', padding: '5rem 2rem', background: 'white', borderRadius: '24px', border: `1px solid ${C.line}` }}>
                                 <div style={{ fontSize: '4rem', marginBottom: '1.25rem' }}>📋</div>
-                                <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', color: C.green900, marginBottom: '0.75rem' }}>Шақырту жоқ</h2>
-                                <p style={{ color: C.green700, marginBottom: '2rem', fontSize: '1rem' }}>Бірінші шақыртуыңызды жасаңыз</p>
+                                <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', color: C.green900, marginBottom: '0.75rem' }}>{tr('Шақырту жоқ', 'Нет приглашений')}</h2>
+                                <p style={{ color: C.green700, marginBottom: '2rem', fontSize: '1rem' }}>{tr('Бірінші шақыртуыңызды жасаңыз', 'Создайте своё первое приглашение')}</p>
                                 {approved && (
                                     <button onClick={() => setShowCreate(true)} style={{
                                         display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 2rem',
@@ -350,7 +369,7 @@ const Dashboard = () => {
                                         color: C.green900, fontWeight: 800, fontSize: '1rem', cursor: 'pointer',
                                         boxShadow: '0 8px 20px rgba(31,91,70,0.14)'
                                     }}>
-                                        <Plus size={18} /> Шақырту жасау
+                                        <Plus size={18} /> {tr('Шақырту жасау', 'Создать приглашение')}
                                     </button>
                                 )}
                             </div>
