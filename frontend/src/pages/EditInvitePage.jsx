@@ -252,12 +252,62 @@ const inputStyle = {
     fontFamily: 'Manrope, sans-serif',
 };
 
+/* ─── Responsive helpers ────────────────────────────────── */
+const useIsMobile = (breakpoint = 768) => {
+    const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < breakpoint : false);
+    useEffect(() => {
+        const handler = () => setIsMobile(window.innerWidth < breakpoint);
+        window.addEventListener('resize', handler);
+        return () => window.removeEventListener('resize', handler);
+    }, [breakpoint]);
+    return isMobile;
+};
+
+const Section = ({ title, children, border = true, isMobile }) => {
+    if (isMobile) {
+        return (
+            <details open style={{ marginBottom: '1.2rem', borderRadius: '14px', background: '#fff', border: `1px solid ${C.border}` }}>
+                <summary style={{
+                    padding: '0.95rem 1rem',
+                    fontFamily: 'Unbounded, sans-serif',
+                    fontSize: '0.95rem',
+                    color: C.burgundy,
+                    cursor: 'pointer',
+                    listStyle: 'none',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <span>{title}</span>
+                    <span style={{ fontSize: '1.1rem', color: C.textMuted }}>⌄</span>
+                </summary>
+                <div style={{ padding: '0 1rem 1rem' }}>
+                    {children}
+                </div>
+            </details>
+        );
+    }
+    return (
+        <section style={{
+            marginBottom: '1.75rem',
+            paddingBottom: '1.75rem',
+            borderBottom: border ? `1px solid ${C.border}` : 'none'
+        }}>
+            <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
+                {title}
+            </h3>
+            {children}
+        </section>
+    );
+};
+
 /* ─── Edit Invite Page ────────────────────────────────────── */
 const EditInvitePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const isNew = !id;
+    const isMobile = useIsMobile();
 
     const [data, setData] = useState(() => (isNew ? getNewInviteDefaults(location.search) : EMPTY_INVITE_DATA));
     const [loading, setLoading] = useState(!isNew);
@@ -482,10 +532,7 @@ const EditInvitePage = () => {
                 <div className="edit-controls" style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
 
                     {/* Media */}
-                    <section style={{ marginBottom: '1.75rem', paddingBottom: '1.75rem', borderBottom: `1px solid ${C.border}` }}>
-                        <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
-                            Медиа
-                        </h3>
+                    <Section title="Медиа" isMobile={isMobile}>
                         <Field label="Басты фото">
                             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                                 <label style={{
@@ -565,13 +612,10 @@ const EditInvitePage = () => {
                                 )}
                             </div>
                         </Field>
-                    </section>
+                    </Section>
 
                     {/* Text fields */}
-                    <section style={{ marginBottom: '1.75rem', paddingBottom: '1.75rem', borderBottom: `1px solid ${C.border}` }}>
-                        <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
-                            Мәтін
-                        </h3>
+                    <Section title="Мәтін" isMobile={isMobile}>
                         <div className="edit-names-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                             <Field label="Тақырып 1 (Күйеу)">
                                 <input value={data.topic1} onChange={set('topic1')} placeholder="Адлет"
@@ -591,13 +635,10 @@ const EditInvitePage = () => {
                             <input value={data.toiOwners} onChange={set('toiOwners')} placeholder="Сырымбетовтар әулеті"
                                 style={inputStyle} />
                         </Field>
-                    </section>
+                    </Section>
 
                     {/* Date & Location */}
-                    <section style={{ marginBottom: '1.75rem', paddingBottom: '1.75rem', borderBottom: `1px solid ${C.border}` }}>
-                        <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '0.9rem', color: C.burgundy, marginBottom: '0.9rem' }}>
-                            Күн және орын
-                        </h3>
+                    <Section title="Күн және орын" isMobile={isMobile} border={false}>
                         <Field label="Дата және уақыт">
                             <div style={{ position: 'relative' }}>
                                 <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
@@ -614,7 +655,7 @@ const EditInvitePage = () => {
                             <input value={data.locationUrl} onChange={set('locationUrl')} placeholder="2GIS немесе Google Maps сілтемесі"
                                 style={inputStyle} />
                         </Field>
-                    </section>
+                    </Section>
 
                 </div>
 
@@ -687,6 +728,10 @@ const EditInvitePage = () => {
                     overflow-x: hidden;
                 }
 
+                details summary::-webkit-details-marker {
+                    display: none;
+                }
+
                 @media (max-width: 1024px) {
                     .edit-layout {
                         grid-template-columns: 1fr !important;
@@ -734,6 +779,24 @@ const EditInvitePage = () => {
 
                     .edit-names-grid {
                         grid-template-columns: 1fr !important;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .edit-controls {
+                        padding: 0.85rem !important;
+                    }
+
+                    details {
+                        box-shadow: 0 10px 28px rgba(23,63,51,0.08);
+                    }
+
+                    .edit-topbar-actions {
+                        gap: 0.4rem !important;
+                    }
+
+                    .edit-topbar-actions button {
+                        height: 44px;
                     }
                 }
 
