@@ -274,7 +274,7 @@ const AdminPanel = () => {
 const Dashboard = () => {
     const navigate = useNavigate();
     const user = authService.getUser();
-    const approved = true;
+    const approved = authService.isApproved();
     const isAdmin = authService.isAdmin();
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
