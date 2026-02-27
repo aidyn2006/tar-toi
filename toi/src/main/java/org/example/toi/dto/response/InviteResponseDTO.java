@@ -9,7 +9,7 @@ public record InviteResponseDTO(
     String slug,
     String title,
     String description,
-    int maxGuests,
+    Integer maxGuests,
     LocalDateTime eventDate,
     String previewPhotoUrl,
     String ownerName,

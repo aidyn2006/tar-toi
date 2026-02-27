@@ -177,10 +177,6 @@ const InviteCard = ({ invite }) => {
     const date = invite.eventDate ? new Date(invite.eventDate).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
     const photo = normalizeUrl(invite.previewPhotoUrl);
 
-    const responsesLabel = invite.maxGuests > 0
-        ? `${invite.responsesCount || 0} / ${invite.maxGuests}`
-        : `${invite.responsesCount || 0}`;
-
     return (
         <div style={{ background: C.bg, borderRadius: '20px', border: `1px solid ${C.line}`, padding: '1.5rem', boxShadow: '0 4px 16px rgba(23,63,51,0.06)', transition: 'all 0.2s' }}
             onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 28px rgba(23,63,51,0.12)'; }}
@@ -195,7 +191,7 @@ const InviteCard = ({ invite }) => {
                     <Calendar size={14} /> {date}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', color: C.green500, fontWeight: 600 }}>
-                    <Users size={14} /> {responsesLabel} {tr('қонақ', 'гостей')}
+                    <Users size={14} /> {invite.responsesCount || 0} {tr('қонақ', 'гостей')}
                 </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>

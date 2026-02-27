@@ -12,9 +12,6 @@ public record UpdateInviteRequest(
     @Size(max = 500)
     String description,
 
-    /** Zero or negative means unlimited */
-    Integer maxGuests,
-
     LocalDateTime eventDate,
 
     String previewPhotoUrl,

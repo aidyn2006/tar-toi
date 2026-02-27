@@ -14,9 +14,6 @@ public record CreateInviteRequest(
     @Size(max = 500)
     String description,
 
-    /** Zero or negative means unlimited */
-    int maxGuests,
-
     @Future(message = "Event date must be in the future")
     LocalDateTime eventDate,
 

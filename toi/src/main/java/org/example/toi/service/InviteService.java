@@ -40,7 +40,7 @@ public class InviteService {
                 .owner(owner)
                 .title(request.title())
                 .description(request.description())
-                .maxGuests(request.maxGuests())
+                .maxGuests(0)
                 .eventDate(request.eventDate())
                 .previewPhotoUrl(request.previewPhotoUrl())
                 .gallery(request.gallery() == null ? List.of() : request.gallery())
@@ -93,7 +93,6 @@ public class InviteService {
 
         if (request.title() != null) invite.setTitle(request.title());
         if (request.description() != null) invite.setDescription(request.description());
-        if (request.maxGuests() != null) invite.setMaxGuests(request.maxGuests());
         if (request.eventDate() != null) invite.setEventDate(request.eventDate());
         if (request.previewPhotoUrl() != null) invite.setPreviewPhotoUrl(request.previewPhotoUrl());
         if (request.gallery() != null) invite.setGallery(request.gallery());
@@ -141,17 +140,6 @@ public class InviteService {
         Invite invite = inviteRepository.findById(inviteId)
                 .orElseThrow(() -> new RuntimeException("Invite not found"));
 
-        if (invite.getMaxGuests() > 0) {
-            long currentGuests = responseRepository.findAllByInviteId(inviteId).stream()
-                    .filter(InviteResponse::isAttending)
-                    .mapToLong(InviteResponse::getGuestsCount)
-                    .sum();
-
-            if (request.attending() && (currentGuests + request.guestsCount() > invite.getMaxGuests())) {
-                throw new RuntimeException("Cannot exceed max guests limit");
-            }
-        }
-
         InviteResponse response = InviteResponse.builder()
                 .invite(invite)
                 .guestName(request.guestName())
@@ -192,7 +180,7 @@ public class InviteService {
                 invite.getSlug(),
                 invite.getTitle(),
                 invite.getDescription(),
-                invite.getMaxGuests(),
+                null,
                 invite.getEventDate(),
                 invite.getPreviewPhotoUrl(),
                 invite.getOwner().getFullName(),

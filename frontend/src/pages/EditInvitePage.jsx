@@ -72,7 +72,6 @@ const getCategoryDefault = (category) => {
 const EMPTY_INVITE_DATA = {
     title: '',
     description: '',
-    maxGuests: 0,
     eventDate: '',
     previewPhotoUrl: '',
     gallery: [],
@@ -448,7 +447,6 @@ const EditInvitePage = () => {
             const payload = {
                 title: data.title || 'Той шақыртуы',
                 description: data.description,
-                maxGuests: Number.isNaN(parseInt(data.maxGuests, 10)) ? 0 : parseInt(data.maxGuests, 10),
                 eventDate: data.eventDate ? new Date(data.eventDate).toISOString().slice(0, 19) : null,
                 previewPhotoUrl: data.previewPhotoUrl || null,
                 gallery: data.gallery || [],
