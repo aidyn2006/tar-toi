@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f5f0e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .card {
+            width: 420px;
+            background: #7a2c3e;
+            position: relative;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Border SVG Placeholder — заменяется через config.border */
+        .border-frame {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .border-frame svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .inner {
+            padding: 36px 40px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            color: #e8d5b7;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 28px;
+            opacity: 0.7;
+        }
+
+        /* Calendar */
+        .calendar-header-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 6px;
+        }
+
+        .calendar-header-row span {
+            color: #e8d5b7;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-align: center;
+            opacity: 0.5;
+            padding: 4px 0;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 32px;
+        }
+
+        .cal-day {
+            color: #e8d5b7;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px 4px;
+            cursor: default;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+        }
+
+        .cal-day.empty { opacity: 0; }
+        .cal-day.other-month { opacity: 0.25; }
+
+        .cal-day.highlighted {
+            position: relative;
+        }
+
+        .cal-day.highlighted::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border: 2px solid #e8566a;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            /* heart shape approximation */
+            animation: heartbeat 1.8s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.8; }
+        }
+
+        /* Month/Year label */
+        .month-label {
+            font-family: 'Cinzel', serif;
+            color: #e8d5b7;
+            font-size: 15px;
+            letter-spacing: 4px;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e8d5b7 30%, #e8d5b7 70%, transparent);
+            opacity: 0.3;
+            margin: 0 20px 28px;
+        }
+
+        /* Time & Info */
+        .info-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 24px;
+        }
+
+        .info-block {
+            text-align: center;
+        }
+
+        .info-block .label {
+            font-family: 'Cinzel', serif;
+            color: #e8d5b7;
+            font-size: 8px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-block .value {
+            font-family: 'Cormorant Garamond', serif;
+            color: #f0e0c8;
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .info-block .value-sub {
+            font-family: 'Cinzel', serif;
+            color: #e8d5b7;
+            font-size: 11px;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        /* RSVP */
+        .rsvp-section {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .rsvp-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            padding: 9px 16px;
+            border: 1px solid rgba(232, 213, 183, 0.4);
+            background: transparent;
+            color: #e8d5b7;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .rsvp-btn:hover, .rsvp-btn.active {
+            background: rgba(232, 213, 183, 0.15);
+            border-color: #e8d5b7;
+        }
+
+        .rsvp-btn.confirm {
+            background: rgba(232, 86, 106, 0.2);
+            border-color: #e8566a;
+            color: #f5b8c2;
+        }
+
+        .rsvp-btn.confirm:hover {
+            background: rgba(232, 86, 106, 0.4);
+        }
+
+        /* Fade in */
+        .card { animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="card" id="card">
+    <!-- Border placeholder — filled by JS from config.border -->
+    <div class="border-frame" id="borderFrame"></div>
+
+    <div class="inner">
+        <div class="subtitle" id="inviteLabel">You are invited</div>
+        <div class="month-label" id="monthLabel">—</div>
+
+        <div class="calendar-header-row">
+            <span>Пн</span><span>Вт</span><span>Ср</span>
+            <span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+
+        <div class="divider"></div>
+
+        <div class="info-row">
+            <div class="info-block">
+                <div class="label">Дата</div>
+                <div class="value" id="dayNum">—</div>
+                <div class="value-sub" id="monthShort">—</div>
+            </div>
+            <div class="info-block">
+                <div class="label">Время</div>
+                <div class="value" id="hourDisplay">—</div>
+                <div class="value-sub">вечера</div>
+            </div>
+        </div>
+
+        <div class="rsvp-section">
+            <button class="rsvp-btn" onclick="selectGuests(1, this)">1 Гость</button>
+            <button class="rsvp-btn" onclick="selectGuests(2, this)">2 Гостя</button>
+            <button class="rsvp-btn confirm" onclick="confirm()">Подтвердить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // CONFIG — меняй только здесь
+    // ============================================================
+    const config = {
+        border: "ornamental",   // "ornamental" | "simple" | "none" | URL к SVG файлу
+        day: "21-03-2026",      // формат DD-MM-YYYY
+        hour: "19:00"
+    };
+    // ============================================================
+
+    const MONTHS_RU = ["Январь","Февраль","Март","Апрель","Май","Июнь",
+        "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+    const MONTHS_SHORT = ["ЯНВ","ФЕВ","МАР","АПР","МАЙ","ИЮН",
+        "ИЮЛ","АВГ","СЕН","ОКТ","НОЯ","ДЕК"];
+
+    // Parse day
+    const [dd, mm, yyyy] = config.day.split('-').map(Number);
+    const targetDate = new Date(yyyy, mm - 1, dd);
+
+    // Month label
+    document.getElementById('monthLabel').textContent =
+        `${MONTHS_RU[mm-1]} ${yyyy}`;
+
+    // Day & hour display
+    document.getElementById('dayNum').textContent = String(dd);
+    document.getElementById('monthShort').textContent = MONTHS_SHORT[mm-1];
+    document.getElementById('hourDisplay').textContent = config.hour;
+
+    // Build calendar
+    function buildCalendar(year, month, highlightDay) {
+        const grid = document.getElementById('calendarGrid');
+        const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+        // Convert Sunday=0 to Mon-first: Mon=0..Sun=6
+        const startOffset = (firstDay === 0 ? 6 : firstDay - 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        grid.innerHTML = '';
+
+        // Empty cells before
+        for (let i = 0; i < startOffset; i++) {
+            const el = document.createElement('div');
+            el.className = 'cal-day empty';
+            el.textContent = '';
+            grid.appendChild(el);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const el = document.createElement('div');
+            el.className = 'cal-day' + (d === highlightDay ? ' highlighted' : '');
+            el.textContent = d;
+            grid.appendChild(el);
+        }
+    }
+
+    buildCalendar(yyyy, mm - 1, dd);
+
+    // Border rendering
+    function renderBorder(type) {
+        const frame = document.getElementById('borderFrame');
+
+        if (type === 'none') { frame.innerHTML = ''; return; }
+
+        if (type === 'ornamental') {
+            // Decorative SVG border — Kazakh-inspired geometric ornamental
+            frame.innerHTML = `
+    <svg viewBox="0 0 420 580" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <defs>
+        <pattern id="pat" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <rect width="40" height="40" fill="none"/>
+          <path d="M20 2 L38 20 L20 38 L2 20 Z" fill="none" stroke="rgba(232,213,183,0.18)" stroke-width="1"/>
+          <circle cx="20" cy="20" r="3" fill="rgba(232,213,183,0.12)"/>
+        </pattern>
+      </defs>
+
+      <!-- Corner ornaments -->
+      <g stroke="rgba(232,213,183,0.55)" fill="none" stroke-width="1.2">
+        <!-- Top-left -->
+        <path d="M8 8 L50 8 L50 14 M8 8 L8 50 M8 14 L14 14 L14 50"/>
+        <path d="M20 8 L20 20 L8 20" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="14" cy="14" r="3" fill="rgba(232,213,183,0.3)"/>
+        <path d="M8 8 Q14 14 20 8 Q14 14 8 20" opacity="0.5"/>
+
+        <!-- Top-right -->
+        <path d="M412 8 L370 8 L370 14 M412 8 L412 50 M412 14 L406 14 L406 50"/>
+        <path d="M400 8 L400 20 L412 20" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="406" cy="14" r="3" fill="rgba(232,213,183,0.3)"/>
+        <path d="M412 8 Q406 14 400 8 Q406 14 412 20" opacity="0.5"/>
+
+        <!-- Bottom-left -->
+        <path d="M8 572 L50 572 L50 566 M8 572 L8 530 M8 566 L14 566 L14 530"/>
+        <path d="M20 572 L20 560 L8 560" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="14" cy="566" r="3" fill="rgba(232,213,183,0.3)"/>
+
+        <!-- Bottom-right -->
+        <path d="M412 572 L370 572 L370 566 M412 572 L412 530 M412 566 L406 566 L406 530"/>
+        <path d="M400 572 L400 560 L412 560" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="406" cy="566" r="3" fill="rgba(232,213,183,0.3)"/>
+
+        <!-- Top edge ornament strip -->
+        <line x1="55" y1="8" x2="365" y2="8" stroke-width="0.6" opacity="0.3"/>
+        <line x1="55" y1="12" x2="365" y2="12" stroke-width="0.4" opacity="0.2"/>
+
+        <!-- Bottom edge ornament strip -->
+        <line x1="55" y1="572" x2="365" y2="572" stroke-width="0.6" opacity="0.3"/>
+        <line x1="55" y1="568" x2="365" y2="568" stroke-width="0.4" opacity="0.2"/>
+
+        <!-- Left edge -->
+        <line x1="8" y1="55" x2="8" y2="525" stroke-width="0.6" opacity="0.3"/>
+        <line x1="12" y1="55" x2="12" y2="525" stroke-width="0.4" opacity="0.2"/>
+
+        <!-- Right edge -->
+        <line x1="412" y1="55" x2="412" y2="525" stroke-width="0.6" opacity="0.3"/>
+        <line x1="408" y1="55" x2="408" y2="525" stroke-width="0.4" opacity="0.2"/>
+
+        <!-- Mid-top diamond row -->
+        <g opacity="0.4">
+          <path d="M130 8 l6 6 l-6 6 l-6 -6 Z" fill="rgba(232,213,183,0.2)"/>
+          <path d="M210 8 l6 6 l-6 6 l-6 -6 Z" fill="rgba(232,213,183,0.2)"/>
+          <path d="M290 8 l6 6 l-6 6 l-6 -6 Z" fill="rgba(232,213,183,0.2)"/>
+        </g>
+      </g>
+    </svg>`;
+            return;
+        }
+
+        if (type === 'simple') {
+            frame.innerHTML = `
+    <svg viewBox="0 0 420 580" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <rect x="10" y="10" width="400" height="560" fill="none"
+        stroke="rgba(232,213,183,0.35)" stroke-width="1.5"/>
+      <rect x="16" y="16" width="388" height="548" fill="none"
+        stroke="rgba(232,213,183,0.15)" stroke-width="0.8"/>
+    </svg>`;
+            return;
+        }
+
+        // If URL — load as img overlay
+        const img = document.createElement('img');
+        img.src = type;
+        img.style.cssText = 'width:100%;height:100%;object-fit:fill;position:absolute;inset:0;';
+        frame.appendChild(img);
+    }
+
+    renderBorder(config.border);
+
+    // Fix card height after render to match SVG
+    function fitCard() {
+        const card = document.getElementById('card');
+        const inner = card.querySelector('.inner');
+        const h = inner.scrollHeight + 72;
+        card.style.height = h + 'px';
+        const svg = card.querySelector('.border-frame svg');
+        if (svg) svg.setAttribute('viewBox', `0 0 420 ${h}`);
+    }
+    window.addEventListener('load', fitCard);
+
+    // RSVP
+    function selectGuests(n, btn) {
+        document.querySelectorAll('.rsvp-btn:not(.confirm)').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+    function confirm() {
+        const active = document.querySelector('.rsvp-btn.active');
+        if (!active) { alert('Выберите количество гостей'); return; }
+        document.querySelector('.rsvp-btn.confirm').textContent = '✓ Отправлено';
+    }
+</script>
+</body>
+</html>

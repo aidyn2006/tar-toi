@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Той шақыруы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f2ebe0;
+            --wine: #7a2c3e;
+            --wine-dark: #5a1e2c;
+            --wine-mid: #8a3a4e;
+            --gold: #b8935a;
+            --text-light: #f0e6d3;
+            --text-dark: #2a1015;
+            --ornament: #8a3a4e;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════
+           PAGE WRAPPER with side ornaments
+        ══════════════════════════════ */
+        .page {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .side-ornament {
+            width: 72px;
+            flex-shrink: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: stretch;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .side-ornament svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* ══════════════════════════════
+           PHOTO
+        ══════════════════════════════ */
+        .photo-wrap {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 28px;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            background: linear-gradient(160deg, #6b3040 0%, #8a4555 40%, #4a1828 100%);
+            position: relative;
+            box-shadow: 0 12px 60px rgba(90,30,44,0.25);
+            margin-bottom: 28px;
+        }
+
+        .photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .photo-placeholder svg { opacity: 0.2; }
+
+        .photo-placeholder span {
+            font-family: 'Cinzel', serif;
+            color: rgba(240,230,211,0.35);
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ══════════════════════════════
+           ORNAMENT ROW + PLAY BUTTON
+        ══════════════════════════════ */
+        .ornament-row {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            gap: 16px;
+        }
+
+        .ornament-strip {
+            flex: 1;
+            height: 32px;
+        }
+
+        .play-circle {
+            width: 64px;
+            height: 64px;
+            background: var(--wine);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(90,30,44,0.35);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .play-circle:hover {
+            background: var(--wine-mid);
+            transform: scale(1.06);
+        }
+
+        .play-circle svg {
+            color: var(--text-light);
+            margin-left: 4px;
+            transition: opacity 0.2s;
+        }
+
+        /* Ripple on play */
+        .play-circle.playing::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border: 2px solid var(--wine);
+            border-radius: 50%;
+            animation: ripple 1.5s ease-out infinite;
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        /* ══════════════════════════════
+           GREETING CARD
+        ══════════════════════════════ */
+        .greeting-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--wine);
+            border-radius: 28px;
+            padding: 40px 36px 44px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .greeting-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(15px, 3.5vw, 20px);
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            line-height: 1.5;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .greeting-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(15px, 3vw, 18px);
+            color: rgba(240,230,211,0.75);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .greeting-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(34px, 7vw, 52px);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-light);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .greeting-amp {
+            color: var(--gold);
+            font-size: 0.6em;
+        }
+
+        .greeting-date-row {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            opacity: 0.85;
+        }
+
+        /* Ornament inside card */
+        .card-ornament {
+            margin: 20px 0;
+            height: 20px;
+        }
+
+        /* ══════════════════════════════
+           COUNTDOWN
+        ══════════════════════════════ */
+        .countdown-wrap {
+            width: 100%;
+            max-width: 520px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .count-cell {
+            background: var(--wine-dark);
+            border-radius: 16px;
+            padding: 20px 8px;
+            text-align: center;
+        }
+
+        .count-num {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(30px, 6vw, 44px);
+            font-weight: 600;
+            color: var(--text-light);
+            line-height: 1;
+        }
+
+        .count-lbl {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            opacity: 0.7;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        /* ══════════════════════════════
+           CALENDAR CARD
+        ══════════════════════════════ */
+        .calendar-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--wine);
+            border-radius: 28px;
+            padding: 32px 28px 36px;
+            margin-bottom: 28px;
+        }
+
+        .cal-month-title {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .cal-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 6px;
+        }
+
+        .cal-header span {
+            font-family: 'Cinzel', serif;
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: rgba(240,230,211,0.4);
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .cal-day {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: rgba(240,230,211,0.65);
+            text-align: center;
+            padding: 9px 2px;
+            position: relative;
+        }
+
+        .cal-day.empty { opacity: 0; }
+
+        .cal-day.today {
+            color: #fff;
+            opacity: 1;
+        }
+
+        .cal-day.today::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border: 2px solid #e05070;
+            border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        .cal-time-note {
+            text-align: center;
+            margin-top: 16px;
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--gold);
+            opacity: 0.7;
+        }
+
+        /* ══════════════════════════════
+           RSVP FORM CARD
+        ══════════════════════════════ */
+        .form-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--wine-dark);
+            border-radius: 28px;
+            padding: 36px 32px 40px;
+        }
+
+        .form-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 34px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .form-sub {
+            font-family: 'Cinzel', serif;
+            font-size: 8px;
+            letter-spacing: 3px;
+            color: var(--gold);
+            opacity: 0.65;
+            text-align: center;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        .f-group {
+            margin-bottom: 24px;
+        }
+
+        .f-group label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            opacity: 0.7;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .f-group input,
+        .f-group textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(240,230,211,0.12);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            color: var(--text-light);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .f-group input::placeholder,
+        .f-group textarea::placeholder {
+            color: rgba(240,230,211,0.3);
+            font-style: italic;
+        }
+
+        .f-group input:focus,
+        .f-group textarea:focus {
+            border-color: rgba(184,147,90,0.5);
+        }
+
+        .f-group textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        .guests-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .g-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(240,230,211,0.12);
+            border-radius: 10px;
+            padding: 12px 6px;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: rgba(240,230,211,0.6);
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+        }
+
+        .g-btn.sel,
+        .g-btn:hover {
+            background: var(--wine-mid);
+            border-color: var(--wine-mid);
+            color: var(--text-light);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--gold);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--wine-dark);
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #cba36a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184,147,90,0.35);
+        }
+
+        .success-state {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-state .heart {
+            font-size: 44px;
+            display: block;
+            margin-bottom: 12px;
+            animation: heartbeat 1.2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+
+        .success-state p {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 22px;
+            color: var(--text-light);
+        }
+
+        /* ══════════════════════════════
+           SIDE ORNAMENT SVG PATTERN
+        ══════════════════════════════ */
+    </style>
+</head>
+<body>
+
+<!-- CONFIG -->
+<script>
+    const C = {
+        names:    { bride: "Аружан", groom: "Данияр" },
+        day:      "21-03-2026",
+        hour:     "19:00",
+        location: "«Жайлау» залы, Тараз",
+        photo:    "",   // URL или оставь пустым
+        music:    ""    // URL к mp3 или оставь пустым
+    };
+</script>
+
+<div class="page">
+
+    <!-- LEFT ORNAMENT -->
+    <div class="side-ornament" id="leftOrn">
+        <svg viewBox="0 0 72 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="kazLP" x="0" y="0" width="72" height="80" patternUnits="userSpaceOnUse">
+                    <!-- Kazakh-style vertical ornament tile -->
+                    <rect width="72" height="80" fill="#f2ebe0"/>
+                    <!-- central vertical stem -->
+                    <line x1="36" y1="0" x2="36" y2="80" stroke="#7a2c3e" stroke-width="1.5" opacity="0.5"/>
+                    <!-- diamond -->
+                    <path d="M36 10 L46 25 L36 40 L26 25 Z" fill="none" stroke="#7a2c3e" stroke-width="1.2" opacity="0.6"/>
+                    <circle cx="36" cy="25" r="3" fill="#7a2c3e" opacity="0.4"/>
+                    <!-- wings -->
+                    <path d="M36 25 Q22 32 14 26" fill="none" stroke="#7a2c3e" stroke-width="1" opacity="0.45"/>
+                    <path d="M36 25 Q50 32 58 26" fill="none" stroke="#7a2c3e" stroke-width="1" opacity="0.45"/>
+                    <circle cx="14" cy="26" r="2" fill="#7a2c3e" opacity="0.3"/>
+                    <circle cx="58" cy="26" r="2" fill="#7a2c3e" opacity="0.3"/>
+                    <!-- lower motif -->
+                    <path d="M36 40 Q28 52 30 60 Q36 55 42 60 Q44 52 36 40" fill="none" stroke="#7a2c3e" stroke-width="1" opacity="0.4"/>
+                    <path d="M36 60 L36 72" stroke="#7a2c3e" stroke-width="1" opacity="0.3"/>
+                    <circle cx="36" cy="72" r="2" fill="#7a2c3e" opacity="0.3"/>
+                    <!-- side leaves -->
+                    <path d="M30 48 Q20 44 16 50" fill="none" stroke="#7a2c3e" stroke-width="0.9" opacity="0.35"/>
+                    <path d="M42 48 Q52 44 56 50" fill="none" stroke="#7a2c3e" stroke-width="0.9" opacity="0.35"/>
+                </pattern>
+            </defs>
+            <rect width="72" height="800" fill="url(#kazLP)"/>
+            <!-- edge lines -->
+            <line x1="68" y1="0" x2="68" y2="800" stroke="#7a2c3e" stroke-width="1" opacity="0.25"/>
+            <line x1="64" y1="0" x2="64" y2="800" stroke="#7a2c3e" stroke-width="0.5" opacity="0.12"/>
+        </svg>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <!-- PHOTO -->
+        <div class="photo-wrap" id="photoWrap">
+            <div class="photo-placeholder" id="photoPlaceholder">
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+                    <circle cx="36" cy="28" r="14" stroke="white" stroke-width="1.5"/>
+                    <path d="M8 62 Q36 42 64 62" stroke="white" stroke-width="1.5" fill="none"/>
+                </svg>
+                <span>Фото жұпты</span>
+            </div>
+        </div>
+
+        <!-- ORNAMENT + PLAY -->
+        <div class="ornament-row">
+            <svg class="ornament-strip" viewBox="0 0 400 32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <pattern id="orn" x="0" y="0" width="40" height="32" patternUnits="userSpaceOnUse">
+                        <!-- Казахский узор горизонтальный -->
+                        <path d="M0 16 Q5 6 10 16 Q15 26 20 16 Q25 6 30 16 Q35 26 40 16" fill="none" stroke="#8a3a4e" stroke-width="1.4" opacity="0.7"/>
+                        <path d="M10 16 L10 8 Q20 2 30 8 L30 16" fill="none" stroke="#8a3a4e" stroke-width="1" opacity="0.5"/>
+                        <circle cx="20" cy="6" r="2" fill="#8a3a4e" opacity="0.5"/>
+                        <circle cx="10" cy="16" r="1.5" fill="#8a3a4e" opacity="0.4"/>
+                        <circle cx="30" cy="16" r="1.5" fill="#8a3a4e" opacity="0.4"/>
+                    </pattern>
+                </defs>
+                <rect width="400" height="32" fill="url(#orn)"/>
+                <line x1="0" y1="0" x2="400" y2="0" stroke="#8a3a4e" stroke-width="0.8" opacity="0.35"/>
+                <line x1="0" y1="32" x2="400" y2="32" stroke="#8a3a4e" stroke-width="0.8" opacity="0.35"/>
+            </svg>
+            <button class="play-circle" id="playBtn" onclick="togglePlay()">
+                <svg id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- GREETING CARD -->
+        <div class="greeting-card">
+            <div class="greeting-title" id="greetTitle">ҚҰРМЕТТІ АҒАЙЫН-ТУЫС, ҚҰДА-ЖЕКЖАТ, ДОС-ЖАРАН!</div>
+
+            <svg class="card-ornament" viewBox="0 0 300 20" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="co" x="0" y="0" width="30" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M0 10 Q7.5 2 15 10 Q22.5 18 30 10" fill="none" stroke="rgba(184,147,90,0.45)" stroke-width="1.2"/>
+                    </pattern>
+                </defs>
+                <rect width="300" height="20" fill="url(#co)"/>
+            </svg>
+
+            <div class="greeting-text">
+                Сіздерді біздің қуанышты тойымызға шақырамыз!<br>
+                Бірге болуыңызды өтінеміз.
+            </div>
+
+            <div class="greeting-names" id="greetNames">—</div>
+
+            <svg class="card-ornament" viewBox="0 0 300 20" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="co2" x="0" y="0" width="30" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M0 10 Q7.5 2 15 10 Q22.5 18 30 10" fill="none" stroke="rgba(184,147,90,0.45)" stroke-width="1.2"/>
+                    </pattern>
+                </defs>
+                <rect width="300" height="20" fill="url(#co2)"/>
+            </svg>
+
+            <div class="greeting-date-row" id="greetDate">—</div>
+        </div>
+
+        <!-- COUNTDOWN -->
+        <div class="countdown-wrap">
+            <div class="count-cell"><span class="count-num" id="cD">00</span><span class="count-lbl">Күн</span></div>
+            <div class="count-cell"><span class="count-num" id="cH">00</span><span class="count-lbl">Сағат</span></div>
+            <div class="count-cell"><span class="count-num" id="cM">00</span><span class="count-lbl">Минут</span></div>
+            <div class="count-cell"><span class="count-num" id="cS">00</span><span class="count-lbl">Секунд</span></div>
+        </div>
+
+        <!-- CALENDAR -->
+        <div class="calendar-card">
+            <div class="cal-month-title" id="calTitle">—</div>
+            <div class="cal-header">
+                <span>Дс</span><span>Сс</span><span>Ср</span>
+                <span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-time-note" id="calNote">—</div>
+        </div>
+
+        <!-- RSVP FORM -->
+        <div class="form-card">
+            <div class="form-title">Растау</div>
+            <div class="form-sub">Қатысуыңызды растаңыз</div>
+
+            <div id="theForm">
+                <div class="f-group">
+                    <label>Атыңыз</label>
+                    <input type="text" id="fName" placeholder="Аты-жөніңіз">
+                </div>
+                <div class="f-group">
+                    <label>Телефон</label>
+                    <input type="tel" id="fPhone" placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="f-group">
+                    <label>Қонақтар саны</label>
+                    <div class="guests-row">
+                        <button class="g-btn sel" data-v="1" onclick="selGuest(this)">1</button>
+                        <button class="g-btn" data-v="2" onclick="selGuest(this)">2</button>
+                        <button class="g-btn" data-v="3" onclick="selGuest(this)">3</button>
+                        <button class="g-btn" data-v="4" onclick="selGuest(this)">4+</button>
+                    </div>
+                </div>
+                <div class="f-group">
+                    <label>Тілек / Ескерту</label>
+                    <textarea id="fNote" placeholder="Аллергия немесе ерекше тілек..."></textarea>
+                </div>
+                <button class="submit-btn" onclick="doSubmit()">Растаймын ✓</button>
+            </div>
+
+            <div class="success-state" id="successState">
+                <span class="heart">♥</span>
+                <p>Рақмет! Сізді күтеміз.</p>
+            </div>
+        </div>
+
+    </div><!-- /main-content -->
+
+    <!-- RIGHT ORNAMENT (mirror) -->
+    <div class="side-ornament" id="rightOrn">
+        <svg viewBox="0 0 72 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(-1)">
+            <use href="#leftOrn"/>
+            <defs>
+                <pattern id="kazRP" x="0" y="0" width="72" height="80" patternUnits="userSpaceOnUse">
+                    <rect width="72" height="80" fill="#f2ebe0"/>
+                    <line x1="36" y1="0" x2="36" y2="80" stroke="#7a2c3e" stroke-width="1.5" opacity="0.5"/>
+                    <path d="M36 10 L46 25 L36 40 L26 25 Z" fill="none" stroke="#7a2c3e" stroke-width="1.2" opacity="0.6"/>
+                    <circle cx="36" cy="25" r="3" fill="#7a2c3e" opacity="0.4"/>
+                    <path d="M36 25 Q22 32 14 26" fill="none" stroke="#7a2c3e" stroke-width="1" opacity="0.45"/>
+                    <path d="M36 25 Q50 32 58 26" fill="none" stroke="#7a2c3e" stroke-width="1" opacity="0.45"/>
+                    <circle cx="14" cy="26" r="2" fill="#7a2c3e" opacity="0.3"/>
+                    <circle cx="58" cy="26" r="2" fill="#7a2c3e" opacity="0.3"/>
+                    <path d="M36 40 Q28 52 30 60 Q36 55 42 60 Q44 52 36 40" fill="none" stroke="#7a2c3e" stroke-width="1" opacity="0.4"/>
+                    <path d="M36 60 L36 72" stroke="#7a2c3e" stroke-width="1" opacity="0.3"/>
+                    <circle cx="36" cy="72" r="2" fill="#7a2c3e" opacity="0.3"/>
+                    <path d="M30 48 Q20 44 16 50" fill="none" stroke="#7a2c3e" stroke-width="0.9" opacity="0.35"/>
+                    <path d="M42 48 Q52 44 56 50" fill="none" stroke="#7a2c3e" stroke-width="0.9" opacity="0.35"/>
+                </pattern>
+            </defs>
+            <rect width="72" height="800" fill="url(#kazRP)"/>
+            <line x1="68" y1="0" x2="68" y2="800" stroke="#7a2c3e" stroke-width="1" opacity="0.25"/>
+            <line x1="64" y1="0" x2="64" y2="800" stroke="#7a2c3e" stroke-width="0.5" opacity="0.12"/>
+        </svg>
+    </div>
+
+</div><!-- /page -->
+
+<script>
+    // ── Apply config ────────────────────
+    const [dd,mm,yy] = C.day.split('-').map(Number);
+    const MRU = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым",
+        "Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
+    const MGEN = ["қаңтарда","ақпанда","наурызда","сәуірде","мамырда","маусымда",
+        "шілдеде","тамызда","қыркүйекте","қазанда","қарашада","желтоқсанда"];
+
+    document.getElementById('greetNames').textContent = `${C.names.bride} & ${C.names.groom}`;
+    document.getElementById('greetDate').textContent = `${dd} ${MGEN[mm-1]} ${yy}  ·  ${C.hour}`;
+
+    // Photo
+    if (C.photo) {
+        const ph = document.getElementById('photoPlaceholder');
+        const img = new Image();
+        img.src = C.photo;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
+        document.getElementById('photoWrap').appendChild(img);
+        ph.style.display = 'none';
+    }
+
+    // Calendar
+    document.getElementById('calTitle').textContent = `${MRU[mm-1].toUpperCase()} ${yy}`;
+    document.getElementById('calNote').textContent = `${C.hour}  ·  ${C.location}`;
+
+    (function buildCal(){
+        const grid = document.getElementById('calGrid');
+        const first = new Date(yy, mm-1, 1).getDay();
+        const off = first === 0 ? 6 : first-1;
+        const days = new Date(yy, mm, 0).getDate();
+        grid.innerHTML = '';
+        for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cal-day empty';e.textContent='';grid.appendChild(e);}
+        for(let d=1;d<=days;d++){const e=document.createElement('div');e.className='cal-day'+(d===dd?' today':'');e.textContent=d;grid.appendChild(e);}
+    })();
+
+    // Countdown
+    const [h,min] = C.hour.split(':').map(Number);
+    const target = new Date(yy,mm-1,dd,h,min,0);
+    function pad(n){return String(n).padStart(2,'0');}
+    function tick(){
+        const diff = target - new Date();
+        if(diff<=0){['cD','cH','cM','cS'].forEach(id=>document.getElementById(id).textContent='00');return;}
+        document.getElementById('cD').textContent=pad(Math.floor(diff/86400000));
+        document.getElementById('cH').textContent=pad(Math.floor(diff%86400000/3600000));
+        document.getElementById('cM').textContent=pad(Math.floor(diff%3600000/60000));
+        document.getElementById('cS').textContent=pad(Math.floor(diff%60000/1000));
+    }
+    tick(); setInterval(tick,1000);
+
+    // Music
+    let audio = C.music ? new Audio(C.music) : null;
+    let playing = false;
+
+    function togglePlay(){
+        if(!audio){
+            // Upload fallback
+            const inp = document.createElement('input');
+            inp.type='file'; inp.accept='audio/*';
+            inp.onchange = e => {
+                const f = e.target.files[0];
+                if(!f) return;
+                audio = new Audio(URL.createObjectURL(f));
+                audio.addEventListener('ended',()=>{playing=false;updateIcon();document.getElementById('playBtn').classList.remove('playing');});
+                playAudio();
+            };
+            inp.click();
+            return;
+        }
+        if(playing){ audio.pause(); playing=false; document.getElementById('playBtn').classList.remove('playing'); }
+        else { playAudio(); }
+        updateIcon();
+    }
+
+    function playAudio(){
+        audio.play();
+        playing = true;
+        document.getElementById('playBtn').classList.add('playing');
+        updateIcon();
+    }
+
+    function updateIcon(){
+        document.getElementById('playIcon').innerHTML = playing
+            ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+            : '<path d="M8 5v14l11-7z"/>';
+    }
+
+    // RSVP
+    let guests = 1;
+    function selGuest(btn){
+        document.querySelectorAll('.g-btn').forEach(b=>b.classList.remove('sel'));
+        btn.classList.add('sel');
+        guests = btn.dataset.v;
+    }
+
+    function doSubmit(){
+        const name = document.getElementById('fName').value.trim();
+        const phone = document.getElementById('fPhone').value.trim();
+        if(!name){ document.getElementById('fName').focus(); return; }
+        if(!phone){ document.getElementById('fPhone').focus(); return; }
+        document.getElementById('theForm').style.display='none';
+        document.getElementById('successState').style.display='block';
+    }
+</script>
+</body>
+</html>
