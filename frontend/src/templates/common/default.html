@@ -190,6 +190,23 @@
             animation: scrollPulse 1.5s ease-in-out infinite;
         }
 
+        /* DESCRIPTION */
+        .description-section {
+            background: var(--cream);
+            text-align: center;
+            padding: 60px 24px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .description-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(18px, 4vw, 24px);
+            line-height: 1.6;
+            color: var(--text);
+            opacity: 0.9;
+        }
+
         @keyframes scrollPulse {
             0%, 100% { opacity: 0.3; transform: scaleY(1); }
             50% { opacity: 0.8; transform: scaleY(1.1); }
@@ -272,6 +289,19 @@
 
         .player-meta {
             flex: 1;
+        }
+
+        .player-select {
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(201,169,110,0.3);
+            background: rgba(201,169,110,0.08);
+            color: var(--gold);
+            padding: 8px 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 2px;
         }
 
         .player-label {
@@ -804,6 +834,13 @@
 </section>
 
 <!-- ══════════════════════════════════
+     DESCRIPTION
+══════════════════════════════════ -->
+<section class="description-section reveal">
+    <p class="description-text" id="descText">—</p>
+</section>
+
+<!-- ══════════════════════════════════
      MUSIC PLAYER
 ══════════════════════════════════ -->
 <div class="player-section">
@@ -817,6 +854,7 @@
             <div class="player-label">Наша музыка</div>
             <div class="player-title" id="playerTitle">Наша Песня</div>
             <div class="player-artist" id="playerArtist">— загрузите аудио файл —</div>
+            <select id="trackSelect" class="player-select" style="display:none"></select>
         </div>
     </div>
 </div>
@@ -972,6 +1010,7 @@
     const musicBlock = document.getElementById('musicBlock');
     const playBtn = document.getElementById('playBtn');
     const playIcon = document.getElementById('playIcon');
+    const trackSelect = document.getElementById('trackSelect');
 
     function updatePlayIcon() {
         playIcon.innerHTML = isPlaying
@@ -979,17 +1018,51 @@
             : '<path d="M8 5v14l11-7z"/>';
     }
 
-    if (CONFIG.music.url) {
-        audio = new Audio(CONFIG.music.url);
+    function loadTrack(track) {
+        if (audio) { audio.pause(); audio = null; }
+        if (!track?.url) { musicBlock.style.display = 'none'; return; }
+        audio = new Audio(track.url);
+        audio.volume = 0.6;
         audio.addEventListener('ended', () => { isPlaying = false; updatePlayIcon(); });
+        document.getElementById('playerTitle').textContent = track.title || 'Трек';
+        document.getElementById('playerArtist').textContent = track.artist || CONFIG.music.artist || '';
+        isPlaying = false;
+        updatePlayIcon();
+        return audio;
+    }
+
+    const playlist = [];
+    if (CONFIG.music?.url) playlist.push({ title: CONFIG.music.title || 'Трек 1', artist: CONFIG.music.artist, url: CONFIG.music.url });
+    if (Array.isArray(CONFIG.music?.playlist)) {
+        CONFIG.music.playlist.forEach((t, i) => {
+            if (t?.url) playlist.push({ title: t.title || `Трек ${i + 2}`, artist: t.artist, url: t.url });
+        });
+    }
+
+    if (playlist.length === 0) {
+        musicBlock.style.display = 'none';
+    } else {
+        loadTrack(playlist[0]);
+        if (playlist.length > 1) {
+            trackSelect.style.display = 'block';
+            trackSelect.innerHTML = '';
+            playlist.forEach((t, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = t.title || `Трек ${i + 1}`;
+                trackSelect.appendChild(opt);
+            });
+            trackSelect.addEventListener('change', () => {
+                const idx = Number(trackSelect.value) || 0;
+                loadTrack(playlist[idx]);
+            });
+        }
         playBtn.addEventListener('click', () => {
             if (!audio) return;
             if (isPlaying) { audio.pause(); isPlaying = false; }
-            else { audio.play(); isPlaying = true; }
+            else { audio.play().catch(()=>{}); isPlaying = true; }
             updatePlayIcon();
         });
-    } else {
-        musicBlock.style.display = 'none';
     }
 
     // ── Gallery ───────────────────────────────────
@@ -1061,6 +1134,12 @@
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Description
+    const desc = document.getElementById('descText');
+    if (desc) {
+        desc.textContent = CONFIG.description || ' ';
+    }
 </script>
 </body>
 </html>

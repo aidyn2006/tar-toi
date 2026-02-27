@@ -397,7 +397,7 @@ const EditInvitePage = () => {
         if (!file) return;
         setUploadingPhoto(true);
         try {
-            const { url } = await uploadService.uploadImage(file);
+            const { url } = await uploadService.uploadImage(file, currentCategory);
             setData(prev => ({ ...prev, previewPhotoUrl: url || prev.previewPhotoUrl }));
         } catch (e) {
             alert('Суретті жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
@@ -412,7 +412,7 @@ const EditInvitePage = () => {
         try {
             const uploads = [];
             for (const f of files) {
-                const { url } = await uploadService.uploadImage(f);
+                const { url } = await uploadService.uploadImage(f, currentCategory);
                 if (url) uploads.push(url);
             }
             if (uploads.length) {
@@ -433,7 +433,7 @@ const EditInvitePage = () => {
         if (!file) return;
         setUploadingAudio(true);
         try {
-            const { url } = await uploadService.uploadAudio(file);
+            const { url } = await uploadService.uploadAudio(file, currentCategory);
             setData(prev => ({ ...prev, musicUrl: url, musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle }));
         } catch (e) {
             alert('Аудио жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));

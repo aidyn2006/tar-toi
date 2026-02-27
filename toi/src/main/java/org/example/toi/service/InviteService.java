@@ -130,6 +130,7 @@ public class InviteService {
                         r.getPhone(),
                         r.getGuestsCount(),
                         r.isAttending(),
+                        r.getNote(),
                         r.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
@@ -157,6 +158,7 @@ public class InviteService {
                 .phone(request.phone())
                 .guestsCount(request.guestsCount())
                 .attending(request.attending())
+                .note(request.note())
                 .build();
 
         responseRepository.save(response);

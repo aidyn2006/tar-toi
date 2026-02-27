@@ -37,7 +37,10 @@ public class UploadController {
     }
 
     @PostMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<Map<String, String>> uploadImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "category", required = false) String category
+    ) throws IOException {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Файл бос"));
         }
@@ -45,11 +48,14 @@ public class UploadController {
         if (contentType == null || !contentType.startsWith("image/")) {
             return ResponseEntity.badRequest().body(Map.of("error", "Тек сурет файлы қажет"));
         }
-        return ResponseEntity.ok(storeFile(file, "images"));
+        return ResponseEntity.ok(storeFile(file, "images", category));
     }
 
     @PostMapping(path = "/audio", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> uploadAudio(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<Map<String, String>> uploadAudio(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "category", required = false) String category
+    ) throws IOException {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Файл бос"));
         }
@@ -57,10 +63,10 @@ public class UploadController {
         if (contentType == null || !contentType.startsWith("audio/")) {
             return ResponseEntity.badRequest().body(Map.of("error", "Тек аудио файлды жүктеңіз"));
         }
-        return ResponseEntity.ok(storeFile(file, "audio"));
+        return ResponseEntity.ok(storeFile(file, "audio", category));
     }
 
-    private Map<String, String> storeFile(MultipartFile file, String subfolder) throws IOException {
+    private Map<String, String> storeFile(MultipartFile file, String subfolder, String category) throws IOException {
         String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "" : file.getOriginalFilename());
         String ext = "";
         int dot = original.lastIndexOf('.');
@@ -68,10 +74,11 @@ public class UploadController {
             ext = original.substring(dot);
         }
         String filename = Instant.now().getEpochSecond() + "-" + UUID.randomUUID() + ext;
-        Path dir = ensureDir(subfolder);
+        String categorySafe = (category == null || category.isBlank()) ? null : category.replaceAll("[^a-zA-Z0-9_-]", "");
+        Path dir = categorySafe == null ? ensureDir(subfolder) : ensureDir(categorySafe + "/" + subfolder);
         Path target = dir.resolve(filename);
         file.transferTo(target);
-        String relative = "/uploads/" + subfolder + "/" + filename;
+        String relative = "/uploads/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + filename;
         String base = publicUrl != null && !publicUrl.isBlank()
                 ? publicUrl.replaceAll("/+$", "")
                 : ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();

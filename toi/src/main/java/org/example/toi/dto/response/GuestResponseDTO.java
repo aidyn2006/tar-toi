@@ -8,5 +8,6 @@ public record GuestResponseDTO(
     String phone,
     int guestsCount,
     boolean attending,
+    String note,
     LocalDateTime createdAt
 ) {}

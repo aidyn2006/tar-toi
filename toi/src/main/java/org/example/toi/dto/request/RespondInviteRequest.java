@@ -14,5 +14,8 @@ public record RespondInviteRequest(
     @Min(value = 1, message = "Guests count must be at least 1")
     int guestsCount,
 
-    boolean attending
+    boolean attending,
+
+    @Size(max = 500)
+    String note
 ) {}

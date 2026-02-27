@@ -33,4 +33,7 @@ public class InviteResponse extends BaseEntity {
 
     @Column(nullable = false)
     private boolean attending;
+
+    @Column(name = "note", length = 500)
+    private String note;
 }

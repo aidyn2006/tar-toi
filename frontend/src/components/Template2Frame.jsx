@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
+const LEGACY_KEYS = ['classic', 'royal', 'nature', 'modern'];
 
 const PALETTES = {
     classic: {
@@ -77,6 +78,7 @@ function normalizeUrl(url) {
 
 function normalizeTemplateKey(key) {
     if (!key) return DEFAULT_TEMPLATE_KEY;
+    if (LEGACY_KEYS.includes(key)) return DEFAULT_TEMPLATE_KEY;
     if (key.startsWith('../templates/')) return key;
     if (key.startsWith('templates/')) return `../${key}`;
     return `../templates/${key}`;
@@ -108,6 +110,7 @@ function buildConfig(invite) {
             url: normalizeUrl(invite?.musicUrl || ''),
         },
         gallery,
+        description: invite?.description || '',
     };
 }
 
@@ -138,6 +141,29 @@ function injectPhoto(html, url) {
         /<div class="hero-photo-placeholder">[\s\S]*?<\/div>/,
         `<img class="hero-photo-img" src="${safeUrl}" alt="photo">`
     );
+}
+
+function injectAutoplay(html, enableRsvp) {
+    if (!enableRsvp) return html;
+    const script = `
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        if (typeof CONFIG === 'undefined') return;
+        const isMobile = window.innerWidth < 920;
+        if (isMobile && CONFIG.music && (CONFIG.music.url || (CONFIG.music.playlist||[]).length)) {
+            const audio = new Audio(CONFIG.music.url);
+            audio.volume = 0.4;
+            const start = () => { audio.play().catch(() => {}); };
+            setTimeout(start, 300);
+            document.body.addEventListener('click', start, { once: true });
+        }
+        const block = document.getElementById('musicBlock');
+        if (block && isMobile) {
+            setTimeout(() => { block.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 800);
+        }
+    });
+</script>`;
+    return html.replace('</body>', `${script}\n</body>`);
 }
 
 function injectConfig(html, config) {
@@ -194,7 +220,8 @@ function injectRsvpApi(html, inviteId) {
                         guestName: name,
                         phone: phone || null,
                         guestsCount: Number.isNaN(guestsCount) ? 1 : guestsCount,
-                        attending: true
+                        attending: true,
+                        note: (noteEl?.value || '').trim() || null
                     })
                 });
 
@@ -272,9 +299,23 @@ function localizeTemplate(html, lang) {
     return out;
 }
 
+function pickPalette(invite) {
+    const tpl = invite?.template || '';
+    const parts = tpl.split('/');
+    const category = parts[0] || '';
+    const fileName = (parts[parts.length - 1] || '').replace('.html', '');
+    const candidates = [
+        fileName,
+        category,
+        LEGACY_KEYS.includes(tpl) ? tpl : null,
+        'classic',
+    ].filter(Boolean);
+    const key = candidates.find(k => PALETTES[k]);
+    return PALETTES[key] || PALETTES.classic;
+}
+
 function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk' } = {}) {
-    const templateId = (invite?.template || '').split('/').pop()?.replace('.html', '');
-    const palette = PALETTES[templateId] || PALETTES.classic;
+    const palette = pickPalette(invite);
     const config = buildConfig(invite || {});
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
@@ -287,14 +328,22 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
     if (enableRsvp) {
         html = injectRsvpApi(html, inviteId);
     }
+    html = injectAutoplay(html, enableRsvp);
     html = localizeTemplate(html, lang);
     return html;
 }
 
 const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk' }) => {
+    const [debouncedInvite, setDebouncedInvite] = useState(invite);
+
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedInvite(invite), 250);
+        return () => clearTimeout(t);
+    }, [invite]);
+
     const srcDoc = useMemo(
-        () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang }),
-        [invite, enableRsvp, inviteId, lang]
+        () => buildTemplate2Html(debouncedInvite, { enableRsvp, inviteId, lang }),
+        [debouncedInvite, enableRsvp, inviteId, lang]
     );
 
     return (

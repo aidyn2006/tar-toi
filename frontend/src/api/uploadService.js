@@ -1,18 +1,18 @@
 import apiClient from './apiClient';
 
 export const uploadService = {
-    uploadImage: async (file) => {
+    uploadImage: async (file, category) => {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await apiClient.post('/uploads/image', formData, {
+        const res = await apiClient.post(`/uploads/image${category ? `?category=${encodeURIComponent(category)}` : ''}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         return normalize(res.data);
     },
-    uploadAudio: async (file) => {
+    uploadAudio: async (file, category) => {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await apiClient.post('/uploads/audio', formData, {
+        const res = await apiClient.post(`/uploads/audio${category ? `?category=${encodeURIComponent(category)}` : ''}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         return normalize(res.data);

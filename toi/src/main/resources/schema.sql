@@ -47,6 +47,7 @@ CREATE TABLE invite_responses (
     guest_name VARCHAR(100) NOT NULL,
     guests_count INT NOT NULL,
     attending BOOLEAN NOT NULL,
+    note VARCHAR(500),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     version BIGINT,
