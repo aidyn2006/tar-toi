@@ -43,16 +43,16 @@ const PendingModal = () => (
                 Аккаунтыңыз расталу күтілуде
             </h2>
             <p style={{ color: C.green700, fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-                Доступ алу үшін осы ботқа жазыңыз — біз сізге баяндаймыз.
+                Доступ алу үшін осы Telegram админіне жазыңыз — біз сізге баяндаймыз.
             </p>
-            <a href="https://wa.me/77083527432?text=Сәлем! Менің аккаунтымды растаңыз." target="_blank" rel="noopener noreferrer" style={{
+            <a href="https://t.me/nur_kun" target="_blank" rel="noopener noreferrer" style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
                 padding: '0.875rem 2rem', borderRadius: '999px', textDecoration: 'none',
                 background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`,
                 color: C.green900, fontWeight: 800, fontSize: '1rem',
                 boxShadow: '0 8px 20px rgba(31,91,70,0.14)', marginBottom: '0.75rem'
             }}>
-                💬 WhatsApp-қа жазу: +7 708 352 74 32
+                ✈️ Telegram-ға жазу: @nur_kun
             </a>
             <button onClick={() => authService.logout()} style={{
                 background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '1rem'

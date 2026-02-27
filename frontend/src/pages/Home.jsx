@@ -420,13 +420,13 @@ const Home = () => {
                     </p>
                     <div className="home-contact-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
                         {/* WhatsApp */}
-                        <a href="https://wa.me/77001234567" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                        <a href="https://wa.me/77056842747" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                             <div style={{ padding: '2rem', borderRadius: '1.5rem', background: '#f0fdf4', border: '1px solid rgba(16,185,129,0.15)', cursor: 'pointer', transition: 'all 0.25s ease' }}
                                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(16,185,129,0.15)'; }}
                                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
                                 <MessageCircle size={32} color="#25D366" style={{ marginBottom: '0.75rem' }} />
                                 <div style={{ fontWeight: 700, color: '#064e3b', marginBottom: '0.25rem' }}>WhatsApp</div>
-                                <div style={{ color: '#10b981', fontSize: '0.9rem', fontWeight: 600 }}>+7 700 000 00 00</div>
+                                <div style={{ color: '#10b981', fontSize: '0.9rem', fontWeight: 600 }}>+7 705 684 27 47</div>
                             </div>
                         </a>
                         {/* Instagram */}
@@ -436,17 +436,17 @@ const Home = () => {
                                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
                                 <Instagram size={32} color="#e1306c" style={{ marginBottom: '0.75rem' }} />
                                 <div style={{ fontWeight: 700, color: '#064e3b', marginBottom: '0.25rem' }}>Instagram</div>
-                                <div style={{ color: '#f59e0b', fontSize: '0.9rem', fontWeight: 600 }}>@shaqyrtu.kz</div>
+                                <div style={{ color: '#f59e0b', fontSize: '0.9rem', fontWeight: 600 }}>@codejaz.kz</div>
                             </div>
                         </a>
                         {/* Phone */}
-                        <a href="tel:+77001234567" style={{ textDecoration: 'none' }}>
+                        <a href="tel:+77056842747" style={{ textDecoration: 'none' }}>
                             <div style={{ padding: '2rem', borderRadius: '1.5rem', background: '#f0fdf4', border: '1px solid rgba(16,185,129,0.15)', cursor: 'pointer', transition: 'all 0.25s ease' }}
                                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(16,185,129,0.15)'; }}
                                 onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
                                 <Phone size={32} color="#10b981" style={{ marginBottom: '0.75rem' }} />
                                 <div style={{ fontWeight: 700, color: '#064e3b', marginBottom: '0.25rem' }}>Телефон</div>
-                                <div style={{ color: '#10b981', fontSize: '0.9rem', fontWeight: 600 }}>+7 700 000 00 00</div>
+                                <div style={{ color: '#10b981', fontSize: '0.9rem', fontWeight: 600 }}>+7 705 684 27 47</div>
                             </div>
                         </a>
                     </div>
@@ -462,7 +462,7 @@ const Home = () => {
                     </div>
                     <div>© 2025 shaqyrtu.kz — Барлық құқықтар қорғалған</div>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
-                        <a href="https://wa.me/77001234567" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>WhatsApp</a>
+                        <a href="https://wa.me/77056842747" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>WhatsApp</a>
                         <a href="https://instagram.com/shaqyrtu" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>Instagram</a>
                     </div>
                 </div>
