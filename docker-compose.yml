@@ -1,17 +1,17 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: toi-db
+    container_name: toi-db-fresh
     environment:
-      POSTGRES_DB: toi_db
+      POSTGRES_DB: toi_db_fresh
       POSTGRES_USER: toi_user
       POSTGRES_PASSWORD: toi_pass
     ports:
-      - "5433:5432"
+      - "5435:5432"
     volumes:
-      - toi_pg_data:/var/lib/postgresql/data
+      - toi_pg_data_fresh:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U toi_user -d toi_db"]
+      test: [ "CMD-SHELL", "pg_isready -U toi_user -d toi_db_fresh" ]
       interval: 5s
       timeout: 5s
       retries: 10
