@@ -5,16 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Template</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --wine: #6b1f2e;
-            --wine-dark: #4a1020;
+            --wine:       #6b1f2e;
+            --wine-dark:  #4a1020;
             --wine-light: #8a2a3e;
-            --gold: #c9a96e;
+            --gold:       #c9a96e;
             --gold-light: #e8d5b7;
-            --cream: #faf6ef;
-            --text: #2a1015;
+            --cream:      #faf6ef;
+            --text:       #2a1015;
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,7 +27,7 @@
         }
 
         /* ══════════════════════════════
-           BORDER — повторяющийся по краям
+           BORDER STRIPS
         ══════════════════════════════ */
         .border-strip {
             pointer-events: none;
@@ -62,15 +62,13 @@
         /* ══════════════════════════════
            ① HERO
         ══════════════════════════════ */
-        .hero {
-            position: relative;
-        }
+        .hero { position: relative; }
 
         .hero-photo-placeholder,
         .hero-photo-img {
             width: 100%;
             height: 70dvh;
-            min-height: 380px;
+            min-height: 400px;
             object-fit: cover;
             border-radius: 0 0 100px 100px;
             display: block;
@@ -78,31 +76,25 @@
         }
 
         .hero-photo-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 14px;
         }
-        .hero-photo-placeholder svg { opacity: 0.12; }
+        .hero-photo-placeholder svg { opacity: 0.1; }
         .hero-photo-placeholder span {
             font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 3px;
-            color: rgba(232,213,183,0.3); text-transform: uppercase;
+            font-size: 9px; letter-spacing: 4px;
+            color: rgba(232,213,183,0.25); text-transform: uppercase;
         }
 
-        /* decor SVG поверх низа фото */
         .hero-decor {
             position: absolute;
             bottom: -1px; left: 50%;
             transform: translateX(-50%);
             width: min(380px, 88%);
-            z-index: 10;
-            pointer-events: none;
-            display: block;
+            z-index: 10; pointer-events: none;
         }
 
-        /* music btn */
         .music-btn {
             position: absolute;
             bottom: 0; right: 28px;
@@ -113,236 +105,291 @@
             background: var(--wine);
             border: none; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 24px rgba(74,16,32,0.45);
-            transition: all 0.3s;
+            box-shadow: 0 6px 32px rgba(74,16,32,0.45);
+            transition: background 0.3s;
         }
-        .music-btn:hover { background: var(--wine-light); transform: translateY(50%) scale(1.06); }
+        .music-btn:hover { background: var(--wine-light); }
         .music-btn svg { color: #fff; margin-left: 3px; }
+        .music-btn.playing svg { margin-left: 0; }
         .music-btn.playing::after {
             content: '';
-            position: absolute; inset: -6px;
+            position: absolute; inset: -7px;
             border: 2px solid var(--wine);
             border-radius: 50%;
             animation: ripple 1.6s ease-out infinite;
         }
         @keyframes ripple {
-            0%  { opacity: 0.6; transform: scale(1); }
-            100%{ opacity: 0; transform: scale(1.5); }
+            0%  { opacity: 0.5; transform: scale(1); }
+            100%{ opacity: 0;   transform: scale(1.55); }
         }
 
-        /* heroNames — поверх hero секции */
-        .hero h1#heroNames {
-            display: none; /* names повторяются в about */
-        }
+        .hero h1#heroNames { display: none; }
 
         /* ══════════════════════════════
-           ② ABOUT — тёмная карточка
+           ② ABOUT
         ══════════════════════════════ */
         .about {
             background: var(--wine);
-            border-radius: 0;
-            padding: 52px 28px 44px;
+            padding: 72px 40px 64px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-
         .about::before {
             content: '';
             position: absolute; inset: 0;
-            background-image: radial-gradient(rgba(232,213,183,0.05) 1px, transparent 1px);
-            background-size: 28px 28px;
+            background-image: radial-gradient(rgba(232,213,183,0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
             pointer-events: none;
         }
 
+        /* CONFIG.description */
         .about-eyebrow {
             font-family: 'Cinzel', serif;
-            font-size: clamp(12px, 2.8vw, 15px);
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--gold-light);
-            line-height: 1.65;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .about p#eventText {
-            font-family: 'Lora', serif;
-            font-size: clamp(14px, 2.8vw, 17px);
-            letter-spacing: 1.5px;
+            font-size: clamp(10px, 2.4vw, 13px);
+            font-weight: 400;
+            letter-spacing: 3px;
             color: rgba(232,213,183,0.75);
-            line-height: 1.75;
-            margin-bottom: 20px;
+            line-height: 2;
+            text-transform: uppercase;
+            margin-bottom: 32px;
             position: relative;
         }
 
-        .about .invite-body {
+        .wave-orn {
+            margin: 28px auto;
+            display: block;
+            width: 200px; height: 14px;
+        }
+
+        .invite-body {
             font-family: 'Lora', serif;
             font-size: clamp(14px, 2.8vw, 17px);
-            color: rgba(232,213,183,0.7);
-            line-height: 1.8;
+            color: rgba(232,213,183,0.58);
+            line-height: 2;
             letter-spacing: 1.5px;
-            margin-bottom: 20px;
+            margin-bottom: 4px;
             position: relative;
         }
 
-        .about h1#heroNamesLine {
+        #heroNamesLine {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-weight: 400;
-            font-size: clamp(32px, 7vw, 48px);
+            font-weight: 300;
+            font-size: clamp(44px, 9vw, 64px);
             color: var(--gold-light);
-            letter-spacing: 3px;
-            margin: 12px 0 20px;
-            line-height: 1.05;
+            letter-spacing: 4px;
+            margin: 14px 0 28px;
+            line-height: 1;
             position: relative;
         }
 
-        .about .invite-footer {
+        .invite-footer {
             font-family: 'Lora', serif;
-            font-size: clamp(13px, 2.6vw, 16px);
-            color: rgba(232,213,183,0.65);
-            line-height: 1.8;
+            font-size: clamp(13px, 2.5vw, 15px);
+            color: rgba(232,213,183,0.52);
+            line-height: 2.1;
             letter-spacing: 1.5px;
             position: relative;
         }
 
-        /* wave ornament */
-        .wave-orn {
-            margin: 18px auto;
-            display: block;
-            width: 180px; height: 12px;
-        }
-
-        /* ══════════════════════════════
-           ③ DATE inside about
-        ══════════════════════════════ */
+        /* ── DATE / CALENDAR ── */
         .date-block {
+            margin: 48px 0 0;
             position: relative;
-            margin: 24px 0 8px;
         }
 
         .date-label {
             font-family: 'Lora', serif;
-            font-size: clamp(15px, 3vw, 18px);
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--gold-light);
-            margin-bottom: 16px;
+            font-size: clamp(13px, 2.6vw, 16px);
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            color: rgba(232,213,183,0.65);
+            margin-bottom: 22px;
         }
 
-        /* Сердечко поверх календаря */
-        .cal-heart {
-            width: 44px; height: 44px;
-            position: absolute;
-            top: 14px; right: 14px;
-            pointer-events: none;
-            animation: heartPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes heartPulse {
-            0%,100% { transform: scale(1); opacity: 0.85; }
-            50%     { transform: scale(1.12); opacity: 0.6; }
-        }
-
-        #heroDateLine {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(16px, 3.2vw, 20px);
-            color: rgba(232,213,183,0.9);
-            letter-spacing: 2px;
+        .calendar-wrap {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(232,213,183,0.08);
+            border-radius: 20px;
+            padding: 28px 16px 24px;
+            margin: 0 auto;
+            max-width: 320px;
             position: relative;
-            z-index: 1;
-            padding: 6px 18px;
         }
 
-        /* ownersBlock */
-        #ownersBlock { margin-top: 20px; position: relative; }
+        .cal-heart {
+            width: 38px; height: 38px;
+            position: absolute;
+            top: 8px; right: 8px;
+            pointer-events: none;
+            animation: hPulse 2.2s ease-in-out infinite;
+            z-index: 2;
+        }
+        @keyframes hPulse {
+            0%,100% { transform: scale(1);    opacity: 0.75; }
+            50%     { transform: scale(1.15); opacity: 0.45; }
+        }
 
-        .tag {
-            display: inline-block;
-            padding: 5px 14px;
-            border-radius: 999px;
-            background: rgba(232,213,183,0.12);
-            color: var(--gold);
+        .cal-month-title {
             font-family: 'Cinzel', serif;
-            font-size: 10px;
-            letter-spacing: 2px;
+            font-size: 9px; letter-spacing: 5px;
+            color: var(--gold); opacity: 0.7;
             text-transform: uppercase;
+            margin-bottom: 18px; text-align: center;
         }
 
-        #ownersText {
-            margin-top: 8px;
+        .cal-grid-head {
+            display: grid; grid-template-columns: repeat(7,1fr);
+            margin-bottom: 8px;
+        }
+        .cal-grid-head span {
+            font-family: 'Cinzel', serif;
+            font-size: 7px; letter-spacing: 1px;
+            color: rgba(232,213,183,0.28);
+            text-align: center; padding: 2px 0;
+        }
+
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7,1fr); gap: 2px;
+        }
+        .cday {
+            font-family: 'Lora', serif;
+            font-size: 13px;
+            color: rgba(232,213,183,0.45);
+            text-align: center; padding: 9px 2px;
+            position: relative; line-height: 1;
+        }
+        .cday.other { opacity: 0.15; }
+        .cday.today { color: #fff; font-weight: 600; font-size: 16px; }
+        .cday.today::before {
+            content: '';
+            position: absolute; inset: 3px;
+            border-radius: 50%;
+            background: var(--wine-light);
+            z-index: -1;
+        }
+
+        .time-only {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 300;
+            font-size: clamp(24px, 5vw, 32px);
+            color: rgba(232,213,183,0.82);
+            letter-spacing: 5px;
+            margin-top: 20px;
+        }
+
+        #ownersBlock { display: none; }
+
+        /* ══════════════════════════════
+           ③ OWNERS CARD
+        ══════════════════════════════ */
+        .owners-section {
+            background: var(--wine);
+            border-radius: 0 0 100px 100px;
+            padding: 16px 40px 72px;
+            text-align: center;
+        }
+
+        .decor-img {
+            width: 100px;
+            display: block;
+            margin: 0 auto 20px;
+            opacity: 0.5;
+        }
+
+        .owners-label-txt {
+            font-family: 'Cinzel', serif;
+            font-size: 9px; letter-spacing: 5px;
+            color: var(--gold); opacity: 0.55;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .owners-name-txt {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: clamp(30px, 7.5vw, 48px);
             color: var(--gold-light);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            line-height: 1.15;
         }
 
         /* ══════════════════════════════
            ④ LOCATION
         ══════════════════════════════ */
         .location {
-            background: var(--wine);
-            padding: 32px 28px 32px;
+            background: var(--cream);
+            padding: 72px 40px 64px;
             text-align: center;
         }
 
         .location h3 {
             font-family: 'Cinzel', serif;
-            font-size: 10px; letter-spacing: 4px;
-            color: var(--gold); opacity: 0.65;
+            font-size: 9px; letter-spacing: 5px;
+            color: var(--wine); opacity: 0.4;
             text-transform: uppercase;
             font-weight: 400;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* thin line divider */
+        .loc-divider {
+            width: 48px; height: 1px;
+            background: var(--wine);
+            opacity: 0.15;
+            margin: 0 auto 24px;
         }
 
         #locationName {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(16px, 3.2vw, 20px);
-            color: rgba(232,213,183,0.85);
-            letter-spacing: 2px;
-            margin-bottom: 16px;
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(20px, 4.5vw, 28px);
+            color: var(--wine);
+            letter-spacing: 1.5px;
+            margin-bottom: 28px;
+            line-height: 1.4;
         }
 
-        #mapBtnWrap { margin-top: 10px; }
+        #mapBtnWrap { margin-top: 0; }
 
         .btn {
             display: inline-flex;
-            align-items: center; gap: 8px;
-            padding: 11px 20px;
-            border-radius: 12px;
-            background: var(--cream);
-            color: var(--wine);
+            align-items: center; gap: 9px;
+            padding: 13px 26px;
+            border-radius: 14px;
+            background: var(--wine);
+            color: var(--gold-light);
             text-decoration: none;
             font-family: 'Cinzel', serif;
-            font-size: 10px; letter-spacing: 1px; font-weight: 600;
+            font-size: 9px; letter-spacing: 2px; font-weight: 400;
             border: none; cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.25s;
             text-transform: uppercase;
         }
-        .btn:hover { background: var(--gold-light); }
-        .btn img { width: 22px; height: 22px; }
+        .btn:hover { background: var(--wine-light); }
+        .btn img { width: 20px; height: 20px; }
 
         /* ══════════════════════════════
-           ⑤ GALLERY — карусель
+           ⑤ GALLERY
         ══════════════════════════════ */
         .gallery {
             background: var(--wine);
-            padding: 32px 0 40px;
+            padding: 64px 0 60px;
         }
 
         .gallery h3 {
             font-family: 'Cinzel', serif;
-            font-size: 10px; letter-spacing: 4px;
-            color: var(--gold); opacity: 0.65;
+            font-size: 9px; letter-spacing: 5px;
+            color: var(--gold); opacity: 0.55;
             text-transform: uppercase;
             font-weight: 400;
             text-align: center;
-            margin-bottom: 20px;
-            padding: 0 28px;
+            margin-bottom: 32px;
+            padding: 0 40px;
         }
 
         .gallery-viewport {
@@ -353,293 +400,241 @@
 
         #gallerySlides {
             display: flex;
-            gap: 12px;
-            padding: 6px 28px;
-            transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+            gap: 14px;
+            padding: 8px 36px;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
             will-change: transform;
         }
 
         #gallerySlides img {
             flex-shrink: 0;
-            width: clamp(180px, 55vw, 270px);
+            width: clamp(190px, 56vw, 275px);
             aspect-ratio: 3/4;
             object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 4px 24px rgba(74,16,32,0.35);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(74,16,32,0.4);
             cursor: pointer;
-            transition: transform 0.3s;
-            margin-bottom: 0;
-            max-height: none;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            margin-bottom: 0; max-height: none;
         }
-
-        #gallerySlides img.active-slide { transform: scale(1.04); }
+        #gallerySlides img.active-slide {
+            transform: scale(1.04);
+            box-shadow: 0 14px 48px rgba(74,16,32,0.55);
+        }
 
         .gallery-empty {
             text-align: center;
-            color: rgba(232,213,183,0.35);
-            font-size: 12px; letter-spacing: 2px;
-            padding: 28px;
+            color: rgba(232,213,183,0.28);
+            font-family: 'Cinzel', serif;
+            font-size: 9px; letter-spacing: 3px;
+            padding: 40px 36px;
         }
 
         .gallery-controls {
             display: flex; align-items: center;
-            justify-content: center; gap: 14px;
-            margin-top: 18px;
+            justify-content: center; gap: 16px;
+            margin-top: 24px;
         }
         .g-arrow {
-            width: 34px; height: 34px;
+            width: 36px; height: 36px;
             border-radius: 50%;
-            border: 1px solid rgba(232,213,183,0.25);
+            border: 1px solid rgba(232,213,183,0.2);
             background: transparent;
             color: var(--gold-light);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.22s;
         }
-        .g-arrow:hover { background: var(--wine-light); }
-        .g-dots { display: flex; gap: 6px; }
+        .g-arrow:hover { background: var(--wine-light); border-color: transparent; }
+        .g-dots { display: flex; gap: 7px; }
         .g-dot {
             width: 5px; height: 5px;
             border-radius: 50%;
             background: var(--gold);
-            opacity: 0.22; cursor: pointer;
+            opacity: 0.2; cursor: pointer;
             transition: all 0.3s;
         }
-        .g-dot.lit { opacity: 1; transform: scale(1.4); }
+        .g-dot.lit { opacity: 1; transform: scale(1.45); }
 
-        /* ══════════════════════════════
-           ⑥ OWNERS — декор снизу
-        ══════════════════════════════ */
-        .owners-section {
-            background: var(--wine);
-            border-radius: 0 0 100px 100px;
-            padding: 4px 28px 52px;
-            text-align: center;
+        /* countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 18px;
+            padding: 10px 0 6px;
+            color: rgba(232,213,183,0.85);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1.2px;
+            font-size: 14px;
         }
-
-        .decor-img {
-            width: 110px;
-            display: block;
-            margin: 0 auto 14px;
-            opacity: 0.6;
-        }
-
-        .owners-label-txt {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 17px; font-style: italic;
-            color: rgba(232,213,183,0.7);
-            letter-spacing: 2px; margin-bottom: 6px;
-        }
-
-        .owners-name-txt {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(22px, 5vw, 30px);
-            font-weight: 600;
+        .countdown strong {
+            display: inline-block;
+            min-width: 30px;
             color: var(--gold-light);
-            letter-spacing: 3px;
+            font-size: 16px;
         }
 
         /* ══════════════════════════════
-           ⑦ RSVP
+           ⑥ RSVP
         ══════════════════════════════ */
         .rsvp {
-            padding: 64px 28px 80px;
+            padding: 80px 40px 100px;
             background: var(--cream);
             text-align: center;
+        }
+
+        .rsvp-tag {
+            font-family: 'Cinzel', serif;
+            font-size: 9px; letter-spacing: 5px;
+            color: var(--wine); opacity: 0.38;
+            text-transform: uppercase;
+            display: block; margin-bottom: 14px;
         }
 
         .rsvp h3 {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: clamp(28px, 6vw, 40px);
+            font-weight: 300;
+            font-size: clamp(36px, 7.5vw, 50px);
             color: var(--wine);
-            font-weight: 400;
-            margin-bottom: 32px;
+            margin-bottom: 48px;
+            line-height: 1;
         }
 
         .form-wrap {
-            max-width: 320px;
+            max-width: 300px;
             margin: 0 auto;
             text-align: left;
         }
 
-        .form-group { margin-bottom: 16px; }
+        .f-label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 8px; letter-spacing: 2.5px;
+            color: var(--text); opacity: 0.38;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .form-group { margin-bottom: 24px; }
 
         .rsvp input,
         .rsvp textarea {
             width: 100%;
-            padding: 12px 14px;
-            margin-top: 0;
-            border-radius: 10px;
-            border: 1px solid rgba(107,31,46,0.15);
-            background: white;
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(107,31,46,0.12);
+            background: #fff;
             font-family: 'Lora', serif;
             font-size: 15px; color: var(--text);
-            outline: none; transition: border-color 0.3s;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
             box-sizing: border-box;
         }
         .rsvp input:focus,
-        .rsvp textarea:focus { border-color: var(--wine); }
+        .rsvp textarea:focus {
+            border-color: rgba(107,31,46,0.35);
+            box-shadow: 0 0 0 3px rgba(107,31,46,0.05);
+        }
         .rsvp input::placeholder,
-        .rsvp textarea::placeholder { color: rgba(42,16,21,0.3); font-style: italic; }
-        .rsvp textarea { min-height: 70px; resize: vertical; }
+        .rsvp textarea::placeholder { color: rgba(42,16,21,0.22); font-style: italic; }
+        .rsvp textarea { min-height: 76px; resize: vertical; }
 
-        /* guest counter */
         .guest-counter {
-            display: flex; align-items: center; gap: 12px;
+            display: flex; align-items: center; gap: 14px;
         }
         .gc-btn {
-            width: 36px; height: 36px;
+            width: 38px; height: 38px;
             border-radius: 50%;
-            border: 1px solid rgba(107,31,46,0.2);
+            border: 1px solid rgba(107,31,46,0.16);
             background: transparent;
-            font-size: 18px; font-weight: 700;
+            font-size: 20px; font-weight: 400;
             color: var(--wine); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             transition: all 0.2s; flex-shrink: 0;
+            font-family: 'Lora', serif;
         }
-        .gc-btn:hover { background: var(--wine); color: #fff; }
+        .gc-btn:hover { background: var(--wine); color: #fff; border-color: var(--wine); }
         #rGuests {
-            width: 80px !important;
+            width: 72px !important;
             text-align: center !important;
-            font-size: 18px !important;
+            font-size: 17px !important;
         }
 
         .guest-opt { display: none !important; }
 
         .submit-btn {
             width: 100%;
-            padding: 14px;
-            border-radius: 10px;
+            padding: 15px;
+            border-radius: 12px;
             background: var(--wine);
-            color: #fff;
+            color: var(--gold-light);
             border: none; cursor: pointer;
             font-family: 'Cinzel', serif;
-            font-size: 11px; letter-spacing: 3px;
+            font-size: 9px; letter-spacing: 3px; font-weight: 400;
             text-transform: uppercase;
-            margin-top: 8px;
-            transition: background 0.3s;
+            margin-top: 10px;
+            transition: background 0.3s, transform 0.2s;
             box-sizing: border-box;
         }
-        .submit-btn:hover { background: var(--wine-light); }
+        .submit-btn:hover { background: var(--wine-light); transform: translateY(-2px); }
 
         #successMsg {
-            margin-top: 16px;
-            font-size: 16px;
-            color: var(--wine);
+            margin-top: 24px;
             display: none;
             text-align: center;
+        }
+        #successMsg .s-icon {
+            font-size: 44px; color: var(--wine);
+            display: block; margin-bottom: 12px;
+            animation: popIn 0.5s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0) rotate(-90deg); opacity: 0; }
+            to   { transform: scale(1) rotate(0);      opacity: 1; }
+        }
+        #successMsg p {
             font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
+            font-style: italic; font-weight: 300;
+            font-size: 22px; color: var(--wine);
+            letter-spacing: 1px;
         }
 
-        /* footer */
         .site-footer {
             text-align: center;
-            padding: 14px;
-            border-top: 1px solid rgba(107,31,46,0.1);
-            font-size: 12px;
-            color: rgba(42,16,21,0.4);
+            padding: 18px;
+            border-top: 1px solid rgba(107,31,46,0.07);
+            font-size: 11px;
+            color: rgba(42,16,21,0.3);
+            letter-spacing: 0.5px;
         }
-        .site-footer a { color: var(--wine); }
+        .site-footer a { color: var(--wine); text-decoration: none; }
 
-        /* ── CALENDAR ── */
-        .calendar-wrap {
-            background: rgba(255,255,255,0.07);
-            border-radius: 14px;
-            padding: 18px 10px;
-            margin: 0 auto;
-            max-width: 340px;
-        }
-        .cal-month-title {
-            font-family: 'Cinzel', serif;
-            font-size: 10px; letter-spacing: 4px;
-            color: var(--gold); text-transform: uppercase;
-            margin-bottom: 14px; text-align: center;
-        }
-        .cal-grid-head {
-            display: grid; grid-template-columns: repeat(7,1fr);
-            margin-bottom: 4px;
-        }
-        .cal-grid-head span {
-            font-family: 'Cinzel', serif;
-            font-size: 7px; letter-spacing: 1px;
-            color: rgba(232,213,183,0.35);
-            text-align: center; padding: 2px 0;
-        }
-        .cal-grid {
-            display: grid; grid-template-columns: repeat(7,1fr); gap: 1px;
-        }
-        .cday {
-            font-family: 'Lora', serif;
-            font-size: 14px; font-weight: 400;
-            color: rgba(232,213,183,0.55);
-            text-align: center; padding: 7px 2px;
-            position: relative;
-        }
-        .cday.other { opacity: 0.2; }
-        .cday.today { color: #fff; font-weight: 700; font-size: 18px; }
-        .cday.today::before {
-            content: '';
-            position: absolute; inset: 2px;
-            border-radius: 50%;
-            background: var(--wine-light);
-            z-index: -1;
-        }
-
-        /* время под календарём */
-        .time-only {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(20px, 4vw, 26px);
-            font-weight: 600;
-            color: rgba(232,213,183,0.9);
-            letter-spacing: 3px;
-            position: relative; z-index: 1;
-            padding: 6px 18px;
-        }
-
-        /* ── OWNERS BIG NAME ── */
-        .owners-name-txt {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: clamp(30px, 7vw, 44px);
-            font-weight: 600;
-            color: var(--gold-light);
-            letter-spacing: 3px;
-            line-height: 1.1;
-        }
-        .owners-label-txt {
-            font-family: 'Cinzel', serif;
-            font-size: 10px; letter-spacing: 4px;
-            color: var(--gold); opacity: 0.65;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-        opacity: 0; transform: translateY(24px);
-        transition: opacity 0.7s ease, transform 0.7s ease;
+        /* ── REVEAL ── */
+        .rv {
+            opacity: 0; transform: translateY(28px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
         .rv.in { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
-<!-- BORDER STRIPS -->
 <div class="border-strip left"  aria-hidden="true"></div>
 <div class="border-strip right" aria-hidden="true"></div>
 
 <script>
     const CONFIG = {
-        names: { bride: "Аружан", groom: "Данияр" },
-        day: "21-03-2026",
-        hour: "19:00",
-        location: "Astana, Farhi Hall",
+        names:       { bride: "Аружан", groom: "Данияр" },
+        day:         "21-03-2026",
+        hour:        "19:00",
+        location:    "Astana, Farhi Hall",
         locationUrl: "https://2gis.kz/astana",
-        music: { title: "Песня", artist: "Исполнитель", url: "" },
-        gallery: [],
+        music:       { title: "Песня", artist: "Исполнитель", url: "" },
+        gallery:     [],
         description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
-        toiOwners: "Сырымбетовтар әулеті",
+        toiOwners:   "Сырымбетовтар әулеті",
     };
 </script>
 
@@ -656,55 +651,41 @@
                 <span>Фото жұпты</span>
             </div>
         </div>
-
-        <!-- декор поверх фото -->
-        <img src="https://shaqyrtu.kz/template4/3.svg"
-             class="hero-decor" alt="decor"
-             onerror="this.style.display='none'">
-
-        <!-- музыка -->
+        <img src="https://shaqyrtu.kz/template4/3.svg" class="hero-decor" alt="" onerror="this.style.display='none'">
         <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-            <svg id="mIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"/>
-            </svg>
+            <svg id="mIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             <audio id="audioEl" style="display:none"></audio>
         </button>
-
         <h1 id="heroNames" style="display:none">Имя &amp; Имя</h1>
     </section>
 
     <!-- ② ABOUT -->
     <section class="about rv">
+        <!-- CONFIG.description -->
         <p class="about-eyebrow" id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
 
-        <svg class="wave-orn" viewBox="0 0 180 12" xmlns="http://www.w3.org/2000/svg">
+        <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <pattern id="wv" x="0" y="0" width="18" height="12" patternUnits="userSpaceOnUse">
-                    <path d="M0 6 Q4.5 0 9 6 Q13.5 12 18 6" fill="none" stroke="rgba(201,169,110,0.45)" stroke-width="1.2"/>
+                <pattern id="wv" x="0" y="0" width="20" height="14" patternUnits="userSpaceOnUse">
+                    <path d="M0 7 Q5 1 10 7 Q15 13 20 7" fill="none" stroke="rgba(201,169,110,0.35)" stroke-width="1.3"/>
                 </pattern>
             </defs>
-            <rect width="180" height="12" fill="url(#wv)"/>
+            <rect width="200" height="14" fill="url(#wv)"/>
         </svg>
 
         <p class="invite-body">Сіздерді балаларымыздың:</p>
-
         <h1 id="heroNamesLine">Имя &amp; Имя</h1>
-
         <p class="invite-footer">Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
 
-        <svg class="wave-orn" viewBox="0 0 180 12" xmlns="http://www.w3.org/2000/svg">
+        <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
             <use href="#wv"/>
         </svg>
 
-        <!-- Дата → КАЛЕНДАРЬ -->
+        <!-- CALENDAR + TIME -->
         <div class="date-block">
             <p class="date-label">Тойымыз уақыты:</p>
-
-            <!-- календарь -->
             <div class="calendar-wrap">
-                <img src="https://shaqyrtu.kz/template6/heart.png"
-                     class="cal-heart" alt="heart"
-                     onerror="this.style.display='none'">
+                <img src="https://shaqyrtu.kz/template6/heart.png" class="cal-heart" alt="" onerror="this.style.display='none'">
                 <div class="cal-month-title" id="calMo"></div>
                 <div class="cal-grid-head">
                     <span>Дс</span><span>Сс</span><span>Ср</span>
@@ -712,31 +693,30 @@
                 </div>
                 <div class="cal-grid" id="calGrid"></div>
             </div>
-
-            <!-- время -->
-            <p id="heroDateLine" class="time-only" style="margin-top:12px;"></p>
+            <p id="heroDateLine" class="time-only"></p>
+            <div class="countdown">
+                <span><strong id="cdD">00</strong> күн</span>
+                <span><strong id="cdH">00</strong> сағ</span>
+                <span><strong id="cdM">00</strong> мин</span>
+                <span><strong id="cdS">00</strong> сек</span>
+            </div>
         </div>
 
-        <!-- owners inline (убран, используем нижний блок) -->
         <div id="ownersBlock" style="display:none;"></div>
     </section>
 
-    <!-- ⑤ TOY OWNERS — нижняя карточка -->
-    <section class="owners-section rv" id="ownersSectionFull">
-        <img src="https://shaqyrtu.kz/template4/decor.png"
-             class="decor-img" alt="decor"
-             onerror="this.style.display='none'">
+    <!-- ③ OWNERS CARD -->
+    <section class="owners-section rv">
+        <img src="https://shaqyrtu.kz/template4/decor.png" class="decor-img" alt="" onerror="this.style.display='none'">
         <p class="owners-label-txt">Той иелері</p>
         <p class="owners-name-txt" id="ownersBigName">—</p>
-        <img src="https://shaqyrtu.kz/template4/decor.png"
-             class="decor-img" alt="decor"
-             style="transform:rotate(180deg); margin-top:14px;"
-             onerror="this.style.display='none'">
+        <img src="https://shaqyrtu.kz/template4/decor.png" class="decor-img" alt="" style="transform:rotate(180deg);margin-top:20px;" onerror="this.style.display='none'">
     </section>
 
-    <!-- ③ LOCATION -->
+    <!-- ④ LOCATION -->
     <section class="location rv">
         <h3>Мекенжай</h3>
+        <div class="loc-divider"></div>
         <p id="locationName"></p>
         <div id="mapBtnWrap" style="display:none;">
             <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">
@@ -746,7 +726,7 @@
         </div>
     </section>
 
-    <!-- ④ GALLERY -->
+    <!-- ⑤ GALLERY -->
     <section class="gallery rv">
         <h3>Біздің сәттер</h3>
         <div class="gallery-viewport">
@@ -763,20 +743,22 @@
         </div>
     </section>
 
-
-
     <!-- ⑥ RSVP -->
     <section class="rsvp">
+        <span class="rsvp-tag">Растау</span>
         <h3>Ваш ответ</h3>
         <div class="form-wrap">
             <div id="rsvpForm">
                 <div class="form-group">
-                    <input id="rName" placeholder="Ваше имя">
+                    <label class="f-label">Есіміңіз</label>
+                    <input id="rName" placeholder="Аты-жөніңіз">
                 </div>
                 <div class="form-group">
+                    <label class="f-label">Телефон</label>
                     <input id="rPhone" placeholder="+7 (___) ___-__-__">
                 </div>
                 <div class="form-group">
+                    <label class="f-label">Қанша адам</label>
                     <div class="guest-counter">
                         <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
                         <input id="rGuests" type="number" min="1" value="1" readonly>
@@ -785,11 +767,15 @@
                     <button class="guest-opt selected" data-val="1" style="display:none"></button>
                 </div>
                 <div class="form-group">
-                    <textarea id="rNote" placeholder="Особые пожелания..."></textarea>
+                    <label class="f-label">Ескерту</label>
+                    <textarea id="rNote" placeholder="Аллергия немесе ерекше тілек..."></textarea>
                 </div>
-                <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Подтвердить</button>
+                <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
             </div>
-            <div id="successMsg">Спасибо! Ждём вас на нашем торжестве.</div>
+            <div id="successMsg">
+                <span class="s-icon">✦</span>
+                <p>Рақмет! Сізді күтеміз.</p>
+            </div>
         </div>
     </section>
 
@@ -797,55 +783,51 @@
         Шын жүректен <a href="https://shaqyrtu.kz" target="_blank">shaqyrtu.kz</a> арқылы жасалған 🇰🇿
     </div>
 
-</div><!-- /page -->
+</div>
 
 <script>
     (function applyConfig() {
         const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
         const [hh, mi]     = CONFIG.hour.split(':');
-
         const MO_KK = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым",
             "Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
 
         document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
-
         document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+
         const nl = document.getElementById('heroNamesLine');
         if (nl) nl.textContent = `${CONFIG.names.groom} & ${CONFIG.names.bride}`;
 
-        // description → about-eyebrow
         const desc = document.getElementById('eventText');
         if (desc) desc.textContent = CONFIG.description || 'Құрметті ағайын-туыс, құда-жекжат, дос-жаран!';
 
-        // heroDateLine → только время
         const dtLine = document.getElementById('heroDateLine');
         if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
 
         // calendar
         const calMo   = document.getElementById('calMo');
         const calGrid = document.getElementById('calGrid');
-        if (calMo)   calMo.textContent = `${MO_KK[mm-1]} ${yy}`;
+        if (calMo) calMo.textContent = `${MO_KK[mm-1]} ${yy}`;
         if (calGrid) {
             calGrid.innerHTML = '';
-            const firstDay = new Date(yy, mm-1, 1).getDay();
-            const off      = firstDay === 0 ? 6 : firstDay - 1;
-            const daysInM  = new Date(yy, mm, 0).getDate();
-            const prevDays = new Date(yy, mm-1, 0).getDate();
+            const first = new Date(yy, mm-1, 1).getDay();
+            const off   = first === 0 ? 6 : first - 1;
+            const total = new Date(yy, mm, 0).getDate();
+            const prev  = new Date(yy, mm-1, 0).getDate();
             for (let i = 0; i < off; i++) {
                 const e = document.createElement('div');
                 e.className = 'cday other';
-                e.textContent = prevDays - off + 1 + i;
+                e.textContent = prev - off + 1 + i;
                 calGrid.appendChild(e);
             }
-            for (let d = 1; d <= daysInM; d++) {
+            for (let d = 1; d <= total; d++) {
                 const e = document.createElement('div');
                 e.className = 'cday' + (d === dd ? ' today' : '');
                 e.textContent = d;
                 calGrid.appendChild(e);
             }
-            const total = off + daysInM;
-            const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
-            for (let i = 1; i <= rem; i++) {
+            const rem = (off + total) % 7;
+            for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
                 const e = document.createElement('div');
                 e.className = 'cday other';
                 e.textContent = i;
@@ -853,27 +835,41 @@
             }
         }
 
+        // countdown
+        (function countdown(){
+            const target = new Date(`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}T${String(hh).padStart(2,'0')}:${String(mi).padStart(2,'0')}:00`);
+            if (isNaN(target.getTime())) return;
+            const ids = {d:'cdD', h:'cdH', m:'cdM', s:'cdS'};
+            const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = String(val).padStart(2,'0'); };
+            const tick = () => {
+                const now = new Date();
+                let diff = Math.max(0, target - now);
+                const sec = Math.floor(diff/1000)%60;
+                const min = Math.floor(diff/60000)%60;
+                const hr  = Math.floor(diff/3600000)%24;
+                const day = Math.floor(diff/86400000);
+                set(ids.s, sec); set(ids.m, min); set(ids.h, hr); set(ids.d, day);
+            };
+            tick();
+            setInterval(tick, 1000);
+        })();
+
         const loc = document.getElementById('locationName');
         if (loc) loc.textContent = CONFIG.location || '';
 
-        // owners
-        const ownersBlock = document.getElementById('ownersBlock');
-        const ownersBig   = document.getElementById('ownersBigName');
-        if (CONFIG.toiOwners) {
-            if (ownersBig)   ownersBig.textContent  = CONFIG.toiOwners;
-        }
+        const ownersBig = document.getElementById('ownersBigName');
+        if (ownersBig && CONFIG.toiOwners) ownersBig.textContent = CONFIG.toiOwners;
 
-        // map
         const mapBtnWrap = document.getElementById('mapBtnWrap');
         const mapBtn     = document.getElementById('mapBtn');
         if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) {
-            mapBtn.href = CONFIG.locationUrl || '#';
+            mapBtn.href                = CONFIG.locationUrl || '#';
             mapBtn.style.pointerEvents = CONFIG.locationUrl ? 'auto' : 'none';
-            mapBtn.style.opacity       = CONFIG.locationUrl ? '1'    : '0.55';
+            mapBtn.style.opacity       = CONFIG.locationUrl ? '1' : '0.55';
             mapBtnWrap.style.display   = 'block';
         }
 
-        // Gallery
+        // gallery
         const slides = document.getElementById('gallerySlides');
         if (slides) {
             slides.innerHTML = '';
@@ -887,17 +883,16 @@
                 list.forEach((url, i) => {
                     const img = document.createElement('img');
                     img.src = url; img.alt = 'photo';
-                    img.setAttribute('data-i', i);
                     img.addEventListener('click', () => { gIdx = i; updateGallery(); });
                     slides.appendChild(img);
                 });
                 document.getElementById('galleryControls').style.display = 'flex';
-                const dotsWrap = document.getElementById('gDots');
+                const dw = document.getElementById('gDots');
                 list.forEach((_, i) => {
                     const d = document.createElement('div');
                     d.className = 'g-dot' + (i === 0 ? ' lit' : '');
                     d.addEventListener('click', () => { gIdx = i; updateGallery(); });
-                    dotsWrap.appendChild(d);
+                    dw.appendChild(d);
                 });
                 let tx = 0;
                 slides.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
@@ -908,105 +903,83 @@
             }
         }
 
-        // ── АВТОПРОКРУТКА страницы при открытии ──
-        setTimeout(() => {
-            const pageH  = document.body.scrollHeight - window.innerHeight;
-            const dur    = 18000; // 18 секунд до низа
-            const start  = performance.now();
-            const startY = 0;
+        // auto scroll — только если не в iframe редактора
+        if (window.self === window.top) {
+            setTimeout(() => {
+                const pageH = document.body.scrollHeight - window.innerHeight;
+                const dur   = 20000;
+                const t0    = performance.now();
+                function tick(now) {
+                    if (window._us) return;
+                    const p = Math.min((now - t0) / dur, 1);
+                    const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p+2,2)/2;
+                    window.scrollTo(0, pageH * e);
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+                ['touchstart','wheel','keydown'].forEach(ev =>
+                    window.addEventListener(ev, () => { window._us = true; }, { once: true, passive: true })
+                );
+            }, 1400);
+        }
 
-            function autoScroll(now) {
-                if (window._userScrolled) return; // останавливаем если юзер тронул
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / dur, 1);
-                // ease-in-out
-                const ease = progress < 0.5
-                    ? 2 * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-                window.scrollTo(0, startY + pageH * ease);
-                if (progress < 1) requestAnimationFrame(autoScroll);
-            }
-            requestAnimationFrame(autoScroll);
-
-            // слушаем касание/скролл юзера — прекращаем автопрокрутку
-            ['touchstart','wheel','keydown'].forEach(ev => {
-                window.addEventListener(ev, () => { window._userScrolled = true; }, { once: true, passive: true });
-            });
-        }, 1200);
-
-        // ── АВТОЗАПУСК МУЗЫКИ ──
-        // Браузеры блокируют autoplay без жеста — запускаем на первый тап/клик
-        function tryAutoMusic() {
+        // auto music
+        (() => {
             const url = CONFIG.music && CONFIG.music.url;
-            if (!url) return; // нет url — не запускаем автоматически
+            if (!url) return;
             const audio = document.getElementById('audioEl');
-            if (!audio.src || audio.src === window.location.href) {
-                audio.src = url;
-            }
+            audio.src = url;
+            const start = () => {
+                audio.play().then(() => {
+                    playing = true;
+                    document.getElementById('musicBtn').classList.add('playing');
+                    updateMIcon();
+                }).catch(() => {});
+            };
             audio.play().then(() => {
                 playing = true;
                 document.getElementById('musicBtn').classList.add('playing');
                 updateMIcon();
             }).catch(() => {
-                // autoplay заблокирован — ждём первого взаимодействия
-                const unlock = () => {
-                    audio.play().then(() => {
-                        playing = true;
-                        document.getElementById('musicBtn').classList.add('playing');
-                        updateMIcon();
-                    }).catch(() => {});
-                    document.removeEventListener('touchstart', unlock);
-                    document.removeEventListener('click', unlock);
-                };
-                document.addEventListener('touchstart', unlock, { once: true });
-                document.addEventListener('click',      unlock, { once: true });
+                document.addEventListener('touchstart', start, { once: true });
+                document.addEventListener('click',      start, { once: true });
             });
-        }
-        tryAutoMusic();
-
+        })();
     })();
 
-    // Gallery carousel
-    let gIdx = 0;
-    let galleryInterval = null;
+    // gallery
+    let gIdx = 0, galleryInterval = null;
 
     function startGalleryAuto() {
         if (galleryInterval) clearInterval(galleryInterval);
         galleryInterval = setInterval(goNext, 4000);
     }
-
     function updateGallery() {
-        const slides = document.getElementById('gallerySlides');
-        const items  = Array.from(slides.querySelectorAll('img'));
+        const s = document.getElementById('gallerySlides');
+        const items = Array.from(s.querySelectorAll('img'));
         if (!items.length) return;
         const dots = Array.from(document.getElementById('gDots').children);
-        const sw   = items[0].offsetWidth + 12;
-        const vw   = slides.parentElement.offsetWidth;
-        const off  = gIdx * sw - vw / 2 + sw / 2 - 28;
-        slides.style.transform = `translateX(${-Math.max(0, off)}px)`;
-        items.forEach((el, i) => el.classList.toggle('active-slide', i === gIdx));
-        dots.forEach((d, i)  => d.classList.toggle('lit', i === gIdx));
+        const sw = items[0].offsetWidth + 14;
+        const vw = s.parentElement.offsetWidth;
+        s.style.transform = `translateX(${-Math.max(0, gIdx * sw - vw/2 + sw/2 - 36)}px)`;
+        items.forEach((el,i) => el.classList.toggle('active-slide', i === gIdx));
+        dots.forEach((d, i) => d.classList.toggle('lit', i === gIdx));
     }
-    function goNext() { const imgs = document.getElementById('gallerySlides').querySelectorAll('img'); if (imgs.length) { gIdx=(gIdx+1)%imgs.length; updateGallery(); } }
-    function goPrev() { const imgs = document.getElementById('gallerySlides').querySelectorAll('img'); if (imgs.length) { gIdx=(gIdx-1+imgs.length)%imgs.length; updateGallery(); } }
-
-    // start gallery auto after DOM ready
+    function goNext() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if(n){ gIdx=(gIdx+1)%n; updateGallery(); } }
+    function goPrev() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if(n){ gIdx=(gIdx-1+n)%n; updateGallery(); } }
     window.addEventListener('load', () => {
-        const imgs = document.getElementById('gallerySlides').querySelectorAll('img');
-        if (imgs.length) startGalleryAuto();
+        if (document.getElementById('gallerySlides').querySelectorAll('img').length) startGalleryAuto();
     });
 
-    // Music
+    // music
     let playing = false;
     function toggleMusic() {
         const audio = document.getElementById('audioEl');
         const btn   = document.getElementById('musicBtn');
         const url   = CONFIG.music && CONFIG.music.url;
-
         if (!audio.src || audio.src === window.location.href) {
-            if (url) {
-                audio.src = url;
-            } else {
+            if (url) { audio.src = url; }
+            else {
                 const inp = document.createElement('input');
                 inp.type = 'file'; inp.accept = 'audio/*';
                 inp.onchange = e => {
@@ -1029,16 +1002,14 @@
             : '<path d="M8 5v14l11-7z"/>';
     }
 
-    // Guests
     function changeGuests(d) {
         const inp = document.getElementById('rGuests');
-        const val = Math.max(1, Math.min(10, parseInt(inp.value || 1) + d));
+        const val = Math.max(1, Math.min(10, parseInt(inp.value||1) + d));
         inp.value = val;
         const h = document.querySelector('.guest-opt');
         if (h) h.setAttribute('data-val', val);
     }
 
-    // submitRSVP
     window.submitRSVP = () => {
         const name  = document.getElementById('rName').value.trim();
         const phone = document.getElementById('rPhone').value.trim();
@@ -1048,19 +1019,10 @@
         document.getElementById('successMsg').style.display = 'block';
     };
 
-    // Автоскролл только в публичном просмотре (не внутри редактора/iframe)
-    if (window.self === window.top) {
-        setTimeout(() => {
-            window.scrollTo({ top: window.innerHeight * 0.8, behavior: 'smooth' });
-        }, 1200);
-    }
-
-    // Scroll reveal
     const obs = new IntersectionObserver(es => {
         es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
     document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 </script>
-
 </body>
 </html>
