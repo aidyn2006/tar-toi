@@ -31,10 +31,7 @@ const normalizeUrl = (url) => {
     if (typeof window === 'undefined') return url;
     if (url.startsWith('/uploads/')) {
         const { protocol, hostname } = window.location;
-        const port = window.location.port && window.location.port !== '80' && window.location.port !== '443'
-            ? window.location.port
-            : '9191';
-        return `${protocol}//${hostname}:${port}${url}`;
+        return `${protocol}//${hostname}:9191${url}`;
     }
     return window.location.origin + url;
 };
