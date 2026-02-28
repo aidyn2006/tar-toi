@@ -167,6 +167,24 @@ public class InviteService {
         responseRepository.save(response);
     }
 
+    /** Owner-only delete: removes guest responses then invite */
+    @Transactional
+    public void deleteInvite(UUID id) {
+        String phone = currentUserPhone();
+        User owner = userRepository.findByPhone(phone)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Invite invite = inviteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invite not found"));
+
+        if (!invite.getOwner().getId().equals(owner.getId())) {
+            throw new RuntimeException("Access denied");
+        }
+
+        responseRepository.deleteAllByInviteId(id);
+        inviteRepository.delete(invite);
+    }
+
     /* ── helpers ─────────────────────────────────────────── */
 
     private String currentUserPhone() {

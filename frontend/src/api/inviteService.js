@@ -7,6 +7,9 @@ export const inviteService = {
     /** POST /api/v1/invites — create a new invite */
     createInvite: (payload) => apiClient.post('/invites', payload).then(r => r.data),
 
+    /** DELETE /api/v1/invites/{id} — delete invite (owner only) */
+    deleteInvite: (id) => apiClient.delete(`/invites/${id}`).then(r => r.data),
+
     /** PUT /api/v1/invites/{id} — update existing invite (owner only) */
     updateInvite: (id, payload) => apiClient.put(`/invites/${id}`, payload).then(r => r.data),
 

@@ -69,6 +69,13 @@ function normalizeUrl(url) {
     if (!url) return '';
     if (/^https?:\/\//i.test(url)) return url;
     if (typeof window === 'undefined') return url;
+    if (url.startsWith('/uploads/')) {
+        const { protocol, hostname } = window.location;
+        const port = window.location.port && window.location.port !== '80' && window.location.port !== '443'
+            ? window.location.port
+            : '9191';
+        return `${protocol}//${hostname}:${port}${url}`;
+    }
     return window.location.origin + url;
 }
 
@@ -95,6 +102,7 @@ function buildConfig(invite) {
     const hour = eventDate
         ? `${pad2(eventDate.getHours())}:${pad2(eventDate.getMinutes())}`
         : '19:00';
+    const numericLimit = Number(invite?.maxGuests) || 0;
 
     return {
         names: { bride, groom },
@@ -110,9 +118,9 @@ function buildConfig(invite) {
         autoplay: false,
         gallery,
         description: invite?.description || 'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
-        toiOwners: invite?.toiOwners || 'Той иелері (толтырыңыз)',
+        toiOwners: invite?.toiOwners || '',
         heroPhotoUrl,
-        maxGuests: invite?.maxGuests ?? 0,
+        maxGuests: numericLimit,
     };
 }
 
@@ -208,6 +216,7 @@ function injectLiveBridge(html) {
         const yy = dayParts[2] || '';
         const namesLine = \`\${cfg.names?.bride || ''} & \${cfg.names?.groom || ''}\`;
         const dateLine = [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : '');
+        const ownersVal = cfg.toiOwners || '';
 
         // Primary hero / about texts
         setText('heroNames', namesLine);
@@ -223,15 +232,20 @@ function injectLiveBridge(html) {
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
         const ownersBig = byId('ownersBigName');
+        const ownersSection = byId('ownersSection');
+        const ownerTargets = ['ownersLine','ownersName','ownersLabel','ownersLabelTxt'];
+        ownerTargets.forEach(id => setText(id, ownersVal));
         if (ownersBlock) {
-            if (cfg.toiOwners) {
-                if (ownersText) ownersText.textContent = cfg.toiOwners;
-                if (ownersBig) ownersBig.textContent = cfg.toiOwners;
+            if (ownersVal) {
+                if (ownersText) ownersText.textContent = ownersVal;
+                if (ownersBig) ownersBig.textContent = ownersVal;
                 ownersBlock.style.display = 'block';
             } else {
                 ownersBlock.style.display = 'none';
             }
         }
+        if (ownersBig) ownersBig.textContent = ownersVal || '—';
+        if (ownersSection) ownersSection.style.display = ownersVal ? 'block' : 'none';
 
         const mapBtnWrap = byId('mapBtnWrap');
         const mapBtn = byId('mapBtn');

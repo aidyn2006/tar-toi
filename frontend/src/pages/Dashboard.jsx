@@ -169,7 +169,7 @@ const CreateInviteModal = ({ onClose }) => {
 };
 
 /* ─── Invite Card ─────────────────────────────────────── */
-const InviteCard = ({ invite }) => {
+const InviteCard = ({ invite, onDelete }) => {
     const navigate = useNavigate();
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
@@ -212,6 +212,12 @@ const InviteCard = ({ invite }) => {
                         <Eye size={13} />
                     </button>
                 )}
+                <button
+                    onClick={() => onDelete && onDelete(invite)}
+                    title={tr('Шақыртуды жою', 'Удалить приглашение')}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', padding: '0.55rem 0.65rem', borderRadius: '10px', border: `1.5px solid #fecdd3`, background: '#fef2f2', color: '#be123c', fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}>
+                    <XCircle size={13} />
+                </button>
             </div>
         </div>
     );
@@ -283,6 +289,16 @@ const Dashboard = () => {
     const [invites, setInvites] = useState([]);
     const [loadingInvites, setLoadingInvites] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
+    const handleDeleteInvite = async (invite) => {
+        if (!invite) return;
+        if (!window.confirm(tr('Шақыртуды өшіру? Бұл әрекет қайтарылмайды.', 'Удалить приглашение? Действие необратимо.'))) return;
+        try {
+            await inviteService.deleteInvite(invite.id);
+            setInvites(list => list.filter(i => i.id !== invite.id));
+        } catch (e) {
+            alert(tr('Өшіру кезінде қате шықты', 'Ошибка при удалении'));
+        }
+    };
 
     useEffect(() => {
         if (!authService.isLoggedIn()) { navigate('/'); return; }
@@ -386,7 +402,7 @@ const Dashboard = () => {
                             </div>
                         ) : (
                             <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-                                {invites.map(inv => <InviteCard key={inv.id} invite={inv} />)}
+                                {invites.map(inv => <InviteCard key={inv.id} invite={inv} onDelete={handleDeleteInvite} />)}
                             </div>
                         )}
                     </div>

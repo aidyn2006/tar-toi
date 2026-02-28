@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InviteResponseRepository extends JpaRepository<InviteResponse, Long> {
     List<InviteResponse> findAllByInviteId(java.util.UUID inviteId);
+
+    void deleteAllByInviteId(java.util.UUID inviteId);
 }

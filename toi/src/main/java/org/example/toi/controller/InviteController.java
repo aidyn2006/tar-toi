@@ -63,4 +63,11 @@ public class InviteController {
         inviteService.respondToInvite(id, request);
         return ResponseEntity.ok().build();
     }
+
+    /** DELETE /api/v1/invites/{id} — delete invite (owner only, authenticated) */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInvite(@PathVariable UUID id) {
+        inviteService.deleteInvite(id);
+        return ResponseEntity.noContent().build();
+    }
 }

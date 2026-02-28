@@ -29,6 +29,13 @@ const normalizeUrl = (url) => {
     if (!url) return '';
     if (/^https?:\/\//i.test(url)) return url;
     if (typeof window === 'undefined') return url;
+    if (url.startsWith('/uploads/')) {
+        const { protocol, hostname } = window.location;
+        const port = window.location.port && window.location.port !== '80' && window.location.port !== '443'
+            ? window.location.port
+            : '9191';
+        return `${protocol}//${hostname}:${port}${url}`;
+    }
     return window.location.origin + url;
 };
 
@@ -366,6 +373,16 @@ const EditInvitePage = () => {
             return { ...prev, maxGuests: next };
         });
     }, []);
+    const deleteInvite = async () => {
+        if (!id) return;
+        if (!window.confirm('Шақыртуды өшіреміз бе?')) return;
+        try {
+            await inviteService.deleteInvite(id);
+            navigate('/dashboard');
+        } catch (e) {
+            alert('Өшіру сәтсіз: ' + (e.response?.data?.message || e.message));
+        }
+    };
 
     /* Load existing invite */
     useEffect(() => {
@@ -484,7 +501,7 @@ const EditInvitePage = () => {
             const payload = {
                 title: data.title || 'Той шақыртуы',
                 description: data.description,
-                maxGuests: data.maxGuests || 0,
+                maxGuests: data.maxGuests === '' ? 0 : (data.maxGuests || 0),
                 eventDate: data.eventDate ? new Date(data.eventDate).toISOString().slice(0, 19) : null,
                 previewPhotoUrl: data.previewPhotoUrl || null,
                 gallery: data.gallery || [],
@@ -518,11 +535,27 @@ const EditInvitePage = () => {
         if (!slug) { alert('Алдымен сақтаңыз!'); return; }
         const link = `${window.location.origin}/invite/${slug}`;
         try {
-            await navigator.clipboard.writeText(link);
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(link);
+            } else {
+                // Fallback: hidden textarea copy
+                const ta = document.createElement('textarea');
+                ta.value = link;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
             setCopied(true);
             setTimeout(() => setCopied(false), 2500);
         } catch {
-            prompt('Сілтемені көшіріңіз:', link);
+            try {
+                prompt('Сілтемені көшіріңіз:', link);
+            } catch (_) {
+                // swallow
+            }
         }
     };
 
@@ -581,6 +614,17 @@ const EditInvitePage = () => {
                         {copied ? <Check size={15} /> : <Share2 size={15} />}
                         {copied ? 'Көшірілді!' : 'Бөлісу'}
                     </button>
+
+                    {!isNew && (
+                        <button onClick={deleteInvite} style={{
+                            display: 'flex', alignItems: 'center', gap: '0.35rem',
+                            padding: '0.55rem 1rem', borderRadius: '10px',
+                            background: '#fef2f2', border: '1.5px solid #fecdd3',
+                            color: '#be123c', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
+                        }}>
+                            <Trash2 size={15} /> Жою
+                        </button>
+                    )}
 
                     <button onClick={saveInvite} disabled={saving} style={{
                         display: 'flex', alignItems: 'center', gap: '0.4rem',
