@@ -40,7 +40,7 @@ public class InviteService {
                 .owner(owner)
                 .title(request.title())
                 .description(request.description())
-                .maxGuests(0)
+                .maxGuests(request.maxGuests() != null ? request.maxGuests() : 0)
                 .eventDate(request.eventDate())
                 .previewPhotoUrl(request.previewPhotoUrl())
                 .gallery(request.gallery() == null ? List.of() : request.gallery())
@@ -104,6 +104,7 @@ public class InviteService {
         if (request.template() != null) invite.setTemplate(request.template());
         if (request.musicUrl() != null) invite.setMusicUrl(request.musicUrl());
         if (request.musicTitle() != null) invite.setMusicTitle(request.musicTitle());
+        if (request.maxGuests() != null) invite.setMaxGuests(request.maxGuests());
 
         return mapToDTO(inviteRepository.save(invite));
     }
@@ -142,6 +143,17 @@ public class InviteService {
 
         int guests = request.guestsCount() == null || request.guestsCount() < 1 ? 1 : request.guestsCount();
         boolean attending = request.attending() == null ? true : request.attending();
+
+        // Validate against maxGuests limit
+        if (attending && invite.getMaxGuests() > 0) {
+            long currentAttending = responseRepository.findAllByInviteId(inviteId).stream()
+                    .filter(InviteResponse::isAttending)
+                    .mapToInt(InviteResponse::getGuestsCount)
+                    .sum();
+            if (currentAttending + guests > invite.getMaxGuests()) {
+                throw new RuntimeException("Қонақтар лимиті толды. Максимум: " + invite.getMaxGuests());
+            }
+        }
 
         InviteResponse response = InviteResponse.builder()
                 .invite(invite)
@@ -183,7 +195,7 @@ public class InviteService {
                 invite.getSlug(),
                 invite.getTitle(),
                 invite.getDescription(),
-                null,
+                invite.getMaxGuests(),
                 invite.getEventDate(),
                 invite.getPreviewPhotoUrl(),
                 invite.getOwner().getFullName(),

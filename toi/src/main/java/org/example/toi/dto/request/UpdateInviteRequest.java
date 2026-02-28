@@ -32,5 +32,7 @@ public record UpdateInviteRequest(
 
     String musicUrl,
 
-    String musicTitle
+    String musicTitle,
+
+    Integer maxGuests
 ) {}

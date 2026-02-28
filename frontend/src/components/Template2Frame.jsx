@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 
 const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
@@ -69,11 +69,7 @@ function normalizeUrl(url) {
     if (!url) return '';
     if (/^https?:\/\//i.test(url)) return url;
     if (typeof window === 'undefined') return url;
-    const isUpload = url.startsWith('/uploads/');
-    const origin = isUpload
-        ? `${window.location.protocol}//${window.location.hostname}:9191`
-        : window.location.origin;
-    return origin + url;
+    return window.location.origin + url;
 }
 
 function normalizeTemplateKey(key) {
@@ -111,11 +107,12 @@ function buildConfig(invite) {
             artist: (invite?.toiOwners || '— загрузите аудио файл —').trim(),
             url: normalizeUrl(invite?.musicUrl || ''),
         },
-        autoplay: !!invite?.autoplay,
+        autoplay: false,
         gallery,
         description: invite?.description || 'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
         toiOwners: invite?.toiOwners || 'Той иелері (толтырыңыз)',
         heroPhotoUrl,
+        maxGuests: invite?.maxGuests ?? 0,
     };
 }
 
@@ -149,27 +146,48 @@ function injectPhoto(html, url) {
     );
 }
 
-function injectAutoplay(html, enableRsvp) {
-    if (!enableRsvp) return html;
+function injectAutoplay(html, isViewMode) {
+    if (!isViewMode) return html;
     const script = `
 <script>
     window.addEventListener('DOMContentLoaded', () => {
         if (typeof CONFIG === 'undefined') return;
         const isIframe = window.self !== window.top;
-        if (isIframe) return; // не автоплей и не автоскролл в редакторе
-        if (!CONFIG.autoplay) return; // автозапуск выключен по умолчанию
-        const isMobile = window.innerWidth < 920;
-        if (isMobile && CONFIG.music && (CONFIG.music.url || (CONFIG.music.playlist||[]).length)) {
+        if (isIframe) return;
+
+        // --- Auto-play music ---
+        if (CONFIG.music && CONFIG.music.url) {
             const audio = new Audio(CONFIG.music.url);
             audio.volume = 0.4;
-            const start = () => { audio.play().catch(() => {}); };
-            setTimeout(start, 300);
-            document.body.addEventListener('click', start, { once: true });
+            audio.loop = true;
+            let started = false;
+            const startMusic = () => {
+                if (started) return;
+                started = true;
+                audio.play().catch(() => {});
+            };
+            // Try immediate play; fallback to first user interaction
+            setTimeout(startMusic, 400);
+            document.body.addEventListener('click', startMusic, { once: true });
+            document.body.addEventListener('touchstart', startMusic, { once: true });
         }
-        const block = document.getElementById('musicBlock');
-        if (block && isMobile) {
-            setTimeout(() => { block.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 800);
+
+        // --- Smooth auto-scroll ---
+        const SCROLL_SPEED = 1; // px per frame
+        let scrolling = true;
+        const stopScroll = () => { scrolling = false; };
+        document.addEventListener('touchstart', stopScroll, { once: true });
+        document.addEventListener('wheel', stopScroll, { once: true });
+
+        function autoScroll() {
+            if (!scrolling) return;
+            const maxY = document.documentElement.scrollHeight - window.innerHeight;
+            if (window.scrollY >= maxY) { scrolling = false; return; }
+            window.scrollBy({ top: SCROLL_SPEED, behavior: 'instant' });
+            requestAnimationFrame(autoScroll);
         }
+        // Start auto-scroll after a short delay
+        setTimeout(() => requestAnimationFrame(autoScroll), 1200);
     });
 </script>`;
     return html.replace('</body>', `${script}\n</body>`);
@@ -188,17 +206,27 @@ function injectLiveBridge(html) {
         const dd = dayParts[0] || '';
         const mm = dayParts[1] || '';
         const yy = dayParts[2] || '';
-        setText('heroNames', \`\${cfg.names?.bride || ''} & \${cfg.names?.groom || ''}\`);
-        setText('heroDateLine', [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : ''));
+        const namesLine = \`\${cfg.names?.bride || ''} & \${cfg.names?.groom || ''}\`;
+        const dateLine = [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : '');
+
+        // Primary hero / about texts
+        setText('heroNames', namesLine);
+        setText('heroNamesLine', \`\${cfg.names?.groom || ''} & \${cfg.names?.bride || ''}\`);
+        setText('hBride', cfg.names?.bride || '');
+        setText('hGroom', cfg.names?.groom || '');
+        setText('heroDateLine', dateLine);
+        setText('hDate', dateLine);
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
         setText('footLine', \`\${cfg.names?.bride || ''} & \${cfg.names?.groom || ''}  ·  \${yy}\`);
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
+        const ownersBig = byId('ownersBigName');
         if (ownersBlock) {
             if (cfg.toiOwners) {
                 if (ownersText) ownersText.textContent = cfg.toiOwners;
+                if (ownersBig) ownersBig.textContent = cfg.toiOwners;
                 ownersBlock.style.display = 'block';
             } else {
                 ownersBlock.style.display = 'none';
@@ -251,6 +279,8 @@ function injectLiveBridge(html) {
         }
     }
     window.__APPLY_DYNAMIC_CONFIG = apply;
+    // Apply CONFIG immediately on load so text is visible without waiting for postMessage
+    setTimeout(function(){ if(typeof CONFIG !== 'undefined') apply(CONFIG); }, 0);
     window.addEventListener('message', (e) => {
         if (e.data && e.data.type === 'UPDATE_CONFIG') {
             apply(e.data.config);
@@ -273,25 +303,69 @@ function injectConfig(html, config) {
         );
 }
 
-function injectRsvpApi(html, inviteId) {
+function injectRsvpApi(html, inviteId, maxGuests) {
     if (!inviteId) return html;
+    const limit = maxGuests || 0;
     const script = `
 <script>
     (function () {
+        // --- Replace guest-opt buttons / readonly counter with editable number input ---
+        var MAX_GUESTS = ${limit};
+        window.addEventListener('DOMContentLoaded', function() {
+            // Remove guest-opt buttons
+            document.querySelectorAll('.guest-opt').forEach(function(b) { b.style.display = 'none'; });
+            // Make rGuests input editable
+            var gInput = document.getElementById('rGuests');
+            if (gInput) {
+                gInput.removeAttribute('readonly');
+                gInput.type = 'number';
+                gInput.min = '1';
+                if (MAX_GUESTS > 0) {
+                    gInput.max = String(MAX_GUESTS);
+                } else {
+                    gInput.removeAttribute('max'); // unlimited
+                }
+                gInput.value = '1';
+                gInput.style.width = '80px';
+                gInput.style.textAlign = 'center';
+                gInput.style.display = 'block';
+                gInput.style.margin = '8px auto';
+                var clampGuests = function() {
+                    var v = parseInt(gInput.value, 10) || 1;
+                    v = Math.max(1, v);
+                    if (MAX_GUESTS > 0) v = Math.min(v, MAX_GUESTS);
+                    gInput.value = String(v);
+                };
+                gInput.addEventListener('input', clampGuests);
+                gInput.addEventListener('change', clampGuests);
+            }
+        });
+
+        // Override changeGuests to respect MAX_GUESTS and editable input
+        window.changeGuests = function changeGuests(delta) {
+            var inp = document.getElementById('rGuests');
+            if (!inp) return;
+            var next = parseInt(inp.value || '1', 10) + (delta || 0);
+            if (isNaN(next)) next = 1;
+            next = Math.max(1, next);
+            if (MAX_GUESTS > 0) next = Math.min(next, MAX_GUESTS);
+            inp.value = String(next);
+        };
+
         window.submitRSVP = async function submitRSVP() {
-            const nameEl = document.getElementById('rName');
-            const phoneEl = document.getElementById('rPhone');
-            const noteEl = document.getElementById('rNote');
-            const formEl = document.getElementById('rsvpForm');
-            const successEl = document.getElementById('successMsg');
+            var nameEl = document.getElementById('rName');
+            var phoneEl = document.getElementById('rPhone');
+            var noteEl = document.getElementById('rNote');
+            var formEl = document.getElementById('rsvpForm');
+            var successEl = document.getElementById('successMsg');
             if (!nameEl || !phoneEl || !formEl || !successEl) return;
 
-            const name = (nameEl.value || '').trim();
-            const phone = (phoneEl.value || '').trim();
+            var name = (nameEl.value || '').trim();
+            var phone = (phoneEl.value || '').trim();
             if (!name) { nameEl.focus(); return; }
             if (!phone) { phoneEl.focus(); return; }
 
-            let err = document.getElementById('rsvpError');
+            var err = document.getElementById('rsvpError');
             if (!err) {
                 err = document.createElement('div');
                 err.id = 'rsvpError';
@@ -304,32 +378,38 @@ function injectRsvpApi(html, inviteId) {
             }
             err.textContent = '';
 
-            const active = document.querySelector('.guest-opt.selected');
-            const guestsInput = document.getElementById('rGuests');
-            const guestsCount = Number(guestsInput?.value || active?.dataset?.val || 1);
+            var guestsInput = document.getElementById('rGuests');
+            var guestsCount = Math.max(1, parseInt(guestsInput ? guestsInput.value : '1', 10) || 1);
+
+            // Client-side maxGuests validation
+            if (MAX_GUESTS > 0 && guestsCount > MAX_GUESTS) {
+                err.textContent = '\u049a\u043e\u043d\u0430\u049b \u0441\u0430\u043d\u044b \u043b\u0438\u043c\u0438\u0442\u0456: ' + MAX_GUESTS;
+                if (guestsInput) guestsInput.value = String(MAX_GUESTS);
+                return;
+            }
 
             try {
-                const res = await fetch('/api/v1/invites/${inviteId}/respond', {
+                var res = await fetch('/api/v1/invites/${inviteId}/respond', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         guestName: name,
                         phone: phone || null,
-                        guestsCount: Number.isNaN(guestsCount) ? 1 : guestsCount,
+                        guestsCount: guestsCount,
                         attending: true,
-                        note: (noteEl?.value || '').trim() || null
+                        note: (noteEl ? noteEl.value : '').trim() || null
                     })
                 });
 
                 if (!res.ok) {
-                    const data = await res.json().catch(() => ({}));
-                    throw new Error(data?.message || 'Не удалось отправить ответ');
+                    var data = await res.json().catch(function() { return {}; });
+                    throw new Error(data.message || '\u0416\u0456\u0431\u0435\u0440\u0443 \u0441\u04d9\u0442\u0441\u0456\u0437 \u0431\u043e\u043b\u0434\u044b');
                 }
 
                 formEl.style.display = 'none';
                 successEl.style.display = 'block';
             } catch (e) {
-                err.textContent = e?.message || 'Ошибка отправки';
+                err.textContent = e.message || '\u049a\u0430\u0442\u0435 \u043e\u0440\u044b\u043d \u0430\u043b\u0434\u044b';
             }
         };
     })();
@@ -410,9 +490,10 @@ function pickPalette(invite) {
     return PALETTES[key] || PALETTES.classic;
 }
 
-function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk' } = {}) {
+function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk', mode = 'edit' } = {}) {
     const palette = pickPalette(invite);
-    const config = buildConfig(invite || {});
+    const isViewMode = mode === 'view';
+    const config = { ...buildConfig(invite || {}), autoplay: isViewMode };
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
     const tplKey = normalizeTemplateKey(invite?.template);
@@ -423,44 +504,57 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
     html = injectConfig(html, config);
     html = injectPhoto(html, heroUrl);
     if (enableRsvp) {
-        html = injectRsvpApi(html, inviteId);
+        html = injectRsvpApi(html, inviteId, config.maxGuests);
     }
-    html = injectAutoplay(html, enableRsvp);
+    html = injectAutoplay(html, isViewMode);
     html = injectLiveBridge(html);
     html = localizeTemplate(html, lang);
     return html;
 }
 
-const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false }) => {
+const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false, mode = 'edit' }) => {
     const iframeRef = useRef(null);
     const templateKey = useMemo(() => normalizeTemplateKey(invite?.template), [invite?.template]);
+    // Rebuild full HTML when template, photo, gallery, or mode changes
+    const structureKey = useMemo(
+        () => JSON.stringify([
+            templateKey, invite?.previewPhotoUrl,
+            invite?.gallery, invite?.musicUrl, enableRsvp, inviteId, lang, mode,
+        ]),
+        [templateKey, invite?.previewPhotoUrl, invite?.gallery, invite?.musicUrl, enableRsvp, inviteId, lang, mode]
+    );
     const initialDoc = useMemo(
-        () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang }),
-        [templateKey, enableRsvp, inviteId, lang]
+        () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang, mode }),
+        [structureKey]
     );
     const liveConfig = useMemo(() => buildConfig(invite || {}), [invite]);
-    const [debouncedConfig, setDebouncedConfig] = useState(liveConfig);
     const prevHashRef = useRef('');
 
-    useEffect(() => {
-        const t = setTimeout(() => setDebouncedConfig(liveConfig), 500);
-        return () => clearTimeout(t);
-    }, [liveConfig]);
-
+    // Send live config updates instantly (no debounce) for reactive text preview
     useEffect(() => {
         const iframe = iframeRef.current;
         if (!iframe?.contentWindow) return;
-        const hash = JSON.stringify(debouncedConfig);
+        const hash = JSON.stringify(liveConfig);
         if (hash === prevHashRef.current) return;
         prevHashRef.current = hash;
-        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: debouncedConfig }, '*');
-    }, [debouncedConfig]);
+        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
+    }, [liveConfig]);
+
+    // Re-send config when iframe finishes loading (srcDoc loads asynchronously)
+    const handleIframeLoad = () => {
+        const iframe = iframeRef.current;
+        if (!iframe?.contentWindow) return;
+        // Force re-send so text is always up to date after iframe reload
+        prevHashRef.current = '';
+        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
+    };
 
     return (
         <iframe
             ref={iframeRef}
             title="template-2-preview"
             srcDoc={initialDoc}
+            onLoad={handleIframeLoad}
             className={className}
             style={{
                 width: '100%',

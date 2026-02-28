@@ -44,5 +44,8 @@ public record CreateInviteRequest(
     String musicUrl,
 
     /** Optional music title/label */
-    String musicTitle
+    String musicTitle,
+
+    /** Max number of guests (0 = unlimited) */
+    Integer maxGuests
 ) {}

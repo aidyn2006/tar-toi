@@ -59,7 +59,7 @@ const PublicInvitePage = () => {
 
     return (
         <div style={{ width: '100%', height: '100vh', background: '#f7fff9' }}>
-            <Template2Frame invite={invite} inviteId={invite.id} enableRsvp lang={lang} />
+            <Template2Frame invite={invite} inviteId={invite.id} enableRsvp lang={lang} mode="view" />
         </div>
     );
 };

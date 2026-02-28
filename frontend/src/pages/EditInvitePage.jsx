@@ -29,9 +29,6 @@ const normalizeUrl = (url) => {
     if (!url) return '';
     if (/^https?:\/\//i.test(url)) return url;
     if (typeof window === 'undefined') return url;
-    if (url.startsWith('/uploads/')) {
-        return `${window.location.protocol}//${window.location.hostname}:9191${url}`;
-    }
     return window.location.origin + url;
 };
 
@@ -83,6 +80,7 @@ const EMPTY_INVITE_DATA = {
     template: DEFAULT_TEMPLATE_KEY,
     musicUrl: '',
     musicTitle: '',
+    maxGuests: 0,
 };
 
 const CATEGORY_PRESETS = {
@@ -359,6 +357,15 @@ const EditInvitePage = () => {
     const [imagesLibrary, setImagesLibrary] = useState([]);
     const [audioLibrary, setAudioLibrary] = useState([]);
     const [showEditorMobile, setShowEditorMobile] = useState(!isMobile);
+    const adjustMaxGuests = useCallback((delta) => {
+        setData(prev => {
+            // Blank means unlimited; start from 0 when adjusting
+            let current = prev.maxGuests === '' ? 0 : parseInt(prev.maxGuests, 10) || 0;
+            let next = current + delta;
+            if (next < 0) next = 0;
+            return { ...prev, maxGuests: next };
+        });
+    }, []);
 
     /* Load existing invite */
     useEffect(() => {
@@ -477,6 +484,7 @@ const EditInvitePage = () => {
             const payload = {
                 title: data.title || 'Той шақыртуы',
                 description: data.description,
+                maxGuests: data.maxGuests || 0,
                 eventDate: data.eventDate ? new Date(data.eventDate).toISOString().slice(0, 19) : null,
                 previewPhotoUrl: data.previewPhotoUrl || null,
                 gallery: data.gallery || [],
@@ -625,314 +633,381 @@ const EditInvitePage = () => {
 
             {/* ── Two-panel layout ── */}
             {(!isMobile || showEditorMobile) && (
-            <div className="edit-layout" style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0,1fr) minmax(420px, 44vw)',
-                gap: '0',
-                maxWidth: '1600px',
-                margin: '0 auto',
-            }}>
-                {/* ── Left: Controls ── */}
-                <div className="edit-controls" style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
+                <div className="edit-layout" style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'minmax(0,1fr) minmax(420px, 44vw)',
+                    gap: '0',
+                    maxWidth: '1600px',
+                    margin: '0 auto',
+                }}>
+                    {/* ── Left: Controls ── */}
+                    <div className="edit-controls" style={{ padding: '1.5rem 2rem', overflowY: 'auto', borderRight: `1px solid ${C.border}` }}>
 
-                    {/* Template selector */}
-                    <Section title="Шаблон" isMobile={isMobile}>
-                        <Field label="Файл шаблона">
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.65rem' }}>
-                                {selectableTemplates.map(opt => {
-                                    const active = templateValue === opt.id;
-                                    const pretty = opt.label.trim() || 'Template';
-                                    const shortPath = opt.id.replace(/\.html$/, '').replace(/^([^/]+)\//, '');
-                                    return (
-                                        <button
-                                            key={opt.id}
-                                            type="button"
-                                            onClick={() => setData(d => ({ ...d, template: opt.id }))}
-                                            style={{
-                                                textAlign: 'left',
-                                                padding: '0.75rem',
-                                                borderRadius: '12px',
-                                                border: `1.5px solid ${active ? C.burgundy : C.border}`,
-                                                background: active ? `${C.burgundy}10` : '#fff',
-                                                cursor: 'pointer',
-                                                boxShadow: active ? '0 8px 20px rgba(23,63,51,0.12)' : 'none',
-                                                transition: 'all 0.15s',
-                                            }}
-                                        >
-                                            <div style={{ width: '100%', height: '70px', borderRadius: '10px', background: `${C.burgundy}0f`, border: `1px dashed ${C.border}`, marginBottom: '0.55rem', position: 'relative', overflow: 'hidden' }}>
-                                                <div style={{
-                                                    position: 'absolute', inset: 0, display: 'grid', placeItems: 'center',
-                                                    color: C.textMuted, fontSize: '0.75rem', letterSpacing: '0.5px'
-                                                }}>
+                        {/* Template selector */}
+                        <Section title="Шаблон" isMobile={isMobile}>
+                            <Field label="Файл шаблона">
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.65rem' }}>
+                                    {selectableTemplates.map(opt => {
+                                        const active = templateValue === opt.id;
+                                        const pretty = opt.label.trim() || 'Template';
+                                        const shortPath = opt.id.replace(/\.html$/, '').replace(/^([^/]+)\//, '');
+                                        return (
+                                            <button
+                                                key={opt.id}
+                                                type="button"
+                                                onClick={() => setData(d => ({ ...d, template: opt.id }))}
+                                                style={{
+                                                    textAlign: 'left',
+                                                    padding: '0.75rem',
+                                                    borderRadius: '12px',
+                                                    border: `1.5px solid ${active ? C.burgundy : C.border}`,
+                                                    background: active ? `${C.burgundy}10` : '#fff',
+                                                    cursor: 'pointer',
+                                                    boxShadow: active ? '0 8px 20px rgba(23,63,51,0.12)' : 'none',
+                                                    transition: 'all 0.15s',
+                                                }}
+                                            >
+                                                <div style={{ width: '100%', height: '70px', borderRadius: '10px', background: `${C.burgundy}0f`, border: `1px dashed ${C.border}`, marginBottom: '0.55rem', position: 'relative', overflow: 'hidden' }}>
+                                                    <div style={{
+                                                        position: 'absolute', inset: 0, display: 'grid', placeItems: 'center',
+                                                        color: C.textMuted, fontSize: '0.75rem', letterSpacing: '0.5px'
+                                                    }}>
+                                                        {pretty}
+                                                    </div>
+                                                </div>
+                                                <div style={{ fontWeight: 700, color: C.burgundy, fontSize: '0.9rem', textTransform: 'capitalize' }}>
                                                     {pretty}
                                                 </div>
-                                            </div>
-                                            <div style={{ fontWeight: 700, color: C.burgundy, fontSize: '0.9rem', textTransform: 'capitalize' }}>
-                                                {pretty}
-                                            </div>
-                                            <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '0.1rem' }}>
-                                                {shortPath}
-                                            </div>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </Field>
-                    </Section>
-
-                    {/* Media */}
-                    <Section title="Медиа" isMobile={isMobile}>
-                        <Field label="Басты фото">
-                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                                <label style={{
-                                    display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
-                                    padding: '0.65rem 1rem', borderRadius: '10px',
-                                    border: `1.5px dashed ${C.border}`, cursor: 'pointer',
-                                    background: '#fff', color: C.burgundy, fontWeight: 700
-                                }}>
-                                    <UploadCloud size={16} /> {uploadingPhoto ? 'Жүктелуде...' : 'Жүктеу'}
-                                    <input type="file" accept="image/*" style={{ display: 'none' }}
-                                        onChange={e => { if (e.target.files?.[0]) handleMainPhotoUpload(e.target.files[0]); e.target.value = ''; }} />
-                                </label>
-                                {data.previewPhotoUrl && (
-                                    <div style={{ position: 'relative' }}>
-                                        <img src={data.previewPhotoUrl} alt="preview" style={{ width: '110px', height: '80px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
-                                        <button onClick={() => setData(d => ({ ...d, previewPhotoUrl: '' }))} style={{
-                                            position: 'absolute', top: 4, right: 4, border: 'none', background: 'rgba(0,0,0,0.45)',
-                                            color: '#fff', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer'
-                                        }}>&times;</button>
-                                    </div>
-                                )}
-                            </div>
-                            {imagesLibrary.length > 0 && (
-                                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                    {imagesLibrary.slice(0, 12).map(file => {
-                                        const url = normalizeUrl(file.url || file.path);
-                                        const name = (file.path || file.url || '').split('/').pop();
-                                        return (
-                                            <button
-                                                key={file.path || file.url}
-                                                onClick={() => setData(prev => ({ ...prev, previewPhotoUrl: file.url || file.path || '' }))}
-                                                style={{
-                                                    border: `1px solid ${C.border}`,
-                                                    borderRadius: '10px',
-                                                    padding: '4px',
-                                                    background: '#fff',
-                                                    cursor: 'pointer',
-                                                }}
-                                                title={name}
-                                            >
-                                                <img src={url} alt={name} style={{ width: '70px', height: '52px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
+                                                <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '0.1rem' }}>
+                                                    {shortPath}
+                                                </div>
                                             </button>
                                         );
                                     })}
                                 </div>
-                            )}
-                        </Field>
+                            </Field>
+                        </Section>
 
-                        <Field label="Галерея фотолары">
-                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-                                <label style={{
-                                    display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
-                                    padding: '0.65rem 1rem', borderRadius: '10px',
-                                    border: `1.5px dashed ${C.border}`, cursor: 'pointer',
-                                    background: '#fff', color: C.burgundy, fontWeight: 700
-                                }}>
-                                    <Image size={16} /> {uploadingGallery ? 'Жүктелуде...' : 'Файлдарды қосу'}
-                                    <input type="file" accept="image/*" multiple style={{ display: 'none' }}
-                                        onChange={e => { if (e.target.files?.length) handleGalleryUpload(e.target.files); e.target.value = ''; }} />
-                                </label>
-                                <span style={{ color: C.textMuted, fontSize: '0.9rem' }}>Кемінде 1-2 фото қосыңыз</span>
-                            </div>
-                            {(data.gallery?.length || 0) > 0 && (
-                                <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                                    {data.gallery.map(urlRaw => {
-                                        const url = normalizeUrl(urlRaw);
-                                        return (
-                                        <div key={url} style={{ position: 'relative' }}>
-                                            <img src={url} alt="g" style={{ width: '90px', height: '70px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
-                                            <button onClick={() => removeGalleryPhoto(urlRaw)} style={{
-                                                position: 'absolute', top: 3, right: 3, border: 'none', background: 'rgba(0,0,0,0.5)',
-                                                color: '#fff', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer'
-                                            }}>
-                                                <Trash2 size={12} />
-                                            </button>
+                        {/* Media */}
+                        <Section title="Медиа" isMobile={isMobile}>
+                            <Field label="Басты фото">
+                                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <label style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                        padding: '0.65rem 1rem', borderRadius: '10px',
+                                        border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                        background: '#fff', color: C.burgundy, fontWeight: 700
+                                    }}>
+                                        <UploadCloud size={16} /> {uploadingPhoto ? 'Жүктелуде...' : 'Жүктеу'}
+                                        <input type="file" accept="image/*" style={{ display: 'none' }}
+                                            onChange={e => { if (e.target.files?.[0]) handleMainPhotoUpload(e.target.files[0]); e.target.value = ''; }} />
+                                    </label>
+                                    {data.previewPhotoUrl && (
+                                        <div style={{ position: 'relative' }}>
+                                            <img src={data.previewPhotoUrl} alt="preview" style={{ width: '110px', height: '80px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
+                                            <button onClick={() => setData(d => ({ ...d, previewPhotoUrl: '' }))} style={{
+                                                position: 'absolute', top: 4, right: 4, border: 'none', background: 'rgba(0,0,0,0.45)',
+                                                color: '#fff', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer'
+                                            }}>&times;</button>
                                         </div>
-                                        );
-                                    })}
+                                    )}
                                 </div>
-                            )}
-                            {imagesLibrary.length > 0 && (
-                                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                    {imagesLibrary.slice(0, 20).map(file => {
-                                        const urlRaw = file.url || file.path || '';
-                                        const url = normalizeUrl(urlRaw);
-                                        const added = (data.gallery || []).includes(urlRaw);
-                                        return (
-                                            <button
-                                                key={file.path || file.url}
-                                                onClick={() => setData(prev => added ? prev : ({ ...prev, gallery: [...(prev.gallery || []), urlRaw] }))}
-                                                style={{
-                                                    border: `1px solid ${added ? C.burgundy : C.border}`,
-                                                    borderRadius: '10px',
-                                                    padding: '4px',
-                                                    background: added ? `${C.burgundy}10` : '#fff',
-                                                    cursor: added ? 'default' : 'pointer',
-                                                    opacity: added ? 0.6 : 1,
-                                                }}
-                                            >
-                                                <img src={url} alt="lib" style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </Field>
-
-                        <Field label="Музыка (қаласаңыз)">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                                <label style={{
-                                    display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
-                                    padding: '0.65rem 1rem', borderRadius: '10px',
-                                    border: `1.5px dashed ${C.border}`, cursor: 'pointer',
-                                    background: '#fff', color: C.burgundy, fontWeight: 700
-                                }}>
-                                    <Music size={16} /> {uploadingAudio ? 'Жүктелуде...' : 'MP3 жүктеу'}
-                                    <input type="file" accept="audio/*" style={{ display: 'none' }}
-                                        onChange={e => { if (e.target.files?.[0]) handleAudioUpload(e.target.files[0]); e.target.value = ''; }} />
-                                </label>
-                                {data.musicUrl && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', background: '#fff', border: `1px solid ${C.border}` }}>
-                                        <Music size={16} color={C.burgundy} />
-                                        <span style={{ fontWeight: 700, color: C.burgundy }}>{data.musicTitle || 'Аудио файл'}</span>
-                                        <button onClick={() => setData(d => ({ ...d, musicUrl: '', musicTitle: '' }))} style={{ border: 'none', background: 'transparent', color: C.textMuted, cursor: 'pointer' }}>Өшіру</button>
+                                {imagesLibrary.length > 0 && (
+                                    <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                        {imagesLibrary.slice(0, 12).map(file => {
+                                            const url = normalizeUrl(file.url || file.path);
+                                            const name = (file.path || file.url || '').split('/').pop();
+                                            return (
+                                                <button
+                                                    key={file.path || file.url}
+                                                    onClick={() => setData(prev => ({ ...prev, previewPhotoUrl: file.url || file.path || '' }))}
+                                                    style={{
+                                                        border: `1px solid ${C.border}`,
+                                                        borderRadius: '10px',
+                                                        padding: '4px',
+                                                        background: '#fff',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                    title={name}
+                                                >
+                                                    <img src={url} alt={name} style={{ width: '70px', height: '52px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 )}
-                            </div>
-                            {audioLibrary.length > 0 && (
-                                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                    {audioLibrary.slice(0, 10).map(file => {
-        const nameFull = (file.path || file.url || '').split('/').pop() || 'audio';
-        const title = nameFull.replace(/\.[^/.]+$/, '');
-        return (
-            <button
-                key={file.path || file.url}
-                onClick={() => setData(prev => ({ ...prev, musicUrl: file.url || file.path || '', musicTitle: title }))}
-                style={{
-                    border: `1px solid ${C.border}`,
-                    borderRadius: '12px',
-                    padding: '8px 10px',
-                    background: '#fff',
-                    cursor: 'pointer',
-                    fontSize: '0.82rem',
-                    color: C.burgundy,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem'
-                }}
-            >
-                <Music size={14} /> {title}
-            </button>
-        );
-    })}
+                            </Field>
+
+                            <Field label="Галерея фотолары">
+                                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+                                    <label style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                        padding: '0.65rem 1rem', borderRadius: '10px',
+                                        border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                        background: '#fff', color: C.burgundy, fontWeight: 700
+                                    }}>
+                                        <Image size={16} /> {uploadingGallery ? 'Жүктелуде...' : 'Файлдарды қосу'}
+                                        <input type="file" accept="image/*" multiple style={{ display: 'none' }}
+                                            onChange={e => { if (e.target.files?.length) handleGalleryUpload(e.target.files); e.target.value = ''; }} />
+                                    </label>
+                                    <span style={{ color: C.textMuted, fontSize: '0.9rem' }}>Кемінде 1-2 фото қосыңыз</span>
                                 </div>
-                            )}
-                        </Field>
-                    </Section>
+                                {(data.gallery?.length || 0) > 0 && (
+                                    <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                                        {data.gallery.map(urlRaw => {
+                                            const url = normalizeUrl(urlRaw);
+                                            return (
+                                                <div key={url} style={{ position: 'relative' }}>
+                                                    <img src={url} alt="g" style={{ width: '90px', height: '70px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
+                                                    <button onClick={() => removeGalleryPhoto(urlRaw)} style={{
+                                                        position: 'absolute', top: 3, right: 3, border: 'none', background: 'rgba(0,0,0,0.5)',
+                                                        color: '#fff', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer'
+                                                    }}>
+                                                        <Trash2 size={12} />
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                                {imagesLibrary.length > 0 && (
+                                    <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                        {imagesLibrary.slice(0, 20).map(file => {
+                                            const urlRaw = file.url || file.path || '';
+                                            const url = normalizeUrl(urlRaw);
+                                            const added = (data.gallery || []).includes(urlRaw);
+                                            return (
+                                                <button
+                                                    key={file.path || file.url}
+                                                    onClick={() => setData(prev => added ? prev : ({ ...prev, gallery: [...(prev.gallery || []), urlRaw] }))}
+                                                    style={{
+                                                        border: `1px solid ${added ? C.burgundy : C.border}`,
+                                                        borderRadius: '10px',
+                                                        padding: '4px',
+                                                        background: added ? `${C.burgundy}10` : '#fff',
+                                                        cursor: added ? 'default' : 'pointer',
+                                                        opacity: added ? 0.6 : 1,
+                                                    }}
+                                                >
+                                                    <img src={url} alt="lib" style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </Field>
 
-                    {/* Text fields */}
-                    <Section title="Мәтін" isMobile={isMobile}>
-                        <div className="edit-names-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                            <Field label="Тақырып 1 (Күйеу)">
-                                <input value={data.topic1} onChange={set('topic1')} placeholder="Адлет"
+                            <Field label="Музыка (қаласаңыз)">
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                    <label style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                        padding: '0.65rem 1rem', borderRadius: '10px',
+                                        border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                        background: '#fff', color: C.burgundy, fontWeight: 700
+                                    }}>
+                                        <Music size={16} /> {uploadingAudio ? 'Жүктелуде...' : 'MP3 жүктеу'}
+                                        <input type="file" accept="audio/*" style={{ display: 'none' }}
+                                            onChange={e => { if (e.target.files?.[0]) handleAudioUpload(e.target.files[0]); e.target.value = ''; }} />
+                                    </label>
+                                    {data.musicUrl && (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', background: '#fff', border: `1px solid ${C.border}` }}>
+                                            <Music size={16} color={C.burgundy} />
+                                            <span style={{ fontWeight: 700, color: C.burgundy }}>{data.musicTitle || 'Аудио файл'}</span>
+                                            <button onClick={() => setData(d => ({ ...d, musicUrl: '', musicTitle: '' }))} style={{ border: 'none', background: 'transparent', color: C.textMuted, cursor: 'pointer' }}>Өшіру</button>
+                                        </div>
+                                    )}
+                                </div>
+                                {audioLibrary.length > 0 && (
+                                    <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                        {audioLibrary.slice(0, 10).map(file => {
+                                            const nameFull = (file.path || file.url || '').split('/').pop() || 'audio';
+                                            const title = nameFull.replace(/\.[^/.]+$/, '');
+                                            return (
+                                                <button
+                                                    key={file.path || file.url}
+                                                    onClick={() => setData(prev => ({ ...prev, musicUrl: file.url || file.path || '', musicTitle: title }))}
+                                                    style={{
+                                                        border: `1px solid ${C.border}`,
+                                                        borderRadius: '12px',
+                                                        padding: '8px 10px',
+                                                        background: '#fff',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.82rem',
+                                                        color: C.burgundy,
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.45rem'
+                                                    }}
+                                                >
+                                                    <Music size={14} /> {title}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </Field>
+                        </Section>
+
+                        {/* Text fields */}
+                        <Section title="Мәтін" isMobile={isMobile}>
+                            <div className="edit-names-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                                <Field label="Тақырып 1 (Күйеу)">
+                                    <input value={data.topic1} onChange={set('topic1')} placeholder="Адлет"
+                                        style={inputStyle} />
+                                </Field>
+                                <Field label="Тақырып 2 (Қыз)">
+                                    <input value={data.topic2} onChange={set('topic2')} placeholder="Асем"
+                                        style={inputStyle} />
+                                </Field>
+                            </div>
+                            <Field label="Сипаттама">
+                                <textarea value={data.description} onChange={set('description')}
+                                    placeholder="Құрметті ағайын-туыс, сізді тойымызға шақырамыз..."
+                                    rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+                            </Field>
+                            <Field label="Той иелері">
+                                <input value={data.toiOwners} onChange={set('toiOwners')} placeholder="Сырымбетовтар әулеті"
                                     style={inputStyle} />
                             </Field>
-                            <Field label="Тақырып 2 (Қыз)">
-                                <input value={data.topic2} onChange={set('topic2')} placeholder="Асем"
-                                    style={inputStyle} />
-                            </Field>
-                        </div>
-                        <Field label="Сипаттама">
-                            <textarea value={data.description} onChange={set('description')}
-                                placeholder="Құрметті ағайын-туыс, сізді тойымызға шақырамыз..."
-                                rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
-                        </Field>
-                        <Field label="Той иелері">
-                            <input value={data.toiOwners} onChange={set('toiOwners')} placeholder="Сырымбетовтар әулеті"
-                                style={inputStyle} />
-                        </Field>
-                    </Section>
-
-                    {/* Date & Location */}
-                    <Section title="Күн және орын" isMobile={isMobile} border={false}>
-                        <Field label="Дата және уақыт">
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                                <div style={{ position: 'relative' }}>
-                                    <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
+                            <Field label="Қонақтар саны лимиті (0 = шексіз)">
+                                <div className="guest-counter" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+                                    <button
+                                        type="button"
+                                        className="gc-btn"
+                                        onClick={() => adjustMaxGuests(-1)}
+                                        style={{
+                                            width: '38px',
+                                            height: '38px',
+                                            borderRadius: '12px',
+                                            border: `1.5px solid ${C.border}`,
+                                            background: '#fff',
+                                            fontSize: '18px',
+                                            color: C.burgundy,
+                                            cursor: 'pointer',
+                                            fontWeight: 700,
+                                            lineHeight: 1,
+                                        }}
+                                    >
+                                        −
+                                    </button>
                                     <input
-                                        type="date"
-                                        value={data.eventDate ? data.eventDate.slice(0, 10) : ''}
+                                        id="maxGuestsInput"
+                                        type="number"
+                                        min="0"
+                                        value={data.maxGuests}
                                         onChange={e => {
-                                            const date = e.target.value;
-                                            const time = data.eventDate ? data.eventDate.slice(11, 16) : '';
-                                            const combined = date ? `${date}${time ? 'T' + time : 'T00:00'}` : '';
+                                            const raw = e.target.value;
+                                            setData(prev => ({
+                                                ...prev,
+                                                maxGuests: raw === '' ? '' : Math.max(0, parseInt(raw, 10) || 0)
+                                            }));
+                                        }}
+                                        placeholder="0"
+                                        style={{
+                                            ...inputStyle,
+                                            width: '120px',
+                                            textAlign: 'center',
+                                            margin: '0',
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="gc-btn"
+                                        onClick={() => adjustMaxGuests(1)}
+                                        style={{
+                                            width: '38px',
+                                            height: '38px',
+                                            borderRadius: '12px',
+                                            border: `1.5px solid ${C.border}`,
+                                            background: '#fff',
+                                            fontSize: '18px',
+                                            color: C.burgundy,
+                                            cursor: 'pointer',
+                                            fontWeight: 700,
+                                            lineHeight: 1,
+                                        }}
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <p style={{ fontSize: '0.78rem', color: C.textMuted, marginTop: '0.35rem' }}>
+                                    {data.maxGuests > 0
+                                        ? `Максимум ${data.maxGuests} қонақ. RSVP лимитке жеткенде жабылады.`
+                                        : '0 немесе бос қалдыру — лимит жоқ.'}
+                                </p>
+                            </Field>
+                        </Section>
+
+                        {/* Date & Location */}
+                        <Section title="Күн және орын" isMobile={isMobile} border={false}>
+                            <Field label="Дата және уақыт">
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                                    <div style={{ position: 'relative' }}>
+                                        <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
+                                        <input
+                                            type="date"
+                                            value={data.eventDate ? data.eventDate.slice(0, 10) : ''}
+                                            onChange={e => {
+                                                const date = e.target.value;
+                                                const time = data.eventDate ? data.eventDate.slice(11, 16) : '';
+                                                const combined = date ? `${date}${time ? 'T' + time : 'T00:00'}` : '';
+                                                setData(prev => ({ ...prev, eventDate: combined }));
+                                            }}
+                                            style={{ ...inputStyle, paddingLeft: '30px' }}
+                                        />
+                                    </div>
+                                    <input
+                                        type="time"
+                                        value={data.eventDate ? data.eventDate.slice(11, 16) : ''}
+                                        onChange={e => {
+                                            const time = e.target.value;
+                                            const date = data.eventDate ? data.eventDate.slice(0, 10) : '';
+                                            const baseDate = date || new Date().toISOString().slice(0, 10);
+                                            const combined = (time || date) ? `${baseDate}T${time || '00:00'}` : '';
                                             setData(prev => ({ ...prev, eventDate: combined }));
                                         }}
-                                        style={{ ...inputStyle, paddingLeft: '30px' }}
+                                        style={inputStyle}
                                     />
                                 </div>
-                                <input
-                                    type="time"
-                                    value={data.eventDate ? data.eventDate.slice(11, 16) : ''}
-                                    onChange={e => {
-                    const time = e.target.value;
-                    const date = data.eventDate ? data.eventDate.slice(0, 10) : '';
-                    const baseDate = date || new Date().toISOString().slice(0, 10);
-                    const combined = (time || date) ? `${baseDate}T${time || '00:00'}` : '';
-                    setData(prev => ({ ...prev, eventDate: combined }));
-                }}
-                                    style={inputStyle}
-                                />
-                            </div>
-                        </Field>
-                        <Field label="Той өтетін орын">
-                            <div style={{ position: 'relative', marginBottom: '0.6rem' }}>
-                                <MapPin size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
-                                <input value={data.locationName} onChange={set('locationName')} placeholder="Astana, Farhi Hall"
-                                    style={{ ...inputStyle, paddingLeft: '30px' }} />
-                            </div>
-                            <input value={data.locationUrl} onChange={set('locationUrl')} placeholder="2GIS немесе Google Maps сілтемесі"
-                                style={inputStyle} />
-                        </Field>
-                    </Section>
+                            </Field>
+                            <Field label="Той өтетін орын">
+                                <div style={{ position: 'relative', marginBottom: '0.6rem' }}>
+                                    <MapPin size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
+                                    <input value={data.locationName} onChange={set('locationName')} placeholder="Astana, Farhi Hall"
+                                        style={{ ...inputStyle, paddingLeft: '30px' }} />
+                                </div>
+                                <input value={data.locationUrl} onChange={set('locationUrl')} placeholder="2GIS немесе Google Maps сілтемесі"
+                                    style={inputStyle} />
+                            </Field>
+                        </Section>
 
-                </div>
+                    </div>
 
-                {/* ── Right: Full preview panel ── */}
-                <div className="edit-preview-panel" style={{
-                    position: 'sticky', top: '60px', height: 'calc(100vh - 60px)',
-                    display: 'flex', flexDirection: 'column',
-                    justifyContent: 'stretch', padding: '1.25rem',
-                    background: `linear-gradient(135deg, ${C.burgundy}08, ${C.gold}08)`,
-                }}>
-                    <p style={{ fontSize: '0.75rem', color: C.textMuted, marginBottom: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        Алдын ала қарау
-                    </p>
-                    <div className="edit-preview-canvas" style={{
-                        flex: 1,
-                        width: '100%',
-                        minHeight: 0,
-                        borderRadius: '16px',
-                        overflow: 'auto',
-                        background: C.white,
-                        border: `1px solid ${C.border}`,
-                        boxShadow: '0 18px 40px rgba(16,46,36,0.16)',
-                        scrollbarWidth: 'thin',
+                    {/* ── Right: Full preview panel ── */}
+                    <div className="edit-preview-panel" style={{
+                        position: 'sticky', top: '60px', height: 'calc(100vh - 60px)',
+                        display: 'flex', flexDirection: 'column',
+                        justifyContent: 'stretch', padding: '1.25rem',
+                        background: `linear-gradient(135deg, ${C.burgundy}08, ${C.gold}08)`,
                     }}>
-                        <Template2Frame invite={previewData} />
+                        <p style={{ fontSize: '0.75rem', color: C.textMuted, marginBottom: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                            Алдын ала қарау
+                        </p>
+                        <div className="edit-preview-canvas" style={{
+                            flex: 1,
+                            width: '100%',
+                            minHeight: 0,
+                            borderRadius: '16px',
+                            overflow: 'auto',
+                            background: C.white,
+                            border: `1px solid ${C.border}`,
+                            boxShadow: '0 18px 40px rgba(16,46,36,0.16)',
+                            scrollbarWidth: 'thin',
+                        }}>
+                            <Template2Frame invite={previewData} />
+                        </div>
                     </div>
                 </div>
-            </div>
             )}
 
             {/* ── Mobile preview modal ── */}

@@ -44,8 +44,9 @@ services:
     working_dir: /app
     command: sh -c "npm install && npm run dev"
     environment:
-      # Use internal docker network so it works on servers without host.docker.internal
-      VITE_API_PROXY_TARGET: "http://backend:9191"
+      # If backend работает вне Docker (на хосте), используйте host.docker.internal
+      # Перекрой через .env или export VITE_API_PROXY_TARGET
+      VITE_API_PROXY_TARGET: "http://host.docker.internal:9191"
     ports:
       - "7171:7171"
     volumes:
