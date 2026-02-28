@@ -324,8 +324,8 @@ const Home = () => {
                     <a className="home-nav-link" href="#categories" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Үлгілер', 'Шаблоны')}</a>
                     <a className="home-nav-link" href="#contact" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Байланыс', 'Контакты')}</a>
                     <LanguageSwitch compact />
-                    <Button className="home-nav-btn" variant="outline" onClick={() => setModal('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>{tr('Кіру', 'Войти')}</Button>
-                    <Button className="home-nav-btn" onClick={() => setModal('register')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>{tr('Тіркелу', 'Регистрация')}</Button>
+                    <Button className="home-nav-btn desktop-only" variant="outline" onClick={() => setModal('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>{tr('Кіру', 'Войти')}</Button>
+                    <Button className="home-nav-btn desktop-only" onClick={() => setModal('register')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>{tr('Тіркелу', 'Регистрация')}</Button>
                 </nav>
             </header>
 
@@ -528,6 +528,22 @@ const Home = () => {
                     </div>
                 </div>
             </footer>
+
+            {/* ── MOBILE CTA BAR ─────────────────────────────── */}
+            <div className="home-mobile-cta" style={{
+                position: 'sticky', bottom: 0, left: 0, right: 0, zIndex: 150,
+                display: 'none',
+                padding: '0.75rem 1rem',
+                background: 'rgba(255,255,255,0.96)',
+                backdropFilter: 'blur(12px)',
+                borderTop: '1px solid rgba(16,185,129,0.12)',
+                boxShadow: '0 -8px 24px rgba(16,185,129,0.12)'
+            }}>
+                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                    <Button variant="outline" onClick={() => setModal('login')} style={{ flex: 1, height: '2.95rem' }}>{tr('Кіру', 'Войти')}</Button>
+                    <Button onClick={() => setModal('register')} style={{ flex: 1, height: '2.95rem' }}>{tr('Тегін бастау', 'Начать бесплатно')}</Button>
+                </div>
+            </div>
             <style>{`
                 .home-page {
                     overflow-x: hidden;
@@ -550,7 +566,10 @@ const Home = () => {
 
                     .home-nav {
                         gap: 0.45rem !important;
+                        overflow-x: auto;
+                        scrollbar-width: none;
                     }
+                    .home-nav::-webkit-scrollbar { display: none; }
 
                     .home-nav .home-nav-btn {
                         padding: 0.45rem 0.8rem !important;
@@ -594,6 +613,8 @@ const Home = () => {
                         padding: 1.25rem !important;
                         border-radius: 1.25rem !important;
                     }
+
+                    .desktop-only { display: none !important; }
                 }
 
                 @media (max-width: 640px) {
@@ -607,6 +628,14 @@ const Home = () => {
 
                     .home-footer-inner {
                         justify-content: center !important;
+                    }
+
+                    .home-mobile-cta {
+                        display: block !important;
+                    }
+
+                    .home-hero-cta {
+                        align-items: stretch !important;
                     }
                 }
             `}</style>
