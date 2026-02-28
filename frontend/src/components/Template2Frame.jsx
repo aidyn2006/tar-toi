@@ -413,8 +413,9 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
 
     const tplKey = normalizeTemplateKey(invite?.template);
     const htmlSource = TEMPLATE_RAW_MAP[tplKey] || TEMPLATE_RAW_MAP[DEFAULT_TEMPLATE_KEY];
+    const skipPalette = tplKey.includes('/wedding/test.html') || (htmlSource && /NO_PALETTE/i.test(htmlSource));
     let html = htmlSource;
-    html = applyPalette(html, palette);
+    html = skipPalette ? html : applyPalette(html, palette);
     html = injectConfig(html, config);
     html = injectPhoto(html, heroUrl);
     if (enableRsvp) {

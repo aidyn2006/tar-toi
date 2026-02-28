@@ -1,23 +1,633 @@
 <!doctype html>
+<!-- NO_PALETTE -->
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lora:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --wine:#6b1f2e; --wine-dark:#4a1020; --wine-light:#8a2a3e; --gold:#c9a96e; --gold-light:#e8d5b7; --cream:#faf6ef; --text:#2a1015; }
-        body { margin:0; font-family:sans-serif; background:var(--cream); color:var(--text); padding:16px; box-sizing:border-box; }
-        section { margin-bottom:24px; }
-        .hero-photo-placeholder, .hero-photo-img { width:100%; max-height:260px; object-fit:cover; border-radius:12px; background:#eee; display:block; }
-        .gallery img { width:100%; max-height:180px; object-fit:cover; border-radius:10px; margin-bottom:8px; }
-        .tag { display:inline-block; padding:6px 12px; border-radius:999px; background:rgba(107,31,46,0.08); color:var(--wine); font-weight:700; font-size:12px; margin-top:8px; }
-        .btn { display:inline-block; padding:10px 14px; border-radius:10px; background:var(--wine); color:#fff; text-decoration:none; font-weight:700; border:none; cursor:pointer; }
-        .rsvp input, .rsvp textarea, .rsvp button { width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; }
-        .rsvp textarea { min-height:70px; resize:vertical; }
-        .rsvp button { background:var(--wine); color:#fff; border:none; cursor:pointer; }
+        :root {
+            --wine: #6b1f2e;
+            --wine-dark: #4a1020;
+            --wine-light: #8a2a3e;
+            --gold: #c9a96e;
+            --gold-light: #e8d5b7;
+            --cream: #faf6ef;
+            --text: #2a1015;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Lora', serif;
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        /* ══════════════════════════════
+           BORDER — повторяющийся по краям
+        ══════════════════════════════ */
+        .border-strip {
+            pointer-events: none;
+            position: fixed;
+            top: 0; z-index: 9999;
+        }
+        .border-strip.left {
+            left: 0; width: 20px; height: 100%;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 20px auto;
+            background-repeat: repeat-y;
+        }
+        .border-strip.right {
+            right: 0; width: 20px; height: 100%;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 20px auto;
+            background-repeat: repeat-y;
+            transform: scaleX(-1);
+        }
+
+        /* ══════════════════════════════
+           PAGE
+        ══════════════════════════════ */
+        .page {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section { margin-bottom: 0; }
+
+        /* ══════════════════════════════
+           ① HERO
+        ══════════════════════════════ */
+        .hero {
+            position: relative;
+        }
+
+        .hero-photo-placeholder,
+        .hero-photo-img {
+            width: 100%;
+            height: 70dvh;
+            min-height: 380px;
+            object-fit: cover;
+            border-radius: 0 0 100px 100px;
+            display: block;
+            background: linear-gradient(160deg, var(--wine-dark), var(--wine));
+        }
+
+        .hero-photo-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .hero-photo-placeholder svg { opacity: 0.12; }
+        .hero-photo-placeholder span {
+            font-family: 'Cinzel', serif;
+            font-size: 9px; letter-spacing: 3px;
+            color: rgba(232,213,183,0.3); text-transform: uppercase;
+        }
+
+        /* decor SVG поверх низа фото */
+        .hero-decor {
+            position: absolute;
+            bottom: -1px; left: 50%;
+            transform: translateX(-50%);
+            width: min(380px, 88%);
+            z-index: 10;
+            pointer-events: none;
+            display: block;
+        }
+
+        /* music btn */
+        .music-btn {
+            position: absolute;
+            bottom: 0; right: 28px;
+            transform: translateY(50%);
+            z-index: 20;
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: var(--wine);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 24px rgba(74,16,32,0.45);
+            transition: all 0.3s;
+        }
+        .music-btn:hover { background: var(--wine-light); transform: translateY(50%) scale(1.06); }
+        .music-btn svg { color: #fff; margin-left: 3px; }
+        .music-btn.playing::after {
+            content: '';
+            position: absolute; inset: -6px;
+            border: 2px solid var(--wine);
+            border-radius: 50%;
+            animation: ripple 1.6s ease-out infinite;
+        }
+        @keyframes ripple {
+            0%  { opacity: 0.6; transform: scale(1); }
+            100%{ opacity: 0; transform: scale(1.5); }
+        }
+
+        /* heroNames — поверх hero секции */
+        .hero h1#heroNames {
+            display: none; /* names повторяются в about */
+        }
+
+        /* ══════════════════════════════
+           ② ABOUT — тёмная карточка
+        ══════════════════════════════ */
+        .about {
+            background: var(--wine);
+            border-radius: 0;
+            padding: 52px 28px 44px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(232,213,183,0.05) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        .about-eyebrow {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(12px, 2.8vw, 15px);
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--gold-light);
+            line-height: 1.65;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .about p#eventText {
+            font-family: 'Lora', serif;
+            font-size: clamp(14px, 2.8vw, 17px);
+            letter-spacing: 1.5px;
+            color: rgba(232,213,183,0.75);
+            line-height: 1.75;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .about .invite-body {
+            font-family: 'Lora', serif;
+            font-size: clamp(14px, 2.8vw, 17px);
+            color: rgba(232,213,183,0.7);
+            line-height: 1.8;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .about h1#heroNamesLine {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(32px, 7vw, 48px);
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            margin: 12px 0 20px;
+            line-height: 1.05;
+            position: relative;
+        }
+
+        .about .invite-footer {
+            font-family: 'Lora', serif;
+            font-size: clamp(13px, 2.6vw, 16px);
+            color: rgba(232,213,183,0.65);
+            line-height: 1.8;
+            letter-spacing: 1.5px;
+            position: relative;
+        }
+
+        /* wave ornament */
+        .wave-orn {
+            margin: 18px auto;
+            display: block;
+            width: 180px; height: 12px;
+        }
+
+        /* ══════════════════════════════
+           ③ DATE inside about
+        ══════════════════════════════ */
+        .date-block {
+            position: relative;
+            margin: 24px 0 8px;
+        }
+
+        .date-label {
+            font-family: 'Lora', serif;
+            font-size: clamp(15px, 3vw, 18px);
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--gold-light);
+            margin-bottom: 16px;
+        }
+
+        /* Сердечко поверх календаря */
+        .cal-heart {
+            width: 44px; height: 44px;
+            position: absolute;
+            top: 14px; right: 14px;
+            pointer-events: none;
+            animation: heartPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes heartPulse {
+            0%,100% { transform: scale(1); opacity: 0.85; }
+            50%     { transform: scale(1.12); opacity: 0.6; }
+        }
+
+        #heroDateLine {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(16px, 3.2vw, 20px);
+            color: rgba(232,213,183,0.9);
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+            padding: 6px 18px;
+        }
+
+        /* ownersBlock */
+        #ownersBlock { margin-top: 20px; position: relative; }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 999px;
+            background: rgba(232,213,183,0.12);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #ownersText {
+            margin-top: 8px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(20px, 4vw, 28px);
+            color: var(--gold-light);
+            letter-spacing: 2px;
+        }
+
+        /* ══════════════════════════════
+           ④ LOCATION
+        ══════════════════════════════ */
+        .location {
+            background: var(--wine);
+            padding: 32px 28px 32px;
+            text-align: center;
+        }
+
+        .location h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 10px; letter-spacing: 4px;
+            color: var(--gold); opacity: 0.65;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        #locationName {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(16px, 3.2vw, 20px);
+            color: rgba(232,213,183,0.85);
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        #mapBtnWrap { margin-top: 10px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center; gap: 8px;
+            padding: 11px 20px;
+            border-radius: 12px;
+            background: var(--cream);
+            color: var(--wine);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 10px; letter-spacing: 1px; font-weight: 600;
+            border: none; cursor: pointer;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
+        .btn:hover { background: var(--gold-light); }
+        .btn img { width: 22px; height: 22px; }
+
+        /* ══════════════════════════════
+           ⑤ GALLERY — карусель
+        ══════════════════════════════ */
+        .gallery {
+            background: var(--wine);
+            padding: 32px 0 40px;
+        }
+
+        .gallery h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 10px; letter-spacing: 4px;
+            color: var(--gold); opacity: 0.65;
+            text-transform: uppercase;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 28px;
+        }
+
+        .gallery-viewport {
+            overflow: hidden;
+            touch-action: pan-y;
+            user-select: none;
+        }
+
+        #gallerySlides {
+            display: flex;
+            gap: 12px;
+            padding: 6px 28px;
+            transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+            will-change: transform;
+        }
+
+        #gallerySlides img {
+            flex-shrink: 0;
+            width: clamp(180px, 55vw, 270px);
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(74,16,32,0.35);
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-bottom: 0;
+            max-height: none;
+        }
+
+        #gallerySlides img.active-slide { transform: scale(1.04); }
+
+        .gallery-empty {
+            text-align: center;
+            color: rgba(232,213,183,0.35);
+            font-size: 12px; letter-spacing: 2px;
+            padding: 28px;
+        }
+
+        .gallery-controls {
+            display: flex; align-items: center;
+            justify-content: center; gap: 14px;
+            margin-top: 18px;
+        }
+        .g-arrow {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            border: 1px solid rgba(232,213,183,0.25);
+            background: transparent;
+            color: var(--gold-light);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .g-arrow:hover { background: var(--wine-light); }
+        .g-dots { display: flex; gap: 6px; }
+        .g-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.22; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .g-dot.lit { opacity: 1; transform: scale(1.4); }
+
+        /* ══════════════════════════════
+           ⑥ OWNERS — декор снизу
+        ══════════════════════════════ */
+        .owners-section {
+            background: var(--wine);
+            border-radius: 0 0 100px 100px;
+            padding: 4px 28px 52px;
+            text-align: center;
+        }
+
+        .decor-img {
+            width: 110px;
+            display: block;
+            margin: 0 auto 14px;
+            opacity: 0.6;
+        }
+
+        .owners-label-txt {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px; font-style: italic;
+            color: rgba(232,213,183,0.7);
+            letter-spacing: 2px; margin-bottom: 6px;
+        }
+
+        .owners-name-txt {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(22px, 5vw, 30px);
+            font-weight: 600;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+        }
+
+        /* ══════════════════════════════
+           ⑦ RSVP
+        ══════════════════════════════ */
+        .rsvp {
+            padding: 64px 28px 80px;
+            background: var(--cream);
+            text-align: center;
+        }
+
+        .rsvp h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(28px, 6vw, 40px);
+            color: var(--wine);
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .form-wrap {
+            max-width: 320px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        .rsvp input,
+        .rsvp textarea {
+            width: 100%;
+            padding: 12px 14px;
+            margin-top: 0;
+            border-radius: 10px;
+            border: 1px solid rgba(107,31,46,0.15);
+            background: white;
+            font-family: 'Lora', serif;
+            font-size: 15px; color: var(--text);
+            outline: none; transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .rsvp input:focus,
+        .rsvp textarea:focus { border-color: var(--wine); }
+        .rsvp input::placeholder,
+        .rsvp textarea::placeholder { color: rgba(42,16,21,0.3); font-style: italic; }
+        .rsvp textarea { min-height: 70px; resize: vertical; }
+
+        /* guest counter */
+        .guest-counter {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .gc-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(107,31,46,0.2);
+            background: transparent;
+            font-size: 18px; font-weight: 700;
+            color: var(--wine); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; flex-shrink: 0;
+        }
+        .gc-btn:hover { background: var(--wine); color: #fff; }
+        #rGuests {
+            width: 80px !important;
+            text-align: center !important;
+            font-size: 18px !important;
+        }
+
+        .guest-opt { display: none !important; }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            background: var(--wine);
+            color: #fff;
+            border: none; cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 11px; letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 8px;
+            transition: background 0.3s;
+            box-sizing: border-box;
+        }
+        .submit-btn:hover { background: var(--wine-light); }
+
+        #successMsg {
+            margin-top: 16px;
+            font-size: 16px;
+            color: var(--wine);
+            display: none;
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+
+        /* footer */
+        .site-footer {
+            text-align: center;
+            padding: 14px;
+            border-top: 1px solid rgba(107,31,46,0.1);
+            font-size: 12px;
+            color: rgba(42,16,21,0.4);
+        }
+        .site-footer a { color: var(--wine); }
+
+        /* ── CALENDAR ── */
+        .calendar-wrap {
+            background: rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 18px 10px;
+            margin: 0 auto;
+            max-width: 340px;
+        }
+        .cal-month-title {
+            font-family: 'Cinzel', serif;
+            font-size: 10px; letter-spacing: 4px;
+            color: var(--gold); text-transform: uppercase;
+            margin-bottom: 14px; text-align: center;
+        }
+        .cal-grid-head {
+            display: grid; grid-template-columns: repeat(7,1fr);
+            margin-bottom: 4px;
+        }
+        .cal-grid-head span {
+            font-family: 'Cinzel', serif;
+            font-size: 7px; letter-spacing: 1px;
+            color: rgba(232,213,183,0.35);
+            text-align: center; padding: 2px 0;
+        }
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7,1fr); gap: 1px;
+        }
+        .cday {
+            font-family: 'Lora', serif;
+            font-size: 14px; font-weight: 400;
+            color: rgba(232,213,183,0.55);
+            text-align: center; padding: 7px 2px;
+            position: relative;
+        }
+        .cday.other { opacity: 0.2; }
+        .cday.today { color: #fff; font-weight: 700; font-size: 18px; }
+        .cday.today::before {
+            content: '';
+            position: absolute; inset: 2px;
+            border-radius: 50%;
+            background: var(--wine-light);
+            z-index: -1;
+        }
+
+        /* время под календарём */
+        .time-only {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(20px, 4vw, 26px);
+            font-weight: 600;
+            color: rgba(232,213,183,0.9);
+            letter-spacing: 3px;
+            position: relative; z-index: 1;
+            padding: 6px 18px;
+        }
+
+        /* ── OWNERS BIG NAME ── */
+        .owners-name-txt {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(30px, 7vw, 44px);
+            font-weight: 600;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            line-height: 1.1;
+        }
+        .owners-label-txt {
+            font-family: 'Cinzel', serif;
+            font-size: 10px; letter-spacing: 4px;
+            color: var(--gold); opacity: 0.65;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        opacity: 0; transform: translateY(24px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .rv.in { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
+
+<!-- BORDER STRIPS -->
+<div class="border-strip left"  aria-hidden="true"></div>
+<div class="border-strip right" aria-hidden="true"></div>
 
 <script>
     const CONFIG = {
@@ -33,115 +643,423 @@
     };
 </script>
 
-<section class="hero">
-    <div class="hero-photo">
-        <div class="hero-photo-placeholder">[главное фото]</div>
-    </div>
-    <h1 id="heroNames">Имя & Имя</h1>
-</section>
+<div class="page">
 
-<section class="about">
-    <p id="eventText">Описание события</p>
-    <p>Сиздерды балаларымыздын </p>
-    <h1 id="heroNamesLine">Имя & Имя</h1>
-<p>Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
-    <p>Тойымыз уақыты:
-    <p id="heroDateLine">Дата · Время</p>
-
-    </p>
-    <div id="ownersBlock" style="margin-top:10px; display:none;">
-        <span class="tag">Той иелері</span>
-        <div id="ownersText" style="margin-top:6px; font-weight:700;"></div>
-    </div>
-</section>
-<section class="location">
-    <h3 style="margin:0 0 6px 0; color:var(--wine);">Мекенжай</h3>
-    <p id="locationName" style="margin:0 0 4px 0;"></p>
-    <div id="mapBtnWrap" style="margin-top:8px; display:none;">
-        <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">📍 2GIS / Google Maps</a>
-    </div>
-</section>
-
-
-
-<section class="gallery">
-    <h3 style="margin:0 0 8px 0; color:var(--wine);">Біздің сәттер</h3>
-    <div id="gallerySlides">[галерея]</div>
-</section>
-
-
-<section class="rsvp">
-    <h3>Ваш ответ</h3>
-    <div id="rsvpForm">
-        <div class="form-group">
-            <input id="rName" placeholder="Ваше имя">
+    <!-- ① HERO -->
+    <section class="hero">
+        <div class="hero-photo">
+            <div class="hero-photo-placeholder">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                    <circle cx="32" cy="24" r="13" stroke="white" stroke-width="1.3"/>
+                    <path d="M8 58 Q32 40 56 58" stroke="white" stroke-width="1.3" fill="none"/>
+                </svg>
+                <span>Фото жұпты</span>
+            </div>
         </div>
-        <div class="form-group">
-            <input id="rPhone" placeholder="+7 (___) ___-__-__">
+
+        <!-- декор поверх фото -->
+        <img src="https://shaqyrtu.kz/template4/3.svg"
+             class="hero-decor" alt="decor"
+             onerror="this.style.display='none'">
+
+        <!-- музыка -->
+        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+            <svg id="mIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+            <audio id="audioEl" style="display:none"></audio>
+        </button>
+
+        <h1 id="heroNames" style="display:none">Имя &amp; Имя</h1>
+    </section>
+
+    <!-- ② ABOUT -->
+    <section class="about rv">
+        <p class="about-eyebrow" id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+
+        <svg class="wave-orn" viewBox="0 0 180 12" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="wv" x="0" y="0" width="18" height="12" patternUnits="userSpaceOnUse">
+                    <path d="M0 6 Q4.5 0 9 6 Q13.5 12 18 6" fill="none" stroke="rgba(201,169,110,0.45)" stroke-width="1.2"/>
+                </pattern>
+            </defs>
+            <rect width="180" height="12" fill="url(#wv)"/>
+        </svg>
+
+        <p class="invite-body">Сіздерді балаларымыздың:</p>
+
+        <h1 id="heroNamesLine">Имя &amp; Имя</h1>
+
+        <p class="invite-footer">Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
+
+        <svg class="wave-orn" viewBox="0 0 180 12" xmlns="http://www.w3.org/2000/svg">
+            <use href="#wv"/>
+        </svg>
+
+        <!-- Дата → КАЛЕНДАРЬ -->
+        <div class="date-block">
+            <p class="date-label">Тойымыз уақыты:</p>
+
+            <!-- календарь -->
+            <div class="calendar-wrap">
+                <img src="https://shaqyrtu.kz/template6/heart.png"
+                     class="cal-heart" alt="heart"
+                     onerror="this.style.display='none'">
+                <div class="cal-month-title" id="calMo"></div>
+                <div class="cal-grid-head">
+                    <span>Дс</span><span>Сс</span><span>Ср</span>
+                    <span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+            </div>
+
+            <!-- время -->
+            <p id="heroDateLine" class="time-only" style="margin-top:12px;"></p>
         </div>
-        <div class="form-group">
-            <input id="rGuests" type="number" min="1" value="1" placeholder="Количество гостей">
-            <!-- hidden guest-opt, чтобы submitRSVP видел выбранный вариант -->
-            <button class="guest-opt selected" data-val="1" style="display:none"></button>
+
+        <!-- owners inline (убран, используем нижний блок) -->
+        <div id="ownersBlock" style="display:none;"></div>
+    </section>
+
+    <!-- ⑤ TOY OWNERS — нижняя карточка -->
+    <section class="owners-section rv" id="ownersSectionFull">
+        <img src="https://shaqyrtu.kz/template4/decor.png"
+             class="decor-img" alt="decor"
+             onerror="this.style.display='none'">
+        <p class="owners-label-txt">Той иелері</p>
+        <p class="owners-name-txt" id="ownersBigName">—</p>
+        <img src="https://shaqyrtu.kz/template4/decor.png"
+             class="decor-img" alt="decor"
+             style="transform:rotate(180deg); margin-top:14px;"
+             onerror="this.style.display='none'">
+    </section>
+
+    <!-- ③ LOCATION -->
+    <section class="location rv">
+        <h3>Мекенжай</h3>
+        <p id="locationName"></p>
+        <div id="mapBtnWrap" style="display:none;">
+            <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">
+                <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2gis">
+                Карта арқылы ашу
+            </a>
         </div>
-        <div class="form-group">
-            <textarea id="rNote" placeholder="Особые пожелания..."></textarea>
+    </section>
+
+    <!-- ④ GALLERY -->
+    <section class="gallery rv">
+        <h3>Біздің сәттер</h3>
+        <div class="gallery-viewport">
+            <div id="gallerySlides"></div>
         </div>
-        <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Подтвердить</button>
+        <div class="gallery-controls" id="galleryControls" style="display:none">
+            <button class="g-arrow" onclick="goPrev()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="g-dots" id="gDots"></div>
+            <button class="g-arrow" onclick="goNext()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+    </section>
+
+
+
+    <!-- ⑥ RSVP -->
+    <section class="rsvp">
+        <h3>Ваш ответ</h3>
+        <div class="form-wrap">
+            <div id="rsvpForm">
+                <div class="form-group">
+                    <input id="rName" placeholder="Ваше имя">
+                </div>
+                <div class="form-group">
+                    <input id="rPhone" placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="form-group">
+                    <div class="guest-counter">
+                        <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
+                        <input id="rGuests" type="number" min="1" value="1" readonly>
+                        <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
+                    </div>
+                    <button class="guest-opt selected" data-val="1" style="display:none"></button>
+                </div>
+                <div class="form-group">
+                    <textarea id="rNote" placeholder="Особые пожелания..."></textarea>
+                </div>
+                <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Подтвердить</button>
+            </div>
+            <div id="successMsg">Спасибо! Ждём вас на нашем торжестве.</div>
+        </div>
+    </section>
+
+    <div class="site-footer">
+        Шын жүректен <a href="https://shaqyrtu.kz" target="_blank">shaqyrtu.kz</a> арқылы жасалған 🇰🇿
     </div>
-    <div id="successMsg" style="margin-top:8px;font-size:14px;color:var(--wine);display:none;">Спасибо! Ждём вас на нашем торжестве.</div>
-</section>
+
+</div><!-- /page -->
 
 <script>
     (function applyConfig() {
-        const [dd, mm, yy] = CONFIG.day.split('-');
-        document.title = CONFIG.music.title || 'Invitation';
-        document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
-        const namesLine = document.getElementById('heroNamesLine');
-        if (namesLine) namesLine.textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
-        document.getElementById('heroDateLine').textContent = `${dd}.${mm}.${yy} · ${CONFIG.hour}`;
-        const loc = document.getElementById('locationName');
-        const desc = document.getElementById('eventText');
-        if (desc) desc.textContent = CONFIG.description || '';
-        if (loc) loc.textContent = CONFIG.location || '';
+        const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
+        const [hh, mi]     = CONFIG.hour.split(':');
 
-        const ownersBlock = document.getElementById('ownersBlock');
-        const ownersText = document.getElementById('ownersText');
-        if (ownersText && CONFIG.toiOwners) {
-            ownersText.textContent = CONFIG.toiOwners;
-            ownersBlock.style.display = 'block';
+        const MO_KK = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым",
+            "Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
+
+        document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+
+        document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+        const nl = document.getElementById('heroNamesLine');
+        if (nl) nl.textContent = `${CONFIG.names.groom} & ${CONFIG.names.bride}`;
+
+        // description → about-eyebrow
+        const desc = document.getElementById('eventText');
+        if (desc) desc.textContent = CONFIG.description || 'Құрметті ағайын-туыс, құда-жекжат, дос-жаран!';
+
+        // heroDateLine → только время
+        const dtLine = document.getElementById('heroDateLine');
+        if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
+
+        // calendar
+        const calMo   = document.getElementById('calMo');
+        const calGrid = document.getElementById('calGrid');
+        if (calMo)   calMo.textContent = `${MO_KK[mm-1]} ${yy}`;
+        if (calGrid) {
+            calGrid.innerHTML = '';
+            const firstDay = new Date(yy, mm-1, 1).getDay();
+            const off      = firstDay === 0 ? 6 : firstDay - 1;
+            const daysInM  = new Date(yy, mm, 0).getDate();
+            const prevDays = new Date(yy, mm-1, 0).getDate();
+            for (let i = 0; i < off; i++) {
+                const e = document.createElement('div');
+                e.className = 'cday other';
+                e.textContent = prevDays - off + 1 + i;
+                calGrid.appendChild(e);
+            }
+            for (let d = 1; d <= daysInM; d++) {
+                const e = document.createElement('div');
+                e.className = 'cday' + (d === dd ? ' today' : '');
+                e.textContent = d;
+                calGrid.appendChild(e);
+            }
+            const total = off + daysInM;
+            const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
+            for (let i = 1; i <= rem; i++) {
+                const e = document.createElement('div');
+                e.className = 'cday other';
+                e.textContent = i;
+                calGrid.appendChild(e);
+            }
         }
 
+        const loc = document.getElementById('locationName');
+        if (loc) loc.textContent = CONFIG.location || '';
+
+        // owners
+        const ownersBlock = document.getElementById('ownersBlock');
+        const ownersBig   = document.getElementById('ownersBigName');
+        if (CONFIG.toiOwners) {
+            if (ownersBig)   ownersBig.textContent  = CONFIG.toiOwners;
+        }
+
+        // map
         const mapBtnWrap = document.getElementById('mapBtnWrap');
-        const mapBtn = document.getElementById('mapBtn');
+        const mapBtn     = document.getElementById('mapBtn');
         if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) {
             mapBtn.href = CONFIG.locationUrl || '#';
             mapBtn.style.pointerEvents = CONFIG.locationUrl ? 'auto' : 'none';
-            mapBtn.style.opacity = CONFIG.locationUrl ? '1' : '0.55';
-            mapBtnWrap.style.display = 'block';
+            mapBtn.style.opacity       = CONFIG.locationUrl ? '1'    : '0.55';
+            mapBtnWrap.style.display   = 'block';
         }
 
         // Gallery
         const slides = document.getElementById('gallerySlides');
         if (slides) {
             slides.innerHTML = '';
-            (CONFIG.gallery || []).forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'photo';
-                slides.appendChild(img);
-            });
-            if (!CONFIG.gallery || CONFIG.gallery.length === 0) {
-                slides.textContent = 'Добавьте фото в галерею';
+            const list = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : [];
+            if (!list.length) {
+                const e = document.createElement('div');
+                e.className = 'gallery-empty';
+                e.textContent = 'Добавьте фото в галерею';
+                slides.appendChild(e);
+            } else {
+                list.forEach((url, i) => {
+                    const img = document.createElement('img');
+                    img.src = url; img.alt = 'photo';
+                    img.setAttribute('data-i', i);
+                    img.addEventListener('click', () => { gIdx = i; updateGallery(); });
+                    slides.appendChild(img);
+                });
+                document.getElementById('galleryControls').style.display = 'flex';
+                const dotsWrap = document.getElementById('gDots');
+                list.forEach((_, i) => {
+                    const d = document.createElement('div');
+                    d.className = 'g-dot' + (i === 0 ? ' lit' : '');
+                    d.addEventListener('click', () => { gIdx = i; updateGallery(); });
+                    dotsWrap.appendChild(d);
+                });
+                let tx = 0;
+                slides.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+                slides.addEventListener('touchend',   e => {
+                    const dx = e.changedTouches[0].clientX - tx;
+                    if (Math.abs(dx) > 40) dx < 0 ? goNext() : goPrev();
+                });
             }
         }
+
+        // ── АВТОПРОКРУТКА страницы при открытии ──
+        setTimeout(() => {
+            const pageH  = document.body.scrollHeight - window.innerHeight;
+            const dur    = 18000; // 18 секунд до низа
+            const start  = performance.now();
+            const startY = 0;
+
+            function autoScroll(now) {
+                if (window._userScrolled) return; // останавливаем если юзер тронул
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / dur, 1);
+                // ease-in-out
+                const ease = progress < 0.5
+                    ? 2 * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                window.scrollTo(0, startY + pageH * ease);
+                if (progress < 1) requestAnimationFrame(autoScroll);
+            }
+            requestAnimationFrame(autoScroll);
+
+            // слушаем касание/скролл юзера — прекращаем автопрокрутку
+            ['touchstart','wheel','keydown'].forEach(ev => {
+                window.addEventListener(ev, () => { window._userScrolled = true; }, { once: true, passive: true });
+            });
+        }, 1200);
+
+        // ── АВТОЗАПУСК МУЗЫКИ ──
+        // Браузеры блокируют autoplay без жеста — запускаем на первый тап/клик
+        function tryAutoMusic() {
+            const url = CONFIG.music && CONFIG.music.url;
+            if (!url) return; // нет url — не запускаем автоматически
+            const audio = document.getElementById('audioEl');
+            if (!audio.src || audio.src === window.location.href) {
+                audio.src = url;
+            }
+            audio.play().then(() => {
+                playing = true;
+                document.getElementById('musicBtn').classList.add('playing');
+                updateMIcon();
+            }).catch(() => {
+                // autoplay заблокирован — ждём первого взаимодействия
+                const unlock = () => {
+                    audio.play().then(() => {
+                        playing = true;
+                        document.getElementById('musicBtn').classList.add('playing');
+                        updateMIcon();
+                    }).catch(() => {});
+                    document.removeEventListener('touchstart', unlock);
+                    document.removeEventListener('click', unlock);
+                };
+                document.addEventListener('touchstart', unlock, { once: true });
+                document.addEventListener('click',      unlock, { once: true });
+            });
+        }
+        tryAutoMusic();
+
     })();
 
-    // Простейший клиентский submitRSVP (переопределяется нашим скриптом, если enableRsvp=true)
+    // Gallery carousel
+    let gIdx = 0;
+    let galleryInterval = null;
+
+    function startGalleryAuto() {
+        if (galleryInterval) clearInterval(galleryInterval);
+        galleryInterval = setInterval(goNext, 4000);
+    }
+
+    function updateGallery() {
+        const slides = document.getElementById('gallerySlides');
+        const items  = Array.from(slides.querySelectorAll('img'));
+        if (!items.length) return;
+        const dots = Array.from(document.getElementById('gDots').children);
+        const sw   = items[0].offsetWidth + 12;
+        const vw   = slides.parentElement.offsetWidth;
+        const off  = gIdx * sw - vw / 2 + sw / 2 - 28;
+        slides.style.transform = `translateX(${-Math.max(0, off)}px)`;
+        items.forEach((el, i) => el.classList.toggle('active-slide', i === gIdx));
+        dots.forEach((d, i)  => d.classList.toggle('lit', i === gIdx));
+    }
+    function goNext() { const imgs = document.getElementById('gallerySlides').querySelectorAll('img'); if (imgs.length) { gIdx=(gIdx+1)%imgs.length; updateGallery(); } }
+    function goPrev() { const imgs = document.getElementById('gallerySlides').querySelectorAll('img'); if (imgs.length) { gIdx=(gIdx-1+imgs.length)%imgs.length; updateGallery(); } }
+
+    // start gallery auto after DOM ready
+    window.addEventListener('load', () => {
+        const imgs = document.getElementById('gallerySlides').querySelectorAll('img');
+        if (imgs.length) startGalleryAuto();
+    });
+
+    // Music
+    let playing = false;
+    function toggleMusic() {
+        const audio = document.getElementById('audioEl');
+        const btn   = document.getElementById('musicBtn');
+        const url   = CONFIG.music && CONFIG.music.url;
+
+        if (!audio.src || audio.src === window.location.href) {
+            if (url) {
+                audio.src = url;
+            } else {
+                const inp = document.createElement('input');
+                inp.type = 'file'; inp.accept = 'audio/*';
+                inp.onchange = e => {
+                    const f = e.target.files[0]; if (!f) return;
+                    audio.src = URL.createObjectURL(f);
+                    audio.addEventListener('ended', () => { playing = false; updateMIcon(); btn.classList.remove('playing'); });
+                    doPlay(audio, btn);
+                };
+                inp.click(); return;
+            }
+        }
+        if (playing) { audio.pause(); playing = false; btn.classList.remove('playing'); }
+        else doPlay(audio, btn);
+        updateMIcon();
+    }
+    function doPlay(a, b) { a.play().catch(()=>{}); playing = true; b.classList.add('playing'); updateMIcon(); }
+    function updateMIcon() {
+        document.getElementById('mIcon').innerHTML = playing
+            ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+            : '<path d="M8 5v14l11-7z"/>';
+    }
+
+    // Guests
+    function changeGuests(d) {
+        const inp = document.getElementById('rGuests');
+        const val = Math.max(1, Math.min(10, parseInt(inp.value || 1) + d));
+        inp.value = val;
+        const h = document.querySelector('.guest-opt');
+        if (h) h.setAttribute('data-val', val);
+    }
+
+    // submitRSVP
     window.submitRSVP = () => {
-        const ok = document.getElementById('successMsg');
-        if (ok) ok.style.display = 'block';
+        const name  = document.getElementById('rName').value.trim();
+        const phone = document.getElementById('rPhone').value.trim();
+        if (!name)  { document.getElementById('rName').focus();  return; }
+        if (!phone) { document.getElementById('rPhone').focus(); return; }
+        document.getElementById('rsvpForm').style.display  = 'none';
+        document.getElementById('successMsg').style.display = 'block';
     };
+
+    // Автоскролл только в публичном просмотре (не внутри редактора/iframe)
+    if (window.self === window.top) {
+        setTimeout(() => {
+            window.scrollTo({ top: window.innerHeight * 0.8, behavior: 'smooth' });
+        }, 1200);
+    }
+
+    // Scroll reveal
+    const obs = new IntersectionObserver(es => {
+        es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 </script>
 
 </body>

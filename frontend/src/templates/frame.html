@@ -1,95 +1,76 @@
 <!doctype html>
+<!-- NO_PALETTE -->
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Template</title>
-    <style>
-        :root { --wine:#6b1f2e; --wine-dark:#4a1020; --wine-light:#8a2a3e; --gold:#c9a96e; --gold-light:#e8d5b7; --cream:#faf6ef; --text:#2a1015; }
-        body { margin:0; font-family:sans-serif; background:var(--cream); color:var(--text); padding:16px; box-sizing:border-box; }
-        section { margin-bottom:24px; }
-        .hero-photo-placeholder, .hero-photo-img { width:100%; max-height:260px; object-fit:cover; border-radius:12px; background:#eee; display:block; }
-        .gallery img { width:100%; max-height:180px; object-fit:cover; border-radius:10px; margin-bottom:8px; }
-        .tag { display:inline-block; padding:6px 12px; border-radius:999px; background:rgba(107,31,46,0.08); color:var(--wine); font-weight:700; font-size:12px; margin-top:8px; }
-        .btn { display:inline-block; padding:10px 14px; border-radius:10px; background:var(--wine); color:#fff; text-decoration:none; font-weight:700; border:none; cursor:pointer; }
-        .rsvp input, .rsvp textarea, .rsvp button { width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; }
-        .rsvp textarea { min-height:70px; resize:vertical; }
-        .rsvp button { background:var(--wine); color:#fff; border:none; cursor:pointer; }
-    </style>
+    <title>Frame Bare</title>
 </head>
-<body>
+<body style="margin:0; padding:16px; font-family: sans-serif;">
 
 <script>
     const CONFIG = {
         names: { bride: "Аружан", groom: "Данияр" },
         day: "21-03-2026",
         hour: "19:00",
-        location: "Astana, Farhi Hall",
-        locationUrl: "https://2gis.kz/astana",
-        music: { title: "Песня", artist: "Исполнитель", url: "" },
+        location: "Astana, Hall",
+        locationUrl: "",
+        music: { title: "", artist: "", url: "" },
         gallery: [],
-        description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
-        toiOwners: "Сырымбетовтар әулеті",
+        description: "Описание события",
+        toiOwners: "Той иелері",
     };
 </script>
 
-<section class="hero">
-    <div class="hero-photo">
-        <div class="hero-photo-placeholder">[главное фото]</div>
+<!-- Hero -->
+<section>
+    <div id="heroPhoto" style="width:100%; height:200px; background:#e6e6e6; display:flex; align-items:center; justify-content:center;">
+        Главное фото
     </div>
-    <h1 id="heroNames">Имя & Имя</h1>
+    <h1 id="heroNames" style="margin:12px 0 4px;">Имя & Имя</h1>
+    <p id="heroDateLine" style="margin:0;">Дата · Время</p>
 </section>
 
-<section class="about">
-    <p id="eventText">Описание события</p>
-    <p>Сиздерды балаларымыздын </p>
-    <h1 id="heroNames">Имя & Имя</h1>
-    <p>Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
-    <p>Тойымыз уақыты:
-    <p id="heroDateLine">Дата · Время</p>
-
-    </p>
-    <div id="ownersBlock" style="margin-top:10px; display:none;">
-        <span class="tag">Той иелері</span>
-        <div id="ownersText" style="margin-top:6px; font-weight:700;"></div>
-    </div>
-</section>
-<section class="location">
-    <h3 style="margin:0 0 6px 0; color:var(--wine);">Мекенжай</h3>
-    <p id="locationName" style="margin:0 0 4px 0;"></p>
-    <div id="mapBtnWrap" style="margin-top:8px; display:none;">
-        <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">📍 2GIS / Google Maps</a>
-    </div>
+<!-- About -->
+<section>
+    <h3 style="margin:0 0 6px 0;">Құрметті ағайын-туыс!</h3>
+    <p id="eventText" style="margin:0 0 6px 0;">Описание события</p>
+    <p style="margin:0 0 6px 0;">Сіздерді қуанышымызды бөлісуге шақырамыз.</p>
 </section>
 
-
-
-<section class="gallery">
-    <h3 style="margin:0 0 8px 0; color:var(--wine);">Біздің сәттер</h3>
+<!-- Gallery -->
+<section>
+    <h4 style="margin:0 0 6px 0;">Біздің сәттер</h4>
     <div id="gallerySlides">[галерея]</div>
 </section>
 
-
-<section class="rsvp">
-    <h3>Ваш ответ</h3>
-    <div id="rsvpForm">
-        <div class="form-group">
-            <input id="rName" placeholder="Ваше имя">
-        </div>
-        <div class="form-group">
-            <input id="rPhone" placeholder="+7 (___) ___-__-__">
-        </div>
-        <div class="form-group">
-            <input id="rGuests" type="number" min="1" value="1" placeholder="Количество гостей">
-            <!-- hidden guest-opt, чтобы submitRSVP видел выбранный вариант -->
-            <button class="guest-opt selected" data-val="1" style="display:none"></button>
-        </div>
-        <div class="form-group">
-            <textarea id="rNote" placeholder="Особые пожелания..."></textarea>
-        </div>
-        <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Подтвердить</button>
+<!-- Location -->
+<section>
+    <h4 style="margin:0 0 4px 0;">Мекенжай</h4>
+    <p id="locationName"></p>
+    <div id="mapBtnWrap" style="display:none;">
+        <a id="mapBtn" target="_blank" rel="noreferrer noopener">Карта арқылы ашу</a>
     </div>
-    <div id="successMsg" style="margin-top:8px;font-size:14px;color:var(--wine);display:none;">Спасибо! Ждём вас на нашем торжестве.</div>
+</section>
+
+<!-- Owners -->
+<section id="ownersSection" style="display:none;">
+    <strong>Той иелері:</strong>
+    <div id="ownersName" style="margin-top:4px;">—</div>
+</section>
+
+<!-- RSVP -->
+<section>
+    <h4 style="margin:0 0 6px 0;">Ваш ответ</h4>
+    <p style="margin:0 0 8px 0; font-size:14px; color:#555;">Пожалуйста, подтвердите присутствие</p>
+    <div id="rsvpForm">
+        <input id="rName" placeholder="Ваше имя"><br>
+        <input id="rPhone" placeholder="+7 (___) ___-__-__"><br>
+        <input id="rGuests" type="number" min="1" value="1" placeholder="Количество гостей"><br>
+        <textarea id="rNote" placeholder="Пожелания"></textarea><br>
+        <button onclick="submitRSVP && submitRSVP()">Подтвердить</button>
+    </div>
+    <div id="successMsg" style="display:none;">Спасибо!</div>
 </section>
 
 <script>
@@ -97,31 +78,27 @@
         const [dd, mm, yy] = CONFIG.day.split('-');
         document.title = CONFIG.music.title || 'Invitation';
         document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
-        const namesLine = document.getElementById('heroNamesLine');
-        if (namesLine) namesLine.textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
         document.getElementById('heroDateLine').textContent = `${dd}.${mm}.${yy} · ${CONFIG.hour}`;
         const loc = document.getElementById('locationName');
+        if (loc) loc.textContent = CONFIG.location || '';
         const desc = document.getElementById('eventText');
         if (desc) desc.textContent = CONFIG.description || '';
-        if (loc) loc.textContent = CONFIG.location || '';
 
-        const ownersBlock = document.getElementById('ownersBlock');
-        const ownersText = document.getElementById('ownersText');
-        if (ownersText && CONFIG.toiOwners) {
-            ownersText.textContent = CONFIG.toiOwners;
-            ownersBlock.style.display = 'block';
+        const owners = document.getElementById('ownersSection');
+        const ownersName = document.getElementById('ownersName');
+        if (CONFIG.toiOwners && owners && ownersName) {
+            ownersName.textContent = CONFIG.toiOwners;
+            owners.style.display = 'block';
         }
 
-        const mapBtnWrap = document.getElementById('mapBtnWrap');
+        const mapWrap = document.getElementById('mapBtnWrap');
         const mapBtn = document.getElementById('mapBtn');
-        if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) {
-            mapBtn.href = CONFIG.locationUrl || '#';
-            mapBtn.style.pointerEvents = CONFIG.locationUrl ? 'auto' : 'none';
-            mapBtn.style.opacity = CONFIG.locationUrl ? '1' : '0.55';
-            mapBtnWrap.style.display = 'block';
+        if (mapBtn && CONFIG.locationUrl) {
+            mapBtn.href = CONFIG.locationUrl;
+            mapWrap.style.display = 'block';
         }
 
-        // Gallery
+        // gallery
         const slides = document.getElementById('gallerySlides');
         if (slides) {
             slides.innerHTML = '';
@@ -129,6 +106,9 @@
                 const img = document.createElement('img');
                 img.src = url;
                 img.alt = 'photo';
+                img.style.maxWidth = '100%';
+                img.style.display = 'block';
+                img.style.marginBottom = '8px';
                 slides.appendChild(img);
             });
             if (!CONFIG.gallery || CONFIG.gallery.length === 0) {
@@ -137,10 +117,10 @@
         }
     })();
 
-    // Простейший клиентский submitRSVP (переопределяется нашим скриптом, если enableRsvp=true)
+    // submitRSVP
     window.submitRSVP = () => {
-        const ok = document.getElementById('successMsg');
-        if (ok) ok.style.display = 'block';
+        document.getElementById('rsvpForm').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
     };
 </script>
 
