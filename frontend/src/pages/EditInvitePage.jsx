@@ -29,10 +29,6 @@ const normalizeUrl = (url) => {
     if (!url) return '';
     if (/^https?:\/\//i.test(url)) return url;
     if (typeof window === 'undefined') return url;
-    if (url.startsWith('/uploads/')) {
-        const { protocol, hostname } = window.location;
-        return `${protocol}//${hostname}:9191${url}`;
-    }
     return window.location.origin + url;
 };
 
