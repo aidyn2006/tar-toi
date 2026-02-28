@@ -49,6 +49,20 @@ const TEMPLATES = [
     { id: 'modern', label: 'Модерн', color: '#1a1a1a', bg: '#f9f9f9' },
 ];
 
+const TEMPLATE_NAME_MAP = {
+    'wedding/default': 'Classic Wedding',
+    'wedding/template2': 'Modern Love',
+    'wedding/template3': 'Elegant Story',
+    'wedding/template4': 'Golden Evening',
+    'wedding/test': 'Minimal Test',
+    'common/default': 'Universal Classic',
+    'uzatu/default': 'Uzatu Classic',
+    'sundet/default': 'Sundet Celebration',
+    'tusaukeser/default': 'Tusaukeser',
+    'merei/default': 'Anniversary',
+    'besik/default': 'Besik Toy',
+};
+
 function buildTemplateOptions() {
     const groups = {};
     TEMPLATE_FILES.forEach((path) => {
@@ -57,9 +71,12 @@ function buildTemplateOptions() {
         const category = m[1];
         const file = m[2];
         const id = `${category}/${file}`;
-        const label = file.replace(/\.html$/, '').replace(/[-_]/g, ' ');
+        const fileBase = file.replace(/\.html$/, '');
+        const key = `${category}/${fileBase}`;
+        const fallback = fileBase.replace(/[-_]/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
+        const label = TEMPLATE_NAME_MAP[key] || fallback;
         if (!groups[category]) groups[category] = [];
-        groups[category].push({ id, label });
+        groups[category].push({ id, label, fileBase });
     });
     Object.values(groups).forEach(list => list.sort((a, b) => a.label.localeCompare(b.label, 'ru')));
     return groups;
@@ -67,7 +84,14 @@ function buildTemplateOptions() {
 
 const TEMPLATE_OPTIONS = buildTemplateOptions();
 
-const DEFAULT_TEMPLATE_KEY = 'common/default.html';
+const pickGlobalDefault = () => {
+    if (TEMPLATE_OPTIONS.common?.[0]) return TEMPLATE_OPTIONS.common[0].id;
+    const firstCategory = Object.keys(TEMPLATE_OPTIONS)[0];
+    if (firstCategory && TEMPLATE_OPTIONS[firstCategory]?.[0]) return TEMPLATE_OPTIONS[firstCategory][0].id;
+    return TEMPLATE_FILES[0] ? TEMPLATE_FILES[0].replace('../templates/', '') : null;
+};
+
+const DEFAULT_TEMPLATE_KEY = pickGlobalDefault();
 
 const getCategoryDefault = (category) => {
     if (category && TEMPLATE_OPTIONS[category]?.length) {
@@ -364,8 +388,6 @@ const EditInvitePage = () => {
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [uploadingGallery, setUploadingGallery] = useState(false);
     const [uploadingAudio, setUploadingAudio] = useState(false);
-    const [imagesLibrary, setImagesLibrary] = useState([]);
-    const [audioLibrary, setAudioLibrary] = useState([]);
     const [showEditorMobile, setShowEditorMobile] = useState(!isMobile);
     const adjustMaxGuests = useCallback((delta) => {
         setData(prev => {
@@ -429,23 +451,6 @@ const EditInvitePage = () => {
     const currentCategory = (data.template && data.template.includes('/'))
         ? data.template.split('/')[0]
         : (new URLSearchParams(location.search).get('category') || 'common');
-
-    useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            try {
-                const imgs = await uploadService.list('image', currentCategory);
-                const auds = await uploadService.list('audio', currentCategory);
-                if (!cancelled) {
-                    setImagesLibrary(imgs);
-                    setAudioLibrary(auds);
-                }
-            } catch (e) {
-                console.warn('upload list', e);
-            }
-        })();
-        return () => { cancelled = true; };
-    }, [currentCategory]);
 
     const set = useCallback((k) => (e) => setData(prev => ({ ...prev, [k]: e.target.value })), []);
 
@@ -697,7 +702,8 @@ const EditInvitePage = () => {
                                     {selectableTemplates.map(opt => {
                                         const active = templateValue === opt.id;
                                         const pretty = opt.label.trim() || 'Template';
-                                        const shortPath = opt.id.replace(/\.html$/, '').replace(/^([^/]+)\//, '');
+                                        const [cat, file] = opt.id.split('/');
+                                        const subtitle = `${cat || 'template'} / ${file?.replace('.html','') || ''}`;
                                         return (
                                             <button
                                                 key={opt.id}
@@ -726,7 +732,7 @@ const EditInvitePage = () => {
                                                     {pretty}
                                                 </div>
                                                 <div style={{ color: C.textMuted, fontSize: '0.78rem', marginTop: '0.1rem' }}>
-                                                    {shortPath}
+                                                    {subtitle}
                                                 </div>
                                             </button>
                                         );
@@ -759,30 +765,6 @@ const EditInvitePage = () => {
                                         </div>
                                     )}
                                 </div>
-                                {imagesLibrary.length > 0 && (
-                                    <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                        {imagesLibrary.slice(0, 12).map(file => {
-                                            const url = normalizeUrl(file.url || file.path);
-                                            const name = (file.path || file.url || '').split('/').pop();
-                                            return (
-                                                <button
-                                                    key={file.path || file.url}
-                                                    onClick={() => setData(prev => ({ ...prev, previewPhotoUrl: file.url || file.path || '' }))}
-                                                    style={{
-                                                        border: `1px solid ${C.border}`,
-                                                        borderRadius: '10px',
-                                                        padding: '4px',
-                                                        background: '#fff',
-                                                        cursor: 'pointer',
-                                                    }}
-                                                    title={name}
-                                                >
-                                                    <img src={url} alt={name} style={{ width: '70px', height: '52px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                )}
                             </Field>
 
                             <Field label="Галерея фотолары">
@@ -817,31 +799,6 @@ const EditInvitePage = () => {
                                         })}
                                     </div>
                                 )}
-                                {imagesLibrary.length > 0 && (
-                                    <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                        {imagesLibrary.slice(0, 20).map(file => {
-                                            const urlRaw = file.url || file.path || '';
-                                            const url = normalizeUrl(urlRaw);
-                                            const added = (data.gallery || []).includes(urlRaw);
-                                            return (
-                                                <button
-                                                    key={file.path || file.url}
-                                                    onClick={() => setData(prev => added ? prev : ({ ...prev, gallery: [...(prev.gallery || []), urlRaw] }))}
-                                                    style={{
-                                                        border: `1px solid ${added ? C.burgundy : C.border}`,
-                                                        borderRadius: '10px',
-                                                        padding: '4px',
-                                                        background: added ? `${C.burgundy}10` : '#fff',
-                                                        cursor: added ? 'default' : 'pointer',
-                                                        opacity: added ? 0.6 : 1,
-                                                    }}
-                                                >
-                                                    <img src={url} alt="lib" style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                )}
                             </Field>
 
                             <Field label="Музыка (қаласаңыз)">
@@ -864,34 +821,9 @@ const EditInvitePage = () => {
                                         </div>
                                     )}
                                 </div>
-                                {audioLibrary.length > 0 && (
-                                    <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                        {audioLibrary.slice(0, 10).map(file => {
-                                            const nameFull = (file.path || file.url || '').split('/').pop() || 'audio';
-                                            const title = nameFull.replace(/\.[^/.]+$/, '');
-                                            return (
-                                                <button
-                                                    key={file.path || file.url}
-                                                    onClick={() => setData(prev => ({ ...prev, musicUrl: file.url || file.path || '', musicTitle: title }))}
-                                                    style={{
-                                                        border: `1px solid ${C.border}`,
-                                                        borderRadius: '12px',
-                                                        padding: '8px 10px',
-                                                        background: '#fff',
-                                                        cursor: 'pointer',
-                                                        fontSize: '0.82rem',
-                                                        color: C.burgundy,
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '0.45rem'
-                                                    }}
-                                                >
-                                                    <Music size={14} /> {title}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                )}
+                                <p style={{ fontSize: '0.82rem', color: C.textMuted, marginTop: '0.4rem' }}>
+                                    Музыка мен автоскролл тек алдын ала қарауда (публичном просмотре) ойнайды. Редакторда өшірілген.
+                                </p>
                             </Field>
                         </Section>
 

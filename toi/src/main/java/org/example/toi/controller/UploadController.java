@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.example.toi.repository.UserRepository;
+import org.example.toi.entity.User;
 
 @RestController
 @RequestMapping("/api/v1/uploads")
@@ -34,8 +37,10 @@ public class UploadController {
     @Value("${uploads.public-url:}")
     private String publicUrl;
 
-    private Path ensureDir(String sub) throws IOException {
-        Path dir = Paths.get(uploadDir, sub).toAbsolutePath().normalize();
+    private final UserRepository userRepository;
+
+    private Path ensureDir(String userId, String sub) throws IOException {
+        Path dir = Paths.get(uploadDir, userId, sub).toAbsolutePath().normalize();
         Files.createDirectories(dir);
         return dir;
     }
@@ -75,6 +80,7 @@ public class UploadController {
             @RequestParam("type") String type,
             @RequestParam(value = "category", required = false) String category
     ) throws IOException {
+        String userId = currentUser().getId().toString();
         String subfolder;
         if ("audio".equalsIgnoreCase(type)) {
             subfolder = "audio";
@@ -85,14 +91,14 @@ public class UploadController {
         }
 
         String categorySafe = (category == null || category.isBlank()) ? null : category.replaceAll("[^a-zA-Z0-9_-]", "");
-        Path dir = categorySafe == null ? ensureDir(subfolder) : ensureDir(categorySafe + "/" + subfolder);
+        Path dir = categorySafe == null ? ensureDir(userId, subfolder) : ensureDir(userId, categorySafe + "/" + subfolder);
 
         try (Stream<Path> stream = Files.list(dir)) {
             List<Map<String, String>> files = stream
                     .filter(Files::isRegularFile)
                     .sorted((a, b) -> b.getFileName().toString().compareToIgnoreCase(a.getFileName().toString()))
                     .map(p -> {
-                        String relative = "/uploads/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + p.getFileName();
+                        String relative = "/uploads/" + userId + "/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + p.getFileName();
                         return Map.of(
                                 "url", buildPublicUrl(relative),
                                 "path", relative
@@ -104,6 +110,7 @@ public class UploadController {
     }
 
     private Map<String, String> storeFile(MultipartFile file, String subfolder, String category) throws IOException {
+        String userId = currentUser().getId().toString();
         String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "" : file.getOriginalFilename());
         String ext = "";
         int dot = original.lastIndexOf('.');
@@ -112,10 +119,10 @@ public class UploadController {
         }
         String filename = Instant.now().getEpochSecond() + "-" + UUID.randomUUID() + ext;
         String categorySafe = (category == null || category.isBlank()) ? null : category.replaceAll("[^a-zA-Z0-9_-]", "");
-        Path dir = categorySafe == null ? ensureDir(subfolder) : ensureDir(categorySafe + "/" + subfolder);
+        Path dir = categorySafe == null ? ensureDir(userId, subfolder) : ensureDir(userId, categorySafe + "/" + subfolder);
         Path target = dir.resolve(filename);
         file.transferTo(target);
-        String relative = "/uploads/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + filename;
+        String relative = "/uploads/" + userId + "/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + filename;
         return Map.of(
                 "url", buildPublicUrl(relative),
                 "path", relative
@@ -128,5 +135,10 @@ public class UploadController {
                 : ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         if (base.endsWith("/")) base = base.substring(0, base.length() - 1);
         return base + relative;
+    }
+
+    private User currentUser() {
+        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByPhone(phone).orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
