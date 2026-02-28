@@ -67,8 +67,20 @@ function parseNames(invite) {
 
 function normalizeUrl(url) {
     if (!url) return '';
-    if (/^https?:\/\//i.test(url)) return url;
+    if (/^https?:\/\//i.test(url)) {
+        // If backend saved absolute URL with localhost, rewrite to current host
+        if (typeof window !== 'undefined') {
+            try {
+                const u = new URL(url);
+                if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') {
+                    return `${window.location.protocol}//${window.location.host}${u.pathname}${u.search}`;
+                }
+            } catch (_) { /* ignore malformed */ }
+        }
+        return url;
+    }
     if (typeof window === 'undefined') return url;
+    // relative path (e.g., /uploads/...)
     return window.location.origin + url;
 }
 

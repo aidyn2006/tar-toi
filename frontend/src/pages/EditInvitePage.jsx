@@ -27,7 +27,17 @@ const C = {
 
 const normalizeUrl = (url) => {
     if (!url) return '';
-    if (/^https?:\/\//i.test(url)) return url;
+    if (/^https?:\/\//i.test(url)) {
+        if (typeof window !== 'undefined') {
+            try {
+                const u = new URL(url);
+                if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') {
+                    return `${window.location.protocol}//${window.location.host}${u.pathname}${u.search}`;
+                }
+            } catch (_) { /* noop */ }
+        }
+        return url;
+    }
     if (typeof window === 'undefined') return url;
     return window.location.origin + url;
 };
