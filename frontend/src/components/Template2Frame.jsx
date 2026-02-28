@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 
 const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
@@ -119,6 +119,7 @@ function buildConfig(invite) {
 }
 
 function applyPalette(html, palette) {
+    if (html.includes('NO_PALETTE')) return html;
     let out = html;
     const vars = {
         '--wine': palette.wine,
@@ -433,12 +434,22 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         [templateKey, enableRsvp, inviteId, lang]
     );
     const liveConfig = useMemo(() => buildConfig(invite || {}), [invite]);
+    const [debouncedConfig, setDebouncedConfig] = useState(liveConfig);
+    const prevHashRef = useRef('');
+
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedConfig(liveConfig), 500);
+        return () => clearTimeout(t);
+    }, [liveConfig]);
 
     useEffect(() => {
         const iframe = iframeRef.current;
         if (!iframe?.contentWindow) return;
-        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
-    }, [liveConfig]);
+        const hash = JSON.stringify(debouncedConfig);
+        if (hash === prevHashRef.current) return;
+        prevHashRef.current = hash;
+        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: debouncedConfig }, '*');
+    }, [debouncedConfig]);
 
     return (
         <iframe

@@ -38,25 +38,37 @@
         <div class="hero-photo-placeholder">[главное фото]</div>
     </div>
     <h1 id="heroNames">Имя & Имя</h1>
-    <p id="heroDateLine">Дата · Время</p>
 </section>
 
 <section class="about">
     <p id="eventText">Описание события</p>
+    <p>Сиздерды балаларымыздын </p>
+    <h1 id="heroNames">Имя & Имя</h1>
+    <p>Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
+    <p>Тойымыз уақыты:
+    <p id="heroDateLine">Дата · Время</p>
+
+    </p>
     <div id="ownersBlock" style="margin-top:10px; display:none;">
         <span class="tag">Той иелері</span>
         <div id="ownersText" style="margin-top:6px; font-weight:700;"></div>
     </div>
 </section>
-
-<section class="gallery" id="gallerySlides">[галерея]</section>
-
 <section class="location">
-    <p id="locationName"></p>
+    <h3 style="margin:0 0 6px 0; color:var(--wine);">Мекенжай</h3>
+    <p id="locationName" style="margin:0 0 4px 0;"></p>
     <div id="mapBtnWrap" style="margin-top:8px; display:none;">
         <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">📍 2GIS / Google Maps</a>
     </div>
 </section>
+
+
+
+<section class="gallery">
+    <h3 style="margin:0 0 8px 0; color:var(--wine);">Біздің сәттер</h3>
+    <div id="gallerySlides">[галерея]</div>
+</section>
+
 
 <section class="rsvp">
     <h3>Ваш ответ</h3>
@@ -73,7 +85,7 @@
             <button class="guest-opt selected" data-val="1" style="display:none"></button>
         </div>
         <div class="form-group">
-            <textarea id="rNote" placeholder="Аллергии, особые пожелания..."></textarea>
+            <textarea id="rNote" placeholder="Особые пожелания..."></textarea>
         </div>
         <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Подтвердить</button>
     </div>
@@ -85,6 +97,8 @@
         const [dd, mm, yy] = CONFIG.day.split('-');
         document.title = CONFIG.music.title || 'Invitation';
         document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+        const namesLine = document.getElementById('heroNamesLine');
+        if (namesLine) namesLine.textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
         document.getElementById('heroDateLine').textContent = `${dd}.${mm}.${yy} · ${CONFIG.hour}`;
         const loc = document.getElementById('locationName');
         const desc = document.getElementById('eventText');
