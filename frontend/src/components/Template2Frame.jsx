@@ -111,6 +111,7 @@ function buildConfig(invite) {
             artist: (invite?.toiOwners || '— загрузите аудио файл —').trim(),
             url: normalizeUrl(invite?.musicUrl || ''),
         },
+        autoplay: !!invite?.autoplay,
         gallery,
         description: invite?.description || 'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
         toiOwners: invite?.toiOwners || 'Той иелері (толтырыңыз)',
@@ -154,6 +155,9 @@ function injectAutoplay(html, enableRsvp) {
 <script>
     window.addEventListener('DOMContentLoaded', () => {
         if (typeof CONFIG === 'undefined') return;
+        const isIframe = window.self !== window.top;
+        if (isIframe) return; // не автоплей и не автоскролл в редакторе
+        if (!CONFIG.autoplay) return; // автозапуск выключен по умолчанию
         const isMobile = window.innerWidth < 920;
         if (isMobile && CONFIG.music && (CONFIG.music.url || (CONFIG.music.playlist||[]).length)) {
             const audio = new Audio(CONFIG.music.url);
