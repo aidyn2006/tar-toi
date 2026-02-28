@@ -23,6 +23,8 @@ services:
     container_name: toi-backend
     ports:
       - "9191:9191"
+    volumes:
+      - ./uploads:/app/uploads
     environment:
       JWT_SECRET: "replace-with-very-strong-secret-key-at-least-32-char"
       JWT_EXPIRATION_MINUTES: "120"
