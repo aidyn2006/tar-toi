@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +18,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v1/uploads")
@@ -66,6 +70,39 @@ public class UploadController {
         return ResponseEntity.ok(storeFile(file, "audio", category));
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<Map<String, String>>> listUploads(
+            @RequestParam("type") String type,
+            @RequestParam(value = "category", required = false) String category
+    ) throws IOException {
+        String subfolder;
+        if ("audio".equalsIgnoreCase(type)) {
+            subfolder = "audio";
+        } else if ("image".equalsIgnoreCase(type) || "images".equalsIgnoreCase(type)) {
+            subfolder = "images";
+        } else {
+            return ResponseEntity.badRequest().body(List.of(Map.of("error", "type must be image|audio")));
+        }
+
+        String categorySafe = (category == null || category.isBlank()) ? null : category.replaceAll("[^a-zA-Z0-9_-]", "");
+        Path dir = categorySafe == null ? ensureDir(subfolder) : ensureDir(categorySafe + "/" + subfolder);
+
+        try (Stream<Path> stream = Files.list(dir)) {
+            List<Map<String, String>> files = stream
+                    .filter(Files::isRegularFile)
+                    .sorted((a, b) -> b.getFileName().toString().compareToIgnoreCase(a.getFileName().toString()))
+                    .map(p -> {
+                        String relative = "/uploads/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + p.getFileName();
+                        return Map.of(
+                                "url", buildPublicUrl(relative),
+                                "path", relative
+                        );
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(files);
+        }
+    }
+
     private Map<String, String> storeFile(MultipartFile file, String subfolder, String category) throws IOException {
         String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "" : file.getOriginalFilename());
         String ext = "";
@@ -79,14 +116,17 @@ public class UploadController {
         Path target = dir.resolve(filename);
         file.transferTo(target);
         String relative = "/uploads/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + filename;
+        return Map.of(
+                "url", buildPublicUrl(relative),
+                "path", relative
+        );
+    }
+
+    private String buildPublicUrl(String relative) {
         String base = publicUrl != null && !publicUrl.isBlank()
                 ? publicUrl.replaceAll("/+$", "")
                 : ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         if (base.endsWith("/")) base = base.substring(0, base.length() - 1);
-        String absolute = base + relative;
-        return Map.of(
-                "url", absolute,
-                "path", relative
-        );
+        return base + relative;
     }
 }

@@ -17,6 +17,10 @@ export const uploadService = {
         });
         return normalize(res.data);
     },
+    list: async (type, category) => {
+        const res = await apiClient.get(`/uploads/list?type=${encodeURIComponent(type)}${category ? `&category=${encodeURIComponent(category)}` : ''}`);
+        return Array.isArray(res.data) ? res.data : [];
+    },
 };
 
 function normalize(data = {}) {

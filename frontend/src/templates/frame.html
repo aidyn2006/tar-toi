@@ -10,7 +10,10 @@
         section { margin-bottom:24px; }
         .hero-photo-placeholder, .hero-photo-img { width:100%; max-height:260px; object-fit:cover; border-radius:12px; background:#eee; display:block; }
         .gallery img { width:100%; max-height:180px; object-fit:cover; border-radius:10px; margin-bottom:8px; }
-        .rsvp input, .rsvp button { width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; }
+        .tag { display:inline-block; padding:6px 12px; border-radius:999px; background:rgba(107,31,46,0.08); color:var(--wine); font-weight:700; font-size:12px; margin-top:8px; }
+        .btn { display:inline-block; padding:10px 14px; border-radius:10px; background:var(--wine); color:#fff; text-decoration:none; font-weight:700; border:none; cursor:pointer; }
+        .rsvp input, .rsvp textarea, .rsvp button { width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; }
+        .rsvp textarea { min-height:70px; resize:vertical; }
         .rsvp button { background:var(--wine); color:#fff; border:none; cursor:pointer; }
     </style>
 </head>
@@ -21,10 +24,12 @@
         names: { bride: "Аружан", groom: "Данияр" },
         day: "21-03-2026",
         hour: "19:00",
-        location: "Локация",
+        location: "Astana, Farhi Hall",
+        locationUrl: "https://2gis.kz/astana",
         music: { title: "Песня", artist: "Исполнитель", url: "" },
         gallery: [],
-        description: "",
+        description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+        toiOwners: "Сырымбетовтар әулеті",
     };
 </script>
 
@@ -38,12 +43,19 @@
 
 <section class="about">
     <p id="eventText">Описание события</p>
+    <div id="ownersBlock" style="margin-top:10px; display:none;">
+        <span class="tag">Той иелері</span>
+        <div id="ownersText" style="margin-top:6px; font-weight:700;"></div>
+    </div>
 </section>
 
 <section class="gallery" id="gallerySlides">[галерея]</section>
 
 <section class="location">
     <p id="locationName"></p>
+    <div id="mapBtnWrap" style="margin-top:8px; display:none;">
+        <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">📍 2GIS / Google Maps</a>
+    </div>
 </section>
 
 <section class="rsvp">
@@ -79,6 +91,22 @@
         if (desc) desc.textContent = CONFIG.description || '';
         if (loc) loc.textContent = CONFIG.location || '';
 
+        const ownersBlock = document.getElementById('ownersBlock');
+        const ownersText = document.getElementById('ownersText');
+        if (ownersText && CONFIG.toiOwners) {
+            ownersText.textContent = CONFIG.toiOwners;
+            ownersBlock.style.display = 'block';
+        }
+
+        const mapBtnWrap = document.getElementById('mapBtnWrap');
+        const mapBtn = document.getElementById('mapBtn');
+        if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) {
+            mapBtn.href = CONFIG.locationUrl || '#';
+            mapBtn.style.pointerEvents = CONFIG.locationUrl ? 'auto' : 'none';
+            mapBtn.style.opacity = CONFIG.locationUrl ? '1' : '0.55';
+            mapBtnWrap.style.display = 'block';
+        }
+
         // Gallery
         const slides = document.getElementById('gallerySlides');
         if (slides) {
@@ -97,7 +125,8 @@
 
     // Простейший клиентский submitRSVP (переопределяется нашим скриптом, если enableRsvp=true)
     window.submitRSVP = () => {
-        document.getElementById('rsvpMsg').style.display = 'block';
+        const ok = document.getElementById('successMsg');
+        if (ok) ok.style.display = 'block';
     };
 </script>
 

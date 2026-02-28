@@ -356,6 +356,9 @@ const EditInvitePage = () => {
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [uploadingGallery, setUploadingGallery] = useState(false);
     const [uploadingAudio, setUploadingAudio] = useState(false);
+    const [imagesLibrary, setImagesLibrary] = useState([]);
+    const [audioLibrary, setAudioLibrary] = useState([]);
+    const [showEditorMobile, setShowEditorMobile] = useState(!isMobile);
 
     /* Load existing invite */
     useEffect(() => {
@@ -389,6 +392,33 @@ const EditInvitePage = () => {
             setData(getNewInviteDefaults(location.search));
         }
     }, [isNew, location.search]);
+
+    useEffect(() => {
+        setShowEditorMobile(!isMobile);
+    }, [isMobile]);
+
+    const previewData = { ...data, eventDate: data.eventDate ? new Date(data.eventDate) : null };
+
+    const currentCategory = (data.template && data.template.includes('/'))
+        ? data.template.split('/')[0]
+        : (new URLSearchParams(location.search).get('category') || 'common');
+
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const imgs = await uploadService.list('image', currentCategory);
+                const auds = await uploadService.list('audio', currentCategory);
+                if (!cancelled) {
+                    setImagesLibrary(imgs);
+                    setAudioLibrary(auds);
+                }
+            } catch (e) {
+                console.warn('upload list', e);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [currentCategory]);
 
     const set = useCallback((k) => (e) => setData(prev => ({ ...prev, [k]: e.target.value })), []);
 
@@ -494,12 +524,6 @@ const EditInvitePage = () => {
         </div>
     );
 
-    /* ── Shared preview data (normalize datetime) ── */
-    const previewData = { ...data, eventDate: data.eventDate ? new Date(data.eventDate) : null };
-
-    const currentCategory = (data.template && data.template.includes('/'))
-        ? data.template.split('/')[0]
-        : (new URLSearchParams(location.search).get('category') || 'common');
     const templateOptions = TEMPLATE_OPTIONS[currentCategory] || TEMPLATE_OPTIONS.common || [];
     const templateValue = data.template || DEFAULT_TEMPLATE_KEY;
     const hasCurrentInList = templateOptions.some(o => o.id === templateValue);
@@ -564,7 +588,43 @@ const EditInvitePage = () => {
                 </div>
             </header>
 
+            {/* Mobile-first preview and edit toggle */}
+            {isMobile && (
+                <div style={{ padding: '1rem 1.25rem 0' }}>
+                    <div style={{
+                        width: '100%',
+                        minHeight: '70vh',
+                        borderRadius: '14px',
+                        overflow: 'hidden',
+                        background: C.white,
+                        border: `1px solid ${C.border}`,
+                        boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
+                    }}>
+                        <Template2Frame invite={previewData} mobileZoom />
+                    </div>
+                    <button
+                        onClick={() => setShowEditorMobile(v => !v)}
+                        style={{
+                            marginTop: '0.75rem',
+                            width: '100%',
+                            padding: '0.9rem 1rem',
+                            borderRadius: '12px',
+                            border: `1.5px solid ${C.burgundy}`,
+                            background: showEditorMobile ? `${C.burgundy}10` : C.white,
+                            color: C.burgundy,
+                            fontWeight: 800,
+                            fontSize: '0.95rem',
+                            letterSpacing: '0.2px',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        {showEditorMobile ? 'Жабу' : 'Редактировать'}
+                    </button>
+                </div>
+            )}
+
             {/* ── Two-panel layout ── */}
+            {(!isMobile || showEditorMobile) && (
             <div className="edit-layout" style={{
                 display: 'grid',
                 gridTemplateColumns: 'minmax(0,1fr) minmax(420px, 44vw)',
@@ -644,6 +704,30 @@ const EditInvitePage = () => {
                                     </div>
                                 )}
                             </div>
+                            {imagesLibrary.length > 0 && (
+                                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    {imagesLibrary.slice(0, 12).map(file => {
+                                        const url = normalizeUrl(file.url || file.path);
+                                        const name = (file.path || file.url || '').split('/').pop();
+                                        return (
+                                            <button
+                                                key={file.path || file.url}
+                                                onClick={() => setData(prev => ({ ...prev, previewPhotoUrl: file.url || file.path || '' }))}
+                                                style={{
+                                                    border: `1px solid ${C.border}`,
+                                                    borderRadius: '10px',
+                                                    padding: '4px',
+                                                    background: '#fff',
+                                                    cursor: 'pointer',
+                                                }}
+                                                title={name}
+                                            >
+                                                <img src={url} alt={name} style={{ width: '70px', height: '52px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </Field>
 
                         <Field label="Галерея фотолары">
@@ -678,6 +762,31 @@ const EditInvitePage = () => {
                                     })}
                                 </div>
                             )}
+                            {imagesLibrary.length > 0 && (
+                                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    {imagesLibrary.slice(0, 20).map(file => {
+                                        const urlRaw = file.url || file.path || '';
+                                        const url = normalizeUrl(urlRaw);
+                                        const added = (data.gallery || []).includes(urlRaw);
+                                        return (
+                                            <button
+                                                key={file.path || file.url}
+                                                onClick={() => setData(prev => added ? prev : ({ ...prev, gallery: [...(prev.gallery || []), urlRaw] }))}
+                                                style={{
+                                                    border: `1px solid ${added ? C.burgundy : C.border}`,
+                                                    borderRadius: '10px',
+                                                    padding: '4px',
+                                                    background: added ? `${C.burgundy}10` : '#fff',
+                                                    cursor: added ? 'default' : 'pointer',
+                                                    opacity: added ? 0.6 : 1,
+                                                }}
+                                            >
+                                                <img src={url} alt="lib" style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </Field>
 
                         <Field label="Музыка (қаласаңыз)">
@@ -700,6 +809,34 @@ const EditInvitePage = () => {
                                     </div>
                                 )}
                             </div>
+                            {audioLibrary.length > 0 && (
+                                <div style={{ marginTop: '0.6rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    {audioLibrary.slice(0, 10).map(file => {
+        const nameFull = (file.path || file.url || '').split('/').pop() || 'audio';
+        const title = nameFull.replace(/\.[^/.]+$/, '');
+        return (
+            <button
+                key={file.path || file.url}
+                onClick={() => setData(prev => ({ ...prev, musicUrl: file.url || file.path || '', musicTitle: title }))}
+                style={{
+                    border: `1px solid ${C.border}`,
+                    borderRadius: '12px',
+                    padding: '8px 10px',
+                    background: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    color: C.burgundy,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem'
+                }}
+            >
+                <Music size={14} /> {title}
+            </button>
+        );
+    })}
+                                </div>
+                            )}
                         </Field>
                     </Section>
 
@@ -729,10 +866,33 @@ const EditInvitePage = () => {
                     {/* Date & Location */}
                     <Section title="Күн және орын" isMobile={isMobile} border={false}>
                         <Field label="Дата және уақыт">
-                            <div style={{ position: 'relative' }}>
-                                <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
-                                <input type="datetime-local" value={data.eventDate} onChange={set('eventDate')}
-                                    style={{ ...inputStyle, paddingLeft: '30px' }} />
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                                <div style={{ position: 'relative' }}>
+                                    <Calendar size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: C.burgundy }} />
+                                    <input
+                                        type="date"
+                                        value={data.eventDate ? data.eventDate.slice(0, 10) : ''}
+                                        onChange={e => {
+                                            const date = e.target.value;
+                                            const time = data.eventDate ? data.eventDate.slice(11, 16) : '';
+                                            const combined = date ? `${date}${time ? 'T' + time : 'T00:00'}` : '';
+                                            setData(prev => ({ ...prev, eventDate: combined }));
+                                        }}
+                                        style={{ ...inputStyle, paddingLeft: '30px' }}
+                                    />
+                                </div>
+                                <input
+                                    type="time"
+                                    value={data.eventDate ? data.eventDate.slice(11, 16) : ''}
+                                    onChange={e => {
+                    const time = e.target.value;
+                    const date = data.eventDate ? data.eventDate.slice(0, 10) : '';
+                    const baseDate = date || new Date().toISOString().slice(0, 10);
+                    const combined = (time || date) ? `${baseDate}T${time || '00:00'}` : '';
+                    setData(prev => ({ ...prev, eventDate: combined }));
+                }}
+                                    style={inputStyle}
+                                />
                             </div>
                         </Field>
                         <Field label="Той өтетін орын">
@@ -773,6 +933,7 @@ const EditInvitePage = () => {
                     </div>
                 </div>
             </div>
+            )}
 
             {/* ── Mobile preview modal ── */}
             {previewOpen && (

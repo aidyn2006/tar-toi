@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 
 const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
@@ -91,6 +91,7 @@ function buildConfig(invite) {
     const gallery = Array.isArray(invite?.gallery)
         ? invite.gallery.filter(Boolean).map(normalizeUrl)
         : [];
+    const heroPhotoUrl = normalizeUrl(invite?.previewPhotoUrl || gallery[0] || '');
 
     const day = eventDate
         ? `${pad2(eventDate.getDate())}-${pad2(eventDate.getMonth() + 1)}-${eventDate.getFullYear()}`
@@ -103,14 +104,17 @@ function buildConfig(invite) {
         names: { bride, groom },
         day,
         hour,
-        location: (invite?.locationName || 'Зал мерекесі').trim(),
+        location: (invite?.locationName || 'Astana, Farhi Hall').trim(),
+        locationUrl: (invite?.locationUrl || '').trim(),
         music: {
             title: (invite?.musicTitle || invite?.title || 'Наша Песня').trim(),
             artist: (invite?.toiOwners || '— загрузите аудио файл —').trim(),
             url: normalizeUrl(invite?.musicUrl || ''),
         },
         gallery,
-        description: invite?.description || '',
+        description: invite?.description || 'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
+        toiOwners: invite?.toiOwners || 'Той иелері (толтырыңыз)',
+        heroPhotoUrl,
     };
 }
 
@@ -164,6 +168,92 @@ function injectAutoplay(html, enableRsvp) {
     });
 </script>`;
     return html.replace('</body>', `${script}\n</body>`);
+}
+
+function injectLiveBridge(html) {
+    const bridge = `
+<script>
+(function(){
+    const qs = (sel) => document.querySelector(sel);
+    const byId = (id) => document.getElementById(id);
+    const setText = (id, text) => { const el = byId(id); if (el) el.textContent = text ?? ''; };
+    function apply(cfg){
+        if (!cfg) return;
+        const dayParts = (cfg.day || '').split('-');
+        const dd = dayParts[0] || '';
+        const mm = dayParts[1] || '';
+        const yy = dayParts[2] || '';
+        setText('heroNames', \`\${cfg.names?.bride || ''} & \${cfg.names?.groom || ''}\`);
+        setText('heroDateLine', [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : ''));
+        setText('eventText', cfg.description || '');
+        setText('locationName', cfg.location || '');
+        setText('footLine', \`\${cfg.names?.bride || ''} & \${cfg.names?.groom || ''}  ·  \${yy}\`);
+
+        const ownersBlock = byId('ownersBlock');
+        const ownersText = byId('ownersText');
+        if (ownersBlock) {
+            if (cfg.toiOwners) {
+                if (ownersText) ownersText.textContent = cfg.toiOwners;
+                ownersBlock.style.display = 'block';
+            } else {
+                ownersBlock.style.display = 'none';
+            }
+        }
+
+        const mapBtnWrap = byId('mapBtnWrap');
+        const mapBtn = byId('mapBtn');
+        if (mapBtnWrap && mapBtn) {
+            const has = cfg.locationUrl || cfg.location;
+            mapBtnWrap.style.display = has ? 'block' : 'none';
+            mapBtn.href = cfg.locationUrl || '#';
+            mapBtn.style.pointerEvents = cfg.locationUrl ? 'auto' : 'none';
+            mapBtn.style.opacity = cfg.locationUrl ? '1' : '0.55';
+        }
+
+        if (cfg.heroPhotoUrl) {
+            const heroImg = qs('.hero-photo-img');
+            if (heroImg) {
+                heroImg.src = cfg.heroPhotoUrl;
+            } else {
+                const ph = qs('.hero-photo-placeholder');
+                if (ph) {
+                    const img = document.createElement('img');
+                    img.className = 'hero-photo-img';
+                    img.src = cfg.heroPhotoUrl;
+                    img.alt = 'photo';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    ph.replaceWith(img);
+                }
+            }
+        }
+
+        const slides = byId('gallerySlides');
+        if (slides) {
+            slides.innerHTML = '';
+            if (cfg.gallery && cfg.gallery.length) {
+                cfg.gallery.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = 'photo';
+                    img.style.maxWidth = '100%';
+                    slides.appendChild(img);
+                });
+            } else {
+                slides.textContent = 'Добавьте фото в галерею';
+            }
+        }
+    }
+    window.__APPLY_DYNAMIC_CONFIG = apply;
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'UPDATE_CONFIG') {
+            apply(e.data.config);
+        }
+    });
+})();
+</script>`;
+    return html.replace('</body>', `${bridge}\n</body>`);
 }
 
 function injectConfig(html, config) {
@@ -330,33 +420,40 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
         html = injectRsvpApi(html, inviteId);
     }
     html = injectAutoplay(html, enableRsvp);
+    html = injectLiveBridge(html);
     html = localizeTemplate(html, lang);
     return html;
 }
 
-const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk' }) => {
-    const [debouncedInvite, setDebouncedInvite] = useState(invite);
+const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false }) => {
+    const iframeRef = useRef(null);
+    const templateKey = useMemo(() => normalizeTemplateKey(invite?.template), [invite?.template]);
+    const initialDoc = useMemo(
+        () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang }),
+        [templateKey, enableRsvp, inviteId, lang]
+    );
+    const liveConfig = useMemo(() => buildConfig(invite || {}), [invite]);
 
     useEffect(() => {
-        const t = setTimeout(() => setDebouncedInvite(invite), 250);
-        return () => clearTimeout(t);
-    }, [invite]);
-
-    const srcDoc = useMemo(
-        () => buildTemplate2Html(debouncedInvite, { enableRsvp, inviteId, lang }),
-        [debouncedInvite, enableRsvp, inviteId, lang]
-    );
+        const iframe = iframeRef.current;
+        if (!iframe?.contentWindow) return;
+        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
+    }, [liveConfig]);
 
     return (
         <iframe
+            ref={iframeRef}
             title="template-2-preview"
-            srcDoc={srcDoc}
+            srcDoc={initialDoc}
             className={className}
             style={{
                 width: '100%',
                 height: '100%',
+                minHeight: mobileZoom ? '70vh' : '100%',
                 border: 'none',
                 background: 'transparent',
+                transform: mobileZoom ? 'scale(1.05)' : 'none',
+                transformOrigin: 'top center',
                 ...style,
             }}
         />
