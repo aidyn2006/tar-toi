@@ -159,10 +159,15 @@ function injectPhoto(html, url) {
     if (!url) return html;
     const absoluteUrl = normalizeUrl(url);
     const safeUrl = absoluteUrl.replace(/"/g, '&quot;');
-    return html.replace(
+    let out = html.replace(
         /<div class="hero-photo-placeholder">[\s\S]*?<\/div>/,
         `<img class="hero-photo-img" src="${safeUrl}" alt="photo">`
     );
+    out = out.replace(
+        /<div id="heroPhoto"([^>]*)>[\s\S]*?<\/div>/,
+        `<div id="heroPhoto"$1><img class="hero-photo-img" src="${safeUrl}" alt="photo" style="width:100%;height:100%;object-fit:cover;display:block;"></div>`
+    );
+    return out;
 }
 
 function injectAutoplay(html, isViewMode) {
