@@ -50,11 +50,10 @@ const TEMPLATES = [
 ];
 
 const TEMPLATE_NAME_MAP = {
-    'wedding/default': 'Classic Wedding',
+    'wedding/template1': 'Classic Wedding',
     'wedding/template2': 'Modern Love',
     'wedding/template3': 'Elegant Story',
     'wedding/template4': 'Golden Evening',
-    'wedding/test': 'Minimal Test',
     'common/default': 'Universal Classic',
     'uzatu/default': 'Uzatu Classic',
     'sundet/default': 'Sundet Celebration',
@@ -84,20 +83,29 @@ function buildTemplateOptions() {
 
 const TEMPLATE_OPTIONS = buildTemplateOptions();
 
-const pickGlobalDefault = () => {
-    if (TEMPLATE_OPTIONS.common?.[0]) return TEMPLATE_OPTIONS.common[0].id;
-    const firstCategory = Object.keys(TEMPLATE_OPTIONS)[0];
-    if (firstCategory && TEMPLATE_OPTIONS[firstCategory]?.[0]) return TEMPLATE_OPTIONS[firstCategory][0].id;
-    return TEMPLATE_FILES[0] ? TEMPLATE_FILES[0].replace('../templates/', '') : null;
+const pickFirstTemplate = (category) => {
+    const list = (category && TEMPLATE_OPTIONS[category]) ? TEMPLATE_OPTIONS[category] : null;
+    if (list?.length) {
+        const nonDefault = list.find(t => !t.id.endsWith('/default.html'));
+        return (nonDefault || list[0]).id;
+    }
+    // fallback: first non-default overall
+    const anyCategory = Object.keys(TEMPLATE_OPTIONS)[0];
+    if (anyCategory) {
+        const listAny = TEMPLATE_OPTIONS[anyCategory] || [];
+        const nonDefaultAny = listAny.find(t => !t.id.endsWith('/default.html'));
+        if (nonDefaultAny) return nonDefaultAny.id;
+        if (listAny[0]) return listAny[0].id;
+    }
+    return null;
 };
+
+const pickGlobalDefault = () => pickFirstTemplate(null);
 
 const DEFAULT_TEMPLATE_KEY = pickGlobalDefault();
 
 const getCategoryDefault = (category) => {
-    if (category && TEMPLATE_OPTIONS[category]?.length) {
-        return TEMPLATE_OPTIONS[category][0].id;
-    }
-    return DEFAULT_TEMPLATE_KEY;
+    return pickFirstTemplate(category) || DEFAULT_TEMPLATE_KEY;
 };
 
 const EMPTY_INVITE_DATA = {
@@ -119,7 +127,7 @@ const EMPTY_INVITE_DATA = {
 
 const CATEGORY_PRESETS = {
     uzatu: { title: 'Ұзату тойы', template: 'uzatu/default.html' },
-    wedding: { title: 'Үйлену тойы', template: 'wedding/default.html' },
+    wedding: { title: 'Үйлену тойы', template: 'wedding/template1.html' },
     sundet: { title: 'Сүндет той', template: 'sundet/default.html' },
     tusaukeser: { title: 'Тұсаукесер', template: 'tusaukeser/default.html' },
     merei: { title: 'Мерейтой', template: 'merei/default.html' },
@@ -574,9 +582,9 @@ const EditInvitePage = () => {
     );
 
     const templateOptions = TEMPLATE_OPTIONS[currentCategory] || TEMPLATE_OPTIONS.common || [];
-    const templateValue = data.template || DEFAULT_TEMPLATE_KEY;
+    const templateValue = data.template || DEFAULT_TEMPLATE_KEY || '';
     const hasCurrentInList = templateOptions.some(o => o.id === templateValue);
-    const selectableTemplates = hasCurrentInList ? templateOptions : [{ id: templateValue, label: templateValue }, ...templateOptions];
+    const selectableTemplates = hasCurrentInList ? templateOptions : templateOptions;
 
     return (
         <div className="edit-page" style={{ minHeight: '100vh', background: C.cream, fontFamily: 'Manrope, sans-serif' }}>

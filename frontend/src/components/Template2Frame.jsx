@@ -130,6 +130,7 @@ function buildConfig(invite) {
 }
 
 function applyPalette(html, palette) {
+    if (!html) return '';
     if (html.includes('NO_PALETTE')) return html;
     let out = html;
     const vars = {
@@ -569,8 +570,9 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
     const tplKey = normalizeTemplateKey(invite?.template);
-    const htmlSource = TEMPLATE_RAW_MAP[tplKey] || TEMPLATE_RAW_MAP[DEFAULT_TEMPLATE_KEY];
-    const skipPalette = tplKey.includes('/wedding/test.html') || (htmlSource && /NO_PALETTE/i.test(htmlSource));
+    const fallbackHtml = Object.values(TEMPLATE_RAW_MAP)[0] || '';
+    const htmlSource = TEMPLATE_RAW_MAP[tplKey] || TEMPLATE_RAW_MAP[DEFAULT_TEMPLATE_KEY] || fallbackHtml;
+    const skipPalette = tplKey.includes('/wedding/template4.html') || (htmlSource && /NO_PALETTE/i.test(htmlSource));
     let html = htmlSource;
     html = skipPalette ? html : applyPalette(html, palette);
     html = injectConfig(html, config);
