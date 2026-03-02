@@ -1,0 +1,1038 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Template</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --emerald: #1a6b50;
+            --emerald-dark: #0e4a35;
+            --emerald-deep: #082e22;
+            --emerald-light: #48a07a;
+            --sage: #a8d4be;
+            --cream: #f2f8f4;
+            --bg: #d4e8dc;
+            --gold: #c9a84c;
+            --gold-light: #e8d888;
+            --text: #0a2018;
+            --text-soft: #2a5a48
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center
+        }
+
+        .page-root {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: var(--cream);
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 0 50px rgba(10, 32, 24, 0.15)
+        }
+
+        .page {
+            width: 100%;
+            padding: 10px 16px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        /* HERO full-bleed */
+        .hero {
+            position: relative;
+            border-radius: 0 0 28px 28px;
+            overflow: hidden;
+            box-shadow: 0 10px 48px rgba(14, 74, 53, 0.28);
+            margin: -10px -16px 0;
+            width: calc(100% + 32px)
+        }
+
+        .hero-photo-placeholder,
+        .hero-photo-img {
+            width: 100%;
+            height: 80dvh;
+            min-height: 500px;
+            object-fit: cover;
+            display: block;
+            background: linear-gradient(165deg, #041a12 0%, #0e4a35 40%, #1a6b50 70%, #082e22 100%)
+        }
+
+        .hero-photo-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px
+        }
+
+        .hero-photo-placeholder svg {
+            opacity: 0.08
+        }
+
+        .hero-photo-placeholder span {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 8px;
+            letter-spacing: 6px;
+            color: rgba(168, 212, 190, 0.2);
+            text-transform: uppercase
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(8, 46, 34, 0.15) 0%, transparent 30%, rgba(8, 46, 34, 0.5) 65%, rgba(4, 26, 18, 0.97) 100%);
+            z-index: 1
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            text-align: center;
+            padding: 0 32px 52px
+        }
+
+        .hero-eyebrow {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 8px;
+            letter-spacing: 6px;
+            color: var(--gold);
+            opacity: 0.75;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            font-weight: 500
+        }
+
+        .hero-names {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: clamp(46px, 11vw, 78px);
+            color: #fff;
+            line-height: 0.88;
+            margin-bottom: 18px
+        }
+
+        .hero-amp {
+            display: block;
+            font-size: 0.42em;
+            color: var(--gold);
+            line-height: 2;
+            font-style: normal;
+            opacity: 0.8
+        }
+
+        .hero-date {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 5px;
+            color: var(--sage);
+            opacity: 0.7;
+            font-weight: 400
+        }
+
+        .scroll-cue {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px
+        }
+
+        .scroll-cue span {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 7px;
+            letter-spacing: 3px;
+            color: var(--gold);
+            opacity: 0.4
+        }
+
+        .scroll-needle {
+            width: 1px;
+            height: 32px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: pulse 1.6s ease-in-out infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.2
+            }
+
+            50% {
+                opacity: 0.7
+            }
+        }
+
+        .music-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(201, 168, 76, 0.1);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            transition: all 0.3s
+        }
+
+        .music-btn:hover {
+            background: rgba(201, 168, 76, 0.2)
+        }
+
+        .music-btn svg {
+            color: var(--gold-light);
+            margin-left: 2px
+        }
+
+        h1#heroNames {
+            display: none
+        }
+
+        /* ABOUT */
+        .about {
+            background: linear-gradient(180deg, var(--emerald-deep) 0%, #051a10 100%);
+            padding: 48px 28px 56px;
+            text-align: center;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 44px rgba(14, 74, 53, 0.3)
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(168, 212, 190, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 212, 190, 0.02) 1px, transparent 1px);
+            background-size: 36px 36px;
+            pointer-events: none
+        }
+
+        .about>* {
+            position: relative;
+            z-index: 1
+        }
+
+        #eventText {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 22px;
+            line-height: 1.8
+        }
+
+        .orn-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 26px auto;
+            width: 180px
+        }
+
+        .orn-line::before,
+        .orn-line::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201, 168, 76, 0.25), transparent)
+        }
+
+        .orn-diamond {
+            width: 5px;
+            height: 5px;
+            background: var(--gold);
+            transform: rotate(45deg);
+            opacity: 0.5;
+            flex-shrink: 0
+        }
+
+        .invite-body {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 18px;
+            color: rgba(168, 212, 190, 0.7);
+            line-height: 2;
+            letter-spacing: 1px
+        }
+
+        #heroNamesLine {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 50px;
+            color: #fff;
+            letter-spacing: 3px;
+            margin: 12px 0 22px;
+            line-height: 1.08;
+            text-shadow: 0 2px 28px rgba(26, 107, 80, 0.4)
+        }
+
+        .invite-footer {
+            font-family: 'DM Serif Display', serif;
+            font-size: 16px;
+            color: rgba(168, 212, 190, 0.6);
+            line-height: 2;
+            letter-spacing: 1px;
+            font-style: italic
+        }
+
+        .date-block {
+            margin: 42px 0 0
+        }
+
+        .date-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-transform: uppercase
+        }
+
+        .calendar-wrap {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(201, 168, 76, 0.12);
+            border-radius: 20px;
+            padding: 24px 14px 20px;
+            margin: 0 auto;
+            max-width: 280px
+        }
+
+        .cal-month-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 500
+        }
+
+        .cal-grid-head {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 5px
+        }
+
+        .cal-grid-head span {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 7px;
+            letter-spacing: 1px;
+            color: rgba(168, 212, 190, 0.35);
+            text-align: center;
+            padding: 2px 0;
+            font-weight: 500
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px
+        }
+
+        .cday {
+            font-family: 'DM Serif Display', serif;
+            font-size: 15px;
+            color: rgba(168, 212, 190, 0.5);
+            text-align: center;
+            padding: 8px 2px;
+            position: relative;
+            line-height: 1
+        }
+
+        .cday.other {
+            opacity: 0.2
+        }
+
+        .cday.today {
+            color: #fff;
+            font-size: 16px
+        }
+
+        .cday.today::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--emerald), var(--emerald-deep));
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            z-index: -1;
+            box-shadow: 0 2px 12px rgba(26, 107, 80, 0.5)
+        }
+
+        .time-only {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 32px;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 5px;
+            margin-top: 22px
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 18px
+        }
+
+        .count-block {
+            text-align: center;
+            padding: 14px 6px 10px;
+            border: 1px solid rgba(201, 168, 76, 0.08);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .count-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201, 168, 76, 0.2), transparent)
+        }
+
+        .count-num {
+            display: block;
+            font-family: 'DM Serif Display', serif;
+            font-size: 34px;
+            color: #fff;
+            line-height: 1
+        }
+
+        .count-label {
+            display: block;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: rgba(168, 212, 190, 0.5);
+            margin-top: 4px;
+            text-transform: uppercase;
+            font-weight: 500
+        }
+
+        .owners-section {
+            background: linear-gradient(180deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            border-radius: 20px;
+            padding: 40px 28px 48px;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(14, 74, 53, 0.28)
+        }
+
+        .owners-label-txt {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 5px;
+            color: var(--gold);
+            opacity: 0.8;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 500
+        }
+
+        .owners-name-txt {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 36px;
+            color: #fff;
+            letter-spacing: 2px;
+            line-height: 1.3
+        }
+
+        .location {
+            background: #e8f2ec;
+            padding: 44px 28px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(14, 74, 53, 0.06)
+        }
+
+        .location h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 5px;
+            color: var(--emerald-dark);
+            opacity: 0.55;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: 16px
+        }
+
+        #locationName {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 24px;
+            color: var(--emerald-dark);
+            margin-bottom: 24px;
+            line-height: 1.5
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 24px;
+            border-radius: 14px;
+            background: var(--emerald-dark);
+            color: var(--sage);
+            text-decoration: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            font-weight: 500;
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase
+        }
+
+        .btn:hover {
+            background: var(--emerald);
+            transform: translateY(-1px)
+        }
+
+        .btn img {
+            width: 18px;
+            height: 18px
+        }
+
+        .gallery {
+            background: linear-gradient(180deg, #082e22 0%, #041a12 100%);
+            padding: 44px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(14, 74, 53, 0.3)
+        }
+
+        .gallery h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 5px;
+            color: var(--gold);
+            opacity: 0.75;
+            text-transform: uppercase;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 0 28px
+        }
+
+        .gallery-viewport {
+            overflow: hidden;
+            touch-action: pan-y;
+            user-select: none
+        }
+
+        #gallerySlides {
+            display: flex;
+            gap: 14px;
+            padding: 6px 28px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform
+        }
+
+        #gallerySlides img {
+            flex-shrink: 0;
+            width: clamp(180px, 54vw, 260px);
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(4, 26, 18, 0.6);
+            cursor: pointer;
+            transition: transform 0.4s, box-shadow 0.4s;
+            border: 1px solid rgba(201, 168, 76, 0.06)
+        }
+
+        #gallerySlides img.active-slide {
+            transform: scale(1.04);
+            box-shadow: 0 14px 48px rgba(4, 26, 18, 0.7);
+            border-color: rgba(201, 168, 76, 0.18)
+        }
+
+        .gallery-empty {
+            text-align: center;
+            color: rgba(168, 212, 190, 0.15);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 8px;
+            letter-spacing: 3px;
+            padding: 44px 28px
+        }
+
+        .gallery-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px
+        }
+
+        .g-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(201, 168, 76, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s
+        }
+
+        .g-arrow:hover {
+            background: rgba(26, 107, 80, 0.3);
+            border-color: rgba(201, 168, 76, 0.3)
+        }
+
+        .g-dots {
+            display: flex;
+            gap: 7px;
+            align-items: center
+        }
+
+        .g-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.15;
+            cursor: pointer;
+            transition: all 0.3s
+        }
+
+        .g-dot.lit {
+            opacity: 1;
+            transform: scale(1.5)
+        }
+
+        .rsvp {
+            padding: 44px 28px 52px;
+            background: #e8f2ec;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(14, 74, 53, 0.06)
+        }
+
+        .rsvp-tag {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 5px;
+            color: var(--emerald-dark);
+            opacity: 0.5;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500
+        }
+
+        .rsvp h3 {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 38px;
+            color: var(--emerald-dark);
+            margin-bottom: 30px;
+            line-height: 1
+        }
+
+        .form-wrap {
+            max-width: 280px;
+            margin: 0 auto;
+            text-align: left
+        }
+
+        .f-label {
+            display: block;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text);
+            opacity: 0.5;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+            font-weight: 500
+        }
+
+        .form-group {
+            margin-bottom: 20px
+        }
+
+        .rsvp input,
+        .rsvp textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(14, 74, 53, 0.12);
+            background: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s
+        }
+
+        .rsvp input:focus,
+        .rsvp textarea:focus {
+            border-color: rgba(14, 74, 53, 0.3);
+            box-shadow: 0 0 0 3px rgba(14, 74, 53, 0.05)
+        }
+
+        .rsvp input::placeholder,
+        .rsvp textarea::placeholder {
+            color: rgba(10, 32, 24, 0.3);
+            font-style: italic
+        }
+
+        .rsvp textarea {
+            min-height: 70px;
+            resize: vertical
+        }
+
+        .guest-counter {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .gc-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(14, 74, 53, 0.12);
+            background: transparent;
+            font-size: 18px;
+            color: var(--emerald-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+            flex-shrink: 0
+        }
+
+        .gc-btn:hover {
+            background: var(--emerald-dark);
+            color: var(--sage);
+            border-color: var(--emerald-dark)
+        }
+
+        #rGuests {
+            width: 64px !important;
+            text-align: center !important;
+            font-size: 15px !important
+        }
+
+        .guest-opt {
+            display: none !important
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--emerald-dark);
+            color: var(--sage);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 10px;
+            transition: all 0.3s
+        }
+
+        .submit-btn:hover {
+            background: var(--emerald);
+            transform: translateY(-1px)
+        }
+
+        #successMsg {
+            margin-top: 24px;
+            display: none;
+            text-align: center
+        }
+
+        #successMsg .s-icon {
+            font-size: 36px;
+            color: var(--emerald);
+            display: block;
+            margin-bottom: 10px;
+            animation: popIn 0.5s ease
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0) rotate(-90deg);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1) rotate(0);
+                opacity: 1
+            }
+        }
+
+        #successMsg p {
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 22px;
+            color: var(--emerald-dark)
+        }
+
+        .site-footer {
+            text-align: center;
+            padding: 14px 20px;
+            background: rgba(14, 74, 53, 0.03);
+            border: 1px solid rgba(14, 74, 53, 0.05);
+            border-radius: 14px;
+            font-size: 11px;
+            color: rgba(10, 32, 24, 0.3);
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .site-footer a {
+            color: var(--emerald-dark);
+            opacity: 0.5;
+            text-decoration: none
+        }
+
+        .rv {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+        }
+
+        .rv.in {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        @media(hover:none) {
+
+            .submit-btn:hover,
+            .btn:hover {
+                transform: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-root">
+        <script>
+            const CONFIG = {
+                names: { bride: "Аружан", groom: "Данияр" },
+                day: "21-03-2026",
+                hour: "19:00",
+                location: "Astana, Farhi Hall",
+                locationUrl: "https://2gis.kz/astana",
+                music: { title: "Песня", artist: "Исполнитель", url: "" },
+                gallery: [],
+                description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+                toiOwners: "Сырымбетовтар әулеті",
+            };
+        </script>
+        <div class="page">
+            <section class="hero">
+                <div class="hero-photo-placeholder"><svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="24" r="13" stroke="white" stroke-width="1.3" />
+                        <path d="M8 58 Q32 40 56 58" stroke="white" stroke-width="1.3" fill="none" />
+                    </svg><span>Фото жұпты</span></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-eyebrow">Тойға шақыру</div>
+                    <div class="hero-names"><span id="hBride">—</span><span class="hero-amp">&</span><span
+                            id="hGroom">—</span></div>
+                    <div class="hero-date" id="hDate">—</div>
+                </div>
+                <div class="scroll-cue"><span>ТӨМЕН</span>
+                    <div class="scroll-needle"></div>
+                </div>
+                <button class="music-btn" id="musicBtn" onclick="toggleMusic()"><svg id="mIcon" width="20" height="20"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg><audio id="audioEl" style="display:none"></audio></button>
+                <h1 id="heroNames" style="display:none">Имя & Имя</h1>
+            </section>
+
+            <section class="about rv">
+                <p id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+                <div class="orn-line">
+                    <div class="orn-diamond"></div>
+                </div>
+                <p class="invite-body">Сіздерді балаларымыздың:</p>
+                <h1 id="heroNamesLine">Имя & Имя</h1>
+                <p class="invite-footer">Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы
+                    болуға шақырамыз</p>
+                <div class="orn-line">
+                    <div class="orn-diamond"></div>
+                </div>
+                <div class="date-block">
+                    <p class="date-label">Тойымыз уақыты</p>
+                    <div class="calendar-wrap">
+                        <div class="cal-month-title" id="calMo"></div>
+                        <div class="cal-grid-head">
+                            <span>Дс</span><span>Сс</span><span>Ср</span><span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+                        </div>
+                        <div class="cal-grid" id="calGrid"></div>
+                    </div>
+                    <p id="heroDateLine" class="time-only"></p>
+                    <div class="countdown-grid">
+                        <div class="count-block"><span class="count-num" id="cdD">00</span><span
+                                class="count-label">күн</span></div>
+                        <div class="count-block"><span class="count-num" id="cdH">00</span><span
+                                class="count-label">сағ</span></div>
+                        <div class="count-block"><span class="count-num" id="cdM">00</span><span
+                                class="count-label">мин</span></div>
+                        <div class="count-block"><span class="count-num" id="cdS">00</span><span
+                                class="count-label">сек</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="owners-section rv" id="ownersSection">
+                <p class="owners-label-txt">Той иелері</p>
+                <p class="owners-name-txt" id="ownersBigName">—</p>
+            </section>
+
+            <section class="location rv">
+                <h3>Мекенжай</h3>
+                <p id="locationName"></p>
+                <div id="mapBtnWrap" style="display:none;"><a id="mapBtn" class="btn" target="_blank"
+                        rel="noreferrer noopener"><img src="https://shaqyrtu.kz/images/twogis.svg" alt="2gis"
+                            onerror="this.style.display='none'"> Карта арқылы ашу</a></div>
+            </section>
+
+            <section class="gallery rv">
+                <h3>Біздің сәттер</h3>
+                <div class="gallery-viewport">
+                    <div id="gallerySlides"></div>
+                </div>
+                <div class="gallery-controls" id="galleryControls" style="display:none">
+                    <button class="g-arrow" onclick="goPrev()"><svg width="12" height="12" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6" />
+                        </svg></button>
+                    <div class="g-dots" id="gDots"></div>
+                    <button class="g-arrow" onclick="goNext()"><svg width="12" height="12" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6" />
+                        </svg></button>
+                </div>
+            </section>
+
+            <section class="rsvp rv">
+                <span class="rsvp-tag">Растау</span>
+                <h3>Ваш ответ</h3>
+                <div class="form-wrap">
+                    <div id="rsvpForm">
+                        <div class="form-group"><label class="f-label">Есіміңіз</label><input id="rName"
+                                placeholder="Аты-жөніңіз"></div>
+                        <div class="form-group"><label class="f-label">Телефон</label><input id="rPhone"
+                                placeholder="+7 (___) ___-__-__"></div>
+                        <div class="form-group"><label class="f-label">Қанша адам</label>
+                            <div class="guest-counter"><button class="gc-btn" type="button"
+                                    onclick="changeGuests(-1)">−</button><input id="rGuests" type="number" min="1"
+                                    value="1" readonly><button class="gc-btn" type="button"
+                                    onclick="changeGuests(1)">+</button></div>
+                        </div>
+                        <div class="form-group"><label class="f-label">Ескерту</label><textarea id="rNote"
+                                placeholder="Аллергия немесе ерекше тілек..."></textarea></div>
+                        <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
+                    </div>
+                    <div id="successMsg"><span class="s-icon">✦</span>
+                        <p>Рақмет! Сізді күтеміз.</p>
+                    </div>
+                </div>
+            </section>
+            <div class="site-footer">Шын жүректен <a href="https://shaqyrtu.kz" target="_blank">shaqyrtu.kz</a> арқылы
+                жасалған 🇰🇿</div>
+        </div>
+    </div>
+
+    <script>
+        (function applyConfig() {
+            const [dd, mm, yy] = CONFIG.day.split('-').map(Number); const [hh, mi] = CONFIG.hour.split(':');
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+            document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+            document.getElementById('hBride').textContent = CONFIG.names.bride;
+            document.getElementById('hGroom').textContent = CONFIG.names.groom;
+            document.getElementById('hDate').textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}  ·  ${CONFIG.hour}`;
+            const nl = document.getElementById('heroNamesLine'); if (nl) nl.textContent = `${CONFIG.names.groom} & ${CONFIG.names.bride}`;
+            const desc = document.getElementById('eventText'); if (desc) desc.textContent = CONFIG.description || '';
+            const dtLine = document.getElementById('heroDateLine'); if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
+            const calMo = document.getElementById('calMo'); const calGrid = document.getElementById('calGrid');
+            if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
+            if (calGrid) { calGrid.innerHTML = ''; const first = new Date(yy, mm - 1, 1).getDay(); const off = first === 0 ? 6 : first - 1; const total = new Date(yy, mm, 0).getDate(); const prev = new Date(yy, mm - 1, 0).getDate(); for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'cday other'; e.textContent = prev - off + 1 + i; calGrid.appendChild(e); } for (let d = 1; d <= total; d++) { const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d; calGrid.appendChild(e); } }
+            (function countdown() { const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`); if (isNaN(target.getTime())) return; const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2, '0'); }; const tick = () => { const now = new Date(); let diff = Math.max(0, target - now); set('cdS', Math.floor(diff / 1000) % 60); set('cdM', Math.floor(diff / 60000) % 60); set('cdH', Math.floor(diff / 3600000) % 24); set('cdD', Math.floor(diff / 86400000)); }; tick(); setInterval(tick, 1000); })();
+            const loc = document.getElementById('locationName'); if (loc) loc.textContent = CONFIG.location || '';
+            const ownersBig = document.getElementById('ownersBigName'); if (ownersBig && CONFIG.toiOwners) ownersBig.textContent = CONFIG.toiOwners;
+            const mapBtnWrap = document.getElementById('mapBtnWrap'); const mapBtn = document.getElementById('mapBtn'); if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) { mapBtn.href = CONFIG.locationUrl || '#'; mapBtnWrap.style.display = 'block'; }
+            const slides = document.getElementById('gallerySlides'); if (slides) { slides.innerHTML = ''; const list = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : []; if (!list.length) { const e = document.createElement('div'); e.className = 'gallery-empty'; e.textContent = 'Галереяға фото қосыңыз'; slides.appendChild(e); } else { list.forEach((url, i) => { const img = document.createElement('img'); img.src = url; img.alt = 'photo'; img.addEventListener('click', () => { gIdx = i; updateGallery(); }); slides.appendChild(img); }); document.getElementById('galleryControls').style.display = 'flex'; const dw = document.getElementById('gDots'); list.forEach((_, i) => { const d = document.createElement('div'); d.className = 'g-dot' + (i === 0 ? ' lit' : ''); d.addEventListener('click', () => { gIdx = i; updateGallery(); }); dw.appendChild(d); }); let tx = 0; slides.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true }); slides.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) dx < 0 ? goNext() : goPrev(); }); } }
+            (() => { const url = CONFIG.music && CONFIG.music.url; if (!url) return; const audio = document.getElementById('audioEl'); audio.src = url; const start = () => { audio.play().then(() => { playing = true; updateMIcon(); }).catch(() => { }); }; audio.play().then(() => { playing = true; updateMIcon(); }).catch(() => { document.addEventListener('touchstart', start, { once: true }); document.addEventListener('click', start, { once: true }); }); })();
+        })();
+        let gIdx = 0; function updateGallery() { const s = document.getElementById('gallerySlides'); const items = Array.from(s.querySelectorAll('img')); if (!items.length) return; const dots = Array.from(document.getElementById('gDots').children); const sw = items[0].offsetWidth + 14; const vw = s.parentElement.offsetWidth; s.style.transform = `translateX(${-Math.max(0, gIdx * sw - vw / 2 + sw / 2 - 28)}px)`; items.forEach((el, i) => el.classList.toggle('active-slide', i === gIdx)); dots.forEach((d, i) => d.classList.toggle('lit', i === gIdx)); }
+        function goNext() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if (n) { gIdx = (gIdx + 1) % n; updateGallery(); } }
+        function goPrev() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if (n) { gIdx = (gIdx - 1 + n) % n; updateGallery(); } }
+        window.addEventListener('load', () => { if (document.getElementById('gallerySlides').querySelectorAll('img').length) setInterval(goNext, 4200); });
+        let playing = false;
+        function toggleMusic() { const audio = document.getElementById('audioEl'); const url = CONFIG.music && CONFIG.music.url; if (!audio.src || audio.src === window.location.href) { if (url) { audio.src = url; } else { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'audio/*'; inp.onchange = e => { const f = e.target.files[0]; if (!f) return; audio.src = URL.createObjectURL(f); audio.addEventListener('ended', () => { playing = false; updateMIcon(); }); audio.play().catch(() => { }); playing = true; updateMIcon(); }; inp.click(); return; } } if (playing) { audio.pause(); playing = false; } else { audio.play().catch(() => { }); playing = true; } updateMIcon(); }
+        function updateMIcon() { document.getElementById('mIcon').innerHTML = playing ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<path d="M8 5v14l11-7z"/>'; }
+        function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, Math.min(10, parseInt(inp.value || 1) + d)); }
+        window.submitRSVP = () => { const n = document.getElementById('rName').value.trim(); const p = document.getElementById('rPhone').value.trim(); if (!n) { document.getElementById('rName').focus(); return; } if (!p) { document.getElementById('rPhone').focus(); return; } document.getElementById('rsvpForm').style.display = 'none'; document.getElementById('successMsg').style.display = 'block'; };
+        const obs = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.06 }); document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>
