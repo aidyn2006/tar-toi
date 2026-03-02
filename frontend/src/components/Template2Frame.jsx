@@ -286,8 +286,8 @@ function injectLiveBridge(html) {
         // Primary hero / about texts
         setText('heroNames', namesLine);
         setText('heroNamesLine', isWedding && pair ? \`\${cfg.names?.groom || ''} & \${pair}\` : primary);
-        setText('hBride', isWedding ? pair : '');
-        setText('hGroom', primary);
+        setText('hBride', isWedding ? pair : primary);
+        setText('hGroom', isWedding ? primary : '');
         setText('heroDateLine', dateLine);
         setText('hDate', dateLine);
         setText('eventText', cfg.description || '');
