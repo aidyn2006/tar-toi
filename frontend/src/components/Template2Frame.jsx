@@ -51,10 +51,10 @@ function parseNames(invite) {
     const groomRaw = (invite?.topic1 || '').trim();
     const brideRaw = (invite?.topic2 || '').trim();
     const tpl = invite?.template || '';
-    const isWeddingPair = tpl.startsWith('wedding/') && !tpl.endsWith('template1.html');
+    const isWeddingPair = tpl.startsWith('wedding/'); // все свадебные — два человека
 
     if (!isWeddingPair) {
-        const single = groomRaw || brideRaw;
+        const single = groomRaw || brideRaw || (invite?.title || '').trim();
         return { groom: '', bride: single || 'Қонақ' };
     }
 
@@ -96,6 +96,8 @@ function normalizeTemplateKey(key) {
 function buildConfig(invite) {
     const eventDate = invite?.eventDate ? new Date(invite.eventDate) : null;
     const { groom, bride } = parseNames(invite);
+    const templateKey = invite?.template || '';
+    const isWedding = templateKey.startsWith('wedding/');
 
     const gallery = Array.isArray(invite?.gallery)
         ? invite.gallery.filter(Boolean).map(normalizeUrl)
@@ -127,6 +129,8 @@ function buildConfig(invite) {
         toiOwners: invite?.toiOwners || '',
         heroPhotoUrl,
         maxGuests: numericLimit,
+        isWedding,
+        template: templateKey,
     };
 }
 
@@ -274,10 +278,11 @@ function injectLiveBridge(html) {
         const dd = dayParts[0] || '';
         const mm = dayParts[1] || '';
         const yy = dayParts[2] || '';
-        const isWedding = !!cfg.isWedding;
+        const tplKey = (cfg.template || '').toString();
+        const isWeddingPair = tplKey.startsWith('wedding/');
         const primary = cfg.names?.groom || cfg.names?.bride || '';
         const pair = cfg.names?.bride || '';
-        const namesLine = isWedding && pair
+        const namesLine = isWeddingPair && pair
             ? \`\${pair} & \${cfg.names?.groom || ''}\`.trim()
             : primary;
         const dateLine = [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : '');
@@ -285,14 +290,14 @@ function injectLiveBridge(html) {
 
         // Primary hero / about texts
         setText('heroNames', namesLine);
-        setText('heroNamesLine', isWedding && pair ? \`\${cfg.names?.groom || ''} & \${pair}\` : primary);
-        setText('hBride', isWedding ? pair : primary);
-        setText('hGroom', isWedding ? primary : '');
+        setText('heroNamesLine', isWeddingPair && pair ? \`\${cfg.names?.groom || ''} & \${pair}\` : primary);
+        setText('hBride', isWeddingPair ? pair : primary);
+        setText('hGroom', isWeddingPair ? primary : '');
         setText('heroDateLine', dateLine);
         setText('hDate', dateLine);
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
-        setText('footLine', isWedding && pair ? \`\${pair || ''} & \${primary}  ·  \${yy}\` : \`\${primary} · \${yy}\`);
+        setText('footLine', isWeddingPair && pair ? \`\${pair || ''} & \${primary}  ·  \${yy}\` : \`\${primary} · \${yy}\`);
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
