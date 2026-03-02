@@ -76,18 +76,25 @@
         <div id="ownersBigName">—</div>
     </section>
 
-    <!-- LOCATION -->
-    <section>
-        <h4>Мекенжай</h4>
-        <p id="locationName"></p>
-        <div id="mapBtnWrap" style="display:none;">
-            <a id="mapBtn" target="_blank" rel="noreferrer noopener">Карта арқылы ашу</a>
-        </div>
-    </section>
+<!-- LOCATION -->
+<section>
+    <h4>Мекенжай</h4>
+    <p id="locationName"></p>
+    <div id="mapBtnWrap" style="display:none;">
+        <a id="mapBtn" target="_blank" rel="noreferrer noopener">Карта арқылы ашу</a>
+    </div>
+</section>
 
-    <!-- GALLERY -->
-    <section>
-        <h4>Біздің сәттер</h4>
+<!-- MUSIC -->
+<section id="musicSection" style="display:none;">
+    <h4>Музыка</h4>
+    <p id="musicTitle" style="margin-bottom:8px;"></p>
+    <button id="musicBtn" type="button" style="padding:10px 14px;border-radius:8px;border:1px solid #222;background:#222;color:#fff;font-weight:700;">▶ Ойнату</button>
+</section>
+
+<!-- GALLERY -->
+<section>
+    <h4>Біздің сәттер</h4>
         <div id="gallerySlides"></div>
     </section>
 
@@ -170,6 +177,31 @@
                 mapBtn.href = CONFIG.locationUrl;
                 mapWrap.style.display = 'block';
             }
+
+            // music
+            (function music() {
+                const url = CONFIG.music?.url || '';
+                const title = CONFIG.music?.title || '';
+                const wrap = document.getElementById('musicSection');
+                const btn = document.getElementById('musicBtn');
+                const titleEl = document.getElementById('musicTitle');
+                if (!url || !wrap || !btn) return;
+                const audio = new Audio(url);
+                audio.loop = true;
+                audio.preload = 'auto';
+                if (titleEl) titleEl.textContent = title;
+                wrap.style.display = 'block';
+                let playing = false;
+                const update = () => { btn.textContent = playing ? '⏸ Пауза' : '▶ Ойнату'; };
+                btn.addEventListener('click', async () => {
+                    try {
+                        if (!playing) { await audio.play(); playing = true; }
+                        else { audio.pause(); playing = false; }
+                        update();
+                    } catch(e){ console.warn('music play', e); }
+                });
+                audio.addEventListener('ended', () => { playing = false; update(); });
+            })();
 
             // gallery
             const slides = document.getElementById('gallerySlides');

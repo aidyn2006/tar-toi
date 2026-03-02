@@ -229,7 +229,7 @@
     <section>
         <p id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
         <p>Сіздерді балаларымыздың:</p>
-    <h1 id="heroNamesLine">Имя</h1>
+        <h1 id="heroNamesLine">Имя</h1>
         <p>Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
 
         <div style="margin-top:14px;">
@@ -263,6 +263,20 @@
         </div>
     </section>
 
+    <!-- ⑤ MUSIC -->
+    <section id="musicSection" style="display:none;">
+        <h4>Музыка</h4>
+        <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
+        <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
+    </section>
+
+    <!-- MUSIC -->
+    <section id="musicSection" style="display:none;">
+        <h4>Музыка</h4>
+        <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
+        <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
+    </section>
+
     <!-- ⑤ GALLERY -->
     <section>
         <h4>Біздің сәттер</h4>
@@ -292,11 +306,11 @@
             const [hh, mi]     = CONFIG.hour.split(':');
             const MO_KK = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
 
-            const mainName = (CONFIG.names?.groom || CONFIG.names?.bride || '').trim();
-            document.title = mainName;
-            document.getElementById('heroNames').textContent = mainName;
+            document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+            document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+
             const nl = document.getElementById('heroNamesLine');
-            if (nl) nl.textContent = mainName;
+            if (nl) nl.textContent = `${CONFIG.names.groom} & ${CONFIG.names.bride}`;
 
             const desc = document.getElementById('eventText');
             if (desc) desc.textContent = CONFIG.description || '';
@@ -360,6 +374,29 @@
                 mapBtn.href = CONFIG.locationUrl;
                 if (mapWrap) mapWrap.style.display = 'block';
             }
+
+            // Music
+            (function music(){
+                const wrap = document.getElementById('musicSection');
+                const btn  = document.getElementById('musicBtn');
+                const titleEl = document.getElementById('musicTitle');
+                const url = CONFIG.music?.url || '';
+                if (!wrap || !btn || !url) return;
+                const audio = new Audio(url);
+                audio.loop = true; audio.preload = 'auto';
+                if (titleEl) titleEl.textContent = CONFIG.music.title || 'Музыка';
+                wrap.style.display = 'block';
+                let playing = false;
+                const update = () => { btn.textContent = playing ? '⏸ Пауза' : '▶ Ойнату'; };
+                btn.addEventListener('click', async () => {
+                    try {
+                        if (!playing) { await audio.play(); playing = true; }
+                        else { audio.pause(); playing = false; }
+                        update();
+                    } catch(e){ console.warn('music', e); }
+                });
+                audio.addEventListener('ended', () => { playing = false; update(); });
+            })();
 
             // Gallery
             const slides = document.getElementById('gallerySlides');

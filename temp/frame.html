@@ -263,6 +263,20 @@
         </div>
     </section>
 
+    <!-- ⑤ MUSIC -->
+    <section id="musicSection" style="display:none;">
+        <h4>Музыка</h4>
+        <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
+        <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
+    </section>
+
+    <!-- MUSIC -->
+    <section id="musicSection" style="display:none;">
+        <h4>Музыка</h4>
+        <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
+        <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
+    </section>
+
     <!-- ⑤ GALLERY -->
     <section>
         <h4>Біздің сәттер</h4>
@@ -360,6 +374,29 @@
                 mapBtn.href = CONFIG.locationUrl;
                 if (mapWrap) mapWrap.style.display = 'block';
             }
+
+            // Music
+            (function music(){
+                const wrap = document.getElementById('musicSection');
+                const btn  = document.getElementById('musicBtn');
+                const titleEl = document.getElementById('musicTitle');
+                const url = CONFIG.music?.url || '';
+                if (!wrap || !btn || !url) return;
+                const audio = new Audio(url);
+                audio.loop = true; audio.preload = 'auto';
+                if (titleEl) titleEl.textContent = CONFIG.music.title || 'Музыка';
+                wrap.style.display = 'block';
+                let playing = false;
+                const update = () => { btn.textContent = playing ? '⏸ Пауза' : '▶ Ойнату'; };
+                btn.addEventListener('click', async () => {
+                    try {
+                        if (!playing) { await audio.play(); playing = true; }
+                        else { audio.pause(); playing = false; }
+                        update();
+                    } catch(e){ console.warn('music', e); }
+                });
+                audio.addEventListener('ended', () => { playing = false; update(); });
+            })();
 
             // Gallery
             const slides = document.getElementById('gallerySlides');
