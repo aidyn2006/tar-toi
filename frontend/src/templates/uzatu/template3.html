@@ -1,0 +1,600 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ұзату тойы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ─── TOKENS (Romantic Pink & Rose Gold) ────────── */
+        :root {
+            --ivory: #fffafb;
+            --cream: #fff0f3;
+            --champagne: #fbe4e8;
+            --gold: #d4a5a5;
+            --gold-lt: #e8c4c4;
+            --gold-dk: #a67d7d;
+            --emerald: #8d5d5d;
+            --emerald-lt: #b38b8b;
+            --muted: #a38f8f;
+            --text: #4a3434;
+            --border: rgba(212, 165, 165, 0.4);
+            --radius: 20px;
+            --serif: 'Cormorant Garamond', Georgia, serif;
+            --fancy: 'Great Vibes', cursive;
+            --sans: 'Jost', system-ui, sans-serif;
+            --shimmer: linear-gradient(90deg, #d4a5a5 0%, #e8c4c4 35%, #fff0f3 50%, #e8c4c4 65%, #d4a5a5 100%);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f1dada;
+            color: var(--text);
+            font-family: var(--sans);
+            font-weight: 300;
+            line-height: 1.65;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-root::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M50 80 Q30 60 30 40 A20 20 0 0 1 70 40 Q70 60 50 80' fill='none' stroke='%23d4a5a5' stroke-width='0.5' opacity='0.15'/%3E%3C/svg%3E");
+            background-size: 150px 150px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-root {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: var(--ivory);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .page-wrap {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 0 16px 60px;
+        }
+
+        .top-border {
+            text-align: center;
+            padding: 24px 0 0;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(255, 252, 253, 0.96);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(212, 165, 165, 0.1);
+        }
+
+        .section-label {
+            font-family: var(--sans);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: var(--fancy);
+            font-size: 38px;
+            color: var(--emerald);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        /* ─── HERO ───────────────────────────────────────── */
+        .hero {
+            text-align: center;
+            padding: 50px 24px 40px;
+        }
+
+        .hero-event-label {
+            font-family: var(--sans);
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--gold-dk);
+            margin-bottom: 20px;
+        }
+
+        #heroPhoto {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            margin: 0 auto 28px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(212, 165, 165, 0.2);
+            background: var(--cream);
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        #heroPhoto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-name {
+            font-family: var(--fancy);
+            font-size: 64px;
+            line-height: 1;
+            color: var(--emerald);
+            margin-bottom: 15px;
+        }
+
+        .hero-ceremony {
+            font-family: var(--serif);
+            font-size: 18px;
+            color: var(--muted);
+        }
+
+        /* ─── INVITE TEXT ────────────────────────────────── */
+        .invite-text {
+            text-align: center;
+            font-family: var(--serif);
+            font-size: 17px;
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .invite-text strong {
+            color: var(--emerald);
+            font-weight: 500;
+            font-family: var(--fancy);
+            font-size: 24px;
+        }
+
+        /* ─── OWNERS ─────────────────────────────────────── */
+        .owners-name {
+            font-family: var(--serif);
+            font-size: 26px;
+            font-style: italic;
+            color: var(--emerald);
+            text-align: center;
+        }
+
+        /* ─── GALLERY ───────────────────────────────────── */
+        .gallery-viewport {
+            overflow: hidden;
+        }
+
+        #gallerySlides {
+            display: flex;
+            gap: 10px;
+            padding: 15px 0;
+        }
+
+        #gallerySlides img {
+            width: 80%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            transition: 0.4s;
+        }
+
+        #gallerySlides img.active-slide {
+            border-color: var(--emerald);
+            transform: scale(1.05);
+        }
+
+        /* ─── CALENDAR ───────────────────────────────────── */
+        .calendar-inner {
+            background: var(--cream);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        #calMo {
+            font-family: var(--sans);
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: var(--emerald);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .cal-grid-head {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            font-size: 10px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        #calGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .cday {
+            font-size: 14px;
+            text-align: center;
+            padding: 8px 0;
+            position: relative;
+            opacity: 0.8;
+            display: grid;
+            place-items: center;
+            aspect-ratio: 1;
+            isolation: isolate;
+        }
+
+        .cday.other {
+            opacity: 0.2;
+        }
+
+        .cday.today {
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .cday.today::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 50%;
+            background: var(--emerald);
+            z-index: -1;
+            animation: softPulse 2s infinite;
+        }
+
+        @keyframes softPulse {
+
+            0%,
+            100% {
+                transform: scale(0.9);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* ─── LOCATION ───────────────────────────────────── */
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .event-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--champagne);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--emerald);
+        }
+
+        .event-info-value {
+            font-family: var(--serif);
+            font-size: 19px;
+            color: var(--text);
+        }
+
+        .map-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--emerald);
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 15px;
+        }
+
+        /* ─── RSVP ───────────────────────────────────────── */
+        .rsvp-field input,
+        .rsvp-field textarea {
+            width: 100%;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--emerald);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* ─── COUNTDOWN ──────────────────────────────────── */
+        .countdown {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .cd-box {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: var(--cream);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .cd-num {
+            font-size: 24px;
+            color: var(--emerald);
+            font-family: var(--serif);
+            text-shadow: 0 0 8px rgba(141, 93, 93, 0.2);
+        }
+
+        .cd-label {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        /* ─── MUSIC ─────────────────────────────────────── */
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--emerald);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(141, 93, 93, 0.4);
+            z-index: 100;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-root">
+        <div class="page-wrap">
+            <script>
+                const CONFIG = {
+                    names: { bride: "Аружан", groom: "Данияр" },
+                    day: "21-03-2026", hour: "19:00",
+                    location: "Astana, Farhi Hall", locationUrl: "https://2gis.kz/astana",
+                    music: { url: "" }, gallery: [],
+                    description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+                    toiOwners: "Сырымбетовтар әулеті",
+                };
+            </script>
+
+            <!-- ① HERO -->
+            <section class="card hero reveal">
+                <div class="hero-event-label">~ Қыз Ұзату ~</div>
+                <div id="heroPhoto">
+                    <svg viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="0.5" opacity="0.4">
+                        <path d="M50 20 L80 50 L50 80 L20 50 Z" />
+                    </svg>
+                </div>
+                <h1 class="hero-name" id="hBride">Аружан</h1>
+                <p class="hero-ceremony" id="hCeremony">21 наурыз 2026</p>
+                <button class="music-btn" onclick="toggleMusic()"><svg id="mIcon" viewBox="0 0 24 24"
+                        fill="currentColor" width="20">
+                        <path d="M8 5v14l11-7z" />
+                    </svg><audio id="audioEl"></audio></button>
+            </section>
+
+            <!-- ② INVITE TEXT -->
+            <section class="card reveal">
+                <p class="invite-text" id="eventText">Құрметті қауым!</p>
+                <div style="height:1px; background:var(--gold); margin:15px auto; width:40px; opacity:0.5;"></div>
+                <p class="invite-text">Көркіне ақылы сай қызымыз <strong>Аружанның</strong> қияға қонуына арналған
+                    салтанатты кешіміздің куәсі болыңыздар.</p>
+            </section>
+
+            <!-- ③ OWNERS -->
+            <section class="card reveal">
+                <div class="section-label">Той иелері:</div>
+                <p class="owners-name" id="ownersBigName">—</p>
+            </section>
+
+            <!-- ④ GALLERY -->
+            <section class="card reveal" style="padding: 20px 10px;">
+                <div class="section-label">Біздің сәттер</div>
+                <div class="gallery-viewport">
+                    <div id="gallerySlides"></div>
+                </div>
+            </section>
+
+            <!-- ⑤ CALENDAR -->
+            <section class="card reveal">
+                <div class="section-label">Той салтанаты</div>
+                <div class="calendar-inner">
+                    <div id="calMo"></div>
+                    <div class="cal-grid-head">
+                        <span>Дс</span><span>Сс</span><span>Ср</span><span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+                    </div>
+                    <div id="calGrid"></div>
+                </div>
+                <p id="heroDateLine"
+                    style="text-align:center; margin-top:15px; font-family:var(--serif); font-size:24px; color:var(--emerald);">
+                </p>
+            </section>
+
+            <!-- ⑥ LOCATION -->
+            <section class="card reveal">
+                <div class="section-label">Өтетін орны</div>
+                <div class="event-item">
+                    <div class="event-icon">🕒</div>
+                    <div>
+                        <div class="event-info-value" id="locTimeVal">19:00</div>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-icon">📍</div>
+                    <div>
+                        <div class="event-info-value" id="locationName">-</div>
+                    </div>
+                </div>
+                <div id="mapBtnWrap" style="display:none;"><a id="mapBtn" class="map-btn" target="_blank">Картадан
+                        ашу</a></div>
+            </section>
+
+            <!-- ⑦ RSVP -->
+            <section class="card reveal">
+                <div class="section-label">Қонақтар тізімі</div>
+                <div class="section-title" style="font-size:28px;">Келетініңізді растаңыз</div>
+                <p style="text-align:center; margin-bottom:15px; font-size:13px; color:var(--muted);">Тойға
+                    келетініңізді растауыңызды сұраймыз</p>
+                <div id="rsvpForm">
+                    <input id="rName" placeholder="Аты-жөніңіз">
+                    <div class="guest-counter" style="margin-bottom:10px;">
+                        <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
+                        <input id="rGuests" style="margin:0; text-align:center;" value="1" readonly>
+                        <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
+                    </div>
+                    <button class="submit-btn" onclick="submitRSVP()">Растаймын</button>
+                </div>
+                <div id="successMsg" style="display:none; text-align:center; color:var(--emerald); font-weight:500;">
+                    Рахмет! Күтеміз.</div>
+            </section>
+
+            <!-- ⑧ COUNTDOWN -->
+            <section class="card reveal" style="background:none; border:none; box-shadow:none;">
+                <p class="section-label">Тойға дейін қалды:</p>
+                <div class="countdown">
+                    <div class="cd-box"><span class="cd-num" id="cdD">00</span>
+                        <p class="cd-label">күн</p>
+                    </div>
+                    <div class="cd-box"><span class="cd-num" id="cdH">00</span>
+                        <p class="cd-label">сағат</p>
+                    </div>
+                    <div class="cd-box"><span class="cd-num" id="cdM">00</span>
+                        <p class="cd-label">мин</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        (function init() {
+            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
+            const [hh, mi] = CONFIG.hour.split(':');
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const mainName = (CONFIG.names?.bride || 'Қонақ').trim();
+
+            document.getElementById('hBride').textContent = mainName;
+            document.getElementById('hCeremony').textContent = `${dd} ${MO_KK[mm - 1]} ${yy}`;
+            document.getElementById('eventText').textContent = CONFIG.description;
+            document.getElementById('ownersBigName').textContent = CONFIG.toiOwners;
+            document.getElementById('locTimeVal').textContent = CONFIG.hour;
+            document.getElementById('locationName').textContent = CONFIG.location;
+            if (CONFIG.locationUrl) { document.getElementById('mapBtn').href = CONFIG.locationUrl; document.getElementById('mapBtnWrap').style.display = 'block'; }
+            document.getElementById('heroDateLine').textContent = `Сағат ${CONFIG.hour}`;
+
+            const calGrid = document.getElementById('calGrid');
+            const first = new Date(yy, mm - 1, 1).getDay();
+            const off = first === 0 ? 6 : first - 1;
+            const total = new Date(yy, mm, 0).getDate();
+            document.getElementById('calMo').textContent = `${MO_KK[mm - 1]} ${yy}`;
+            for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'cday other'; e.textContent = new Date(yy, mm - 1, 0).getDate() - off + 1 + i; calGrid.appendChild(e); }
+            for (let d = 1; d <= total; d++) { const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d; calGrid.appendChild(e); }
+
+            (function tick() {
+                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
+                const diff = Math.max(0, target - new Date());
+                document.getElementById('cdD').textContent = Math.floor(diff / 86400000);
+                document.getElementById('cdH').textContent = Math.floor(diff / 3600000) % 24;
+                document.getElementById('cdM').textContent = Math.floor(diff / 60000) % 60;
+                setTimeout(tick, 1000);
+            })();
+
+            const slides = document.getElementById('gallerySlides');
+            (CONFIG.gallery || []).forEach((u, i) => { const img = document.createElement('img'); img.src = u; slides.appendChild(img); });
+        })();
+
+        let playing = false;
+        function toggleMusic() {
+            const a = document.getElementById('audioEl'), i = document.getElementById('mIcon');
+            if (playing) { a.pause(); playing = false; i.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+            else { a.play().catch(() => { }); playing = true; i.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
+        }
+        function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, parseInt(inp.value) + d); }
+        function submitRSVP() { if (document.getElementById('rName').value) { document.getElementById('rsvpForm').style.display = 'none'; document.getElementById('successMsg').style.display = 'block'; } }
+        const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>

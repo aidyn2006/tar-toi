@@ -1,0 +1,1222 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ұзату тойы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ─── TOKENS (Royal Blue & Silver) ────────────────── */
+        :root {
+            --ivory: #f8f9fa;
+            --cream: #f1f2f6;
+            --champagne: #dfe4ea;
+            --gold: #a5b1c2;
+            --gold-lt: #cbd3dc;
+            --gold-dk: #4b6584;
+            --emerald: #1a3a5f;
+            --emerald-lt: #2d5a8e;
+            --muted: #5b6978;
+            --text: #1e272e;
+            --border: rgba(165, 177, 194, 0.4);
+            --radius: 16px;
+            --serif: 'Cormorant Garamond', Georgia, serif;
+            --sans: 'Jost', system-ui, sans-serif;
+            --shimmer: linear-gradient(90deg, #1a3a5f 0%, #4b6584 35%, #a5b1c2 50%, #4b6584 65%, #1a3a5f 100%);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #ced6e0;
+            color: var(--text);
+            font-family: var(--sans);
+            font-weight: 300;
+            line-height: 1.65;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Background watermark */
+        .page-root::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%234b6584' stroke-width='0.5' opacity='0.12'%3E%3Cellipse cx='100' cy='100' rx='60' ry='60'/%3E%3Cellipse cx='100' cy='100' rx='40' ry='40'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='20'/%3E%3Cpath d='M100 40 L120 80 L100 160 L80 80 Z' stroke-width='0.6'/%3E%3Cpath d='M40 100 L80 120 L160 100 L80 80 Z' stroke-width='0.6'/%3E%3Ccircle cx='100' cy='100' r='3' fill='%234b6584'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 200px 200px;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── PAGE ROOT ───────────────────── */
+        .page-root {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: var(--ivory);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .page-wrap {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 0 16px 60px;
+        }
+
+        .top-border {
+            text-align: center;
+            padding: 24px 0 0;
+            margin-bottom: -8px;
+        }
+
+        .top-border svg {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 24px 0;
+            opacity: 0.75;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .divider svg {
+            flex-shrink: 0;
+            width: 40px;
+            height: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 24px rgba(26, 58, 95, 0.06), 0 1px 4px rgba(165, 177, 194, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, rgba(241, 242, 246, 0.5) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .corner-svg {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .section-label {
+            font-family: var(--sans);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-family: var(--serif);
+            font-size: clamp(22px, 5vw, 30px);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--emerald);
+            text-shadow: 0 0 10px rgba(26, 58, 95, 0.1);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        /* ─── HERO ───────────────────────────────────────── */
+        .hero {
+            text-align: center;
+            padding: 44px 28px 40px;
+        }
+
+        .hero-event-label {
+            font-family: var(--sans);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-bottom: 20px;
+        }
+
+        #heroPhoto {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--ivory), var(--champagne));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 0 6px rgba(26, 58, 95, 0.05), 0 8px 32px rgba(26, 58, 95, 0.1);
+        }
+
+        #heroPhoto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+        }
+
+        #heroPhoto svg {
+            opacity: 0.35;
+        }
+
+        .hero-name {
+            font-family: var(--serif);
+            font-size: clamp(54px, 14vw, 88px);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.05;
+            background: var(--shimmer);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+            margin-bottom: 6px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-amp {
+            font-family: var(--serif);
+            font-size: 22px;
+            font-style: italic;
+            color: var(--gold-dk);
+            display: block;
+            margin: 6px 0;
+            -webkit-text-fill-color: var(--gold-dk);
+        }
+
+        .hero-name-groom {
+            font-family: var(--serif);
+            font-size: clamp(30px, 7vw, 50px);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--emerald);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-ceremony {
+            font-family: var(--serif);
+            font-size: clamp(15px, 3.5vw, 20px);
+            font-weight: 300;
+            color: var(--muted);
+            letter-spacing: 1px;
+        }
+
+        /* ─── INVITE TEXT ────────────────────────────────── */
+        .invite-text {
+            text-align: center;
+            font-family: var(--serif);
+            font-size: clamp(15px, 3.5vw, 18px);
+            font-style: italic;
+            color: var(--text);
+            line-height: 1.85;
+        }
+
+        .invite-text strong {
+            font-weight: 500;
+            font-style: normal;
+            color: var(--emerald);
+        }
+
+        /* ─── CALENDAR ───────────────────────────────────── */
+        .cal-wrap-outer {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .cal-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-bottom: 14px;
+            font-family: var(--sans);
+            font-weight: 500;
+            opacity: 0.85;
+        }
+
+        .calendar-inner {
+            background: linear-gradient(135deg, var(--ivory), var(--champagne));
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 18px 20px;
+            max-width: 320px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(26, 58, 95, 0.05);
+        }
+
+        #calMo {
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--emerald);
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .cal-grid-head {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 6px;
+        }
+
+        .cal-grid-head span {
+            font-family: var(--sans);
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--muted);
+            text-align: center;
+            padding: 4px 0;
+            opacity: 0.6;
+            font-weight: 500;
+        }
+
+        #calGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .cday {
+            font-family: var(--serif);
+            font-size: 16px;
+            color: var(--text);
+            text-align: center;
+            padding: 10px 2px;
+            position: relative;
+            line-height: 1;
+            opacity: 0.7;
+            display: grid;
+            place-items: center;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            isolation: isolate;
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+
+        .cday.other {
+            opacity: 0.2;
+        }
+
+        .cday.today::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), var(--gold));
+            box-shadow:
+                0 0 0 2px var(--gold),
+                0 0 0 8px rgba(165, 177, 194, 0.2),
+                0 12px 26px rgba(165, 177, 194, 0.3);
+            z-index: -1;
+            animation: heartPulse 1.5s ease-in-out infinite;
+        }
+
+        .cday.today {
+            color: var(--emerald);
+            opacity: 1;
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        @keyframes heartPulse {
+
+            0%,
+            100% {
+                transform: scale(0.95);
+                opacity: 0.75;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        #heroDateLine {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 32px;
+            color: var(--emerald);
+            text-shadow: 0 0 10px rgba(26, 58, 95, 0.1);
+            letter-spacing: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* ─── COUNTDOWN ──────────────────────────────────── */
+        .countdown-label {
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin: 22px 0 12px;
+            font-family: var(--sans);
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .cd-box {
+            flex: 1;
+            max-width: 80px;
+            text-align: center;
+            padding: 14px 8px;
+            background: linear-gradient(135deg, var(--ivory), var(--champagne));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cd-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        }
+
+        .cd-num {
+            font-family: var(--serif);
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--emerald);
+            text-shadow: 0 0 10px rgba(26, 58, 95, 0.2);
+            line-height: 1;
+            display: block;
+        }
+
+        .cd-label {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-top: 4px;
+            display: block;
+            font-family: var(--sans);
+        }
+
+        /* ─── OWNERS ─────────────────────────────────────── */
+        .owners-name {
+            font-family: var(--serif);
+            font-size: clamp(22px, 5.5vw, 32px);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--emerald);
+            text-align: center;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+
+        /* ─── EVENT DETAILS ──────────────────────────────── */
+        .event-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .event-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--ivory), var(--champagne));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--gold-dk);
+        }
+
+        .event-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .event-info-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-bottom: 2px;
+            font-family: var(--sans);
+        }
+
+        .event-info-value {
+            font-family: var(--serif);
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .event-info-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* ─── MAP BTN ────────────────────────────────────── */
+        .map-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-lt));
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 24px rgba(26, 58, 95, 0.2);
+            margin-top: 20px;
+        }
+
+        .map-btn:hover {
+            background: var(--gold-dk);
+            transform: translateY(-1px);
+        }
+
+        .map-btn img {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* ─── MUSIC PLAYER ──────────────────────────────── */
+        .music-btn {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-lt));
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 32px rgba(26, 58, 95, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #fff;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+        }
+
+        .music-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .music-btn.playing::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            animation: musicRipple 1.8s ease-out infinite;
+        }
+
+        @keyframes musicRipple {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        /* ─── GALLERY ──────────────────── */
+        .gallery-wrap {
+            position: relative;
+            margin-top: 18px;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--border);
+        }
+
+        .gallery-viewport {
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+
+        #gallerySlides {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+        }
+
+        #gallerySlides img {
+            flex-shrink: 0;
+            width: 85%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s, filter 0.4s;
+            filter: brightness(0.9);
+        }
+
+        #gallerySlides img.active-slide {
+            transform: scale(1.02);
+            filter: brightness(1);
+            box-shadow: 0 8px 32px rgba(26, 58, 95, 0.2);
+        }
+
+        .gallery-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .g-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--ivory);
+            color: var(--emerald);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .g-arrow:hover {
+            background: var(--emerald);
+            color: #fff;
+        }
+
+        .g-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .g-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--emerald);
+            opacity: 0.2;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .g-dot.active {
+            opacity: 1;
+            transform: scale(1.4);
+        }
+
+        /* ─── RSVP ───────────────────────────────────────── */
+        .rsvp-field {
+            margin-bottom: 12px;
+        }
+
+        .rsvp-field input,
+        .rsvp-field textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .rsvp-field input:focus,
+        .rsvp-field textarea:focus {
+            border-color: var(--emerald);
+        }
+
+        .rsvp-field textarea {
+            min-height: 76px;
+            resize: none;
+        }
+
+        .guest-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gc-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--ivory), var(--champagne));
+            color: var(--emerald);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gc-btn:hover {
+            background: var(--emerald);
+            color: #fff;
+        }
+
+        #rGuests {
+            width: 64px !important;
+            text-align: center !important;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px 24px;
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-lt));
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(26, 58, 95, 0.3);
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        #successMsg {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #successMsg .s-icon {
+            color: var(--emerald);
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        #successMsg p {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-style: italic;
+            color: var(--emerald);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 0 0;
+        }
+
+        .footer-date {
+            font-family: var(--serif);
+            font-size: 24px;
+            font-style: italic;
+            color: var(--emerald);
+            letter-spacing: 2px;
+        }
+
+        .footer-tagline {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (hover: none) {
+
+            .map-btn:hover,
+            .submit-btn:hover,
+            .gc-btn:hover,
+            .music-btn:hover,
+            .g-arrow:hover {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 18px;
+            }
+
+            .cd-num {
+                font-size: 22px;
+            }
+
+            #gallerySlides img {
+                width: 88%;
+            }
+        }
+
+        @media (min-width: 600px) {
+            .event-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-root">
+        <div class="page-wrap">
+
+            <script>
+                const CONFIG = {
+                    names: { bride: "Аружан", groom: "Данияр" },
+                    day: "21-03-2026",
+                    hour: "19:00",
+                    location: "Astana, Farhi Hall",
+                    locationUrl: "https://2gis.kz/astana",
+                    music: { title: "Песня", artist: "Исполнитель", url: "" },
+                    gallery: [],
+                    description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+                    toiOwners: "Сырымбетовтар әулеті",
+                };
+            </script>
+
+            <!-- TOP BORDER -->
+            <div class="top-border">
+                <svg viewBox="0 0 640 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="18" x2="260" y2="18" stroke="#4b6584" stroke-width="0.8" opacity="0.5" />
+                    <line x1="380" y1="18" x2="640" y2="18" stroke="#4b6584" stroke-width="0.8" opacity="0.5" />
+                    <g transform="translate(320,18)" fill="none" stroke="#4b6584">
+                        <circle cx="0" cy="0" r="3" fill="#4b6584" opacity="0.8" />
+                        <circle cx="-16" cy="0" r="1.5" fill="#4b6584" opacity="0.5" />
+                        <circle cx="16" cy="0" r="1.5" fill="#4b6584" opacity="0.5" />
+                    </g>
+                </svg>
+            </div>
+
+            <!-- ① HERO -->
+            <section class="card hero reveal">
+                <div class="hero-event-label">Ұзату тойына шақырамыз</div>
+                <div id="heroPhoto">
+                    <svg viewBox="0 0 80 80" width="60" height="60" fill="none">
+                        <path d="M40 15 C40 15 50 25 50 40 C50 55 40 65 40 65 C40 65 30 55 30 40 C30 25 40 15 40 15Z"
+                            stroke="#4b6584" stroke-width="0.8" />
+                        <circle cx="40" cy="40" r="6" stroke="#4b6584" stroke-width="0.8" />
+                    </svg>
+                </div>
+                <h1 class="hero-name" id="hBride">Аружан</h1>
+                <p class="hero-ceremony" id="hCeremony">Ұзату тойы · 21 наурыз 2026</p>
+                <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+                    <svg id="mIcon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                    <audio id="audioEl" style="display:none"></audio>
+                </button>
+            </section>
+
+            <!-- ② COUNTDOWN (Reordered) -->
+            <section class="card reveal" style="padding: 24px;">
+                <p class="countdown-label">Тойға дейін қалды</p>
+                <div class="countdown">
+                    <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-label">күн</span></div>
+                    <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-label">сағат</span></div>
+                    <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-label">минут</span></div>
+                    <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-label">сек</span></div>
+                </div>
+            </section>
+
+            <!-- ③ ABOUT / INVITE TEXT -->
+            <section class="card reveal">
+                <p class="invite-text" id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+                <div class="divider" style="margin:20px 0;">
+                    <div class="divider-line"></div>
+                </div>
+                <p class="invite-text">Сіздерді қызымыз <strong id="heroNamesLine">Аружанның</strong> ұзату тойына
+                    арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз.</p>
+            </section>
+
+            <!-- ④ OWNERS -->
+            <section class="card reveal" id="ownersSection">
+                <div class="section-label">Той иелері</div>
+                <p class="owners-name" id="ownersBigName">—</p>
+            </section>
+
+            <!-- ⑤ CALENDAR -->
+            <section class="card reveal">
+                <div class="cal-wrap-outer">
+                    <p class="cal-label">Тойымыз уақыты</p>
+                    <div class="calendar-inner">
+                        <div id="calMo"></div>
+                        <div class="cal-grid-head">
+                            <span>Дс</span><span>Сс</span><span>Ср</span>
+                            <span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+                        </div>
+                        <div id="calGrid"></div>
+                    </div>
+                    <p id="heroDateLine"></p>
+                </div>
+            </section>
+
+            <!-- ⑥ LOCATION -->
+            <section class="card reveal">
+                <div class="section-label">Мекенжай</div>
+                <div class="event-grid">
+                    <div class="event-item">
+                        <div class="event-icon"><svg viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor"
+                                    stroke-width="1.3" />
+                                <path d="M3 9h18" stroke="currentColor" stroke-width="1.3" />
+                            </svg></div>
+                        <div>
+                            <div class="event-info-label">Күні</div>
+                            <div class="event-info-value" id="locDateVal">-</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-icon"><svg viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.3" />
+                            </svg></div>
+                        <div>
+                            <div class="event-info-label">Уақыты</div>
+                            <div class="event-info-value" id="locTimeVal">-</div>
+                        </div>
+                    </div>
+                    <div class="event-item" style="grid-column:1/-1;">
+                        <div class="event-icon"><svg viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                                    stroke="currentColor" stroke-width="1.3" />
+                            </svg></div>
+                        <div>
+                            <div class="event-info-label">Мекенжайы</div>
+                            <div class="event-info-value" id="locationName">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mapBtnWrap" style="display:none;">
+                    <a id="mapBtn" class="map-btn" target="_blank" rel="noreferrer noopener">2GIS арқылы ашу</a>
+                </div>
+            </section>
+
+            <!-- ⑦ GALLERY -->
+            <section class="card reveal">
+                <div class="section-label">Біздің сәттер</div>
+                <div class="gallery-wrap">
+                    <div class="gallery-viewport">
+                        <div id="gallerySlides"></div>
+                    </div>
+                    <div class="gallery-controls" id="galleryControls" style="display:none">
+                        <button class="g-arrow" onclick="goPrev()"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5">
+                                <path d="M15 18l-6-6 6-6" />
+                            </svg></button>
+                        <div class="g-dots" id="gDots"></div>
+                        <button class="g-arrow" onclick="goNext()"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5">
+                                <path d="M9 18l6-6-6-6" />
+                            </svg></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑧ RSVP -->
+            <section class="card reveal">
+                <div class="section-label">Растауыңызды күтеміз</div>
+                <div class="section-title">Келетіндігіңізді растаңыз</div>
+                <div id="rsvpForm">
+                    <div class="rsvp-field"><input id="rName" placeholder="Есіміңіз"></div>
+                    <div class="rsvp-field"><input id="rPhone" placeholder="+7 (___) ___-__-__"></div>
+                    <div class="rsvp-field">
+                        <div class="guest-counter">
+                            <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
+                            <input id="rGuests" type="number" min="1" value="1" readonly>
+                            <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
+                        </div>
+                    </div>
+                    <div class="rsvp-field"><textarea id="rNote" placeholder="Тілектеріңіз..."></textarea></div>
+                    <button class="submit-btn" onclick="submitRSVP()">Растаймын</button>
+                </div>
+                <div id="successMsg"><span class="s-icon">✦</span>
+                    <p>Рахмет! Күтеміз.</p>
+                </div>
+            </section>
+
+            <footer class="footer reveal">
+                <div class="footer-date" id="footerDate">-</div>
+                <div class="footer-tagline" id="footerTagline">-</div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        (function applyConfig() {
+            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
+            const [hh, mi] = CONFIG.hour.split(':');
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const MO_ROM = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+            const mainName = (CONFIG.names?.bride || CONFIG.names?.groom || 'Қонақ').trim();
+            document.title = `${mainName} — Ұзату тойы`;
+
+            const hBride = document.getElementById('hBride');
+            if (hBride) hBride.textContent = mainName;
+            const hCeremony = document.getElementById('hCeremony');
+            if (hCeremony) hCeremony.textContent = `Ұзату тойы · ${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}`;
+            const nl = document.getElementById('heroNamesLine');
+            if (nl) nl.textContent = mainName;
+            const desc = document.getElementById('eventText');
+            if (desc) desc.textContent = CONFIG.description || '';
+
+            const calMo = document.getElementById('calMo');
+            const calGrid = document.getElementById('calGrid');
+            if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
+            if (calGrid) {
+                calGrid.innerHTML = '';
+                const first = new Date(yy, mm - 1, 1).getDay();
+                const off = first === 0 ? 6 : first - 1;
+                const total = new Date(yy, mm, 0).getDate();
+                const prev = new Date(yy, mm - 1, 0).getDate();
+                for (let i = 0; i < off; i++) {
+                    const e = document.createElement('div'); e.className = 'cday other';
+                    e.textContent = prev - off + 1 + i; calGrid.appendChild(e);
+                }
+                for (let d = 1; d <= total; d++) {
+                    const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : '');
+                    e.textContent = d; calGrid.appendChild(e);
+                }
+                const rem = (off + total) % 7;
+                for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
+                    const e = document.createElement('div'); e.className = 'cday other';
+                    e.textContent = i; calGrid.appendChild(e);
+                }
+            }
+
+            const dtLine = document.getElementById('heroDateLine');
+            if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
+
+            (function countdown() {
+                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+                if (isNaN(target.getTime())) return;
+                const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2, '0'); };
+                const tick = () => {
+                    let diff = Math.max(0, target - new Date());
+                    set('cdS', Math.floor(diff / 1000) % 60);
+                    set('cdM', Math.floor(diff / 60000) % 60);
+                    set('cdH', Math.floor(diff / 3600000) % 24);
+                    set('cdD', Math.floor(diff / 86400000));
+                };
+                tick(); setInterval(tick, 1000);
+            })();
+
+            const ownersBig = document.getElementById('ownersBigName');
+            if (ownersBig && CONFIG.toiOwners) ownersBig.textContent = CONFIG.toiOwners;
+
+            const locDate = document.getElementById('locDateVal');
+            if (locDate) locDate.textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}`;
+            const locTime = document.getElementById('locTimeVal');
+            if (locTime) locTime.textContent = CONFIG.hour;
+            const loc = document.getElementById('locationName');
+            if (loc) loc.textContent = CONFIG.location || '';
+            const mapBtn = document.getElementById('mapBtn');
+            if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) {
+                mapBtn.href = CONFIG.locationUrl || '#';
+                document.getElementById('mapBtnWrap').style.display = 'block';
+            }
+
+            const fd = document.getElementById('footerDate');
+            if (fd) fd.textContent = `${dd} · ${MO_ROM[mm - 1]} · ${yy}`;
+            const ft = document.getElementById('footerTagline');
+            if (ft) ft.textContent = `${CONFIG.names?.bride} & ${CONFIG.names?.groom} · Ұзату тойы`;
+
+            const slides = document.getElementById('gallerySlides');
+            if (slides) {
+                const list = CONFIG.gallery || [];
+                if (!list.length) {
+                    const e = document.createElement('div'); e.className = 'gallery-empty';
+                    e.textContent = 'Қазірше суреттер жоқ'; slides.appendChild(e);
+                } else {
+                    list.forEach((url, i) => {
+                        const img = document.createElement('img'); img.src = url;
+                        img.addEventListener('click', () => { gIdx = i; updateGallery(); });
+                        slides.appendChild(img);
+                    });
+                    document.getElementById('galleryControls').style.display = 'flex';
+                    const dw = document.getElementById('gDots');
+                    list.forEach((_, i) => {
+                        const d = document.createElement('div'); d.className = 'g-dot' + (i === 0 ? ' active' : '');
+                        d.addEventListener('click', () => { gIdx = i; updateGallery(); });
+                        dw.appendChild(d);
+                    });
+                }
+            }
+
+            (() => {
+                const url = CONFIG.music && CONFIG.music.url;
+                if (!url) return;
+                const audio = document.getElementById('audioEl'); audio.src = url; audio.loop = true;
+                const start = () => {
+                    audio.play().then(() => {
+                        playing = true; document.getElementById('musicBtn').classList.add('playing'); updateMIcon();
+                    }).catch(() => { });
+                    document.removeEventListener('touchstart', start); document.removeEventListener('click', start);
+                };
+                document.addEventListener('touchstart', start, { once: true }); document.addEventListener('click', start, { once: true });
+            })();
+        })();
+
+        let gIdx = 0, playing = false;
+        function updateGallery() {
+            const s = document.getElementById('gallerySlides');
+            const items = s.querySelectorAll('img'); if (!items.length) return;
+            const dots = document.getElementById('gDots').children;
+            const sw = items[0].offsetWidth + 12;
+            const vw = s.parentElement.offsetWidth;
+            const offset = (vw - items[0].offsetWidth) / 2;
+            s.style.transform = `translateX(${-gIdx * sw + offset}px)`;
+            items.forEach((el, i) => el.classList.toggle('active-slide', i === gIdx));
+            if (dots.length) Array.from(dots).forEach((d, i) => d.classList.toggle('active', i === gIdx));
+        }
+        function goNext() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if (n) { gIdx = (gIdx + 1) % n; updateGallery(); } }
+        function goPrev() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if (n) { gIdx = (gIdx - 1 + n) % n; updateGallery(); } }
+
+        function toggleMusic() {
+            const audio = document.getElementById('audioEl'), btn = document.getElementById('musicBtn');
+            if (playing) { audio.pause(); playing = false; btn.classList.remove('playing'); }
+            else { audio.play().catch(() => { }); playing = true; btn.classList.add('playing'); }
+            updateMIcon();
+        }
+        function updateMIcon() {
+            document.getElementById('mIcon').innerHTML = playing
+                ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+        }
+        setInterval(goNext, 5000);
+
+        function changeGuests(d) {
+            const inp = document.getElementById('rGuests');
+            inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
+        }
+        function submitRSVP() {
+            if (!document.getElementById('rName').value.trim() || !document.getElementById('rPhone').value.trim()) return;
+            document.getElementById('rsvpForm').style.display = 'none'; document.getElementById('successMsg').style.display = 'block';
+        }
+        const obs = new IntersectionObserver(es => {
+            es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>

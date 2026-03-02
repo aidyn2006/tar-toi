@@ -1,0 +1,516 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ұзату тойы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ─── TOKENS (Classic Burgundy & Gold) ───────────── */
+        :root {
+            --ivory: #fffdfa;
+            --cream: #f7f1e3;
+            --champagne: #f5ecd1;
+            --gold: #c5a059;
+            --gold-lt: #e5c68b;
+            --gold-dk: #8e6f3e;
+            --emerald: #6b1111;
+            --emerald-lt: #8e2d2d;
+            --muted: #7f8c8d;
+            --text: #2c3e50;
+            --border: rgba(197, 160, 89, 0.4);
+            --radius: 0px;
+            /* Classic sharp corners */
+            --serif: 'Playfair Display', serif;
+            --body-serif: 'Cormorant Garamond', serif;
+            --sans: 'Jost', system-ui, sans-serif;
+            --shimmer: linear-gradient(90deg, var(--gold-dk) 0%, var(--gold-lt) 50%, var(--gold-dk) 100%);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #2c0505;
+            color: var(--text);
+            font-family: var(--body-serif);
+            font-weight: 400;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-root {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: var(--ivory);
+            position: relative;
+            overflow-x: hidden;
+            border-left: 8px solid var(--emerald);
+            border-right: 8px solid var(--emerald);
+        }
+
+        .page-wrap {
+            padding: 40px 20px 80px;
+            position: relative;
+        }
+
+        .top-decor {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .top-decor svg {
+            width: 120px;
+            color: var(--gold);
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--gold);
+            padding: 40px 25px;
+            margin-bottom: 24px;
+            position: relative;
+            box-shadow: 10px 10px 0px rgba(107, 17, 17, 0.05);
+        }
+
+        .section-label {
+            font-family: var(--sans);
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: var(--serif);
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--emerald);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        /* ─── HERO ───────────────────────────────────────── */
+        .hero {
+            text-align: center;
+            border: 2px solid var(--gold);
+            padding: 60px 20px;
+        }
+
+        .hero-event-label {
+            font-family: var(--sans);
+            font-size: 12px;
+            letter-spacing: 5px;
+            color: var(--gold-dk);
+            margin-bottom: 30px;
+        }
+
+        #heroPhoto {
+            width: 150px;
+            height: 180px;
+            margin: 0 auto 30px;
+            border: 1px solid var(--gold);
+            padding: 5px;
+            background: #fff;
+        }
+
+        #heroPhoto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-name {
+            font-family: var(--serif);
+            font-size: 52px;
+            color: var(--emerald);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero-ceremony {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-style: italic;
+            color: var(--gold-dk);
+        }
+
+        /* ─── OWNERS ─────────────────────────────────────── */
+        .owners-name {
+            font-family: var(--serif);
+            font-size: 28px;
+            color: var(--emerald);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* ─── INVITE TEXT ────────────────────────────────── */
+        .invite-text {
+            text-align: center;
+            font-size: 18px;
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+
+        .invite-text strong {
+            color: var(--emerald);
+            font-family: var(--serif);
+            font-size: 24px;
+        }
+
+        /* ─── LOCATION ───────────────────────────────────── */
+        .event-item {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .event-info-label {
+            font-family: var(--sans);
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--gold-dk);
+        }
+
+        .event-info-value {
+            font-family: var(--serif);
+            font-size: 22px;
+            color: var(--emerald);
+        }
+
+        .map-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 1px solid var(--emerald);
+            color: var(--emerald);
+            text-decoration: none;
+            font-family: var(--sans);
+            font-size: 12px;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .map-btn:hover {
+            background: var(--emerald);
+            color: #fff;
+        }
+
+        /* ─── CALENDAR ───────────────────────────────────── */
+        .calendar-inner {
+            border: 1px solid var(--gold);
+            padding: 20px;
+        }
+
+        #calMo {
+            font-family: var(--serif);
+            font-size: 20px;
+            color: var(--emerald);
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .cal-grid-head {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gold-dk);
+            text-align: center;
+        }
+
+        #calGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .cday {
+            font-size: 15px;
+            text-align: center;
+            padding: 10px 0;
+            border: 0.5px solid transparent;
+        }
+
+        .cday.other {
+            color: #ccc;
+        }
+
+        .cday.today {
+            background: var(--emerald);
+            color: #fff;
+            font-weight: 700;
+            border-color: var(--emerald);
+        }
+
+        /* ─── GALLERY ───────────────────────────────────── */
+        #gallerySlides {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 15px;
+            scroll-snap-type: x mandatory;
+        }
+
+        #gallerySlides img {
+            flex: 0 0 90%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border: 1px solid var(--gold);
+            scroll-snap-align: center;
+        }
+
+        /* ─── COUNTDOWN ──────────────────────────────────── */
+        .countdown {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid var(--gold);
+            padding-top: 20px;
+        }
+
+        .cd-num {
+            font-family: var(--serif);
+            font-size: 30px;
+            color: var(--emerald);
+            display: block;
+        }
+
+        .cd-label {
+            font-family: var(--sans);
+            font-size: 10px;
+            color: var(--gold-dk);
+            text-transform: uppercase;
+        }
+
+        /* ─── RSVP ───────────────────────────────────────── */
+        .rsvp-field input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-bottom: 1px solid var(--gold);
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--emerald);
+            color: #fff;
+            border: none;
+            font-family: var(--sans);
+            letter-spacing: 3px;
+            cursor: pointer;
+        }
+
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 1px solid var(--gold);
+            color: var(--emerald);
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 1s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-root">
+        <div class="page-wrap">
+            <script>
+                const CONFIG = {
+                    names: { bride: "Аружан", groom: "Данияр" },
+                    day: "21-03-2026", hour: "19:00",
+                    location: "Astana, Farhi Hall", locationUrl: "https://2gis.kz/astana",
+                    music: { url: "" }, gallery: [],
+                    description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+                    toiOwners: "Сырымбетовтар әулеті",
+                };
+            </script>
+
+            <div class="top-decor">
+                <svg viewBox="0 0 100 40" fill="currentColor">
+                    <path d="M0 20 Q25 0 50 20 Q75 40 100 20" fill="none" stroke="currentColor" stroke-width="2" />
+                </svg>
+            </div>
+
+            <!-- ① HERO -->
+            <section class="card hero reveal">
+                <div class="hero-event-label">~ ШАҚЫРУ ~</div>
+                <div id="heroPhoto">
+                    <div
+                        style="width:100%; height:100%; background:#f9f9f9; display:flex; align-items:center; justify-content:center; color:#ddd;">
+                        PHOTO</div>
+                </div>
+                <h1 class="hero-name" id="hBride">АРУЖАН</h1>
+                <p class="hero-ceremony" id="hCeremony">ҰЗАТУ ТОЙЫ</p>
+                <button class="music-btn" onclick="toggleMusic()"><svg id="mIcon" viewBox="0 0 24 24"
+                        fill="currentColor" width="24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg><audio id="audioEl"></audio></button>
+            </section>
+
+            <!-- ② OWNERS -->
+            <section class="card reveal">
+                <div class="section-label">Той иелері</div>
+                <p class="owners-name" id="ownersBigName">—</p>
+            </section>
+
+            <!-- ③ INVITE TEXT -->
+            <section class="card reveal" style="border-top: 4px solid var(--emerald);">
+                <p class="invite-text" id="eventText">Құрметті ағайын-туыс!</p>
+                <p class="invite-text">Біздің әулеттің үкілеген үміті, мәпелеген қызымыз <strong>Аружанның</strong>
+                    ұзату тойына арналған салтанатты кешіміздің қадірлі қонағы болуға шақырамыз.</p>
+            </section>
+
+            <!-- ④ LOCATION -->
+            <section class="card reveal">
+                <div class="section-label">Мекенжай</div>
+                <div class="event-item">
+                    <div class="event-info-label">КҮНІ ЖӘНЕ УАҚЫТЫ</div>
+                    <div class="event-info-value" id="locDateTimeVal">21.03.2026 | 19:00</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-info-label">МЕКЕНЖАЙЫ</div>
+                    <div class="event-info-value" id="locationName">-</div>
+                </div>
+                <div id="mapBtnWrap" style="text-align:center; display:none;"><a id="mapBtn" class="map-btn"
+                        target="_blank">КАРТАДАН АШУ</a></div>
+            </section>
+
+            <!-- ⑤ CALENDAR -->
+            <section class="card reveal">
+                <div class="calendar-inner">
+                    <div id="calMo">МАУСЫМ</div>
+                    <div class="cal-grid-head">
+                        <span>ДС</span><span>СС</span><span>СР</span><span>БС</span><span>ЖМ</span><span>СБ</span><span>ЖК</span>
+                    </div>
+                    <div id="calGrid"></div>
+                </div>
+            </section>
+
+            <!-- ⑥ GALLERY -->
+            <section class="card reveal">
+                <div class="section-label">Біздің сәттер</div>
+                <div id="gallerySlides"></div>
+            </section>
+
+            <!-- ⑦ COUNTDOWN -->
+            <section class="card reveal" style="text-align:center;">
+                <div class="countdown">
+                    <div class="cd-item"><span class="cd-num" id="cdD">00</span><span class="cd-label">КҮН</span></div>
+                    <div class="cd-item"><span class="cd-num" id="cdH">00</span><span class="cd-label">САҒАТ</span>
+                    </div>
+                    <div class="cd-item"><span class="cd-num" id="cdM">00</span><span class="cd-label">МИН</span></div>
+                </div>
+            </section>
+
+            <!-- ⑧ RSVP -->
+            <section class="card reveal">
+                <div class="section-label">Растау</div>
+                <div class="section-title">Келетініңізді растаңыз</div>
+                <p style="text-align:center; margin-bottom:20px; font-size:14px;">Келетініңізді растауыңызды сұраймыз
+                </p>
+                <div id="rsvpForm">
+                    <div class="rsvp-field"><input id="rName" placeholder="ЕСІМІҢІЗ"></div>
+                    <div class="rsvp-field">
+                        <div
+                            style="display:flex; align-items:center; justify-content:center; gap:20px; margin-bottom:20px;">
+                            <button onclick="changeGuests(-1)"
+                                style="width:30px; height:30px; border:1px solid #ddd; background:none;">-</button>
+                            <span id="rGuests">1</span>
+                            <button onclick="changeGuests(1)"
+                                style="width:30px; height:30px; border:1px solid #ddd; background:none;">+</button>
+                        </div>
+                    </div>
+                    <button class="submit-btn" onclick="submitRSVP()">ЖІБЕРУ</button>
+                </div>
+                <div id="successMsg"
+                    style="display:none; text-align:center; color:var(--emerald); font-weight:600; padding:20px;">
+                    РАХМЕТ!</div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        (function init() {
+            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
+            const [hh, mi] = CONFIG.hour.split(':');
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const mainName = (CONFIG.names?.bride || 'ҚОНАҚ').toUpperCase();
+            document.getElementById('hBride').textContent = mainName;
+            document.getElementById('eventText').textContent = CONFIG.description;
+            document.getElementById('ownersBigName').textContent = CONFIG.toiOwners;
+            document.getElementById('locDateTimeVal').textContent = `${dd}.${mm}.${yy} | ${CONFIG.hour}`;
+            document.getElementById('locationName').textContent = CONFIG.location;
+            if (CONFIG.locationUrl) { document.getElementById('mapBtn').href = CONFIG.locationUrl; document.getElementById('mapBtnWrap').style.display = 'block'; }
+
+            const calMo = document.getElementById('calMo'), calGrid = document.getElementById('calGrid');
+            calMo.textContent = MO_KK[mm - 1].toUpperCase();
+            const first = new Date(yy, mm - 1, 1).getDay();
+            const off = first === 0 ? 6 : first - 1;
+            const total = new Date(yy, mm, 0).getDate();
+            for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'cday other'; e.textContent = new Date(yy, mm - 1, 0).getDate() - off + 1 + i; calGrid.appendChild(e); }
+            for (let d = 1; d <= total; d++) { const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d; calGrid.appendChild(e); }
+
+            (function tick() {
+                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
+                const diff = Math.max(0, target - new Date());
+                document.getElementById('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                document.getElementById('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                document.getElementById('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                setTimeout(tick, 1000);
+            })();
+
+            const g = document.getElementById('gallerySlides');
+            (CONFIG.gallery || []).forEach(u => { const img = document.createElement('img'); img.src = u; g.appendChild(img); });
+            if (CONFIG.heroPhoto) { const h = document.getElementById('heroPhoto'); h.innerHTML = `<img src="${CONFIG.heroPhoto}">`; }
+        })();
+
+        let playing = false;
+        function toggleMusic() {
+            const a = document.getElementById('audioEl'), i = document.getElementById('mIcon');
+            if (playing) { a.pause(); playing = false; i.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+            else { a.play().catch(() => { }); playing = true; i.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
+        }
+        function changeGuests(d) { const s = document.getElementById('rGuests'); s.textContent = Math.max(1, parseInt(s.textContent) + d); }
+        function submitRSVP() { document.getElementById('rsvpForm').style.display = 'none'; document.getElementById('successMsg').style.display = 'block'; }
+        const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>
