@@ -167,7 +167,8 @@
             font-size: clamp(22px, 5vw, 30px);
             font-weight: 400;
             font-style: italic;
-            color: var(--emerald);
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(184, 147, 90, 0.15);
             text-align: center;
             margin-bottom: 6px;
         }
@@ -430,7 +431,8 @@
             font-family: var(--serif);
             font-size: 28px;
             font-weight: 300;
-            color: var(--emerald);
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(184, 147, 90, 0.3);
             line-height: 1;
             display: block;
         }
@@ -518,11 +520,11 @@
             gap: 10px;
             width: 100%;
             padding: 14px 24px;
-            background: var(--emerald);
-            color: var(--champagne);
+            background: linear-gradient(135deg, var(--gold-dk), var(--gold-lt));
+            color: var(--ivory);
             font-family: var(--sans);
             font-size: 13px;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-decoration: none;
@@ -530,7 +532,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(30, 77, 58, 0.3);
+            box-shadow: 0 6px 24px rgba(184, 147, 90, 0.3);
             margin-top: 20px;
         }
 
@@ -554,20 +556,20 @@
             width: 54px;
             height: 54px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--emerald), var(--emerald-lt));
+            background: linear-gradient(135deg, var(--gold), var(--gold-lt));
             border: 1.5px solid var(--border);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 32px rgba(30, 77, 58, 0.4);
+            box-shadow: 0 8px 32px rgba(184, 147, 90, 0.4);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--champagne);
+            color: var(--ivory);
         }
 
         .music-btn:hover {
             transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 12px 40px rgba(30, 77, 58, 0.5);
+            box-shadow: 0 12px 40px rgba(184, 147, 90, 0.5);
         }
 
         .music-btn svg {
@@ -579,7 +581,7 @@
             content: '';
             position: absolute;
             inset: -8px;
-            border: 1px solid var(--emerald);
+            border: 1px solid var(--gold);
             border-radius: 50%;
             animation: musicRipple 1.8s ease-out infinite;
         }
@@ -602,6 +604,8 @@
             margin-top: 18px;
             overflow: hidden;
             border-radius: 12px;
+            background: rgba(255, 252, 245, 0.4);
+            border: 1px solid var(--border);
         }
 
         .gallery-viewport {
@@ -696,6 +700,144 @@
             width: 100%;
         }
 
+        /* ─── RSVP ───────────────────────────────────────── */
+        .rsvp-field {
+            margin-bottom: 12px;
+        }
+
+        .rsvp-field input,
+        .rsvp-field textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(243, 234, 216, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+            -webkit-appearance: none;
+        }
+
+        .rsvp-field input::placeholder,
+        .rsvp-field textarea::placeholder {
+            color: var(--muted);
+            opacity: 0.7;
+        }
+
+        .rsvp-field input:focus,
+        .rsvp-field textarea:focus {
+            border-color: var(--gold);
+            background: rgba(255, 252, 245, 0.9);
+        }
+
+        .rsvp-field textarea {
+            min-height: 76px;
+            resize: none;
+        }
+
+        .guest-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gc-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--cream), var(--champagne));
+            color: var(--emerald);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            font-family: var(--sans);
+        }
+
+        .gc-btn:hover {
+            background: var(--emerald);
+            color: var(--champagne);
+            border-color: var(--emerald);
+        }
+
+        #rGuests {
+            width: 64px !important;
+            text-align: center !important;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px 24px;
+            background: linear-gradient(135deg, var(--gold-dk), var(--gold-lt));
+            color: var(--ivory);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(184, 147, 90, 0.4);
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 28px rgba(184, 147, 90, 0.5);
+        }
+
+        #successMsg {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #successMsg .s-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #successMsg p {
+            font-family: var(--serif);
+            font-size: 18px;
+            font-style: italic;
+            color: var(--emerald);
+        }
+
+        /* ─── FOOTER ─────────────────────────────────────── */
+        .footer {
+            text-align: center;
+            padding: 24px 0 0;
+        }
+
+        .footer-date {
+            font-family: var(--serif);
+            font-size: 24px;
+            font-style: italic;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .footer-tagline {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+
+        /* ─── REVEAL ─────────────────────────────────────── */
         .reveal {
             opacity: 0;
             transform: translateY(20px);
