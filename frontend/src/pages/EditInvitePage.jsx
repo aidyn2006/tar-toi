@@ -837,15 +837,17 @@ const EditInvitePage = () => {
 
                         {/* Text fields */}
                         <Section title="Мәтін" isMobile={isMobile}>
-                            <div className="edit-names-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                                <Field label="Тақырып 1 (Күйеу)">
-                                    <input value={data.topic1} onChange={set('topic1')} placeholder="Адлет"
+                            <div className="edit-names-grid" style={{ display: 'grid', gridTemplateColumns: (data.template?.startsWith('wedding/') && !data.template.endsWith('template1.html')) ? '1fr 1fr' : '1fr', gap: '0.75rem' }}>
+                                <Field label="Тақырып 1">
+                                    <input value={data.topic1} onChange={set('topic1')} placeholder="Аты"
                                         style={inputStyle} />
                                 </Field>
-                                <Field label="Тақырып 2 (Қыз)">
-                                    <input value={data.topic2} onChange={set('topic2')} placeholder="Асем"
-                                        style={inputStyle} />
-                                </Field>
+                                {(data.template?.startsWith('wedding/') && !data.template.endsWith('template1.html')) && (
+                                    <Field label="Тақырып 2">
+                                        <input value={data.topic2} onChange={set('topic2')} placeholder="Жұбайы"
+                                            style={inputStyle} />
+                                    </Field>
+                                )}
                             </div>
                             <Field label="Сипаттама">
                                 <textarea value={data.description} onChange={set('description')}
