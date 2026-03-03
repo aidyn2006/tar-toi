@@ -85,4 +85,13 @@ public class Invite extends BaseEntity {
 
     @Column(name = "music_title", length = 150)
     private String musicTitle;
+
+    /** SYSTEM preset key or null when custom upload is used */
+    @Column(name = "music_key", length = 100)
+    private String musicKey;
+
+    /** Where the music comes from (SYSTEM preset or UPLOAD file) */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "music_source", length = 20)
+    private MusicSource musicSource;
 }

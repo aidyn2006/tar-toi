@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { inviteService } from '../api/inviteService';
 import Template2Frame from '../components/Template2Frame';
 import { uploadService } from '../api/uploadService';
+import { SYSTEM_MUSIC, SYSTEM_MUSIC_MAP } from '../constants/systemMusic';
 import {
     Save, Share2, Eye, X, MapPin, Music,
     Image, Calendar, Clock, ArrowLeft, Check, UploadCloud, Trash2
@@ -60,6 +61,12 @@ const TEMPLATE_NAME_MAP = {
     'tusaukeser/default': 'Tusaukeser',
     'merei/default': 'Anniversary',
     'besik/default': 'Besik Toy',
+};
+
+const MUSIC_SOURCE = {
+    NONE: 'NONE',
+    SYSTEM: 'SYSTEM',
+    UPLOAD: 'UPLOAD',
 };
 
 function buildTemplateOptions() {
@@ -122,6 +129,8 @@ const EMPTY_INVITE_DATA = {
     template: DEFAULT_TEMPLATE_KEY,
     musicUrl: '',
     musicTitle: '',
+    musicKey: '',
+    musicSource: MUSIC_SOURCE.NONE,
     maxGuests: 0,
 };
 
@@ -423,6 +432,13 @@ const EditInvitePage = () => {
         inviteService.getMyInvites().then(list => {
             const inv = list.find(i => i.id === id);
             if (inv) {
+                const srcRaw = (inv.musicSource || '').toString().toUpperCase();
+                const musicSource = srcRaw === MUSIC_SOURCE.SYSTEM || srcRaw === MUSIC_SOURCE.UPLOAD ? srcRaw
+                    : inv.musicKey ? MUSIC_SOURCE.SYSTEM
+                    : inv.musicUrl ? MUSIC_SOURCE.UPLOAD
+                    : MUSIC_SOURCE.NONE;
+                const musicKey = inv.musicKey || '';
+                const presetTitle = musicKey ? (SYSTEM_MUSIC_MAP[musicKey]?.title || '') : '';
                 setSlug(inv.slug || '');
                 setData({
                     title: inv.title || '',
@@ -437,8 +453,10 @@ const EditInvitePage = () => {
                     locationUrl: inv.locationUrl || '',
                     toiOwners: inv.toiOwners || '',
                     template: normalizeTemplateKey(inv.template),
-                    musicUrl: inv.musicUrl || '',
-                    musicTitle: inv.musicTitle || '',
+                    musicUrl: musicSource === MUSIC_SOURCE.UPLOAD ? (inv.musicUrl || '') : '',
+                    musicTitle: inv.musicTitle || presetTitle || '',
+                    musicKey,
+                    musicSource,
                 });
             }
         }).finally(() => setLoading(false));
@@ -447,6 +465,7 @@ const EditInvitePage = () => {
     useEffect(() => {
         if (isNew) {
             setData(getNewInviteDefaults(location.search));
+            setSlug('');
         }
     }, [isNew, location.search]);
 
@@ -498,12 +517,63 @@ const EditInvitePage = () => {
         setData(prev => ({ ...prev, gallery: (prev.gallery || []).filter(p => p !== url) }));
     };
 
+    const clearMusic = useCallback(() => {
+        setData(prev => ({
+            ...prev,
+            musicUrl: '',
+            musicTitle: '',
+            musicKey: '',
+            musicSource: MUSIC_SOURCE.NONE,
+        }));
+    }, []);
+
+    const selectSystemMusic = (key) => {
+        const preset = key ? SYSTEM_MUSIC_MAP[key] : null;
+        setData(prev => ({
+            ...prev,
+            musicSource: key ? MUSIC_SOURCE.SYSTEM : MUSIC_SOURCE.NONE,
+            musicKey: key || '',
+            musicUrl: '',
+            musicTitle: preset?.title || (key ? prev.musicTitle : ''),
+        }));
+    };
+
+    const switchMusicSource = (src) => {
+        if (src === MUSIC_SOURCE.SYSTEM) {
+            setData(prev => {
+                const fallbackKey = prev.musicKey || SYSTEM_MUSIC[0]?.key || '';
+                const preset = fallbackKey ? SYSTEM_MUSIC_MAP[fallbackKey] : null;
+                return {
+                    ...prev,
+                    musicSource: fallbackKey ? MUSIC_SOURCE.SYSTEM : MUSIC_SOURCE.NONE,
+                    musicKey: fallbackKey,
+                    musicUrl: '',
+                    musicTitle: preset?.title || prev.musicTitle,
+                };
+            });
+        } else if (src === MUSIC_SOURCE.UPLOAD) {
+            setData(prev => ({
+                ...prev,
+                musicSource: MUSIC_SOURCE.UPLOAD,
+                musicKey: '',
+            }));
+        } else {
+            clearMusic();
+        }
+    };
+
     const handleAudioUpload = async (file) => {
         if (!file) return;
         setUploadingAudio(true);
         try {
             const { url } = await uploadService.uploadAudio(file, currentCategory);
-            setData(prev => ({ ...prev, musicUrl: url, musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle }));
+            setData(prev => ({
+                ...prev,
+                musicUrl: url,
+                musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle,
+                musicSource: MUSIC_SOURCE.UPLOAD,
+                musicKey: '',
+            }));
         } catch (e) {
             alert('Аудио жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
         } finally {
@@ -514,6 +584,9 @@ const EditInvitePage = () => {
     const saveInvite = async () => {
         setSaving(true);
         try {
+            const systemPreset = data.musicSource === MUSIC_SOURCE.SYSTEM && data.musicKey
+                ? SYSTEM_MUSIC_MAP[data.musicKey]
+                : null;
             const payload = {
                 title: data.title || 'Той шақыртуы',
                 description: data.description,
@@ -527,8 +600,14 @@ const EditInvitePage = () => {
                 locationUrl: data.locationUrl || null,
                 toiOwners: data.toiOwners || null,
                 template: data.template,
-                musicUrl: data.musicUrl || null,
-                musicTitle: data.musicTitle || null,
+                musicUrl: data.musicSource === MUSIC_SOURCE.UPLOAD ? (data.musicUrl || null) : null,
+                musicTitle: data.musicSource === MUSIC_SOURCE.SYSTEM
+                    ? (data.musicTitle || systemPreset?.title || null)
+                    : data.musicSource === MUSIC_SOURCE.UPLOAD
+                        ? (data.musicTitle || null)
+                        : null,
+                musicKey: data.musicSource === MUSIC_SOURCE.SYSTEM ? (data.musicKey || null) : null,
+                musicSource: data.musicSource || MUSIC_SOURCE.NONE,
             };
             let result;
             if (isNew) {
@@ -810,25 +889,85 @@ const EditInvitePage = () => {
                             </Field>
 
                             <Field label="Музыка (қаласаңыз)">
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                                    <label style={{
-                                        display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
-                                        padding: '0.65rem 1rem', borderRadius: '10px',
-                                        border: `1.5px dashed ${C.border}`, cursor: 'pointer',
-                                        background: '#fff', color: C.burgundy, fontWeight: 700
-                                    }}>
-                                        <Music size={16} /> {uploadingAudio ? 'Жүктелуде...' : 'MP3 жүктеу'}
-                                        <input type="file" accept="audio/*" style={{ display: 'none' }}
-                                            onChange={e => { if (e.target.files?.[0]) handleAudioUpload(e.target.files[0]); e.target.value = ''; }} />
-                                    </label>
-                                    {data.musicUrl && (
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', background: '#fff', border: `1px solid ${C.border}` }}>
-                                            <Music size={16} color={C.burgundy} />
-                                            <span style={{ fontWeight: 700, color: C.burgundy }}>{data.musicTitle || 'Аудио файл'}</span>
-                                            <button onClick={() => setData(d => ({ ...d, musicUrl: '', musicTitle: '' }))} style={{ border: 'none', background: 'transparent', color: C.textMuted, cursor: 'pointer' }}>Өшіру</button>
-                                        </div>
-                                    )}
+                                <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap', marginBottom: '0.6rem' }}>
+                                    <button type="button" onClick={() => switchMusicSource(MUSIC_SOURCE.SYSTEM)} style={{
+                                        padding: '0.55rem 0.9rem',
+                                        borderRadius: '10px',
+                                        border: `1.5px solid ${data.musicSource === MUSIC_SOURCE.SYSTEM ? C.burgundy : C.border}`,
+                                        background: data.musicSource === MUSIC_SOURCE.SYSTEM ? `${C.burgundy}12` : '#fff',
+                                        color: C.burgundy,
+                                        fontWeight: 700,
+                                        cursor: 'pointer'
+                                    }}>Системалық</button>
+                                    <button type="button" onClick={() => switchMusicSource(MUSIC_SOURCE.UPLOAD)} style={{
+                                        padding: '0.55rem 0.9rem',
+                                        borderRadius: '10px',
+                                        border: `1.5px solid ${data.musicSource === MUSIC_SOURCE.UPLOAD ? C.burgundy : C.border}`,
+                                        background: data.musicSource === MUSIC_SOURCE.UPLOAD ? `${C.burgundy}12` : '#fff',
+                                        color: C.burgundy,
+                                        fontWeight: 700,
+                                        cursor: 'pointer'
+                                    }}>Өз файлым</button>
+                                    <button type="button" onClick={clearMusic} style={{
+                                        padding: '0.55rem 0.9rem',
+                                        borderRadius: '10px',
+                                        border: `1.5px solid ${C.border}`,
+                                        background: '#fff',
+                                        color: C.textMuted,
+                                        fontWeight: 700,
+                                        cursor: 'pointer'
+                                    }}>Музыкасыз</button>
                                 </div>
+
+                                {data.musicSource === MUSIC_SOURCE.SYSTEM && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                        <select
+                                            value={data.musicKey || ''}
+                                            onChange={e => selectSystemMusic(e.target.value)}
+                                            style={{ ...inputStyle, width: '260px', maxWidth: '100%', padding: '0.65rem 0.75rem' }}
+                                        >
+                                            <option value="">Тректі таңдаңыз</option>
+                                            {SYSTEM_MUSIC.map(track => (
+                                                <option key={track.key} value={track.key}>{track.title}</option>
+                                            ))}
+                                        </select>
+                                        {data.musicKey && (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#fff', border: `1px solid ${C.border}`, padding: '0.5rem 0.75rem', borderRadius: '10px' }}>
+                                                <Music size={16} color={C.burgundy} />
+                                                <span style={{ fontWeight: 700, color: C.burgundy }}>{SYSTEM_MUSIC_MAP[data.musicKey]?.title || 'Трек'}</span>
+                                                <button onClick={clearMusic} style={{ border: 'none', background: 'transparent', color: C.textMuted, cursor: 'pointer' }}>Өшіру</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {data.musicSource === MUSIC_SOURCE.UPLOAD && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                        <label style={{
+                                            display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                            padding: '0.65rem 1rem', borderRadius: '10px',
+                                            border: `1.5px dashed ${C.border}`, cursor: 'pointer',
+                                            background: '#fff', color: C.burgundy, fontWeight: 700
+                                        }}>
+                                            <Music size={16} /> {uploadingAudio ? 'Жүктелуде...' : 'MP3 жүктеу'}
+                                            <input type="file" accept="audio/*" style={{ display: 'none' }}
+                                                onChange={e => { if (e.target.files?.[0]) handleAudioUpload(e.target.files[0]); e.target.value = ''; }} />
+                                        </label>
+                                        {data.musicUrl && (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', background: '#fff', border: `1px solid ${C.border}` }}>
+                                                <Music size={16} color={C.burgundy} />
+                                                <span style={{ fontWeight: 700, color: C.burgundy }}>{data.musicTitle || 'Аудио файл'}</span>
+                                                <button onClick={clearMusic} style={{ border: 'none', background: 'transparent', color: C.textMuted, cursor: 'pointer' }}>Өшіру</button>
+                                            </div>
+                                        )}
+                                        {!data.musicUrl && <span style={{ color: C.textMuted, fontSize: '0.9rem' }}>MP3/OGG жүктеп, автоматты түрде сақтаңыз.</span>}
+                                    </div>
+                                )}
+
+                                {data.musicSource === MUSIC_SOURCE.NONE && (
+                                    <div style={{ color: C.textMuted, fontSize: '0.9rem' }}>Музыка қосылмаған.</div>
+                                )}
+
                                 <p style={{ fontSize: '0.82rem', color: C.textMuted, marginTop: '0.4rem' }}>
                                     Музыка мен автоскролл тек алдын ала қарауда (публичном просмотре) ойнайды. Редакторда өшірілген.
                                 </p>

@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useEffect } from 'react';
+import { resolveMusicTrack } from '../constants/systemMusic';
 
 const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
@@ -98,6 +99,7 @@ function buildConfig(invite) {
     const { groom, bride } = parseNames(invite);
     const templateKey = invite?.template || '';
     const isWedding = templateKey.startsWith('wedding/');
+    const musicResolved = resolveMusicTrack(invite);
 
     const gallery = Array.isArray(invite?.gallery)
         ? invite.gallery.filter(Boolean).map(normalizeUrl)
@@ -119,9 +121,11 @@ function buildConfig(invite) {
         location: (invite?.locationName || 'Astana, Farhi Hall').trim(),
         locationUrl: (invite?.locationUrl || '').trim(),
         music: {
-            title: (invite?.musicTitle || invite?.title || 'Наша Песня').trim(),
-            artist: (invite?.toiOwners || '— загрузите аудио файл —').trim(),
-            url: normalizeUrl(invite?.musicUrl || ''),
+            title: (musicResolved.title || invite?.title || 'Наша Песня').trim(),
+            artist: (musicResolved.artist || '— загрузите аудио файл —').trim(),
+            url: normalizeUrl(musicResolved.url || ''),
+            key: musicResolved.key || null,
+            source: musicResolved.source || null,
         },
         autoplay: false,
         gallery,
@@ -609,9 +613,10 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
     const structureKey = useMemo(
         () => JSON.stringify([
             templateKey, invite?.previewPhotoUrl,
-            invite?.gallery, invite?.musicUrl, enableRsvp, inviteId, lang, mode,
+            invite?.gallery, invite?.musicUrl, invite?.musicKey, invite?.musicSource,
+            enableRsvp, inviteId, lang, mode,
         ]),
-        [templateKey, invite?.previewPhotoUrl, invite?.gallery, invite?.musicUrl, enableRsvp, inviteId, lang, mode]
+        [templateKey, invite?.previewPhotoUrl, invite?.gallery, invite?.musicUrl, invite?.musicKey, invite?.musicSource, enableRsvp, inviteId, lang, mode]
     );
     const initialDoc = useMemo(
         () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang, mode }),

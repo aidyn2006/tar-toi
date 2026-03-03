@@ -22,5 +22,7 @@ public record InviteResponseDTO(
     String template,
     List<String> gallery,
     String musicUrl,
-    String musicTitle
+    String musicTitle,
+    String musicKey,
+    String musicSource
 ) {}

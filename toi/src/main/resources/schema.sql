@@ -23,6 +23,8 @@ CREATE TABLE invites (
     event_date TIMESTAMP,
     music_url VARCHAR(500),
     music_title VARCHAR(150),
+    music_key VARCHAR(100),
+    music_source VARCHAR(20),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     version BIGINT,

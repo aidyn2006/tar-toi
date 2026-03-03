@@ -46,6 +46,12 @@ public record CreateInviteRequest(
     /** Optional music title/label */
     String musicTitle,
 
+    /** Built-in music key (if system track is selected) */
+    String musicKey,
+
+    /** Music source: SYSTEM | UPLOAD */
+    String musicSource,
+
     /** Max number of guests (0 = unlimited) */
     Integer maxGuests
 ) {}
