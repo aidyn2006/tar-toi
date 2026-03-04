@@ -504,7 +504,7 @@
             <section class="card reveal">
                 <p class="invite-text" id="eventText">Құрметті қауым!</p>
                 <div style="height:1px; background:var(--gold); margin:15px auto; width:40px; opacity:0.5;"></div>
-                <p class="invite-text">Көркіне ақылы сай қызымыз <strong>Аружанның</strong> қияға қонуына арналған
+                <p class="invite-text">Көркіне ақылы сай қызымыз <strong id="heroNamesLine">Аружанның</strong> қияға қонуына арналған
                     салтанатты кешіміздің куәсі болыңыздар.</p>
             </section>
 
@@ -602,6 +602,8 @@
             const mainName = (CONFIG.names?.bride || 'Қонақ').trim();
 
             document.getElementById('hBride').textContent = mainName;
+            const nl = document.getElementById('heroNamesLine');
+            if (nl) nl.textContent = mainName;
             document.getElementById('hCeremony').textContent = `${dd} ${MO_KK[mm - 1]} ${yy}`;
             document.getElementById('eventText').textContent = CONFIG.description;
             document.getElementById('ownersBigName').textContent = CONFIG.toiOwners;

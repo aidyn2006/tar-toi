@@ -526,6 +526,8 @@
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const mainName = (CONFIG.names?.bride || 'ҚОНАҚ').toUpperCase();
             document.getElementById('hBride').textContent = mainName;
+            const nl = document.getElementById('heroNamesLine');
+            if (nl) nl.textContent = mainName;
             document.getElementById('eventText').textContent = CONFIG.description;
             document.getElementById('ownersBigName').textContent = CONFIG.toiOwners;
             document.getElementById('locDateTimeVal').textContent = `${dd}.${mm}.${yy} | ${CONFIG.hour}`;
