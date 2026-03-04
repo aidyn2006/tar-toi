@@ -609,6 +609,18 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
 const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false, mode = 'edit' }) => {
     const iframeRef = useRef(null);
     const templateKey = useMemo(() => normalizeTemplateKey(invite?.template), [invite?.template]);
+    const isEmptyInvite = useMemo(() => {
+        if (!invite) return true;
+        const hasMain =
+            (invite.title && invite.title.trim()) ||
+            (invite.topic1 && invite.topic1.trim()) ||
+            (invite.topic2 && invite.topic2.trim()) ||
+            (invite.description && invite.description.trim()) ||
+            invite.eventDate ||
+            (invite.previewPhotoUrl && invite.previewPhotoUrl.trim()) ||
+            (Array.isArray(invite.gallery) && invite.gallery.length > 0);
+        return !hasMain;
+    }, [invite]);
     // Rebuild full HTML when template, photo, gallery, or mode changes
     const structureKey = useMemo(
         () => JSON.stringify([
@@ -643,6 +655,37 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         prevHashRef.current = '';
         iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
     };
+
+    if (mode === 'edit' && isEmptyInvite) {
+        return (
+            <div
+                className={className}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    minHeight: mobileZoom ? '70vh' : '100%',
+                    borderRadius: '16px',
+                    border: '1px dashed #d7e9df',
+                    background: '#f7fff9',
+                    color: '#173f33',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    padding: '28px',
+                    boxSizing: 'border-box',
+                    ...style,
+                }}
+            >
+                <div style={{ maxWidth: '360px', lineHeight: 1.4, fontFamily: 'Manrope, sans-serif' }}>
+                    <div style={{ fontWeight: 800, marginBottom: '6px' }}>Алдын ала қарау</div>
+                    <div style={{ fontSize: '14px', color: '#5f7f73' }}>
+                        Шаблон осы жерде көрсетіледі. Фото, атаулар немесе күнді қосыңыз — превью бірден жаңартылады.
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <iframe

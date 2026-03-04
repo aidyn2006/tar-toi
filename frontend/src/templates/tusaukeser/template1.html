@@ -8,11 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette — мягкий детский + казахский */
-            --sage:       #7a9e7e;   /* зелёный — здоровье */
+            --sage:       #7a9e7e;
             --sage-dark:  #4e7252;
             --sage-light: #a8c4ab;
-            --rose:       #c97b7b;   /* красный — достаток */
+            --rose:       #c97b7b;
             --rose-light: #e8b4b4;
             --cream:      #fdf8f2;
             --ivory:      #f5ede0;
@@ -20,8 +19,6 @@
             --gold-light: #e8d5b7;
             --text:       #2c2416;
             --text-soft:  #6b5a4a;
-
-            /* frame aliases */
             --wine:       var(--sage-dark);
             --wine-dark:  #2e4d31;
             --wine-light: var(--sage);
@@ -32,24 +29,32 @@
 
         body {
             font-family: 'Lora', serif;
-            background: var(--cream);
+            background: #c8bfb0;
             color: var(--text);
+            display: flex;
+            justify-content: center;
         }
 
-        /* ════════════════════════════
-           BORDER STRIPS — нити тұсау
-           красный · белый · зелёный
-        ════════════════════════════ */
+        /* ── MOBILE FRAME ── */
+        .page-root-wrap {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: var(--cream);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* BORDER STRIPS — нити тұсау */
         .border-strip {
             pointer-events: none;
-            position: fixed;
+            position: absolute;
             top: 0; z-index: 9999;
             width: 8px; height: 100%;
         }
         .border-strip.left  { left: 0; }
         .border-strip.right { right: 0; transform: scaleX(-1); }
 
-        /* три вертикальных нити */
         .border-strip::before,
         .border-strip::after,
         .border-strip .trd {
@@ -60,20 +65,15 @@
         .border-strip .trd    { left: 3px; background: repeating-linear-gradient(180deg, #fff    0 6px, transparent 6px 10px); }
         .border-strip::after  { left: 5px; background: repeating-linear-gradient(180deg, var(--sage) 0 6px, transparent 6px 10px); }
 
-        /* ════════════════════════════
-           PAGE
-        ════════════════════════════ */
+        /* PAGE */
         .page {
-            max-width: 640px;
-            margin: 0 auto;
+            width: 100%;
             padding: 0 20px;
         }
 
         section { margin-bottom: 0; }
 
-        /* ════════════════════════════
-           ① HERO
-        ════════════════════════════ */
+        /* ① HERO */
         .hero { position: relative; }
 
         .hero-photo-placeholder,
@@ -98,7 +98,6 @@
             color: rgba(255,255,255,0.28); text-transform: uppercase;
         }
 
-        /* АҚ ЖОЛ — белая полоса внизу hero */
         .ak-zhol {
             position: absolute;
             bottom: 0; left: 0; right: 0;
@@ -108,7 +107,6 @@
             pointer-events: none;
         }
 
-        /* music btn */
         .music-btn {
             position: absolute;
             bottom: 0; right: 28px;
@@ -137,7 +135,6 @@
             100%{ opacity: 0;   transform: scale(1.55); }
         }
 
-        /* child's name over hero */
         .hero-name-wrap {
             text-align: center;
             padding: 32px 24px 20px;
@@ -164,9 +161,7 @@
             font-style: italic;
         }
 
-        /* ════════════════════════════
-           ② ABOUT — приглашение
-        ════════════════════════════ */
+        /* ② ABOUT */
         .about {
             background: var(--sage-dark);
             padding: 64px 36px 56px;
@@ -220,9 +215,7 @@
             position: relative;
         }
 
-        /* ════════════════════════════
-           DATE / CALENDAR
-        ════════════════════════════ */
+        /* DATE / CALENDAR */
         .date-block { margin: 48px 0 0; }
 
         .date-label {
@@ -241,7 +234,6 @@
             position: relative;
         }
 
-        /* сердечко → пинетки */
         .cal-icon {
             font-size: 28px;
             position: absolute; top: 14px; right: 16px;
@@ -297,7 +289,6 @@
             letter-spacing: 5px; margin-top: 20px;
         }
 
-        /* countdown */
         .countdown-row {
             display: flex; gap: 8px;
             margin-top: 28px; position: relative;
@@ -322,9 +313,7 @@
 
         #ownersBlock { display: none; }
 
-        /* ════════════════════════════
-           ③ OWNERS / PARENTS CARD
-        ════════════════════════════ */
+        /* ③ OWNERS */
         .owners-section {
             background: var(--sage-dark);
             border-radius: 0 0 80px 80px;
@@ -332,7 +321,6 @@
             text-align: center;
         }
 
-        /* нити-декор */
         .thread-decor {
             display: flex; justify-content: center;
             gap: 6px; margin: 0 auto 20px;
@@ -359,9 +347,7 @@
             letter-spacing: 3px; line-height: 1.2;
         }
 
-        /* ════════════════════════════
-           ③б ПРЕДМЕТЫ СУДЬБЫ
-        ════════════════════════════ */
+        /* FATE SECTION */
         .fate-section {
             background: var(--ivory);
             padding: 64px 36px 56px;
@@ -403,9 +389,7 @@
             font-size: 11px; color: var(--text-soft); opacity: 0.7;
         }
 
-        /* ════════════════════════════
-           ④ LOCATION
-        ════════════════════════════ */
+        /* ④ LOCATION */
         .location {
             background: var(--cream);
             padding: 64px 36px 56px;
@@ -444,9 +428,7 @@
         .btn:hover { background: var(--sage); }
         .btn img { width: 20px; height: 20px; }
 
-        /* ════════════════════════════
-           ⑤ GALLERY
-        ════════════════════════════ */
+        /* ⑤ GALLERY */
         .gallery {
             background: var(--sage-dark);
             padding: 64px 0 60px;
@@ -501,9 +483,7 @@
         }
         .g-dot.lit { opacity: 1; transform: scale(1.45); }
 
-        /* ════════════════════════════
-           ⑥ RSVP
-        ════════════════════════════ */
+        /* ⑥ RSVP */
         .rsvp { padding: 80px 36px 100px; background: var(--cream); text-align: center; }
         .rsvp-tag {
             font-family: 'Cinzel', serif;
@@ -578,7 +558,6 @@
             font-size: 22px; color: var(--sage-dark); letter-spacing: 1px;
         }
 
-        /* footer */
         .site-footer {
             text-align: center; padding: 18px;
             border-top: 1px solid rgba(122,158,126,0.1);
@@ -586,216 +565,199 @@
         }
         .site-footer a { color: var(--sage-dark); text-decoration: none; }
 
-        /* reveal */
         .rv { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .rv.in { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
 
-<!-- нити тұсау — левый и правый борд -->
-<div class="border-strip left"  aria-hidden="true"><div class="trd"></div></div>
-<div class="border-strip right" aria-hidden="true"><div class="trd"></div></div>
+<div class="page-root-wrap">
 
-<script>
-    const CONFIG = {
-        names:       { child: "Арман" },           /* имя ребёнка */
-        day:         "21-03-2026",
-        hour:        "15:00",
-        location:    "Astana, Farhi Hall",
-        locationUrl: "https://2gis.kz/astana",
-        music:       { title: "Жастық", artist: "", url: "" },
-        gallery:     [],
-        description: "Құрметті ағайын-туыс, құда-жекжат, дос-жаран!",
-        toiOwners:   "Сырымбетовтар әулеті",
-    };
-</script>
+    <!-- нити тұсау — левый и правый борд -->
+    <div class="border-strip left"  aria-hidden="true"><div class="trd"></div></div>
+    <div class="border-strip right" aria-hidden="true"><div class="trd"></div></div>
 
-<div class="page">
+    <script>
+        const CONFIG = {
+            names:       { child: "Арман" },
+            day:         "21-03-2026",
+            hour:        "15:00",
+            location:    "Astana, Farhi Hall",
+            locationUrl: "https://2gis.kz/astana",
+            music:       { title: "Жастық", artist: "", url: "" },
+            gallery:     [],
+            description: "Құрметті ағайын-туыс, құда-жекжат, дос-жаран!",
+            toiOwners:   "Сырымбетовтар әулеті",
+        };
+    </script>
 
-    <!-- ① HERO -->
-    <section class="hero">
-        <div class="hero-photo" id="heroPhoto">
-            <div class="hero-photo-placeholder">
-                <div class="ph-icon">🌱</div>
-                <span>Баланың фотосы</span>
-            </div>
-        </div>
-        <div class="ak-zhol" aria-hidden="true"></div>
+    <div class="page">
 
-        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-            <svg id="mIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            <audio id="audioEl" style="display:none"></audio>
-        </button>
-
-        <!-- имя ребёнка под фото, на cream -->
-        <div class="hero-name-wrap">
-            <p class="hero-name-label">Тұсаукесер той</p>
-            <h1 id="heroNames">—</h1>
-            <p class="hero-name-sub">алғашқы қадам · первый шаг</p>
-        </div>
-    </section>
-
-    <!-- ② ABOUT -->
-    <section class="about rv">
-        <p class="about-eyebrow" id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
-
-        <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="wv" x="0" y="0" width="20" height="14" patternUnits="userSpaceOnUse">
-                    <path d="M0 7 Q5 1 10 7 Q15 13 20 7" fill="none" stroke="rgba(201,169,110,0.35)" stroke-width="1.3"/>
-                </pattern>
-            </defs>
-            <rect width="200" height="14" fill="url(#wv)"/>
-        </svg>
-
-        <p class="invite-body">Сіздерді сүйікті сәбиіміздің:</p>
-        <h1 id="heroNamesLine">—</h1>
-        <p class="invite-footer">Тұсаукесер тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
-
-        <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
-            <use href="#wv"/>
-        </svg>
-
-        <!-- дата + календарь -->
-        <div class="date-block">
-            <p class="date-label">Тойымыз уақыты:</p>
-            <div class="calendar-wrap">
-                <span class="cal-icon">🐣</span>
-                <div class="cal-month-title" id="calMo"></div>
-                <div class="cal-grid-head">
-                    <span>Дс</span><span>Сс</span><span>Ср</span>
-                    <span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+        <!-- ① HERO -->
+        <section class="hero">
+            <div class="hero-photo" id="heroPhoto">
+                <div class="hero-photo-placeholder">
+                    <div class="ph-icon">🌱</div>
+                    <span>Баланың фотосы</span>
                 </div>
-                <div class="cal-grid" id="calGrid"></div>
             </div>
-            <p id="heroDateLine" class="time-only"></p>
-        </div>
+            <div class="ak-zhol" aria-hidden="true"></div>
 
-        <!-- countdown -->
-        <div class="countdown-row">
-            <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">Күн</span></div>
-            <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">Сағат</span></div>
-            <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">Минут</span></div>
-            <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">Секунд</span></div>
-        </div>
-
-        <div id="ownersBlock" style="display:none;"></div>
-    </section>
-
-    <!-- ③ OWNERS / PARENTS -->
-    <section class="owners-section rv">
-        <div class="thread-decor">
-            <span class="tr"></span><span class="tw"></span><span class="tg"></span>
-            <span class="tr"></span><span class="tw"></span><span class="tg"></span>
-        </div>
-        <p class="owners-label-txt">Той иелері</p>
-        <p class="owners-name-txt" id="ownersBigName">—</p>
-        <div class="thread-decor" style="margin-top:20px; margin-bottom:0;">
-            <span class="tg"></span><span class="tw"></span><span class="tr"></span>
-            <span class="tg"></span><span class="tw"></span><span class="tr"></span>
-        </div>
-    </section>
-
-    <!-- ③б ПРЕДМЕТЫ СУДЬБЫ — ақ жол -->
-    <section class="fate-section rv">
-        <p class="fate-eyebrow">Ақ жол</p>
-        <p class="fate-title">Баланың алдына<br>не қоясыз?</p>
-        <div class="fate-items">
-            <div class="fate-item">
-                <span class="fi-icon">📚</span>
-                <span class="fi-name">Кітап</span>
-                <span class="fi-desc">ғалым болады</span>
-            </div>
-            <div class="fate-item">
-                <span class="fi-icon">💰</span>
-                <span class="fi-name">Ақша</span>
-                <span class="fi-desc">бай болады</span>
-            </div>
-            <div class="fate-item">
-                <span class="fi-icon">🎵</span>
-                <span class="fi-name">Домбыра</span>
-                <span class="fi-desc">өнерлі болады</span>
-            </div>
-            <div class="fate-item">
-                <span class="fi-icon">🍎</span>
-                <span class="fi-name">Алма</span>
-                <span class="fi-desc">тоқ болады</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- ④ LOCATION -->
-    <section class="location rv">
-        <h3>Мекенжай</h3>
-        <div class="loc-divider"></div>
-        <p id="locationName"></p>
-        <div id="mapBtnWrap" style="display:none;">
-            <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">
-                <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2gis">
-                Карта арқылы ашу
-            </a>
-        </div>
-    </section>
-
-    <!-- ⑤ GALLERY -->
-    <section class="gallery rv">
-        <h3>Біздің сәттер</h3>
-        <div class="gallery-viewport">
-            <div id="gallerySlides"></div>
-        </div>
-        <div class="gallery-controls" id="galleryControls" style="display:none">
-            <button class="g-arrow" onclick="goPrev()">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+                <svg id="mIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <audio id="audioEl" style="display:none"></audio>
             </button>
-            <div class="g-dots" id="gDots"></div>
-            <button class="g-arrow" onclick="goNext()">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-        </div>
-    </section>
 
-    <!-- ⑥ RSVP -->
-    <section class="rsvp">
-        <span class="rsvp-tag">Растау</span>
-        <h3>Ваш ответ</h3>
-        <div class="form-wrap">
-            <div id="rsvpForm">
-                <div class="form-group">
-                    <label class="f-label">Есіміңіз</label>
-                    <input id="rName" placeholder="Аты-жөніңіз">
-                </div>
-                <div class="form-group">
-                    <label class="f-label">Телефон</label>
-                    <input id="rPhone" placeholder="+7 (___) ___-__-__">
-                </div>
-                <div class="form-group">
-                    <label class="f-label">Қанша адам</label>
-                    <div class="guest-counter">
-                        <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
-                        <input id="rGuests" type="number" min="1" value="1" readonly>
-                        <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
+            <div class="hero-name-wrap">
+                <p class="hero-name-label">Тұсаукесер той</p>
+                <h1 id="heroNames">—</h1>
+                <p class="hero-name-sub">алғашқы қадам · первый шаг</p>
+            </div>
+        </section>
+
+        <!-- ② ABOUT -->
+        <section class="about rv">
+            <p class="about-eyebrow" id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+
+            <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="wv" x="0" y="0" width="20" height="14" patternUnits="userSpaceOnUse">
+                        <path d="M0 7 Q5 1 10 7 Q15 13 20 7" fill="none" stroke="rgba(201,169,110,0.35)" stroke-width="1.3"/>
+                    </pattern>
+                </defs>
+                <rect width="200" height="14" fill="url(#wv)"/>
+            </svg>
+
+            <p class="invite-body">Сіздерді сүйікті сәбиіміздің:</p>
+            <h1 id="heroNamesLine">—</h1>
+            <p class="invite-footer">Тұсаукесер тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
+
+            <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
+                <use href="#wv"/>
+            </svg>
+
+            <div class="date-block">
+                <p class="date-label">Тойымыз уақыты:</p>
+                <div class="calendar-wrap">
+                    <span class="cal-icon">🐣</span>
+                    <div class="cal-month-title" id="calMo"></div>
+                    <div class="cal-grid-head">
+                        <span>Дс</span><span>Сс</span><span>Ср</span>
+                        <span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
                     </div>
-                    <button class="guest-opt selected" data-val="1" style="display:none"></button>
+                    <div class="cal-grid" id="calGrid"></div>
                 </div>
-                <div class="form-group">
-                    <label class="f-label">Ескерту</label>
-                    <textarea id="rNote" placeholder="Ерекше тілек..."></textarea>
+                <p id="heroDateLine" class="time-only"></p>
+            </div>
+
+            <div class="countdown-row">
+                <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">Күн</span></div>
+                <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">Сағат</span></div>
+                <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">Минут</span></div>
+                <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">Секунд</span></div>
+            </div>
+
+            <div id="ownersBlock" style="display:none;"></div>
+        </section>
+
+        <!-- ③ OWNERS -->
+        <section class="owners-section rv">
+            <div class="thread-decor">
+                <span class="tr"></span><span class="tw"></span><span class="tg"></span>
+                <span class="tr"></span><span class="tw"></span><span class="tg"></span>
+            </div>
+            <p class="owners-label-txt">Той иелері</p>
+            <p class="owners-name-txt" id="ownersBigName">—</p>
+            <div class="thread-decor" style="margin-top:20px; margin-bottom:0;">
+                <span class="tg"></span><span class="tw"></span><span class="tr"></span>
+                <span class="tg"></span><span class="tw"></span><span class="tr"></span>
+            </div>
+        </section>
+
+        <!-- АҚ ЖОЛ -->
+        <section class="fate-section rv">
+            <p class="fate-eyebrow">Ақ жол</p>
+            <p class="fate-title">Баланың алдына<br>не қоясыз?</p>
+            <div class="fate-items">
+                <div class="fate-item"><span class="fi-icon">📚</span><span class="fi-name">Кітап</span><span class="fi-desc">ғалым болады</span></div>
+                <div class="fate-item"><span class="fi-icon">💰</span><span class="fi-name">Ақша</span><span class="fi-desc">бай болады</span></div>
+                <div class="fate-item"><span class="fi-icon">🎵</span><span class="fi-name">Домбыра</span><span class="fi-desc">өнерлі болады</span></div>
+                <div class="fate-item"><span class="fi-icon">🍎</span><span class="fi-name">Алма</span><span class="fi-desc">тоқ болады</span></div>
+            </div>
+        </section>
+
+        <!-- ④ LOCATION -->
+        <section class="location rv">
+            <h3>Мекенжай</h3>
+            <div class="loc-divider"></div>
+            <p id="locationName"></p>
+            <div id="mapBtnWrap" style="display:none;">
+                <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">
+                    <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2gis">
+                    Карта арқылы ашу
+                </a>
+            </div>
+        </section>
+
+        <!-- ⑤ GALLERY -->
+        <section class="gallery rv">
+            <h3>Біздің сәттер</h3>
+            <div class="gallery-viewport">
+                <div id="gallerySlides"></div>
+            </div>
+            <div class="gallery-controls" id="galleryControls" style="display:none">
+                <button class="g-arrow" onclick="goPrev()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <div class="g-dots" id="gDots"></div>
+                <button class="g-arrow" onclick="goNext()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- ⑥ RSVP -->
+        <section class="rsvp">
+            <span class="rsvp-tag">Растау</span>
+            <h3>Ваш ответ</h3>
+            <div class="form-wrap">
+                <div id="rsvpForm">
+                    <div class="form-group">
+                        <label class="f-label">Есіміңіз</label>
+                        <input id="rName" placeholder="Аты-жөніңіз">
+                    </div>
+                    <div class="form-group">
+                        <label class="f-label">Телефон</label>
+                        <input id="rPhone" placeholder="+7 (___) ___-__-__">
+                    </div>
+                    <div class="form-group">
+                        <label class="f-label">Қанша адам</label>
+                        <div class="guest-counter">
+                            <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
+                            <input id="rGuests" type="number" min="1" value="1" readonly>
+                            <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="f-label">Ескерту</label>
+                        <textarea id="rNote" placeholder="Ерекше тілек..."></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
                 </div>
-                <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
+                <div id="successMsg">
+                    <span class="s-icon">✦</span>
+                    <p>Рақмет! Сізді күтеміз.</p>
+                </div>
             </div>
-            <div id="successMsg">
-                <span class="s-icon">✦</span>
-                <p>Рақмет! Сізді күтеміз.</p>
-            </div>
+        </section>
+
+        <div class="site-footer">
+            Шын жүректен <a href="https://shaqyrtu.kz" target="_blank">shaqyrtu.kz</a> арқылы жасалған 🇰🇿
         </div>
-    </section>
 
-    <div class="site-footer">
-        Шын жүректен <a href="https://shaqyrtu.kz" target="_blank">shaqyrtu.kz</a> арқылы жасалған 🇰🇿
-    </div>
+    </div><!-- /page -->
 
-</div><!-- /page -->
+</div><!-- .page-root-wrap -->
 
 <script>
     (function applyConfig() {
@@ -804,22 +766,18 @@
         const MO_KK = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым",
             "Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
 
-        /* child name — CONFIG.names.child or .bride fallback */
         const childName = CONFIG.names.child || CONFIG.names.bride || '—';
         document.title = `${childName} — Тұсаукесер`;
-        document.getElementById('heroNames').textContent    = childName;
+        document.getElementById('heroNames').textContent = childName;
         const nl = document.getElementById('heroNamesLine');
         if (nl) nl.textContent = childName;
 
-        /* description → eyebrow */
         const desc = document.getElementById('eventText');
         if (desc) desc.textContent = CONFIG.description || 'Құрметті ағайын-туыс, құда-жекжат, дос-жаран!';
 
-        /* time */
         const dtLine = document.getElementById('heroDateLine');
         if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
 
-        /* calendar */
         const calMo   = document.getElementById('calMo');
         const calGrid = document.getElementById('calGrid');
         if (calMo) calMo.textContent = `${MO_KK[mm-1]} ${yy}`;
@@ -847,7 +805,6 @@
             }
         }
 
-        /* countdown */
         (function() {
             const target = new Date(yy, mm-1, dd, +hh, +mi, 0);
             const pad = n => String(n).padStart(2,'0');
@@ -861,22 +818,18 @@
             tick(); setInterval(tick, 1000);
         })();
 
-        /* owners */
         const ob = document.getElementById('ownersBigName');
         if (ob && CONFIG.toiOwners) ob.textContent = CONFIG.toiOwners;
 
-        /* location */
         const loc = document.getElementById('locationName');
         if (loc) loc.textContent = CONFIG.location || '';
         const mapWrap = document.getElementById('mapBtnWrap');
         const mapBtn  = document.getElementById('mapBtn');
         if (mapBtn && CONFIG.locationUrl) {
             mapBtn.href = CONFIG.locationUrl;
-            mapBtn.style.pointerEvents = 'auto';
             if (mapWrap) mapWrap.style.display = 'block';
         }
 
-        /* gallery */
         const slides = document.getElementById('gallerySlides');
         if (slides) {
             slides.innerHTML = '';
@@ -906,26 +859,6 @@
             }
         }
 
-        /* auto scroll */
-        if (window.self === window.top) {
-            setTimeout(() => {
-                const pageH = document.body.scrollHeight - window.innerHeight;
-                const dur = 20000; const t0 = performance.now();
-                function tick(now) {
-                    if (window._us) return;
-                    const p = Math.min((now-t0)/dur,1);
-                    const e = p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
-                    window.scrollTo(0, pageH*e);
-                    if(p<1) requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-                ['touchstart','wheel','keydown'].forEach(ev=>
-                    window.addEventListener(ev,()=>{window._us=true;},{once:true,passive:true})
-                );
-            }, 1400);
-        }
-
-        /* auto music */
         (() => {
             const url = CONFIG.music && CONFIG.music.url;
             if (!url) return;
@@ -939,7 +872,6 @@
         })();
     })();
 
-    /* gallery */
     let gIdx=0, galleryInterval=null;
     function startGalleryAuto(){ if(galleryInterval) clearInterval(galleryInterval); galleryInterval=setInterval(goNext,4000); }
     function updateGallery(){
@@ -957,7 +889,6 @@
     function goPrev(){ const n=document.getElementById('gallerySlides').querySelectorAll('img').length; if(n){gIdx=(gIdx-1+n)%n; updateGallery();} }
     window.addEventListener('load',()=>{ if(document.getElementById('gallerySlides').querySelectorAll('img').length) startGalleryAuto(); });
 
-    /* music */
     let playing=false;
     function toggleMusic(){
         const audio=document.getElementById('audioEl');
@@ -967,7 +898,7 @@
             if(url){audio.src=url;}
             else{
                 const inp=document.createElement('input'); inp.type='file'; inp.accept='audio/*';
-                inp.onchange=e=>{ const f=e.target.files[0]; if(!f) return; audio.src=URL.createObjectURL(f); audio.addEventListener('ended',()=>{playing=false;updateMIcon();btn.classList.remove('playing');}); doPlay(audio,btn); };
+                inp.onchange=e=>{ const f=e.target.files[0]; if(!f) return; audio.src=URL.createObjectURL(f); doPlay(audio,btn); };
                 inp.click(); return;
             }
         }
@@ -982,10 +913,8 @@
             :'<path d="M8 5v14l11-7z"/>';
     }
 
-    /* guests */
-    function changeGuests(d){ const inp=document.getElementById('rGuests'); const v=Math.max(1,Math.min(20,parseInt(inp.value||1)+d)); inp.value=v; const h=document.querySelector('.guest-opt'); if(h) h.setAttribute('data-val',v); }
+    function changeGuests(d){ const inp=document.getElementById('rGuests'); inp.value=Math.max(1,Math.min(20,parseInt(inp.value||1)+d)); }
 
-    /* rsvp */
     window.submitRSVP=()=>{
         const n=document.getElementById('rName').value.trim();
         const p=document.getElementById('rPhone').value.trim();
@@ -995,7 +924,6 @@
         document.getElementById('successMsg').style.display='block';
     };
 
-    /* scroll reveal */
     const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.08});
     document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 </script>
