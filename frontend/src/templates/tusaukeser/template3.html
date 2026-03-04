@@ -1,0 +1,793 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Тұсаукесер тойы · Айлин</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --mint-dark: #1e3d37;
+            --mint-mid: #345c53;
+            --mint-light: #e8f3f1;
+            --gold: #bfa06b;
+            --gold-light: #e0ccad;
+            --gold-dk: #8e6e3c;
+            --rose-gold: #d9a79a;
+            --cream: #fdfbf7;
+            --ivory: #fcfaf6;
+            --text-dark: #1a2622;
+            --text-muted: #6b7e79;
+            --serif: 'Marcellus', serif;
+            --sans: 'Montserrat', sans-serif;
+            --border: rgba(191, 160, 107, 0.3);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #d1d9d7;
+            font-family: var(--sans);
+            font-weight: 300;
+            color: var(--text-dark);
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-root {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: var(--cream);
+            overflow: hidden;
+            padding-bottom: 60px;
+        }
+
+        .page-root::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 10% 10%, rgba(52, 92, 83, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(191, 160, 107, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            padding: 40px 24px 20px;
+            text-align: center;
+        }
+
+        .header-top-oyu {
+            width: 80px;
+            height: 40px;
+            margin: 0 auto 16px;
+            background: var(--gold);
+            mask-image: url('https://shaqyrtu.kz/template4/3.svg');
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-image: url('https://shaqyrtu.kz/template4/3.svg');
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+
+        .header-eyebrow {
+            font-size: 11px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .header-title {
+            font-family: var(--serif);
+            font-size: clamp(28px, 8vw, 36px);
+            color: var(--mint-dark);
+            margin-bottom: 24px;
+        }
+
+        .hero-arch {
+            position: relative;
+            width: 220px;
+            height: 320px;
+            margin: 0 auto 30px;
+            border-radius: 110px 110px 0 0;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+            box-shadow: 0 15px 35px rgba(30, 61, 55, 0.15);
+        }
+
+        .hero-arch img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-arch-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, var(--mint-light), var(--cream));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-arch-decor {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 100px;
+            height: 100px;
+            opacity: 0.8;
+        }
+
+        .name-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .name-main {
+            font-family: var(--serif);
+            font-size: clamp(48px, 12vw, 64px);
+            color: var(--mint-dark);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .name-sub {
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 400;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            margin: 0 24px 24px;
+            padding: 32px 24px;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 4px 4px 0px var(--mint-light);
+        }
+
+        .label {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .wish-card {
+            background: var(--mint-dark);
+            color: var(--cream);
+            box-shadow: 4px 4px 0px var(--gold);
+        }
+
+        .wish-text {
+            font-family: var(--serif);
+            font-size: 17px;
+            line-height: 1.8;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .wish-ornament {
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            margin: 16px auto;
+        }
+
+        /* Calendar */
+        #calMo {
+            font-family: var(--serif);
+            font-size: 16px;
+            color: var(--mint-dark);
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        #calGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        #calGrid div {
+            text-align: center;
+            padding: 8px 2px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        #calGrid div.today {
+            background: var(--gold);
+            color: #fff;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        #calGrid div.other {
+            opacity: 0.15;
+        }
+
+        .cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-bottom: 1px solid var(--mint-light);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .cal-weekdays span {
+            text-align: center;
+            font-size: 10px;
+            color: var(--mint-mid);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cd-box {
+            flex: 1;
+            max-width: 72px;
+            text-align: center;
+            padding: 12px 6px;
+            background: var(--mint-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .cd-num {
+            display: block;
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--mint-dark);
+            line-height: 1;
+        }
+
+        .cd-label {
+            display: block;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-top: 4px;
+        }
+
+        /* Gallery */
+        #gallerySlides {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 6px 4px 10px;
+        }
+
+        #gallerySlides img {
+            flex: 0 0 82%;
+            border-radius: 12px;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 4/5;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+            scroll-snap-align: center;
+        }
+
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .gallery-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--mint-light);
+            transition: 0.2s;
+        }
+
+        .gallery-dots .dot.active {
+            background: var(--gold);
+            transform: scale(1.1);
+        }
+
+        .info-list {
+            margin-top: 24px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mint-dark);
+            flex-shrink: 0;
+        }
+
+        .info-content .info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 2px;
+        }
+
+        .info-content .info-val {
+            font-family: var(--serif);
+            font-size: 18px;
+            color: var(--mint-dark);
+        }
+
+        .map-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--mint-dark);
+            color: var(--gold-light);
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .map-btn:hover {
+            background: var(--mint-mid);
+        }
+
+        /* RSVP */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--mint-light);
+            background: var(--cream);
+            color: var(--mint-dark);
+            font-family: var(--sans);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--gold);
+        }
+
+        .guest-counter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            border: 1px solid var(--mint-light);
+            margin-bottom: 15px;
+        }
+
+        .counter-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--gold);
+            background: none;
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            background: var(--gold);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--mint-mid);
+        }
+
+        /* Parents Grid */
+        .parents-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            align-items: start;
+            margin-top: 16px;
+        }
+
+        .parent-block {
+            text-align: center;
+            padding: 0 8px;
+        }
+
+        .parent-role {
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .parent-name {
+            font-family: var(--serif);
+            font-size: 16px;
+            font-weight: 500;
+            font-style: italic;
+            color: var(--mint-dark);
+            line-height: 1.4;
+        }
+
+        .parent-family {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .parents-sep {
+            width: 1px;
+            background: linear-gradient(180deg, transparent, var(--gold), transparent);
+            align-self: stretch;
+            margin: 4px 0;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 0.8s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer {
+            padding: 40px 24px;
+            text-align: center;
+            border-top: 1px solid var(--mint-light);
+            margin-top: 40px;
+        }
+
+        .footer-logo {
+            font-family: var(--serif);
+            font-size: 24px;
+            color: var(--mint-dark);
+            margin-bottom: 10px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-root">
+        <div class="content">
+
+            <header class="header reveal">
+                <div class="header-top-oyu"></div>
+                <div class="header-eyebrow">Тойға шақыру</div>
+                <h1 class="header-title">Тұсаукесер тойы</h1>
+            </header>
+
+            <div class="hero-arch reveal">
+                <div id="heroPhoto" class="hero-arch-placeholder">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                        opacity="0.3">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+                <img src="https://shaqyrtu.kz/template4/ornament.png" class="hero-arch-decor" alt=""
+                    onerror="this.style.display='none'">
+            </div>
+
+            <div class="name-section reveal">
+                <div class="name-main" id="heroNamesLine">Айлин</div>
+                <div class="name-sub" id="heroAge">1 жас</div>
+            </div>
+
+            <!-- WISH CARD -->
+            <section class="card wish-card reveal">
+                <div class="wish-text">
+                    Тәй-тәй басқан бүлдіршіннің тұсауы кесіліп, болашағына жол ашылсын! Ешқашан сүрінбесін, дұшпан
+                    көзіне ілінбесін. Қадамы құтты, өмірі нұрлы болсын, басына бақ қонып, Қыдыр қолдасын.
+                </div>
+                <div class="wish-ornament"></div>
+            </section>
+
+            <!-- INVITATION TEXT -->
+            <section class="card reveal" style="text-align: center;">
+                <div class="label">Құрметті қонақтар!</div>
+                <p class="wish-text" id="eventText" style="color: var(--text-dark); font-size: 16px;">
+                    Сіздерді біздің қуанышымыз — <span id="heroNamesInline"
+                        style="color: var(--gold); font-weight: 600;">Айлиннің</span> тұсаукесер тойына арналған
+                    салтанатты дастарханымыздың қадірлі қонағы болуға шақырамыз!
+                </p>
+            </section>
+
+            <!-- OWNERS -->
+            <section class="card reveal" id="ownersCardWrap">
+                <div class="label">Той иелері</div>
+                <div class="parents-grid" id="parentsGrid" style="display:none;"></div>
+                <div style="margin-top:14px; text-align:center;">
+                    <div id="ownersBigName"
+                        style="font-family: var(--serif); font-size: 18px; color: var(--mint-dark); font-style: italic;">
+                        Сейітовтар әулеті</div>
+                </div>
+            </section>
+
+            <!-- DETAILS -->
+            <section class="card reveal">
+                <div class="label">Той бағдарламасы</div>
+                <div class="calendar-wrap">
+                    <div class="cal-weekdays">
+                        <span>Дс</span><span>Сс</span><span>Ср</span><span>Бс</span><span>Жм</span><span>Сн</span><span>Жк</span>
+                    </div>
+                    <div id="calMo"></div>
+                    <div id="calGrid"></div>
+                    <p id="heroDateLine"
+                        style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:8px;"></p>
+                </div>
+
+                <div class="info-list">
+                    <div class="info-item">
+                        <div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg></div>
+                        <div class="info-content">
+                            <div class="info-label">Күні</div>
+                            <div class="info-val" id="evDate">21 Наурыз, 2026</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg></div>
+                        <div class="info-content">
+                            <div class="info-label">Уақыты</div>
+                            <div class="info-val">18:00</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg></div>
+                        <div class="info-content">
+                            <div class="info-label">Мекенжайы</div>
+                            <div class="info-val" id="locationName">Astana, Farhi Hall</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:30px; text-align:center;">
+                    <div class="label" style="font-size: 9px; margin-bottom: 8px;">Тойға дейін қалды</div>
+                    <div class="countdown">
+                        <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-label">күн</span>
+                        </div>
+                        <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-label">сағат</span>
+                        </div>
+                        <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-label">минут</span>
+                        </div>
+                        <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-label">сек</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" id="mapBtn" class="map-btn">Картаны ашу</a>
+            </section>
+
+            <!-- GALLERY -->
+            <section class="card reveal">
+                <div class="label">Естеліктер</div>
+                <div id="gallerySlides"></div>
+                <div id="galleryDots" class="gallery-dots"></div>
+            </section>
+
+            <!-- RSVP -->
+            <section class="card reveal">
+                <div class="label">Кері байланыс</div>
+                <form id="rsvpForm" onsubmit="submitRSVP(event)">
+                    <div class="form-group"><input type="text" id="rName" class="form-input" placeholder="Аты-жөніңіз"
+                            required></div>
+                    <div class="form-group"><input type="tel" id="rPhone" class="form-input"
+                            placeholder="Телефон нөміріңіз"></div>
+                    <div class="guest-counter">
+                        <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Қонақтар:</span>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <button type="button" class="counter-btn" onclick="changeGuests(-1)">-</button>
+                            <input type="number" id="rGuests" value="1" min="1" max="10" readonly
+                                style="width: 30px; border: none; text-align: center; background: none; font-weight: 600; color: var(--mint-dark);">
+                            <button type="button" class="counter-btn" onclick="changeGuests(1)">+</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Растау</button>
+                </form>
+                <div id="successMsg" style="display:none; text-align:center; padding: 20px;">
+                    <p style="font-family: var(--serif); font-size: 18px; color: var(--mint-dark);">Рақмет! Сізді
+                        күтеміз.</p>
+                </div>
+            </section>
+
+            <footer class="footer reveal">
+                <div class="footer-logo" id="footerName">Айлин</div>
+                <div class="footer-text">Тұсаукесер · 2026</div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            childName: "Айлин", childAge: "1 жаста",
+            day: "21-03-2026", hour: "18:00",
+            location: "Astana, Farhi Hall", locationUrl: "https://2gis.kz/astana",
+            gallery: [], toiOwners: "Сейітовтар әулеті", parents: [],
+            description: ""
+        };
+
+        (function applyConfig() {
+            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
+            const [hh, mi] = CONFIG.hour.split(':');
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const child = CONFIG.childName || 'Бала';
+
+            document.getElementById('heroNamesLine').textContent = child;
+            document.getElementById('heroNamesInline').textContent = child;
+            if (document.getElementById('footerName')) document.getElementById('footerName').textContent = child;
+            if (document.getElementById('heroAge')) document.getElementById('heroAge').textContent = CONFIG.childAge || '1 жас';
+
+            const descEl = document.getElementById('eventText');
+            if (descEl && CONFIG.description) descEl.innerHTML = CONFIG.description.replace(/\n/g, '<br>');
+
+            document.getElementById('evDate').textContent = `${dd} ${MO_KK[mm - 1]}, ${yy}`;
+            document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm - 1]} ${yy} · ${CONFIG.hour}`;
+            document.getElementById('locationName').textContent = CONFIG.location;
+            const mapBtn = document.getElementById('mapBtn');
+            if (CONFIG.locationUrl) mapBtn.href = CONFIG.locationUrl;
+
+            // Calendar
+            const calGrid = document.getElementById('calGrid');
+            const calMo = document.getElementById('calMo');
+            if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
+            if (calGrid) {
+                calGrid.innerHTML = '';
+                const first = new Date(yy, mm - 1, 1).getDay();
+                const off = first === 0 ? 6 : first - 1;
+                const total = new Date(yy, mm, 0).getDate();
+                const prev = new Date(yy, mm - 1, 0).getDate();
+                for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'other'; e.textContent = prev - off + 1 + i; calGrid.appendChild(e); }
+                for (let d = 1; d <= total; d++) { const e = document.createElement('div'); if (d === dd) e.className = 'today'; e.textContent = d; calGrid.appendChild(e); }
+            }
+
+            // Countdown
+            (function () {
+                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+                const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2, '0'); };
+                const tick = () => {
+                    let diff = Math.max(0, target - new Date());
+                    set('cdS', Math.floor(diff / 1000) % 60); set('cdM', Math.floor(diff / 60000) % 60); set('cdH', Math.floor(diff / 3600000) % 24); set('cdD', Math.floor(diff / 86400000));
+                };
+                tick(); setInterval(tick, 1000);
+            })();
+
+            // Owners
+            const ownersCard = document.getElementById('ownersBigName');
+            const ownersWrap = document.getElementById('ownersCardWrap');
+            const pg = document.getElementById('parentsGrid');
+            const parents = CONFIG.parents || [];
+            if (ownersCard) ownersCard.textContent = CONFIG.toiOwners || '';
+            if (pg && parents.length) {
+                pg.style.display = 'grid'; pg.innerHTML = '';
+                parents.forEach((p, idx) => {
+                    pg.innerHTML += `<div class="parent-block"><div class="parent-role">${p.role || (idx === 0 ? 'Әке' : 'Ана')}</div><div class="parent-name">${p.name || ''}</div><div class="parent-family">${p.family || ''}</div></div>`;
+                    if (idx === 0 && parents.length > 1) pg.innerHTML += '<div class="parents-sep"></div>';
+                });
+            }
+            if (!CONFIG.toiOwners && !parents.length && ownersWrap) ownersWrap.style.display = 'none';
+
+            // Gallery
+            const slides = document.getElementById('gallerySlides');
+            const galleryList = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : ["https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"];
+            if (slides) {
+                slides.innerHTML = '';
+                galleryList.forEach(url => { const img = document.createElement('img'); img.src = url; slides.appendChild(img); });
+            }
+
+            const heroUrl = CONFIG.heroPhoto || (CONFIG.gallery && CONFIG.gallery[0]);
+            if (heroUrl) {
+                const ring = document.getElementById('heroPhoto');
+                if (ring) ring.innerHTML = `<img src="${heroUrl}" alt="Photo">`;
+            }
+        })();
+
+        function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, Math.min(10, parseInt(inp.value) + d)); }
+        function submitRSVP(e) { e.preventDefault(); document.getElementById('rsvpForm').style.display = 'none'; document.getElementById('successMsg').style.display = 'block'; }
+        (function () {
+            const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        })();
+    </script>
+</body>
+
+</html>
