@@ -1,291 +1,438 @@
 <!doctype html>
 <!-- NO_PALETTE -->
-<html lang="kk">
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Бесік той</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Frame</title>
     <style>
-        :root{--blush:#f4c2c2;--blush-lt:#fde8e8;--blush-dk:#d4888a;--mint:#b8ddd0;--mint-lt:#ddf0ea;--mint-dk:#6fad99;--cream:#fdf9f5;--ivory:#fef5f0;--text:#3d2c2c;--muted:#9a7878;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Nunito',system-ui,sans-serif}
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{font-family:var(--sans);font-size:16px;line-height:1.65;background:linear-gradient(160deg,#fde8e8 0%,#ddf0ea 50%,#fde8e8 100%);color:var(--text);display:flex;justify-content:center;min-height:100dvh}
-        .page-root{width:100%;max-width:480px;min-height:100dvh;background:var(--cream);position:relative;overflow:hidden}
-        .page-root::before{content:'';position:fixed;inset:0;max-width:480px;background-image:radial-gradient(circle at 15% 20%,rgba(244,194,194,0.25) 0%,transparent 40%),radial-gradient(circle at 85% 70%,rgba(184,221,208,0.2) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(201,192,224,0.1) 0%,transparent 60%);pointer-events:none;z-index:0}
-        section{position:relative;z-index:1;background:rgba(255,255,255,0.85);backdrop-filter:blur(8px);border-radius:24px;padding:24px 20px;margin:0 12px 16px;border:1px solid rgba(244,194,194,0.4);box-shadow:0 4px 24px rgba(212,136,138,0.08)}
-        section:first-of-type{margin:0 0 16px;border-radius:0 0 32px 32px;border:none;background:linear-gradient(180deg,#fde8e8 0%,#fff 100%);padding:20px 20px 28px;border-bottom:2px solid var(--blush)}
-        #heroPhoto{width:100%;height:260px;background:linear-gradient(135deg,var(--blush-lt),var(--mint-lt));border-radius:20px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);font-size:13px;font-family:var(--sans);margin-bottom:16px;border:2px solid var(--blush);position:relative}
-        #heroPhoto::after{content:'🍼';font-size:48px;opacity:0.3;position:absolute}
-        #heroPhoto img{width:100%;height:100%;object-fit:cover;display:block;border-radius:18px;position:relative;z-index:1}
-        h1,#heroNames{font-family:var(--serif);font-size:clamp(30px,8vw,44px);font-weight:600;font-style:italic;color:var(--blush-dk);text-align:center;margin:8px 0 0;line-height:1.2}
-        h4{font-family:var(--sans);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--mint-dk);margin-bottom:10px}
-        h4::before{content:'❧  ';color:var(--blush)}
-        h4::after{content:'  ❧';color:var(--blush)}
-        p{margin-bottom:8px;color:var(--muted);font-size:14px;line-height:1.7}
-        #heroNamesLine{font-family:var(--serif);font-size:clamp(26px,7vw,38px);font-style:italic;font-weight:600;color:var(--blush-dk);text-align:center;margin:6px 0}
-        #ownersBigName{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--mint-dk);margin-top:6px}
-        #calMo{font-family:var(--serif);font-size:15px;font-style:italic;color:var(--blush-dk);margin-bottom:10px;text-align:center}
-        #calGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px}
-        #calGrid div{text-align:center;padding:6px 2px;font-size:12px;font-family:var(--sans);border-radius:8px;color:var(--text)}
-        #calGrid div.today{background:linear-gradient(135deg,var(--blush),var(--blush-dk));color:#fff;font-weight:700;border-radius:50%;box-shadow:0 2px 8px rgba(212,136,138,0.4)}
-        #calGrid div.other{opacity:.22}
-        #heroDateLine{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--blush-dk);text-align:center;margin:6px 0}
-        .countdown{display:flex;gap:8px;margin-top:12px}
-        .cd-box{flex:1;text-align:center;background:linear-gradient(135deg,var(--blush-lt),#fff);border:1px solid var(--blush);border-radius:14px;padding:12px 4px 10px}
-        .cd-num{display:block;font-family:var(--serif);font-size:26px;font-weight:600;color:var(--blush-dk);line-height:1}
-        .cd-label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:3px;font-family:var(--sans)}
-        #gallerySlides img{width:100%;border-radius:14px;display:block;margin-bottom:10px;border:2px solid var(--blush)}
-        .gallery-empty{color:var(--muted);font-size:12px;font-style:italic;font-family:var(--serif);text-align:center;padding:20px 0}
-        .map-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:linear-gradient(135deg,var(--mint-dk),var(--mint));color:#fff;border-radius:50px;text-decoration:none;font-size:12px;font-family:var(--sans);font-weight:600;letter-spacing:1px;margin-top:12px;border:none;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(111,173,153,0.3)}
-        .map-btn:hover{transform:translateY(-2px)}
-        .map-btn img{width:18px;height:18px}
-        input,textarea{width:100%;padding:12px 16px;border:1.5px solid var(--blush);border-radius:14px;font-family:var(--sans);font-size:14px;outline:none;margin-bottom:10px;background:var(--ivory);transition:border-color .2s,box-shadow .2s;color:var(--text)}
-        input:focus,textarea:focus{border-color:var(--blush-dk);background:#fff;box-shadow:0 0 0 3px rgba(244,194,194,0.2)}
-        input::placeholder,textarea::placeholder{color:var(--muted);opacity:.6}
-        textarea{min-height:70px;resize:vertical}
-        .guest-counter{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-        .gc-btn{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--blush);background:var(--blush-lt);color:var(--blush-dk);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
-        .gc-btn:hover{background:var(--blush);color:#fff}
-        #rGuests{width:60px!important;text-align:center!important;margin:0!important}
-        .submit-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--blush-dk),#c06080);color:#fff;border:none;border-radius:50px;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:all .3s;box-shadow:0 6px 20px rgba(212,136,138,0.35)}
-        .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,136,138,0.5)}
-        #successMsg{text-align:center;padding:24px 16px;font-family:var(--serif);font-size:20px;font-style:italic;color:var(--blush-dk)}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            background: #e0e0e0;
+            color: #111;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-root {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100dvh;
+            background: #f8f8f8;
+            padding: 16px;
+        }
+
+        section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e0e0e0;
+        }
+
+        h1 { font-size: 24px; margin: 10px 0 6px; }
+        h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: #555; }
+        p  { margin-bottom: 8px; color: #444; }
+
+        #heroPhoto {
+            width: 100%;
+            height: 240px;
+            background: #e6e6e6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        #heroPhoto img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+
+        /* Calendar */
+        #calMo {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        #calGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 10px;
+        }
+        #calGrid div {
+            text-align: center;
+            padding: 6px 2px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+        #calGrid div.today {
+            background: #333;
+            color: #fff;
+            font-weight: 700;
+        }
+        #calGrid div.other { opacity: 0.25; }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .cd-box {
+            flex: 1;
+            text-align: center;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 10px 4px;
+        }
+        .cd-num {
+            display: block;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .cd-label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #777;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Gallery */
+        #gallerySlides img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .gallery-empty {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        /* Map button */
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 20px;
+            background: #1a1a1a;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        .map-btn img { width: 18px; height: 18px; }
+
+        /* RSVP */
+        input, textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 10px;
+            background: #fafafa;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus {
+            border-color: #999;
+            background: #fff;
+        }
+        textarea { min-height: 70px; resize: vertical; }
+
+        .guest-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .gc-btn {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: #f0f0f0;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        #rGuests { width: 60px !important; text-align: center !important; margin: 0 !important; }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        #ownersBigName {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        #successMsg {
+            text-align: center;
+            padding: 20px;
+            font-size: 17px;
+            color: #333;
+        }
     </style>
 </head>
-
 <body>
-    <div class="page-root">
+<div class="page-root">
 
-        <script>
-            const CONFIG = {
-                names: { bride: "Аружан", groom: "Данияр" },
-                day: "21-03-2026",
-                hour: "19:00",
-                location: "Astana, Farhi Hall",
-                locationUrl: "https://2gis.kz/astana",
-                music: { title: "Песня", artist: "Исполнитель", url: "" },
-                gallery: [],
-                description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
-                toiOwners: "Сырымбетовтар әулеті",
-            };
-        </script>
+    <script>
+        const CONFIG = {
+            names:       { bride: "Аружан", groom: "Данияр" },
+            day:         "21-03-2026",
+            hour:        "19:00",
+            location:    "Astana, Farhi Hall",
+            locationUrl: "https://2gis.kz/astana",
+            music:       { title: "Песня", artist: "Исполнитель", url: "" },
+            gallery:     [],
+            description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+            toiOwners:   "Сырымбетовтар әулеті",
+        };
+    </script>
 
-        <!-- ① HERO -->
-        <section>
-            <div id="heroPhoto">Фото жұпты</div>
-            <h1 id="heroNames">Имя</h1>
-        </section>
+    <!-- ① HERO -->
+    <section>
+        <div id="heroPhoto">Фото жұпты</div>
+        <h1 id="heroNames">Имя</h1>
+    </section>
 
-        <!-- ② ABOUT -->
-        <section>
-            <p id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
-            <p>Сіздерді балаларымыздың:</p>
-            <h1 id="heroNamesLine">Имя</h1>
-            <p>Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
+    <!-- ② ABOUT -->
+    <section>
+        <p id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+        <p>Сіздерді балаларымыздың:</p>
+        <h1 id="heroNamesLine">Имя</h1>
+        <p>Шаңырақ көтеру тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
 
-            <div style="margin-top:14px;">
-                <div id="calMo"></div>
-                <div id="calGrid"></div>
-                <p id="heroDateLine" style="margin:8px 0;"></p>
-                <div class="countdown">
-                    <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-label">күн</span></div>
-                    <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-label">сағ</span></div>
-                    <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-label">мин</span></div>
-                    <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-label">сек</span></div>
-                </div>
+        <div style="margin-top:14px;">
+            <div id="calMo"></div>
+            <div id="calGrid"></div>
+            <p id="heroDateLine" style="margin:8px 0;"></p>
+            <div class="countdown">
+                <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-label">күн</span></div>
+                <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-label">сағ</span></div>
+                <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-label">мин</span></div>
+                <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-label">сек</span></div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- ③ OWNERS -->
-        <section id="ownersSection">
-            <h4>Той иелері</h4>
-            <div id="ownersBigName">—</div>
-        </section>
+    <!-- ③ OWNERS -->
+    <section id="ownersSection">
+        <h4>Той иелері</h4>
+        <div id="ownersBigName">—</div>
+    </section>
 
-        <!-- ④ LOCATION -->
-        <section>
-            <h4>Мекенжай</h4>
-            <p id="locationName"></p>
-            <div id="mapBtnWrap" style="display:none;">
-                <a id="mapBtn" class="map-btn" target="_blank" rel="noreferrer noopener">
-                    <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2GIS">
-                    Карта арқылы ашу
-                </a>
+    <!-- ④ LOCATION -->
+    <section>
+        <h4>Мекенжай</h4>
+        <p id="locationName"></p>
+        <div id="mapBtnWrap" style="display:none;">
+            <a id="mapBtn" class="map-btn" target="_blank" rel="noreferrer noopener">
+                <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2GIS">
+                Карта арқылы ашу
+            </a>
+        </div>
+    </section>
+
+    <!-- ⑤ MUSIC -->
+    <section id="musicSection" style="display:none;">
+        <h4>Музыка</h4>
+        <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
+        <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
+    </section>
+
+    <!-- MUSIC -->
+    <section id="musicSection" style="display:none;">
+        <h4>Музыка</h4>
+        <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
+        <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
+    </section>
+
+    <!-- ⑤ GALLERY -->
+    <section>
+        <h4>Біздің сәттер</h4>
+        <div id="gallerySlides"></div>
+    </section>
+
+    <!-- ⑥ RSVP -->
+    <section>
+        <h4>Растау</h4>
+        <div id="rsvpForm">
+            <input id="rName" placeholder="Есіміңіз">
+            <input id="rPhone" placeholder="+7 (___) ___-__-__">
+            <div class="guest-counter">
+                <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
+                <input id="rGuests" type="number" min="1" value="1" readonly>
+                <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
             </div>
-        </section>
+            <textarea id="rNote" placeholder="Ескерту..."></textarea>
+            <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
+        </div>
+        <div id="successMsg" style="display:none;">Рақмет! Сізді күтеміз.</div>
+    </section>
 
-        <!-- ⑤ MUSIC -->
-        <section id="musicSection" style="display:none;">
-            <h4>Музыка</h4>
-            <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
-            <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
-        </section>
+    <script>
+        (function applyConfig() {
+            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
+            const [hh, mi]     = CONFIG.hour.split(':');
+            const MO_KK = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
 
-        <!-- MUSIC -->
-        <section id="musicSection" style="display:none;">
-            <h4>Музыка</h4>
-            <p id="musicTitle" style="margin-bottom:8px;color:#444;"></p>
-            <button id="musicBtn" class="map-btn" type="button">▶ Ойнату</button>
-        </section>
+            document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
+            document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
 
-        <!-- ⑤ GALLERY -->
-        <section>
-            <h4>Біздің сәттер</h4>
-            <div id="gallerySlides"></div>
-        </section>
+            const nl = document.getElementById('heroNamesLine');
+            if (nl) nl.textContent = `${CONFIG.names.groom} & ${CONFIG.names.bride}`;
 
-        <!-- ⑥ RSVP -->
-        <section>
-            <h4>Растау</h4>
-            <div id="rsvpForm">
-                <input id="rName" placeholder="Есіміңіз">
-                <input id="rPhone" placeholder="+7 (___) ___-__-__">
-                <div class="guest-counter">
-                    <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
-                    <input id="rGuests" type="number" min="1" value="1" readonly>
-                    <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
-                </div>
-                <textarea id="rNote" placeholder="Ескерту..."></textarea>
-                <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
-            </div>
-            <div id="successMsg" style="display:none;">Рақмет! Сізді күтеміз.</div>
-        </section>
+            const desc = document.getElementById('eventText');
+            if (desc) desc.textContent = CONFIG.description || '';
 
-        <script>
-            (function applyConfig() {
-                const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-                const [hh, mi] = CONFIG.hour.split(':');
-                const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm-1].toLowerCase()} ${yy} · ${CONFIG.hour}`;
 
-                document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
-                document.getElementById('heroNames').textContent = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
-
-                const nl = document.getElementById('heroNamesLine');
-                if (nl) nl.textContent = `${CONFIG.names.groom} & ${CONFIG.names.bride}`;
-
-                const desc = document.getElementById('eventText');
-                if (desc) desc.textContent = CONFIG.description || '';
-
-                document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy} · ${CONFIG.hour}`;
-
-                // Calendar
-                const calMo = document.getElementById('calMo');
-                const calGrid = document.getElementById('calGrid');
-                if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
-                if (calGrid) {
-                    calGrid.innerHTML = '';
-                    const first = new Date(yy, mm - 1, 1).getDay();
-                    const off = first === 0 ? 6 : first - 1;
-                    const total = new Date(yy, mm, 0).getDate();
-                    const prev = new Date(yy, mm - 1, 0).getDate();
-                    for (let i = 0; i < off; i++) {
-                        const e = document.createElement('div');
-                        e.className = 'other'; e.textContent = prev - off + 1 + i;
-                        calGrid.appendChild(e);
-                    }
-                    for (let d = 1; d <= total; d++) {
-                        const e = document.createElement('div');
-                        if (d === dd) e.className = 'today';
-                        e.textContent = d;
-                        calGrid.appendChild(e);
-                    }
-                    const rem = (off + total) % 7;
-                    for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
-                        const e = document.createElement('div');
-                        e.className = 'other'; e.textContent = i;
-                        calGrid.appendChild(e);
-                    }
+            // Calendar
+            const calMo   = document.getElementById('calMo');
+            const calGrid = document.getElementById('calGrid');
+            if (calMo) calMo.textContent = `${MO_KK[mm-1]} ${yy}`;
+            if (calGrid) {
+                calGrid.innerHTML = '';
+                const first = new Date(yy, mm-1, 1).getDay();
+                const off   = first === 0 ? 6 : first - 1;
+                const total = new Date(yy, mm, 0).getDate();
+                const prev  = new Date(yy, mm-1, 0).getDate();
+                for (let i = 0; i < off; i++) {
+                    const e = document.createElement('div');
+                    e.className = 'other'; e.textContent = prev - off + 1 + i;
+                    calGrid.appendChild(e);
                 }
-
-                // Countdown
-                (function countdown() {
-                    const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
-                    if (isNaN(target.getTime())) return;
-                    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2, '0'); };
-                    const tick = () => {
-                        let diff = Math.max(0, target - new Date());
-                        set('cdS', Math.floor(diff / 1000) % 60);
-                        set('cdM', Math.floor(diff / 60000) % 60);
-                        set('cdH', Math.floor(diff / 3600000) % 24);
-                        set('cdD', Math.floor(diff / 86400000));
-                    };
-                    tick(); setInterval(tick, 1000);
-                })();
-
-                // Owners
-                const ownersBig = document.getElementById('ownersBigName');
-                if (ownersBig && CONFIG.toiOwners) ownersBig.textContent = CONFIG.toiOwners;
-
-                // Location
-                const loc = document.getElementById('locationName');
-                if (loc) loc.textContent = CONFIG.location || '';
-                const mapWrap = document.getElementById('mapBtnWrap');
-                const mapBtn = document.getElementById('mapBtn');
-                if (mapBtn && CONFIG.locationUrl) {
-                    mapBtn.href = CONFIG.locationUrl;
-                    if (mapWrap) mapWrap.style.display = 'block';
+                for (let d = 1; d <= total; d++) {
+                    const e = document.createElement('div');
+                    if (d === dd) e.className = 'today';
+                    e.textContent = d;
+                    calGrid.appendChild(e);
                 }
-
-                // Music
-                (function music() {
-                    const wrap = document.getElementById('musicSection');
-                    const btn = document.getElementById('musicBtn');
-                    const titleEl = document.getElementById('musicTitle');
-                    const url = CONFIG.music?.url || '';
-                    if (!wrap || !btn || !url) return;
-                    const audio = new Audio(url);
-                    audio.loop = true; audio.preload = 'auto';
-                    if (titleEl) titleEl.textContent = CONFIG.music.title || 'Музыка';
-                    wrap.style.display = 'block';
-                    let playing = false;
-                    const update = () => { btn.textContent = playing ? '⏸ Пауза' : '▶ Ойнату'; };
-                    btn.addEventListener('click', async () => {
-                        try {
-                            if (!playing) { await audio.play(); playing = true; }
-                            else { audio.pause(); playing = false; }
-                            update();
-                        } catch (e) { console.warn('music', e); }
-                    });
-                    audio.addEventListener('ended', () => { playing = false; update(); });
-                })();
-
-                // Gallery
-                const slides = document.getElementById('gallerySlides');
-                if (slides) {
-                    slides.innerHTML = '';
-                    const list = CONFIG.gallery || [];
-                    if (!list.length) {
-                        const e = document.createElement('div');
-                        e.className = 'gallery-empty';
-                        e.textContent = 'Галереяға фото қосыңыз';
-                        slides.appendChild(e);
-                    } else {
-                        list.forEach(url => {
-                            const img = document.createElement('img');
-                            img.src = url; img.alt = 'photo';
-                            slides.appendChild(img);
-                        });
-                    }
+                const rem = (off + total) % 7;
+                for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
+                    const e = document.createElement('div');
+                    e.className = 'other'; e.textContent = i;
+                    calGrid.appendChild(e);
                 }
-            })();
-
-            function changeGuests(d) {
-                const inp = document.getElementById('rGuests');
-                inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
             }
 
-            window.submitRSVP = () => {
-                const n = document.getElementById('rName').value.trim();
-                const p = document.getElementById('rPhone').value.trim();
-                if (!n) { document.getElementById('rName').focus(); return; }
-                if (!p) { document.getElementById('rPhone').focus(); return; }
-                document.getElementById('rsvpForm').style.display = 'none';
-                document.getElementById('successMsg').style.display = 'block';
-            };
-        </script>
+            // Countdown
+            (function countdown() {
+                const target = new Date(`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}T${String(hh).padStart(2,'0')}:${String(mi).padStart(2,'0')}:00`);
+                if (isNaN(target.getTime())) return;
+                const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2,'0'); };
+                const tick = () => {
+                    let diff = Math.max(0, target - new Date());
+                    set('cdS', Math.floor(diff/1000)%60);
+                    set('cdM', Math.floor(diff/60000)%60);
+                    set('cdH', Math.floor(diff/3600000)%24);
+                    set('cdD', Math.floor(diff/86400000));
+                };
+                tick(); setInterval(tick, 1000);
+            })();
 
-    </div><!-- .page-root -->
+            // Owners
+            const ownersBig = document.getElementById('ownersBigName');
+            if (ownersBig && CONFIG.toiOwners) ownersBig.textContent = CONFIG.toiOwners;
+
+            // Location
+            const loc = document.getElementById('locationName');
+            if (loc) loc.textContent = CONFIG.location || '';
+            const mapWrap = document.getElementById('mapBtnWrap');
+            const mapBtn  = document.getElementById('mapBtn');
+            if (mapBtn && CONFIG.locationUrl) {
+                mapBtn.href = CONFIG.locationUrl;
+                if (mapWrap) mapWrap.style.display = 'block';
+            }
+
+            // Music
+            (function music(){
+                const wrap = document.getElementById('musicSection');
+                const btn  = document.getElementById('musicBtn');
+                const titleEl = document.getElementById('musicTitle');
+                const url = CONFIG.music?.url || '';
+                if (!wrap || !btn || !url) return;
+                const audio = new Audio(url);
+                audio.loop = true; audio.preload = 'auto';
+                if (titleEl) titleEl.textContent = CONFIG.music.title || 'Музыка';
+                wrap.style.display = 'block';
+                let playing = false;
+                const update = () => { btn.textContent = playing ? '⏸ Пауза' : '▶ Ойнату'; };
+                btn.addEventListener('click', async () => {
+                    try {
+                        if (!playing) { await audio.play(); playing = true; }
+                        else { audio.pause(); playing = false; }
+                        update();
+                    } catch(e){ console.warn('music', e); }
+                });
+                audio.addEventListener('ended', () => { playing = false; update(); });
+            })();
+
+            // Gallery
+            const slides = document.getElementById('gallerySlides');
+            if (slides) {
+                slides.innerHTML = '';
+                const list = CONFIG.gallery || [];
+                if (!list.length) {
+                    const e = document.createElement('div');
+                    e.className = 'gallery-empty';
+                    e.textContent = 'Галереяға фото қосыңыз';
+                    slides.appendChild(e);
+                } else {
+                    list.forEach(url => {
+                        const img = document.createElement('img');
+                        img.src = url; img.alt = 'photo';
+                        slides.appendChild(img);
+                    });
+                }
+            }
+        })();
+
+        function changeGuests(d) {
+            const inp = document.getElementById('rGuests');
+            inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
+        }
+
+        window.submitRSVP = () => {
+            const n = document.getElementById('rName').value.trim();
+            const p = document.getElementById('rPhone').value.trim();
+            if (!n) { document.getElementById('rName').focus(); return; }
+            if (!p) { document.getElementById('rPhone').focus(); return; }
+            document.getElementById('rsvpForm').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+        };
+    </script>
+
+</div><!-- .page-root -->
 </body>
-
 </html>

@@ -4,780 +4,1117 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Тұсаукесер</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+    <title>Тұсаукесер тойы · Айлин</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
+        /* ═══════════════════════════════════════════════════
+           TOKENS
+        ═══════════════════════════════════════════════════ */
         :root {
-            --sage:       #7a9e7e;
-            --sage-dark:  #4e7252;
-            --sage-light: #a8c4ab;
-            --rose:       #c97b7b;
-            --rose-light: #e8b4b4;
-            --cream:      #fdf8f2;
-            --ivory:      #f5ede0;
-            --gold:       #c9a96e;
-            --gold-light: #e8d5b7;
-            --text:       #2c2416;
-            --text-soft:  #6b5a4a;
-            --wine:       var(--sage-dark);
-            --wine-dark:  #2e4d31;
-            --wine-light: var(--sage);
+            --ivory:      #fdf9f3;
+            --cream:      #f7efe0;
+            --blush:      #f4d9d0;
+            --sky:        #d6eaf5;
+            --mint:       #d8eeea;
+            --rose:       #c8776a;
+            --rose-lt:    #dfa090;
+            --teal:       #2d6e66;
+            --teal-lt:    #3d8a80;
+            --gold:       #c49a4a;
+            --gold-lt:    #ddb96a;
+            --gold-dk:    #9a7230;
+            --muted:      #8a7060;
+            --text:       #2a1f16;
+            --border:     rgba(196,154,74,0.25);
+            --serif:      'Playfair Display', Georgia, serif;
+            --sans:       'Nunito', system-ui, sans-serif;
+            /* inline assets to avoid CORS */
+            --border-img: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='32' viewBox='0 0 14 32'><rect width='14' height='32' fill='%23c49a4a'/><path d='M1 1h12v30H1z' fill='none' stroke='%23fdf9f3' stroke-width='2'/></svg>");
+            --decor-vec: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='36' viewBox='0 0 200 36' fill='none'><path d='M10 18h40M150 18h40' stroke='%23c49a4a' stroke-width='2' stroke-linecap='round'/><circle cx='100' cy='18' r='8' stroke='%23c49a4a' stroke-width='2' fill='none'/><circle cx='100' cy='18' r='3' fill='%23c49a4a'/></svg>\");
+            --oyu-bg: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200' fill='none'><circle cx='100' cy='100' r='96' stroke='%23c49a4a' stroke-width='1' opacity='0.12'/><circle cx='100' cy='100' r='72' stroke='%232d6e66' stroke-width='1' opacity='0.08'/><path d='M100 10 L120 40 L100 70 L80 40 Z' fill='none' stroke='%23c49a4a' stroke-width='1' opacity='0.12'/><path d='M100 130 L120 160 L100 190 L80 160 Z' fill='none' stroke='%23c49a4a' stroke-width='1' opacity='0.12'/></svg>\");
         }
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ═══════════════════════════════════════════════════
+           RESET
+        ═══════════════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-
         body {
-            font-family: 'Lora', serif;
-            background: #c8bfb0;
+            background: #ddd8d0;
+            font-family: var(--sans);
+            font-weight: 300;
             color: var(--text);
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
         }
 
-        /* ── MOBILE FRAME ── */
-        .page-root-wrap {
+        /* ═══════════════════════════════════════════════════
+           PAGE ROOT + BORDER STRIPS
+        ═══════════════════════════════════════════════════ */
+        .page-root {
+            position: relative;
             width: 100%;
             max-width: 480px;
             min-height: 100dvh;
-            background: var(--cream);
-            position: relative;
-            overflow-x: hidden;
+            background: var(--ivory);
+            padding: 0 24px 60px;
+            overflow: hidden;
         }
 
-        /* BORDER STRIPS — нити тұсау */
+        /* LEFT border strip */
         .border-strip {
+            position: fixed;
+            top: 0;
+            width: 14px;
+            height: 100%;
+            background-image: var(--border-img);
+            background-size: 14px auto;
+            background-repeat: repeat-y;
             pointer-events: none;
-            position: absolute;
-            top: 0; z-index: 9999;
-            width: 8px; height: 100%;
+            z-index: 100;
+            filter: sepia(0.2) saturate(1.4) hue-rotate(-10deg) brightness(1.05);
         }
-        .border-strip.left  { left: 0; }
-        .border-strip.right { right: 0; transform: scaleX(-1); }
+        .border-strip.left  { left: calc(50% - 240px); }
+        .border-strip.right { right: calc(50% - 240px); transform: scaleX(-1); }
 
-        .border-strip::before,
-        .border-strip::after,
-        .border-strip .trd {
+        /* background oyu watermark */
+        .page-root::before {
             content: '';
-            position: absolute; top: 0; bottom: 0; width: 2px;
-        }
-        .border-strip::before { left: 1px; background: repeating-linear-gradient(180deg, var(--rose) 0 6px, transparent 6px 10px); }
-        .border-strip .trd    { left: 3px; background: repeating-linear-gradient(180deg, #fff    0 6px, transparent 6px 10px); }
-        .border-strip::after  { left: 5px; background: repeating-linear-gradient(180deg, var(--sage) 0 6px, transparent 6px 10px); }
-
-        /* PAGE */
-        .page {
-            width: 100%;
-            padding: 0 20px;
-        }
-
-        section { margin-bottom: 0; }
-
-        /* ① HERO */
-        .hero { position: relative; }
-
-        .hero-photo-placeholder,
-        .hero-photo-img {
-            width: 100%;
-            height: 70dvh;
-            min-height: 400px;
-            object-fit: cover;
-            border-radius: 0 0 80px 80px;
-            display: block;
-            background: linear-gradient(160deg, #2e4d31, var(--sage));
-        }
-
-        .hero-photo-placeholder {
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 14px;
-        }
-        .hero-photo-placeholder .ph-icon { font-size: 52px; opacity: 0.18; }
-        .hero-photo-placeholder span {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 4px;
-            color: rgba(255,255,255,0.28); text-transform: uppercase;
-        }
-
-        .ak-zhol {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 7px;
-            background: linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.85) 20%, rgba(255,255,255,0.85) 80%, transparent 95%);
-            border-radius: 0 0 80px 80px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 340px; height: 340px;
+            background-image: var(--oyu-bg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.035;
             pointer-events: none;
+            z-index: 0;
         }
 
-        .music-btn {
-            position: absolute;
-            bottom: 0; right: 28px;
-            transform: translateY(50%);
-            z-index: 20;
-            width: 68px; height: 68px;
-            border-radius: 50%;
-            background: var(--sage-dark);
-            border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 6px 28px rgba(46,77,49,0.45);
-            transition: background 0.3s;
-        }
-        .music-btn:hover { background: var(--sage); }
-        .music-btn svg { color: #fff; margin-left: 3px; }
-        .music-btn.playing svg { margin-left: 0; }
-        .music-btn.playing::after {
-            content: '';
-            position: absolute; inset: -7px;
-            border: 2px solid var(--sage);
-            border-radius: 50%;
-            animation: ripple 1.6s ease-out infinite;
-        }
-        @keyframes ripple {
-            0%  { opacity: 0.5; transform: scale(1);    }
-            100%{ opacity: 0;   transform: scale(1.55); }
-        }
+        /* ═══════════════════════════════════════════════════
+           CONTENT WRAPPER (sits above bg)
+        ═══════════════════════════════════════════════════ */
+        .content { position: relative; z-index: 1; }
 
-        .hero-name-wrap {
-            text-align: center;
-            padding: 32px 24px 20px;
-            background: var(--cream);
-        }
-        .hero-name-label {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--sage-dark); opacity: 0.55;
-            text-transform: uppercase; margin-bottom: 10px;
-        }
-        #heroNames {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: clamp(48px, 11vw, 72px);
-            color: var(--sage-dark);
-            letter-spacing: 4px; line-height: 1;
-        }
-        .hero-name-sub {
-            font-family: 'Lora', serif;
-            font-size: clamp(12px, 2.6vw, 15px);
-            color: var(--text-soft); opacity: 0.7;
-            letter-spacing: 2px; margin-top: 8px;
-            font-style: italic;
-        }
-
-        /* ② ABOUT */
-        .about {
-            background: var(--sage-dark);
-            padding: 64px 36px 56px;
-            text-align: center;
-            position: relative; overflow: hidden;
-        }
-        .about::before {
-            content: '';
-            position: absolute; inset: 0;
-            background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 30px 30px;
-            pointer-events: none;
-        }
-
-        .about-eyebrow {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(10px, 2.4vw, 13px);
-            letter-spacing: 3px;
-            color: rgba(232,213,183,0.7);
-            line-height: 2; text-transform: uppercase;
-            margin-bottom: 32px; position: relative;
-        }
-
-        .wave-orn {
-            margin: 24px auto; display: block;
-            width: 200px; height: 14px;
-        }
-
-        .invite-body {
-            font-family: 'Lora', serif;
-            font-size: clamp(14px, 2.8vw, 17px);
-            color: rgba(232,213,183,0.6);
-            line-height: 2; letter-spacing: 1.5px;
-            margin-bottom: 4px; position: relative;
-        }
-
-        #heroNamesLine {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: clamp(40px, 9vw, 60px);
-            color: var(--gold-light);
-            letter-spacing: 4px; margin: 14px 0 28px;
-            line-height: 1; position: relative;
-        }
-
-        .invite-footer {
-            font-family: 'Lora', serif;
-            font-size: clamp(13px, 2.5vw, 15px);
-            color: rgba(232,213,183,0.55);
-            line-height: 2.1; letter-spacing: 1.5px;
+        /* ═══════════════════════════════════════════════════
+           TOP DECOR BANNER
+        ═══════════════════════════════════════════════════ */
+        .top-decor {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 0 4px;
             position: relative;
         }
-
-        /* DATE / CALENDAR */
-        .date-block { margin: 48px 0 0; }
-
-        .date-label {
-            font-family: 'Lora', serif;
-            font-size: clamp(13px, 2.6vw, 16px);
-            font-weight: 500; letter-spacing: 2.5px;
-            color: rgba(232,213,183,0.6); margin-bottom: 22px;
+        .top-decor-img {
+            width: 100%;
+            max-width: 280px;
+            height: 44px;
+            object-fit: contain;
+            opacity: 0.85;
         }
 
-        .calendar-wrap {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(232,213,183,0.1);
-            border-radius: 20px;
-            padding: 28px 14px 24px;
-            margin: 0 auto; max-width: 320px;
+        /* ═══════════════════════════════════════════════════
+           CARD
+        ═══════════════════════════════════════════════════ */
+        .card {
+            background: rgba(255, 252, 246, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 24px;
+            margin-bottom: 16px;
             position: relative;
+            overflow: hidden;
+            box-shadow:
+                    0 2px 16px rgba(196,154,74,0.08),
+                    0 1px 4px rgba(44,31,22,0.05);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(255,248,235,0.6) 0%, transparent 55%);
+            border-radius: 18px;
+            pointer-events: none;
+        }
+        .card::after {
+            content:'';
+            position:absolute;
+            inset:0;
+            background: radial-gradient(circle at 30% 20%, rgba(45,110,102,0.05), transparent 45%),
+                        radial-gradient(circle at 75% 80%, rgba(200,119,106,0.06), transparent 45%);
+            pointer-events:none;
         }
 
-        .cal-icon {
-            font-size: 28px;
-            position: absolute; top: 14px; right: 16px;
-            animation: hPulse 2.2s ease-in-out infinite;
-            line-height: 1;
-        }
-        @keyframes hPulse {
-            0%,100%{ transform: scale(1);    opacity: 0.8; }
-            50%    { transform: scale(1.15); opacity: 0.45;}
+        /* flower corner decoration on card */
+        .card-flower {
+            position: absolute;
+            top: -8px; right: -8px;
+            width: 80px; height: 80px;
+            object-fit: contain;
+            opacity: 0.28;
+            pointer-events: none;
+            transform: rotate(15deg);
         }
 
-        .cal-month-title {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--gold); opacity: 0.7;
+        /* ═══════════════════════════════════════════════════
+           SECTION LABELS
+        ═══════════════════════════════════════════════════ */
+        .label {
+            font-size: 10px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 18px; text-align: center;
-        }
-        .cal-grid-head {
-            display: grid; grid-template-columns: repeat(7,1fr);
+            color: var(--gold);
+            text-align: center;
+            font-weight: 500;
             margin-bottom: 8px;
         }
-        .cal-grid-head span {
-            font-family: 'Cinzel', serif;
-            font-size: 7px; letter-spacing: 1px;
-            color: rgba(232,213,183,0.28);
-            text-align: center; padding: 2px 0;
+        .section-title {
+            font-family: var(--serif);
+            font-size: clamp(18px, 4.5vw, 22px);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--teal);
+            text-align: center;
+            margin-bottom: 4px;
         }
-        .cal-grid {
-            display: grid; grid-template-columns: repeat(7,1fr); gap: 2px;
+
+        /* ═══════════════════════════════════════════════════
+           HERO
+        ═══════════════════════════════════════════════════ */
+        .hero { text-align: center; padding: 32px 20px 28px; }
+
+        .hero-eyebrow {
+            display: inline-block;
+            font-size: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--rose);
+            margin-bottom: 18px;
+            font-weight: 500;
         }
-        .cday {
-            font-family: 'Lora', serif; font-size: 13px;
-            color: rgba(232,213,183,0.45);
-            text-align: center; padding: 9px 2px;
-            position: relative; line-height: 1;
+
+        /* Photo frame */
+        .hero-photo {
+            position: relative;
+            display: inline-block;
+            margin: 0 auto 22px;
         }
-        .cday.other { opacity: 0.15; }
-        .cday.today { color: #fff; font-weight: 600; font-size: 16px; }
-        .cday.today::before {
-            content: '';
-            position: absolute; inset: 3px;
+        .hero-photo-ring {
+            width: 150px; height: 150px;
             border-radius: 50%;
-            background: var(--sage);
-            z-index: -1;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--sky), var(--blush));
+            display: flex; align-items: center; justify-content: center;
+            box-shadow:
+                    0 0 0 6px rgba(196,154,74,0.1),
+                    0 0 0 12px rgba(196,154,74,0.05),
+                    0 8px 32px rgba(196,154,74,0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .hero-photo-ring:hover { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(45,110,102,0.14); transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .hero-photo-ring img.child-photo {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        /* flower decorating the photo ring */
+        .hero-photo-flower {
+            position: absolute;
+            width: 60px; height: 60px;
+            object-fit: contain;
+            bottom: -12px; right: -8px;
+            z-index: 2;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        .hero-photo-flower-l {
+            position: absolute;
+            width: 48px; height: 48px;
+            object-fit: contain;
+            top: -8px; left: -8px;
+            z-index: 2;
+            opacity: 0.75;
+            transform: rotate(-30deg);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
         }
 
-        .time-only {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: clamp(22px, 5vw, 30px);
-            color: rgba(232,213,183,0.82);
-            letter-spacing: 5px; margin-top: 20px;
+        /* Name */
+        .hero-name {
+            font-family: var(--serif);
+            font-size: clamp(44px, 13vw, 72px);
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.05;
+            background: linear-gradient(135deg, var(--gold-dk) 0%, var(--gold-lt) 40%, #f0d090 55%, var(--gold-lt) 70%, var(--gold-dk) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .hero-name-line {
+            font-family: var(--serif);
+            font-size: clamp(16px, 4.5vw, 22px);
+            color: var(--muted);
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+        .hero-age {
+            font-family: var(--serif);
+            font-size: 17px;
+            font-style: italic;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+        .hero-ceremony-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: var(--gold-dk);
+            background: rgba(196,154,74,0.05);
         }
 
-        .countdown-row {
-            display: flex; gap: 8px;
-            margin-top: 28px; position: relative;
+        @keyframes shimmer {
+            0%   { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* ═══════════════════════════════════════════════════
+           DIVIDER with SVG oyu motif
+        ═══════════════════════════════════════════════════ */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 6px 0 16px;
+            opacity: 0.7;
+        }
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        .divider svg { flex-shrink: 0; }
+
+        /* ═══════════════════════════════════════════════════
+           INVITE TEXT
+        ═══════════════════════════════════════════════════ */
+        .invite-text {
+            font-family: var(--serif);
+            font-size: 15px;
+            font-style: italic;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.9;
+        }
+        .invite-text strong {
+            font-weight: 600;
+            font-style: normal;
+            color: var(--teal);
+        }
+
+        /* decor overlay in section */
+        .section-decor {
+            position: absolute;
+            bottom: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-height: 60px;
+            object-fit: contain;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           PARENTS SECTION
+        ═══════════════════════════════════════════════════ */
+        .parents-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            align-items: start;
+            margin-top: 16px;
+        }
+        .parent-block { text-align: center; padding: 0 8px; }
+        .parent-role {
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .parent-name {
+            font-family: var(--serif);
+            font-size: 16px;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--teal);
+            line-height: 1.4;
+        }
+        .parent-family {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .parents-sep {
+            width: 1px;
+            background: linear-gradient(180deg, transparent, var(--gold), transparent);
+            align-self: stretch;
+            margin: 4px 0;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           CALENDAR
+        ═══════════════════════════════════════════════════ */
+        #calMo {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        #calGrid {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            gap: 2px;
+            margin-bottom: 12px;
+        }
+        #calGrid div {
+            text-align: center;
+            padding: 5px 2px;
+            font-size: 12px;
+            border-radius: 6px;
+            color: var(--muted);
+        }
+        #calGrid div.today {
+            background: var(--teal);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(45,110,102,0.35);
+        }
+        #calGrid div.other { opacity: 0.2; }
+        .cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+        .cal-weekdays span {
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            color: var(--gold);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           COUNTDOWN
+        ═══════════════════════════════════════════════════ */
+        .countdown {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
         }
         .cd-box {
-            flex: 1; text-align: center;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(232,213,183,0.1);
-            border-radius: 12px; padding: 14px 4px 12px;
+            flex: 1;
+            max-width: 72px;
+            text-align: center;
+            padding: 12px 6px;
+            background: linear-gradient(160deg, var(--sky), rgba(214,234,245,0.4));
+            border: 1px solid rgba(45,110,102,0.15);
+            border-radius: 12px;
+            position: relative;
+        }
+        .cd-box::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            border-radius: 12px 12px 0 0;
         }
         .cd-num {
-            display: block; font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(24px,5vw,32px); font-weight: 400;
-            color: var(--gold-light); line-height: 1;
-        }
-        .cd-lbl {
-            display: block; margin-top: 5px;
-            font-family: 'Cinzel', serif;
-            font-size: 7px; letter-spacing: 2px;
-            color: rgba(232,213,183,0.4); text-transform: uppercase;
-        }
-
-        #ownersBlock { display: none; }
-
-        /* ③ OWNERS */
-        .owners-section {
-            background: var(--sage-dark);
-            border-radius: 0 0 80px 80px;
-            padding: 8px 36px 64px;
-            text-align: center;
-        }
-
-        .thread-decor {
-            display: flex; justify-content: center;
-            gap: 6px; margin: 0 auto 20px;
-        }
-        .thread-decor span {
-            width: 3px; height: 40px; border-radius: 2px;
             display: block;
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--teal);
+            line-height: 1;
         }
-        .thread-decor .tr { background: var(--rose-light); opacity: 0.6; }
-        .thread-decor .tw { background: #fff; opacity: 0.45; }
-        .thread-decor .tg { background: var(--sage-light); opacity: 0.6; }
-
-        .owners-label-txt {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--gold); opacity: 0.55;
-            text-transform: uppercase; margin-bottom: 14px;
-        }
-        .owners-name-txt {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: clamp(28px, 7vw, 44px);
-            color: var(--gold-light);
-            letter-spacing: 3px; line-height: 1.2;
+        .cd-label {
+            display: block;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-top: 4px;
+            font-weight: 500;
         }
 
-        /* FATE SECTION */
-        .fate-section {
-            background: var(--ivory);
-            padding: 64px 36px 56px;
-            text-align: center;
+        /* ═══════════════════════════════════════════════════
+           EVENT DETAIL ROWS
+        ═══════════════════════════════════════════════════ */
+        .event-rows { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .event-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
         }
-        .fate-eyebrow {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--sage-dark); opacity: 0.45;
-            text-transform: uppercase; margin-bottom: 20px;
+        .event-icon-wrap {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blush), var(--cream));
+            border: 1px solid rgba(196,154,74,0.2);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
         }
-        .fate-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: clamp(26px, 5vw, 36px);
-            color: var(--sage-dark);
-            margin-bottom: 32px; line-height: 1.2;
+        .event-icon-wrap svg { width: 16px; height: 16px; }
+        .ev-label {
+            font-size: 9px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 1px;
         }
-        .fate-items {
-            display: grid; grid-template-columns: repeat(2,1fr);
-            gap: 14px; max-width: 320px; margin: 0 auto;
+        .ev-val {
+            font-family: var(--serif);
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text);
+            line-height: 1.3;
         }
-        .fate-item {
-            background: #fff;
-            border: 1px solid rgba(122,158,126,0.15);
-            border-radius: 16px;
-            padding: 20px 14px 16px;
-            text-align: center;
-        }
-        .fate-item .fi-icon { font-size: 32px; display: block; margin-bottom: 10px; line-height: 1; }
-        .fate-item .fi-name {
-            font-family: 'Cinzel', serif;
-            font-size: 8px; letter-spacing: 2px;
-            color: var(--sage-dark); opacity: 0.55;
-            text-transform: uppercase; display: block; margin-bottom: 4px;
-        }
-        .fate-item .fi-desc {
-            font-family: 'Lora', serif; font-style: italic;
-            font-size: 11px; color: var(--text-soft); opacity: 0.7;
-        }
+        .ev-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-        /* ④ LOCATION */
-        .location {
-            background: var(--cream);
-            padding: 64px 36px 56px;
-            text-align: center;
-        }
-        .location h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--sage-dark); opacity: 0.4;
-            text-transform: uppercase; font-weight: 400;
-            margin-bottom: 20px;
-        }
-        .loc-divider {
-            width: 48px; height: 1px;
-            background: var(--sage);
-            opacity: 0.2; margin: 0 auto 24px;
-        }
-        #locationName {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 400;
-            font-size: clamp(20px, 4.5vw, 28px);
-            color: var(--sage-dark);
-            letter-spacing: 1.5px; margin-bottom: 28px; line-height: 1.4;
-        }
-        #mapBtnWrap { margin-top: 0; }
-        .btn {
-            display: inline-flex; align-items: center; gap: 9px;
-            padding: 13px 26px; border-radius: 14px;
-            background: var(--sage-dark); color: var(--gold-light);
+        /* ═══════════════════════════════════════════════════
+           MAP BUTTON
+        ═══════════════════════════════════════════════════ */
+        .map-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 13px 20px;
+            background: var(--teal);
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 2px; font-weight: 400;
-            border: none; cursor: pointer;
-            transition: background 0.25s; text-transform: uppercase;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 18px rgba(45,110,102,0.3);
+            margin-top: 18px;
         }
-        .btn:hover { background: var(--sage); }
-        .btn img { width: 20px; height: 20px; }
+        .map-btn:hover { background: var(--teal-lt); transform: translateY(-1px); }
+        .map-btn img { width: 20px; height: 20px; object-fit: contain; }
 
-        /* ⑤ GALLERY */
-        .gallery {
-            background: var(--sage-dark);
-            padding: 64px 0 60px;
-        }
-        .gallery h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--gold); opacity: 0.55;
-            text-transform: uppercase; font-weight: 400;
-            text-align: center; margin-bottom: 32px; padding: 0 36px;
-        }
-        .gallery-viewport { overflow: hidden; touch-action: pan-y; user-select: none; }
+        /* ═══════════════════════════════════════════════════
+           GALLERY
+        ═══════════════════════════════════════════════════ */
         #gallerySlides {
-            display: flex; gap: 14px; padding: 8px 36px;
-            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
-            will-change: transform;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 6px 4px 10px;
         }
         #gallerySlides img {
-            flex-shrink: 0;
-            width: clamp(190px, 56vw, 275px); aspect-ratio: 3/4;
-            object-fit: cover; border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(46,77,49,0.4);
-            cursor: pointer;
-            transition: transform 0.35s ease, box-shadow 0.35s ease;
-            margin-bottom: 0; max-height: none;
-        }
-        #gallerySlides img.active-slide {
-            transform: scale(1.04);
-            box-shadow: 0 14px 48px rgba(46,77,49,0.55);
-        }
-        .gallery-empty {
-            text-align: center; color: rgba(232,213,183,0.28);
-            font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
-            padding: 40px 36px;
-        }
-        .gallery-controls {
-            display: flex; align-items: center;
-            justify-content: center; gap: 16px; margin-top: 24px;
-        }
-        .g-arrow {
-            width: 36px; height: 36px; border-radius: 50%;
-            border: 1px solid rgba(232,213,183,0.2);
-            background: transparent; color: var(--gold-light);
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.22s;
-        }
-        .g-arrow:hover { background: var(--sage); border-color: transparent; }
-        .g-dots { display: flex; gap: 7px; }
-        .g-dot {
-            width: 5px; height: 5px; border-radius: 50%;
-            background: var(--gold); opacity: 0.2; cursor: pointer; transition: all 0.3s;
-        }
-        .g-dot.lit { opacity: 1; transform: scale(1.45); }
-
-        /* ⑥ RSVP */
-        .rsvp { padding: 80px 36px 100px; background: var(--cream); text-align: center; }
-        .rsvp-tag {
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 5px;
-            color: var(--sage-dark); opacity: 0.38;
-            text-transform: uppercase; display: block; margin-bottom: 14px;
-        }
-        .rsvp h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: clamp(34px, 7vw, 48px);
-            color: var(--sage-dark); margin-bottom: 44px; line-height: 1;
-        }
-        .form-wrap { max-width: 300px; margin: 0 auto; text-align: left; }
-        .f-label {
+            flex: 0 0 82%;
+            border-radius: 14px;
             display: block;
-            font-family: 'Cinzel', serif;
-            font-size: 8px; letter-spacing: 2.5px;
-            color: var(--text); opacity: 0.38;
-            text-transform: uppercase; margin-bottom: 8px;
+            object-fit: cover;
+            aspect-ratio: 4/5;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+            scroll-snap-align: center;
         }
-        .form-group { margin-bottom: 24px; }
-        .rsvp input, .rsvp textarea {
-            width: 100%; padding: 13px 16px; border-radius: 12px;
-            border: 1px solid rgba(122,158,126,0.18);
-            background: #fff; font-family: 'Lora', serif;
-            font-size: 15px; color: var(--text); outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s; box-sizing: border-box;
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
         }
-        .rsvp input:focus, .rsvp textarea:focus {
-            border-color: rgba(78,114,82,0.4);
-            box-shadow: 0 0 0 3px rgba(122,158,126,0.08);
+        .gallery-dots .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(45,110,102,0.25);
+            transition: all 0.2s;
         }
-        .rsvp input::placeholder, .rsvp textarea::placeholder {
-            color: rgba(44,36,22,0.22); font-style: italic;
+        .gallery-dots .dot.active { background: var(--teal); transform: scale(1.1); }
+        .gallery-placeholder {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
         }
-        .rsvp textarea { min-height: 76px; resize: vertical; }
-        .guest-counter { display: flex; align-items: center; gap: 14px; }
-        .gc-btn {
-            width: 38px; height: 38px; border-radius: 50%;
-            border: 1px solid rgba(122,158,126,0.2);
-            background: transparent; font-size: 20px; font-weight: 400;
-            color: var(--sage-dark); cursor: pointer;
+        .gallery-placeholder-item {
+            height: 110px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--sky), var(--blush));
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s; flex-shrink: 0; font-family: 'Lora', serif;
+            border: 1px dashed rgba(196,154,74,0.3);
         }
-        .gc-btn:hover { background: var(--sage-dark); color: #fff; border-color: var(--sage-dark); }
-        #rGuests { width: 72px !important; text-align: center !important; font-size: 17px !important; }
-        .guest-opt { display: none !important; }
+        .gallery-placeholder-item:first-child {
+            grid-column: 1 / -1;
+            height: 140px;
+            background: linear-gradient(135deg, var(--blush), var(--mint));
+        }
+        .gallery-placeholder-item svg { opacity: 0.3; }
+
+        /* ═══════════════════════════════════════════════════
+           DRESS CODE / WISHES
+        ═══════════════════════════════════════════════════ */
+        .wishes-quote {
+            border-left: 2px solid var(--gold);
+            padding-left: 16px;
+            margin: 16px 0;
+        }
+        .wishes-quote p {
+            font-family: var(--serif);
+            font-size: 15px;
+            font-style: italic;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+        .palette-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .swatch {
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .swatch-color {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .swatch-name { font-size: 9px; color: var(--muted); text-align: center; letter-spacing: 0.5px; }
+
+        /* ═══════════════════════════════════════════════════
+           RSVP
+        ═══════════════════════════════════════════════════ */
+        .rsvp-field { margin-bottom: 10px; }
+        .rsvp-field input,
+        .rsvp-field textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: #fff;
+            border: 1px solid rgba(196,154,74,0.35);
+            border-radius: 14px;
+            font-family: var(--sans);
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+        }
+        .rsvp-field input::placeholder,
+        .rsvp-field textarea::placeholder { color: var(--muted); opacity: 0.65; }
+        .rsvp-field input:focus,
+        .rsvp-field textarea:focus {
+            border-color: var(--teal);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(45,110,102,0.12);
+        }
+        .rsvp-field textarea { min-height: 72px; resize: none; }
+
+        .guest-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            margin: 12px 0 16px;
+            border: 1px solid rgba(196,154,74,0.35);
+            border-radius: 999px;
+            background: rgba(255,252,246,0.7);
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .gc-btn {
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            border: 1px solid rgba(196,154,74,0.5);
+            background: linear-gradient(135deg, var(--cream), var(--blush));
+            font-size: 18px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            color: var(--teal);
+            font-family: var(--sans);
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .gc-btn:hover { background: var(--blush); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(200,119,106,0.25); }
+        #rGuests {
+            width: 64px;
+            text-align: center !important;
+            margin-bottom: 0 !important;
+            background: transparent;
+            border: none;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text);
+        }
         .submit-btn {
-            width: 100%; padding: 15px; border-radius: 12px;
-            background: var(--sage-dark); color: var(--gold-light);
-            border: none; cursor: pointer;
-            font-family: 'Cinzel', serif;
-            font-size: 9px; letter-spacing: 3px; font-weight: 400;
-            text-transform: uppercase; margin-top: 10px;
-            transition: background 0.3s, transform 0.2s; box-sizing: border-box;
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--rose), var(--rose-lt));
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 18px rgba(200,119,106,0.35);
+            margin-top: 6px;
         }
-        .submit-btn:hover { background: var(--sage); transform: translateY(-2px); }
-        #successMsg { margin-top: 24px; display: none; text-align: center; }
-        #successMsg .s-icon {
-            font-size: 44px; color: var(--sage-dark);
-            display: block; margin-bottom: 12px; animation: popIn 0.5s ease;
+        .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(200,119,106,0.45); }
+        #successMsg {
+            display: none;
+            text-align: center;
+            padding: 24px 16px;
         }
-        @keyframes popIn {
-            from { transform: scale(0) rotate(-90deg); opacity: 0; }
-            to   { transform: scale(1) rotate(0);      opacity: 1; }
+        #successMsg .tick {
+            font-size: 28px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 10px;
         }
         #successMsg p {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic; font-weight: 300;
-            font-size: 22px; color: var(--sage-dark); letter-spacing: 1px;
+            font-family: var(--serif);
+            font-size: 17px;
+            font-style: italic;
+            color: var(--teal);
         }
 
-        .site-footer {
-            text-align: center; padding: 18px;
-            border-top: 1px solid rgba(122,158,126,0.1);
-            font-size: 11px; color: rgba(44,36,22,0.3); letter-spacing: 0.5px;
+        /* ═══════════════════════════════════════════════════
+           OWNERS SECTION
+        ═══════════════════════════════════════════════════ */
+        #ownersBigName {
+            font-family: var(--serif);
+            font-size: 18px;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--teal);
+            margin-top: 6px;
+            text-align: center;
         }
-        .site-footer a { color: var(--sage-dark); text-decoration: none; }
 
-        .rv { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
-        .rv.in { opacity: 1; transform: translateY(0); }
+        /* ═══════════════════════════════════════════════════
+           FOOTER
+        ═══════════════════════════════════════════════════ */
+        .footer {
+            text-align: center;
+            padding: 8px 0 0;
+        }
+        .footer-decor {
+            width: 100%;
+            max-width: 260px;
+            height: 36px;
+            object-fit: contain;
+            opacity: 0.5;
+            margin: 0 auto 14px;
+            display: block;
+        }
+        .footer-date {
+            font-family: var(--serif);
+            font-size: 22px;
+            font-style: italic;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+        .footer-name {
+            font-family: var(--serif);
+            font-size: 14px;
+            font-style: italic;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .footer-tagline {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 10px;
+            opacity: 0.55;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SCROLL REVEAL
+        ═══════════════════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           TOUCH / RESPONSIVE
+        ═══════════════════════════════════════════════════ */
+        @media (hover: none) {
+            .map-btn  { padding: 16px 20px; }
+            .submit-btn { padding: 16px 24px; }
+            .gc-btn { width: 46px; height: 46px; }
+            .map-btn:hover, .submit-btn:hover { transform: none; }
+        }
+        @media (max-width: 400px) {
+            .page-root { padding: 0 18px 50px; }
+            .card { padding: 22px 18px; }
+            .hero { padding: 24px 14px 22px; }
+            .hero-photo-ring { width: 130px; height: 130px; }
+            .hero-name { font-size: 40px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="page-root-wrap">
+<!-- ── BORDER STRIPS ──────────────────────────────── -->
+<div class="border-strip left"></div>
+<div class="border-strip right"></div>
 
-    <!-- нити тұсау — левый и правый борд -->
-    <div class="border-strip left"  aria-hidden="true"><div class="trd"></div></div>
-    <div class="border-strip right" aria-hidden="true"><div class="trd"></div></div>
+<div class="page-root">
+    <div class="content">
 
-    <script>
-        const CONFIG = {
-            names:       { child: "Арман" },
-            day:         "21-03-2026",
-            hour:        "15:00",
-            location:    "Astana, Farhi Hall",
-            locationUrl: "https://2gis.kz/astana",
-            music:       { title: "Жастық", artist: "", url: "" },
-            gallery:     [],
-            description: "Құрметті ағайын-туыс, құда-жекжат, дос-жаран!",
-            toiOwners:   "Сырымбетовтар әулеті",
-        };
-    </script>
+        <!-- TOP DECOR -->
+        <div class="top-decor reveal">
+            <img src="" alt="" class="top-decor-img" aria-hidden="true" style="display:none;">
+            <svg viewBox="0 0 200 36" width="200" height="36" aria-hidden="true">
+                <path d="M10 18h40M150 18h40" stroke="#c49a4a" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="100" cy="18" r="8" stroke="#c49a4a" stroke-width="2" fill="none"/>
+                <circle cx="100" cy="18" r="3" fill="#c49a4a"/>
+            </svg>
+        </div>
 
-    <div class="page">
+        <!-- ① HERO ──────────────────────────────────────── -->
+        <section class="card hero reveal">
+            <!-- flower corners (inline to avoid CORS) -->
+            <svg class="card-flower" viewBox="0 0 64 64" aria-hidden="true">
+                <path d="M32 6 C36 14 42 18 52 18 C44 22 42 28 44 36 C38 32 32 34 26 36 C28 28 26 22 14 18 C24 18 28 14 32 6Z" fill="#dfa090" opacity="0.28"/>
+            </svg>
+            <svg aria-hidden="true" style="position:absolute;bottom:-8px;left:-8px;width:70px;height:70px;opacity:0.22;transform:rotate(200deg);pointer-events:none;" viewBox="0 0 64 64">
+                <path d="M32 6 C36 14 42 18 52 18 C44 22 42 28 44 36 C38 32 32 34 26 36 C28 28 26 22 14 18 C24 18 28 14 32 6Z" fill="#dfa090"/>
+            </svg>
 
-        <!-- ① HERO -->
-        <section class="hero">
-            <div class="hero-photo" id="heroPhoto">
-                <div class="hero-photo-placeholder">
-                    <div class="ph-icon">🌱</div>
-                    <span>Баланың фотосы</span>
+            <div class="hero-eyebrow">Тұсаукесер тойына шақырамыз</div>
+
+            <!-- Photo ring with flowers -->
+            <div class="hero-photo">
+                <div class="hero-photo-ring" id="heroPhoto">
+                    <!-- placeholder child silhouette -->
+                    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="0.35">
+                        <circle cx="35" cy="20" r="12" stroke="#c49a4a" stroke-width="1.2" fill="none"/>
+                        <path d="M18 60 C18 44 52 44 52 60" stroke="#c49a4a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                        <path d="M26 45 L24 58 M44 45 L46 58" stroke="#c49a4a" stroke-width="1.2" stroke-linecap="round"/>
+                        <path d="M26 50 L44 50" stroke="#c49a4a" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/>
+                    </svg>
                 </div>
+                <svg class="hero-photo-flower" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M24 4 C28 12 36 14 42 14 C36 18 34 26 36 32 C30 28 24 30 18 32 C20 26 18 20 6 14 C14 14 20 12 24 4Z" fill="#dfa090" opacity="0.85"/>
+                </svg>
+                <svg class="hero-photo-flower-l" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M24 4 C28 12 36 14 42 14 C36 18 34 26 36 32 C30 28 24 30 18 32 C20 26 18 20 6 14 C14 14 20 12 24 4Z" fill="#dfa090" opacity="0.6"/>
+                </svg>
             </div>
-            <div class="ak-zhol" aria-hidden="true"></div>
 
-            <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-                <svg id="mIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                <audio id="audioEl" style="display:none"></audio>
-            </button>
+            <span class="hero-name" id="heroNamesLine">Айлин</span>
+            <span class="hero-ceremony-badge" id="heroCeremonyBadge">Тұсаукесер той</span>
+        </section>
 
-            <div class="hero-name-wrap">
-                <p class="hero-name-label">Тұсаукесер той</p>
-                <h1 id="heroNames">—</h1>
-                <p class="hero-name-sub">алғашқы қадам · первый шаг</p>
+        <!-- DIVIDER -->
+        <div class="divider reveal">
+            <div class="divider-line"></div>
+            <svg width="44" height="20" viewBox="0 0 44 20" fill="none" aria-hidden="true">
+                <path d="M22 2 L26 10 L22 18 L18 10 Z" stroke="#c49a4a" stroke-width="0.9" fill="none" opacity="0.8"/>
+                <path d="M8 10 L12 6 L16 10 L12 14 Z" stroke="#c49a4a" stroke-width="0.8" fill="none" opacity="0.5"/>
+                <path d="M28 10 L32 6 L36 10 L32 14 Z" stroke="#c49a4a" stroke-width="0.8" fill="none" opacity="0.5"/>
+                <circle cx="22" cy="10" r="2" fill="#c49a4a" opacity="0.7"/>
+            </svg>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- ② INVITE TEXT ──────────────────────────────── -->
+        <section class="card reveal">
+            <svg aria-hidden="true" style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;max-height:50px;object-fit:contain;opacity:0.08;pointer-events:none;" viewBox="0 0 300 50">
+                <path d="M20 30 C60 10 120 10 150 25 C180 10 240 10 280 30" stroke="#c49a4a" stroke-width="2" fill="none" opacity="0.6"/>
+            </svg>
+            <p class="invite-text" id="eventText">
+                Құрметті ағайын-туыс, құда-жекжат,<br>дос-жаран!
+                <br><br>
+                Сіздерді сүйікті <strong id="heroNamesInline">Айлинімізге</strong> арналған<br>
+                <strong>Тұсаукесер тойының</strong> қадірлі қонағы<br>
+                болуға шақырамыз.
+            </p>
+        </section>
+
+        <!-- ③ OWNERS / PARENTS ─────────────────────────── -->
+        <section class="card reveal" id="ownersCardWrap">
+            <div class="label">Той иелері</div>
+            <div class="section-title">Ата-аналар</div>
+
+            <div class="parents-grid" id="parentsGrid" style="display:none;"></div>
+
+            <div style="margin-top:14px; text-align:center;">
+                <div class="parent-role" style="margin-bottom:4px;">Той иелері</div>
+                <div id="ownersBigName">Сейітовтар әулеті</div>
             </div>
         </section>
 
-        <!-- ② ABOUT -->
-        <section class="about rv">
-            <p class="about-eyebrow" id="eventText">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+        <!-- ④ EVENT DETAILS ────────────────────────────── -->
+        <section class="card reveal">
+            <div class="label">Той мәліметтері</div>
+            <div class="section-title">Мерзімі мен орны</div>
 
-            <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="wv" x="0" y="0" width="20" height="14" patternUnits="userSpaceOnUse">
-                        <path d="M0 7 Q5 1 10 7 Q15 13 20 7" fill="none" stroke="rgba(201,169,110,0.35)" stroke-width="1.3"/>
-                    </pattern>
-                </defs>
-                <rect width="200" height="14" fill="url(#wv)"/>
-            </svg>
+            <!-- Mini calendar -->
+            <div style="margin-top:16px; background:rgba(214,234,245,0.2); border-radius:12px; padding:14px; border:1px solid rgba(45,110,102,0.1);">
+                <div class="cal-weekdays">
+                    <span>Дс</span><span>Сс</span><span>Ср</span><span>Бс</span><span>Жм</span><span>Сн</span><span>Жк</span>
+                </div>
+                <div id="calMo"></div>
+                <div id="calGrid"></div>
+                <p id="heroDateLine" style="text-align:center;font-size:13px;color:var(--muted);margin-top:4px;"></p>
+            </div>
 
-            <p class="invite-body">Сіздерді сүйікті сәбиіміздің:</p>
-            <h1 id="heroNamesLine">—</h1>
-            <p class="invite-footer">Тұсаукесер тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз</p>
-
-            <svg class="wave-orn" viewBox="0 0 200 14" xmlns="http://www.w3.org/2000/svg">
-                <use href="#wv"/>
-            </svg>
-
-            <div class="date-block">
-                <p class="date-label">Тойымыз уақыты:</p>
-                <div class="calendar-wrap">
-                    <span class="cal-icon">🐣</span>
-                    <div class="cal-month-title" id="calMo"></div>
-                    <div class="cal-grid-head">
-                        <span>Дс</span><span>Сс</span><span>Ср</span>
-                        <span>Бс</span><span>Жм</span><span>Сб</span><span>Жк</span>
+            <!-- Event rows -->
+            <div class="event-rows">
+                <div class="event-row">
+                    <div class="event-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#c49a4a" stroke-width="1.3" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/>
+                            <rect x="9" y="13" width="3" height="3" rx="0.5" fill="#c49a4a"/>
+                        </svg>
                     </div>
-                    <div class="cal-grid" id="calGrid"></div>
+                    <div>
+                        <div class="ev-label">Күні</div>
+                        <div class="ev-val" id="evDate">21 наурыз 2026</div>
+                        <div class="ev-sub">Сенбі</div>
+                    </div>
                 </div>
-                <p id="heroDateLine" class="time-only"></p>
+                <div class="event-row">
+                    <div class="event-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#c49a4a" stroke-width="1.3" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="ev-label">Уақыты</div>
+                        <div class="ev-val">18:00</div>
+                        <div class="ev-sub">Қонақтар күтіледі</div>
+                    </div>
+                </div>
+                <div class="event-row">
+                    <div class="event-icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#c49a4a" stroke-width="1.3" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                            <circle cx="12" cy="9" r="2.5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="ev-label">Мекенжайы</div>
+                        <div class="ev-val" id="locationName">Astana, Farhi Hall</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="countdown-row">
-                <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">Күн</span></div>
-                <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">Сағат</span></div>
-                <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">Минут</span></div>
-                <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">Секунд</span></div>
+            <!-- Countdown -->
+            <div style="margin-top:20px; text-align:center;">
+                <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:500;">Тойға дейін қалды</div>
+                <div class="countdown">
+                    <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-label">күн</span></div>
+                    <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-label">сағат</span></div>
+                    <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-label">минут</span></div>
+                    <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-label">секунд</span></div>
+                </div>
             </div>
 
-            <div id="ownersBlock" style="display:none;"></div>
-        </section>
-
-        <!-- ③ OWNERS -->
-        <section class="owners-section rv">
-            <div class="thread-decor">
-                <span class="tr"></span><span class="tw"></span><span class="tg"></span>
-                <span class="tr"></span><span class="tw"></span><span class="tg"></span>
-            </div>
-            <p class="owners-label-txt">Той иелері</p>
-            <p class="owners-name-txt" id="ownersBigName">—</p>
-            <div class="thread-decor" style="margin-top:20px; margin-bottom:0;">
-                <span class="tg"></span><span class="tw"></span><span class="tr"></span>
-                <span class="tg"></span><span class="tw"></span><span class="tr"></span>
-            </div>
-        </section>
-
-        <!-- АҚ ЖОЛ -->
-        <section class="fate-section rv">
-            <p class="fate-eyebrow">Ақ жол</p>
-            <p class="fate-title">Баланың алдына<br>не қоясыз?</p>
-            <div class="fate-items">
-                <div class="fate-item"><span class="fi-icon">📚</span><span class="fi-name">Кітап</span><span class="fi-desc">ғалым болады</span></div>
-                <div class="fate-item"><span class="fi-icon">💰</span><span class="fi-name">Ақша</span><span class="fi-desc">бай болады</span></div>
-                <div class="fate-item"><span class="fi-icon">🎵</span><span class="fi-name">Домбыра</span><span class="fi-desc">өнерлі болады</span></div>
-                <div class="fate-item"><span class="fi-icon">🍎</span><span class="fi-name">Алма</span><span class="fi-desc">тоқ болады</span></div>
-            </div>
-        </section>
-
-        <!-- ④ LOCATION -->
-        <section class="location rv">
-            <h3>Мекенжай</h3>
-            <div class="loc-divider"></div>
-            <p id="locationName"></p>
-            <div id="mapBtnWrap" style="display:none;">
-                <a id="mapBtn" class="btn" target="_blank" rel="noreferrer noopener">
-                    <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2gis">
+            <!-- 2GIS btn -->
+            <div id="mapBtnWrap">
+                <a id="mapBtn" href="#" target="_blank" rel="noreferrer noopener" class="map-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C8.1 2 5 5 5 8.8c0 4.6 6.2 12.5 6.5 12.5s6.5-7.9 6.5-12.5C18 5 15 2 12 2Z"/><circle cx="12" cy="8.5" r="2.4"/></svg>
                     Карта арқылы ашу
                 </a>
             </div>
         </section>
 
-        <!-- ⑤ GALLERY -->
-        <section class="gallery rv">
-            <h3>Біздің сәттер</h3>
-            <div class="gallery-viewport">
-                <div id="gallerySlides"></div>
-            </div>
-            <div class="gallery-controls" id="galleryControls" style="display:none">
-                <button class="g-arrow" onclick="goPrev()">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <div class="g-dots" id="gDots"></div>
-                <button class="g-arrow" onclick="goNext()">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-            </div>
-        </section>
-
-        <!-- ⑥ RSVP -->
-        <section class="rsvp">
-            <span class="rsvp-tag">Растау</span>
-            <h3>Ваш ответ</h3>
-            <div class="form-wrap">
-                <div id="rsvpForm">
-                    <div class="form-group">
-                        <label class="f-label">Есіміңіз</label>
-                        <input id="rName" placeholder="Аты-жөніңіз">
-                    </div>
-                    <div class="form-group">
-                        <label class="f-label">Телефон</label>
-                        <input id="rPhone" placeholder="+7 (___) ___-__-__">
-                    </div>
-                    <div class="form-group">
-                        <label class="f-label">Қанша адам</label>
-                        <div class="guest-counter">
-                            <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
-                            <input id="rGuests" type="number" min="1" value="1" readonly>
-                            <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="f-label">Ескерту</label>
-                        <textarea id="rNote" placeholder="Ерекше тілек..."></textarea>
-                    </div>
-                    <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растаймын</button>
-                </div>
-                <div id="successMsg">
-                    <span class="s-icon">✦</span>
-                    <p>Рақмет! Сізді күтеміз.</p>
-                </div>
-            </div>
-        </section>
-
-        <div class="site-footer">
-            Шын жүректен <a href="https://shaqyrtu.kz" target="_blank">shaqyrtu.kz</a> арқылы жасалған 🇰🇿
+        <!-- DIVIDER -->
+        <div class="divider reveal">
+            <div class="divider-line"></div>
+            <svg width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" style="opacity:0.6;">
+                <path d="M24 4 C28 12 36 14 42 14 C36 18 34 26 36 32 C30 28 24 30 18 32 C20 26 18 20 6 14 C14 14 20 12 24 4Z" fill="#dfa090"/>
+            </svg>
+            <div class="divider-line"></div>
         </div>
 
-    </div><!-- /page -->
+        <!-- ⑤ WISHES / DRESS CODE ──────────────────────── -->
+        <section class="card reveal">
+            <div class="label">Тілектер</div>
 
-</div><!-- .page-root-wrap -->
 
+            <div class="wishes-quote" style="margin-top:18px;">
+                <p>
+                    Тұсаукесер тойы құтты болсын! Сәбидің тәй-тәй басқан қадамы нық, болашағы жарқын, өмір жолы ақ болсын. Сүрінбей, биік шыңдарды бағындырып, ата-анасын қуантып, елінің мақтанышы болсын. Әр қадамы оң болып, бағы жансын!
+                </p>
+            </div>
+        </section>
+
+        <!-- ⑥ GALLERY ──────────────────────────────────── -->
+        <section class="card reveal">
+            <div class="label">Естеліктер</div>
+            <div class="section-title">Біздің сәттер</div>
+            <div id="gallerySlides">
+                <div class="gallery-placeholder">
+                    <div class="gallery-placeholder-item">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#c49a4a" stroke-width="1">
+                            <rect x="4" y="6" width="28" height="24" rx="3"/><circle cx="18" cy="17" r="6"/><circle cx="27" cy="11" r="2.5" fill="#c49a4a" opacity="0.5"/>
+                        </svg>
+                    </div>
+                    <div class="gallery-placeholder-item">
+                        <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true" style="opacity:0.35;">
+                            <path d="M24 4 C28 12 36 14 42 14 C36 18 34 26 36 32 C30 28 24 30 18 32 C20 26 18 20 6 14 C14 14 20 12 24 4Z" fill="#dfa090"/>
+                        </svg>
+                    </div>
+                    <div class="gallery-placeholder-item">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#2d6e66" stroke-width="1" opacity="0.4">
+                            <path d="M14 4 C14 4 20 9 20 14 C20 20 14 24 14 24 C14 24 8 20 8 14 C8 9 14 4 14 4Z"/>
+                            <path d="M4 14 C4 14 9 8 14 8 C20 8 24 14 24 14 C24 14 20 20 14 20 C9 20 4 14 4 14Z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;opacity:0.6;letter-spacing:1px;">Той алдында жаңартылады</p>
+            </div>
+            <div id="galleryDots" class="gallery-dots" style="display:none;"></div>
+        </section>
+
+        <!-- ⑦ RSVP ────────────────────────────────────── -->
+        <section class="card reveal">
+            <div class="label">Растауыңызды күтеміз</div>
+            <div class="section-title">Келетіндігіңізді растаңыз</div>
+            <p style="text-align:center;font-family:var(--serif);font-size:13px;font-style:italic;color:var(--muted);margin:8px 0 18px;">Той басталуына 3 күн бұрын хабарлаңыз</p>
+
+            <form id="rsvpForm" onsubmit="submitRSVP(event)">
+                <div class="rsvp-field">
+                    <input type="text" id="rName" placeholder="Есіміңіз" required autocomplete="name">
+                </div>
+                <div class="rsvp-field">
+                    <input type="tel" id="rPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+                </div>
+                <div class="guest-counter">
+                    <button class="gc-btn" type="button" onclick="changeGuests(-1)">−</button>
+                    <input id="rGuests" type="number" min="1" max="20" value="1" readonly class="rsvp-field" style="margin-bottom:0!important;">
+                    <button class="gc-btn" type="button" onclick="changeGuests(1)">+</button>
+                </div>
+                <div class="rsvp-field">
+                    <textarea id="rNote" placeholder="Арнайы тілектер..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Растаймын ✦</button>
+            </form>
+
+            <div id="successMsg">
+                <span class="tick">✦</span>
+                <p>Рақмет! Сізді тойымызда күтеміз.</p>
+            </div>
+        </section>
+
+        <!-- FOOTER ─────────────────────────────────────── -->
+        <footer class="footer reveal">
+            <svg class="footer-decor" viewBox="0 0 200 36" aria-hidden="true">
+                <path d="M10 18h40M150 18h40" stroke="#c49a4a" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="100" cy="18" r="8" stroke="#c49a4a" stroke-width="2" fill="none"/>
+                <circle cx="100" cy="18" r="3" fill="#c49a4a"/>
+            </svg>
+            <div class="footer-date">21 · III · 2026</div>
+            <div class="footer-name"> Тұсаукесер тойы</div>
+        </footer>
+
+    </div><!-- /content -->
+</div><!-- /page-root -->
+
+<!-- ══ SCRIPTS ══════════════════════════════════════ -->
 <script>
+    const CONFIG = {
+        childName:   "Айлин",
+        childAge:    "1 жасқа толды",
+        day:         "21-03-2026",
+        hour:        "18:00",
+        location:    "Astana, Farhi Hall",
+        locationUrl: "https://2gis.kz/astana",
+        gallery:     [],
+        previewPhotoUrl: "",
+        toiOwners:   "Сейітовтар әулеті",
+        parents: []
+    };
+
+    /* ── Apply CONFIG ───────────────────────────────── */
     (function applyConfig() {
         const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
         const [hh, mi]     = CONFIG.hour.split(':');
         const MO_KK = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым",
             "Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];
 
-        const childName = CONFIG.names.child || CONFIG.names.bride || '—';
-        document.title = `${childName} — Тұсаукесер`;
-        document.getElementById('heroNames').textContent = childName;
-        const nl = document.getElementById('heroNamesLine');
-        if (nl) nl.textContent = childName;
+        const child = CONFIG.childName
+            || CONFIG.names?.child
+            || CONFIG.names?.bride
+            || CONFIG.names?.groom
+            || (CONFIG.title || '').trim()
+            || 'Бала';
 
-        const desc = document.getElementById('eventText');
-        if (desc) desc.textContent = CONFIG.description || 'Құрметті ағайын-туыс, құда-жекжат, дос-жаран!';
+        const ceremonyLabel = CONFIG.ceremony || CONFIG.ceremonyTitle || CONFIG.templateTitle || 'Тұсаукесер той';
 
-        const dtLine = document.getElementById('heroDateLine');
-        if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
+        document.title = `${child} · ${ceremonyLabel}`;
 
+        const nameEl = document.getElementById('heroName');
+        if (nameEl) nameEl.textContent = child;
+        const badge = document.getElementById('heroCeremonyBadge');
+        if (badge) badge.textContent = ceremonyLabel;
+        const nameLine = document.getElementById('heroNamesLine');
+        if (nameLine) nameLine.textContent = child;
+        const nameInline = document.getElementById('heroNamesInline');
+        if (nameInline) nameInline.textContent = child;
+
+        // Description / invite text
+        const evText = document.getElementById('eventText');
+        if (evText && CONFIG.description) evText.innerHTML = CONFIG.description.replace('\n', '<br>');
+
+        const dateEl = document.getElementById('heroDateLine');
+        if (dateEl) dateEl.textContent = `${dd} ${MO_KK[mm-1]} ${yy} · ${CONFIG.hour}`;
+
+        // Calendar
         const calMo   = document.getElementById('calMo');
         const calGrid = document.getElementById('calGrid');
         if (calMo) calMo.textContent = `${MO_KK[mm-1]} ${yy}`;
@@ -789,143 +1126,199 @@
             const prev  = new Date(yy, mm-1, 0).getDate();
             for (let i = 0; i < off; i++) {
                 const e = document.createElement('div');
-                e.className = 'cday other'; e.textContent = prev - off + 1 + i;
+                e.className = 'other'; e.textContent = prev - off + 1 + i;
                 calGrid.appendChild(e);
             }
             for (let d = 1; d <= total; d++) {
                 const e = document.createElement('div');
-                e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d;
+                if (d === dd) e.className = 'today';
+                e.textContent = d;
                 calGrid.appendChild(e);
             }
             const rem = (off + total) % 7;
             for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
                 const e = document.createElement('div');
-                e.className = 'cday other'; e.textContent = i;
+                e.className = 'other'; e.textContent = i;
                 calGrid.appendChild(e);
             }
         }
 
-        (function() {
-            const target = new Date(yy, mm-1, dd, +hh, +mi, 0);
-            const pad = n => String(n).padStart(2,'0');
-            function tick() {
-                const d = Math.max(0, target - new Date());
-                document.getElementById('cdD').textContent = pad(Math.floor(d/86400000));
-                document.getElementById('cdH').textContent = pad(Math.floor(d%86400000/3600000));
-                document.getElementById('cdM').textContent = pad(Math.floor(d%3600000/60000));
-                document.getElementById('cdS').textContent = pad(Math.floor(d%60000/1000));
-            }
+        // Countdown
+        (function countdown() {
+            const target = new Date(`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}T${String(hh).padStart(2,'0')}:${String(mi).padStart(2,'0')}:00`);
+            if (isNaN(target.getTime())) return;
+            const set = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=String(v).padStart(2,'0'); };
+            const tick = () => {
+                let diff = Math.max(0, target - new Date());
+                set('cdS', Math.floor(diff/1000)%60);
+                set('cdM', Math.floor(diff/60000)%60);
+                set('cdH', Math.floor(diff/3600000)%24);
+                set('cdD', Math.floor(diff/86400000));
+            };
             tick(); setInterval(tick, 1000);
         })();
 
-        const ob = document.getElementById('ownersBigName');
-        if (ob && CONFIG.toiOwners) ob.textContent = CONFIG.toiOwners;
+        // Owners
+        const ownersCard = document.getElementById('ownersBigName');
+        const ownersWrap = document.getElementById('ownersCardWrap');
+        const parentsGrid = document.getElementById('parentsGrid');
+        const parentsList = CONFIG.parents || [];
+        if (ownersCard) ownersCard.textContent = CONFIG.toiOwners || '';
+        if (parentsGrid && parentsList.length) {
+            parentsGrid.style.display = 'grid';
+            parentsGrid.innerHTML = '';
+            parentsList.forEach((p, idx) => {
+                parentsGrid.innerHTML += `<div class="parent-block">
+                    <div class="parent-role">${p.role || (idx === 0 ? 'Әке' : 'Ана')}</div>
+                    <div class="parent-name">${p.name || ''}</div>
+                    <div class="parent-family">${p.family || ''}</div>
+                </div>`;
+                if (idx === 0 && parentsList.length > 1) parentsGrid.innerHTML += '<div class="parents-sep"></div>';
+            });
+        }
+        if (!CONFIG.toiOwners && (!parentsList || !parentsList.length) && ownersWrap) {
+            ownersWrap.style.display = 'none';
+        }
 
+        // Location
         const loc = document.getElementById('locationName');
         if (loc) loc.textContent = CONFIG.location || '';
-        const mapWrap = document.getElementById('mapBtnWrap');
-        const mapBtn  = document.getElementById('mapBtn');
-        if (mapBtn && CONFIG.locationUrl) {
-            mapBtn.href = CONFIG.locationUrl;
-            if (mapWrap) mapWrap.style.display = 'block';
+        const evDate = document.getElementById('evDate');
+        if (evDate) evDate.textContent = `${dd} ${MO_KK[mm-1].toLowerCase()} ${yy}`;
+        const mapBtn = document.getElementById('mapBtn');
+        if (mapBtn) {
+            if (CONFIG.locationUrl) {
+                mapBtn.href = CONFIG.locationUrl;
+                mapBtn.style.display = 'inline-flex';
+            } else {
+                mapBtn.style.display = 'none';
+            }
         }
 
+        // Gallery
         const slides = document.getElementById('gallerySlides');
+        const galleryList = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : [
+            "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80"
+        ];
         if (slides) {
             slides.innerHTML = '';
-            const list = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : [];
-            if (!list.length) {
-                const e = document.createElement('div');
-                e.className = 'gallery-empty'; e.textContent = 'Галереяға фото қосыңыз';
-                slides.appendChild(e);
-            } else {
-                list.forEach((url, i) => {
-                    const img = document.createElement('img');
-                    img.src = url; img.alt = 'photo';
-                    img.addEventListener('click', () => { gIdx = i; updateGallery(); });
-                    slides.appendChild(img);
-                });
-                document.getElementById('galleryControls').style.display = 'flex';
-                const dw = document.getElementById('gDots');
-                list.forEach((_,i) => {
-                    const d = document.createElement('div');
-                    d.className = 'g-dot'+(i===0?' lit':'');
-                    d.addEventListener('click', ()=>{ gIdx=i; updateGallery(); });
-                    dw.appendChild(d);
-                });
-                let tx=0;
-                slides.addEventListener('touchstart', e=>tx=e.touches[0].clientX,{passive:true});
-                slides.addEventListener('touchend',   e=>{ const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) dx<0?goNext():goPrev(); });
-            }
+            galleryList.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url; img.alt = 'photo';
+                slides.appendChild(img);
+            });
+        }
+        const dotsWrap = document.getElementById('galleryDots');
+        if (dotsWrap && galleryList.length > 1) {
+            dotsWrap.style.display = 'flex';
+            dotsWrap.innerHTML = '';
+            galleryList.forEach((_, i) => {
+                const d = document.createElement('div');
+                d.className = 'dot' + (i === 0 ? ' active' : '');
+                d.onclick = () => setGalleryIndex(i);
+                dotsWrap.appendChild(d);
+            });
         }
 
-        (() => {
-            const url = CONFIG.music && CONFIG.music.url;
-            if (!url) return;
-            const audio = document.getElementById('audioEl');
-            audio.src = url;
-            const start = () => { audio.play().then(()=>{ playing=true; document.getElementById('musicBtn').classList.add('playing'); updateMIcon(); }).catch(()=>{}); };
-            audio.play().then(()=>{ playing=true; document.getElementById('musicBtn').classList.add('playing'); updateMIcon(); }).catch(()=>{
-                document.addEventListener('touchstart', start, {once:true});
-                document.addEventListener('click',      start, {once:true});
+        let gIdx = 0;
+        function setGalleryIndex(idx) {
+            const imgs = slides ? Array.from(slides.querySelectorAll('img')) : [];
+            if (!imgs.length) return;
+            gIdx = (idx + imgs.length) % imgs.length;
+            const target = imgs[gIdx];
+            target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            if (dotsWrap) {
+                dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
+            }
+        }
+        if (slides && galleryList.length > 1) {
+            let auto;
+            const restart = () => {
+                clearInterval(auto);
+                auto = setInterval(() => setGalleryIndex(gIdx + 1), 3500);
+            };
+            slides.addEventListener('scroll', () => {
+                const imgs = Array.from(slides.querySelectorAll('img'));
+                if (!imgs.length) return;
+                const mid = slides.scrollLeft + slides.clientWidth / 2;
+                const nearest = imgs.reduce((best, img, i) => {
+                    const box = img.getBoundingClientRect();
+                    const center = box.left + window.scrollX + box.width / 2;
+                    const dist = Math.abs(center - mid - window.scrollX);
+                    return dist < best.dist ? { i, dist } : best;
+                }, { i: gIdx, dist: Infinity });
+                if (nearest.i !== gIdx) setGalleryIndex(nearest.i);
+            }, { passive: true });
+            restart();
+        }
+
+        // Parents grid (optional)
+        const pg = document.getElementById('parentsGrid');
+        const parents = CONFIG.parents || [];
+        if (pg && parents.length) {
+            pg.style.display = 'grid';
+            pg.innerHTML = '';
+            parents.forEach((p, idx) => {
+                pg.innerHTML += `<div class="parent-block">
+                    <div class="parent-role">${p.role || (idx === 0 ? 'Әке' : 'Ана')}</div>
+                    <div class="parent-name">${p.name || ''}</div>
+                    <div class="parent-family">${p.family || ''}</div>
+                </div>`;
+                if (idx === 0 && parents.length > 1) {
+                    pg.innerHTML += '<div class="parents-sep"></div>';
+                }
             });
-        })();
+        }
+
+        // Hero photo (prefer provided)
+        const heroUrl = CONFIG.heroPhoto || CONFIG.previewPhotoUrl || (galleryList.length ? galleryList[0] : '');
+        if (heroUrl) {
+            const ring = document.querySelector('.hero-photo-ring');
+            if (ring) {
+                ring.innerHTML = `<img class="child-photo" src="${heroUrl}" alt="${child}">`;
+            }
+        }
     })();
 
-    let gIdx=0, galleryInterval=null;
-    function startGalleryAuto(){ if(galleryInterval) clearInterval(galleryInterval); galleryInterval=setInterval(goNext,4000); }
-    function updateGallery(){
-        const s=document.getElementById('gallerySlides');
-        const items=Array.from(s.querySelectorAll('img'));
-        if(!items.length) return;
-        const dots=Array.from(document.getElementById('gDots').children);
-        const sw=items[0].offsetWidth+14;
-        const vw=s.parentElement.offsetWidth;
-        s.style.transform=`translateX(${-Math.max(0,gIdx*sw-vw/2+sw/2-36)}px)`;
-        items.forEach((el,i)=>el.classList.toggle('active-slide',i===gIdx));
-        dots.forEach((d,i)=>d.classList.toggle('lit',i===gIdx));
+    /* ── Guest counter ──────────────────────────────── */
+    function changeGuests(d) {
+        const inp = document.getElementById('rGuests');
+        inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
     }
-    function goNext(){ const n=document.getElementById('gallerySlides').querySelectorAll('img').length; if(n){gIdx=(gIdx+1)%n; updateGallery();} }
-    function goPrev(){ const n=document.getElementById('gallerySlides').querySelectorAll('img').length; if(n){gIdx=(gIdx-1+n)%n; updateGallery();} }
-    window.addEventListener('load',()=>{ if(document.getElementById('gallerySlides').querySelectorAll('img').length) startGalleryAuto(); });
 
-    let playing=false;
-    function toggleMusic(){
-        const audio=document.getElementById('audioEl');
-        const btn=document.getElementById('musicBtn');
-        const url=CONFIG.music&&CONFIG.music.url;
-        if(!audio.src||audio.src===window.location.href){
-            if(url){audio.src=url;}
-            else{
-                const inp=document.createElement('input'); inp.type='file'; inp.accept='audio/*';
-                inp.onchange=e=>{ const f=e.target.files[0]; if(!f) return; audio.src=URL.createObjectURL(f); doPlay(audio,btn); };
-                inp.click(); return;
-            }
+    /* ── RSVP ───────────────────────────────────────── */
+    function submitRSVP(e) {
+        e.preventDefault();
+        const n = document.getElementById('rName').value.trim();
+        const p = document.getElementById('rPhone').value.trim();
+        if (!n) { document.getElementById('rName').focus(); return; }
+        if (!p) { document.getElementById('rPhone').focus(); return; }
+        document.getElementById('rsvpForm').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+    }
+
+    /* ── Scroll reveal ──────────────────────────────── */
+    (function() {
+        const els = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        obs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
+            els.forEach((el, i) => {
+                el.style.transitionDelay = (i * 0.07) + 's';
+                obs.observe(el);
+            });
+        } else {
+            els.forEach(el => el.classList.add('visible'));
         }
-        if(playing){audio.pause();playing=false;btn.classList.remove('playing');}
-        else doPlay(audio,btn);
-        updateMIcon();
-    }
-    function doPlay(a,b){ a.play().catch(()=>{}); playing=true; b.classList.add('playing'); updateMIcon(); }
-    function updateMIcon(){
-        document.getElementById('mIcon').innerHTML=playing
-            ?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
-            :'<path d="M8 5v14l11-7z"/>';
-    }
-
-    function changeGuests(d){ const inp=document.getElementById('rGuests'); inp.value=Math.max(1,Math.min(20,parseInt(inp.value||1)+d)); }
-
-    window.submitRSVP=()=>{
-        const n=document.getElementById('rName').value.trim();
-        const p=document.getElementById('rPhone').value.trim();
-        if(!n){document.getElementById('rName').focus();return;}
-        if(!p){document.getElementById('rPhone').focus();return;}
-        document.getElementById('rsvpForm').style.display='none';
-        document.getElementById('successMsg').style.display='block';
-    };
-
-    const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.08});
-    document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+    })();
 </script>
 </body>
 </html>
