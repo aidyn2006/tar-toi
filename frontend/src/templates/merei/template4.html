@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мерейтой — Шақыру</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --peach: #FFF8F6;
+            --rose: #E5A894;
+            --gold: #C5A367;
+            --text: #4E342E;
+            --muted: #8D6E63;
+            --white: #FFFFFF;
+            --serif: 'Playfair Display', serif;
+            --sans: 'Montserrat', sans-serif;
+            --script: 'Great Vibes', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--peach);
+            color: var(--text);
+            font-family: var(--sans);
+        }
+
+        .app {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--white);
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Border */
+        .border-strip {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 14px;
+            z-index: 1000;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 100% auto;
+            background-repeat: repeat-y;
+            filter: sepia(0.5) saturate(1.2);
+        }
+
+        .border-left {
+            left: 0;
+        }
+
+        .border-right {
+            right: 0;
+            transform: scaleX(-1);
+        }
+
+        .section {
+            padding: 60px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 1s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(180deg, var(--peach) 0%, var(--white) 100%);
+            padding-top: 80px;
+        }
+
+        .flower-icon {
+            width: 120px;
+            margin-bottom: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .hero-badge {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--rose);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .hero-name {
+            font-family: var(--script);
+            font-size: 64px;
+            color: var(--rose);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .hero-age {
+            font-family: var(--serif);
+            font-size: 20px;
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .photo-wrap {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 1px solid var(--rose);
+            padding: 10px;
+            position: relative;
+        }
+
+        .photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .photo-wrap::after {
+            content: '';
+            position: absolute;
+            inset: -15px;
+            border: 1px dashed var(--gold);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .invite-txt {
+            font-family: var(--serif);
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--muted);
+            padding: 0 10px;
+            margin: 40px 0;
+        }
+
+        /* Details */
+        .details-box {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            border-top: 1px solid var(--peach);
+            border-bottom: 1px solid var(--peach);
+            padding: 25px 0;
+        }
+
+        .detail-item span {
+            display: block;
+            font-size: 10px;
+            color: var(--rose);
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .detail-item strong {
+            font-family: var(--serif);
+            font-size: 18px;
+        }
+
+        /* Map */
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--rose);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 13px;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(229, 168, 148, 0.4);
+        }
+
+        .map-btn img {
+            width: 18px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* RSVP */
+        .rsvp-form {
+            background: var(--peach);
+            padding: 50px 25px;
+            border-radius: 40px;
+            margin-top: 30px;
+        }
+
+        .f-input {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: white;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            background: var(--rose);
+            color: white;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        /* Music */
+        .music-btn {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--peach);
+            color: var(--rose);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        footer {
+            padding: 80px 30px;
+            text-align: center;
+        }
+
+        .foot-decor {
+            width: 120px;
+            opacity: 0.1;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+        <div class="border-strip border-left"></div>
+        <div class="border-strip border-right"></div>
+
+        <button class="music-btn" onclick="toggleMusic()">
+            <svg id="mIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+            </svg>
+            <audio id="audioEl" loop></audio>
+        </button>
+
+        <section class="section hero reveal">
+            <img src="https://shaqyrtu.kz/template12/gul.png" class="flower-icon" alt="">
+            <div class="hero-badge">Мерейтойға шақыру</div>
+            <h1 class="hero-name" id="heroName">Ақмарал</h1>
+            <div class="hero-age" id="heroAge">50 жас</div>
+
+            <div class="photo-wrap" id="heroPhoto">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80"
+                    alt="">
+            </div>
+        </section>
+
+        <section class="section reveal" style="padding-top:0;">
+            <div class="invite-txt" id="eventText">
+                Құрметті бауырлар мен қадірлі қонақтар!<br><br>
+                Өмірдің шуақты белесіне шығып, <strong id="ageLabel">50 жасқа</strong> толуыма арналған салтанатты
+                мерекелік кештің қадірлі қонағы болуға шақырамын!
+            </div>
+
+            <div class="details-box">
+                <div class="detail-item">
+                    <span>КҮНІ</span>
+                    <strong id="dispDate">25 Мамыр</strong>
+                </div>
+                <div class="detail-item">
+                    <span>УАҚЫТЫ</span>
+                    <strong id="dispTime">19:00</strong>
+                </div>
+            </div>
+
+            <div style="margin-top:40px;">
+                <h3 style="font-family:var(--serif); color:var(--rose); margin-bottom:5px;" id="locName">Gold Palace
+                </h3>
+                <p style="color:var(--muted); font-size:14px;" id="locDesc">Алматы қаласы, Абай даңғылы, 15</p>
+
+                <a id="mapLink" href="#" target="_blank" class="map-btn">
+                    <img src="https://shaqyrtu.kz/images/twogis.svg" alt="">
+                    2GIS КАРТАМЕН АШУ
+                </a>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="rsvp-form">
+                <h3 style="font-family:var(--serif); margin-bottom:25px;">Қатысуыңызды растаңыз</h3>
+                <div id="rsvpForm">
+                    <input type="text" id="rName" class="f-input" placeholder="Есіміңіз">
+                    <input type="tel" id="rPhone" class="f-input" placeholder="Телефон нөміріңіз">
+                    <button class="submit-btn" onclick="submitRSVP()">Растау</button>
+                </div>
+                <div id="success" style="display:none; text-align:center;">
+                    <p style="font-family:var(--script); font-size:32px; color:var(--rose);">Рахмет!</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <img src="https://shaqyrtu.kz/template4/decor.png" class="foot-decor" alt="">
+            <div style="font-family:var(--script); font-size:32px; color:var(--rose);" id="footerName">Ақмарал — 50 жас
+            </div>
+            <div style="font-size:11px; letter-spacing:4px; opacity:0.5; margin-top:10px;" id="footerDate">2026</div>
+        </footer>
+    </div>
+
+    <script>
+        (function () {
+            const MO = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const $ = id => document.getElementById(id);
+
+            function applyConfig(cfg) {
+                const c = cfg || window.CONFIG || {};
+                const name = c.personName || c.childName || c.names?.bride || 'Есімі';
+                const age = c.personAge || '50';
+                const [d, m, y] = (c.day || '25-05-2026').split('-').map(Number);
+
+                $('heroName').textContent = name;
+                $('heroAge').textContent = age + ' жас';
+                $('ageLabel').textContent = age + ' жасқа';
+                $('footerName').textContent = `${name} — ${age} жас`;
+
+                $('dispDate').textContent = `${d} ${MO[m - 1]}`;
+                $('dispTime').textContent = c.hour || '19:00';
+                $('locName').textContent = c.location || '';
+                $('mapLink').href = c.locationUrl || '#';
+                $('footerDate').textContent = y;
+                if (c.description) $('eventText').innerHTML = c.description.replace(/\n/g, '<br>');
+
+                const photoEl = $('heroPhoto');
+                const url = c.heroPhoto || c.heroPhotoUrl || c.previewPhotoUrl;
+                if (photoEl && url) photoEl.innerHTML = `<img src="${url}" alt="">`;
+            }
+
+            window.CONFIG = {
+                personName: "Ақмарал",
+                personAge: "50",
+                day: "25-05-2026",
+                hour: "19:00",
+                location: "Gold Palace",
+                locationUrl: "https://2gis.kz"
+            };
+
+            window.toggleMusic = () => {
+                const a = $('audioEl');
+                if (!a.src) return;
+                if (a.paused) { a.play(); $('mIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
+                else { a.pause(); $('mIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+            };
+
+            window.submitRSVP = () => {
+                $('rsvpForm').style.display = 'none';
+                $('success').style.display = 'block';
+            };
+
+            const obs = new IntersectionObserver(es => es.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            }), { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+            applyConfig();
+            window.addEventListener('message', e => { if (e.data?.type === 'UPDATE_CONFIG') applyConfig(e.data.config); });
+        })();
+    </script>
+</body>
+
+</html>
