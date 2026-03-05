@@ -46,27 +46,26 @@
         }
 
         /* Premium Borders */
-        .border-strip.left {
-            left: 0;
+        .border-strip {
+            position: fixed;
+            top: 0;
             width: 14px;
             height: 100%;
             z-index: 1000;
+            pointer-events: none;
             background-image: url('https://shaqyrtu.kz/template4/border.png');
             background-size: 14px auto;
             background-repeat: repeat-y;
             filter: sepia(0.3) saturate(1.2);
         }
 
+        .border-strip.left {
+            left: 0;
+        }
+
         .border-strip.right {
             right: 0;
-            width: 14px;
-            height: 100%;
-            z-index: 1000;
-            background-image: url('https://shaqyrtu.kz/template4/border.png');
-            background-size: 14px auto;
-            background-repeat: repeat-y;
             transform: scaleX(-1);
-            filter: sepia(0.3) saturate(1.2);
         }
 
         .section {

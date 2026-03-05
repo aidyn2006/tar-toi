@@ -369,6 +369,13 @@
             </div>
         </section>
 
+        <!-- OWNERS -->
+        <section class="section reveal" style="padding-top:0;">
+            <div style="font-size:11px; letter-spacing:3px; color:var(--rose); margin-bottom:10px;">ТОЙ ИЕЛЕРІ</div>
+            <div id="toiOwners" style="font-family:var(--serif); font-size:22px; color:var(--text); font-weight:700;">—
+            </div>
+        </section>
+
         <section class="section reveal">
             <div class="rsvp-form">
                 <h3 style="font-family:var(--serif); margin-bottom:25px;">Қатысуыңызды растаңыз</h3>
@@ -413,7 +420,9 @@
                 $('dispDate').textContent = `${d} ${MO[m - 1]}`;
                 $('dispTime').textContent = c.hour || '19:00';
                 $('locName').textContent = c.location || '';
+                if ($('locDesc')) $('locDesc').textContent = c.locationDescription || c.address || '';
                 $('mapLink').href = c.locationUrl || '#';
+                if ($('toiOwners')) $('toiOwners').textContent = c.toiOwners || '';
                 $('footerDate').textContent = y;
                 if (c.description) $('eventText').innerHTML = c.description.replace(/\n/g, '<br>');
 
