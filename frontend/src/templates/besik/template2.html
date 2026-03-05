@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бесік тойы — Шақыру</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --mint: #E8F5E9;
+            --mint-dk: #81C784;
+            --gold: #D4AF37;
+            --text: #2D3436;
+            --muted: #636E72;
+            --white: #FFFFFF;
+            --serif: 'Playfair Display', serif;
+            --sans: 'Montserrat', sans-serif;
+            --script: 'Lobster', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f2f0;
+            color: var(--text);
+            font-family: var(--sans);
+        }
+
+        .app {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Premium Border */
+        .border-strip {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 14px;
+            z-index: 100;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 100% auto;
+            background-repeat: repeat-y;
+            filter: hue-rotate(90deg) saturate(0.5) brightness(1.2);
+            /* Light Mint attempt */
+        }
+
+        .border-left {
+            left: 0;
+        }
+
+        .border-right {
+            right: 0;
+            transform: scaleX(-1);
+        }
+
+        .section {
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(180deg, var(--mint) 0%, var(--white) 100%);
+            padding-top: 80px;
+        }
+
+        .hero-oiu {
+            width: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .ceremony-label {
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--mint-dk);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .child-name {
+            font-family: var(--script);
+            font-size: 52px;
+            color: var(--mint-dk);
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .photo-frame {
+            width: 260px;
+            height: 320px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            transform: rotate(-2deg);
+            border: 1px solid var(--mint);
+            position: relative;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-frame::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: url('https://shaqyrtu.kz/template12/gul.png') no-repeat center/contain;
+            z-index: 2;
+        }
+
+        .invitation-text {
+            font-family: var(--serif);
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        /* Stats Table */
+        .event-details {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px dashed var(--mint);
+        }
+
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--mint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mint-dk);
+        }
+
+        /* Calendar */
+        .calendar {
+            margin: 40px 0;
+            background: var(--mint);
+            padding: 30px 20px;
+            border-radius: 20px;
+        }
+
+        .cal-head {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .cal-d {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .cal-d.sel {
+            background: var(--white);
+            color: var(--mint-dk);
+            border-radius: 50%;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .map-box {
+            margin-top: 30px;
+        }
+
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #2D3436;
+            color: white;
+            padding: 18px 35px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .map-btn img {
+            width: 20px;
+            filter: grayscale(1) invert(1);
+        }
+
+        /* RSVP Form */
+        .form-card {
+            background: #fbfbfb;
+            border: 1px solid #eee;
+            border-radius: 25px;
+            padding: 30px;
+            text-align: left;
+        }
+
+        .f-group {
+            margin-bottom: 15px;
+        }
+
+        .f-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--mint-dk);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            margin-left: 5px;
+        }
+
+        .f-group input {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            outline: none;
+            border: 1px solid #eee;
+        }
+
+        .counter {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .c-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: var(--mint);
+            color: var(--mint-dk);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .submit {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            background: var(--mint-dk);
+            color: white;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--mint);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+
+        .footer-orn {
+            width: 200px;
+            opacity: 0.1;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+        <div class="border-strip border-left"></div>
+        <div class="border-strip border-right"></div>
+
+        <div class="music-toggle" onclick="toggleMusic()">
+            <svg id="mIcon" width="18" height="18" viewBox="0 0 24 24" fill="var(--mint-dk)">
+                <path d="M8 5v14l11-7z" />
+            </svg>
+            <audio id="audioEl" loop></audio>
+        </div>
+
+        <section class="section hero reveal">
+            <img src="https://shaqyrtu.kz/template9/oiu.png" class="hero-oiu" alt="">
+            <div class="ceremony-label" id="cTitle">Бесік тойына шақыру</div>
+            <h1 class="child-name" id="cName">Нұрислам</h1>
+
+            <div class="photo-frame" id="heroPhoto">
+                <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80"
+                    alt="">
+            </div>
+        </section>
+
+        <section class="section reveal" style="padding-top:0;">
+            <div class="invitation-text" id="eventDesc">
+                Құрметті ағайын-туыс, бауырлар!<br>
+                Ортамызға жас нәресте келіп, шаңырағымыз қуанышқа толды. Осы салтанатты
+                <strong>Бесік тойының</strong> куәсі болуға шақырамыз!
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="calendar">
+                <div class="cal-head" id="calMo">Шілде 2026</div>
+                <div class="cal-grid" id="calGrid"></div>
+            </div>
+
+            <div class="event-details">
+                <div class="detail-item">
+                    <div class="detail-icon">📅</div>
+                    <div style="text-align:left">
+                        <div style="font-size:10px; color:var(--mint-dk); font-weight:700;">КҮНІ</div>
+                        <div id="dispDate" style="font-weight:600">25 Шілде 2026</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon">⏰</div>
+                    <div style="text-align:left">
+                        <div style="font-size:10px; color:var(--mint-dk); font-weight:700;">УАҚЫТЫ</div>
+                        <div id="dispTime" style="font-weight:600">18:00</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Мекенжайымыз</h2>
+            <div class="map-box">
+                <div style="font-weight:700; margin-bottom:5px;" id="locName">"Aruana" салтанат сарайы</div>
+                <div style="font-size:14px; color:var(--muted); margin-bottom:25px;" id="locD">Астана қаласы, Қабанбай
+                    батыр даңғылы, 15</div>
+
+                <a id="mapLink" href="#" target="_blank" class="map-btn">
+                    <img src="https://shaqyrtu.kz/images/twogis.svg" alt="">
+                    2GIS-пен Навигация
+                </a>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <div class="form-card">
+                <h3 style="font-family:var(--serif); margin-bottom:20px; color:var(--mint-dk);">Тойға келетініңізді
+                    растаңыз</h3>
+                <div id="rsvpForm">
+                    <div class="f-group">
+                        <label>Есіміңіз</label>
+                        <input type="text" id="rName" placeholder="Кім болып жазыласыз?">
+                    </div>
+                    <div class="f-group">
+                        <label>Телефон</label>
+                        <input type="tel" id="rPhone" placeholder="+7 (___) ___-__-__">
+                    </div>
+                    <div class="f-group">
+                        <label>Қонақтар саны</label>
+                        <div class="counter">
+                            <button class="c-btn" onclick="changeGuests(-1)">-</button>
+                            <span id="gCount" style="width:20px; text-align:center; font-weight:700;">1</span>
+                            <button class="c-btn" onclick="changeGuests(1)">+</button>
+                        </div>
+                    </div>
+                    <button class="submit" onclick="submitRSVP()">Жіберу</button>
+                </div>
+                <div id="success" style="display:none; text-align:center; padding:20px;">
+                    <span style="font-size:30px;">🕊️</span>
+                    <p style="font-weight:600; color:var(--mint-dk); margin-top:10px;">Рахмет! Сәтті қабылданды.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="section">
+            <img src="https://shaqyrtu.kz/template4/decor.png" class="footer-orn" alt="">
+            <div class="footer-name" id="footName">Нұрислам — Бесік тойы</div>
+            <div style="font-size:12px; color:var(--muted); letter-spacing:3px;">2026</div>
+        </footer>
+    </div>
+
+    <script>
+        window.CONFIG = {
+            childName: "Нұрислам",
+            day: "25-07-2026",
+            hour: "18:00",
+            location: "Aruana салтанат сарайы",
+            locationUrl: "https://2gis.kz",
+            toiOwners: "Дәрмен & Жұлдыз"
+        };
+
+        (function () {
+            const MO = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const $ = id => document.getElementById(id);
+
+            function applyConfig(cfg) {
+                const c = cfg || window.CONFIG;
+                const [d, m, y] = c.day.split('-').map(Number);
+
+                $('cName').textContent = c.childName;
+                $('footName').textContent = `${c.childName} — Бесік тойы`;
+                $('cTitle').textContent = c.ceremony || 'Бесік тойына шақыру';
+
+                $('dispDate').textContent = `${d} ${MO[m - 1]} ${y}`;
+                $('dispTime').textContent = c.hour || '18:00';
+                $('locName').textContent = c.location || '';
+                $('mapLink').href = c.locationUrl || '#';
+                if (c.description) $('eventDesc').innerHTML = c.description.replace(/\n/g, '<br>');
+
+                const ph = $('heroPhoto');
+                const url = c.heroPhoto || c.heroPhotoUrl || c.previewPhotoUrl;
+                if (ph && url) ph.innerHTML = `<img src="${url}" alt="">`;
+
+                // Calendar
+                $('calMo').textContent = `${MO[m - 1]} ${y}`;
+                const grid = $('calGrid');
+                if (grid) {
+                    grid.innerHTML = '';
+                    const first = new Date(y, m - 1, 1).getDay();
+                    const off = first === 0 ? 6 : first - 1;
+                    const days = new Date(y, m, 0).getDate();
+                    for (let i = 0; i < off; i++) grid.innerHTML += '<div class="cal-d" style="opacity:0.1"></div>';
+                    for (let i = 1; i <= days; i++) {
+                        grid.innerHTML += `<div class="cal-d ${i === d ? 'sel' : ''}">${i}</div>`;
+                    }
+                }
+            }
+
+            window.toggleMusic = () => {
+                const a = $('audioEl');
+                if (!a.src) return;
+                if (a.paused) { a.play(); $('mIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
+                else { a.pause(); $('mIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+            }
+
+            window.changeGuests = (val) => {
+                const s = $('gCount');
+                s.textContent = Math.max(1, parseInt(s.textContent) + val);
+            }
+
+            window.submitRSVP = () => {
+                $('rsvpForm').style.display = 'none';
+                $('success').style.display = 'block';
+            }
+
+            const obs = new IntersectionObserver(es => es.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            }), { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+            applyConfig();
+            window.addEventListener('message', e => { if (e.data?.type === 'UPDATE_CONFIG') applyConfig(e.data.config); });
+        })();
+    </script>
+</body>
+
+</html>

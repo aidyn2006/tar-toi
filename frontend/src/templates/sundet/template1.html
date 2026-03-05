@@ -994,270 +994,6 @@
 <body>
     <div class="app">
 
-        <script>
-            (function () {
-                const CONFIG = {
-                    childName: "Арлан",
-                    childAge: "7 жаста",
-                    day: "15-06-2026",
-                    hour: "14:00",
-                    location: "Astana, Grand Hall",
-                    locationUrl: "https://2gis.kz/astana",
-                    gallery: [],
-                    toiOwners: "Сейітовтар әулеті",
-                    description: "",
-                    parents: []
-                };
-
-                const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
-                const MO_ROM = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-                const DAYS_KK = ["Жк", "Дс", "Сс", "Ср", "Бс", "Жм", "Сб"];
-                const $ = id => document.getElementById(id);
-
-                let countdownTimer = null;
-                let carouselTimer = null;
-                let cIdx = 0;
-                let musicPlaying = false;
-                let touchX = 0;
-
-                function applyConfig(cfg) {
-                    const config = cfg || (typeof window.CONFIG !== 'undefined' ? window.CONFIG : CONFIG);
-                    const child = config.childName || config.names?.child || 'Бала';
-                    const ceremonyLabel = config.ceremony || config.ceremonyTitle || config.templateTitle || 'Сүндет той';
-                    const dayStr = config.day || '15-06-2026';
-                    const [dd, mm, yy] = dayStr.split('-').map(Number);
-                    const [hh = "00", mi = "00"] = (config.hour || '00:00').split(':');
-
-                    document.title = `${child} — ${ceremonyLabel}`;
-
-                    // Hero
-                    const hName = $('heroNamesLine');
-                    if (hName) hName.innerHTML = `${child}<div class="hero-name-under"></div>`;
-                    const hBadge = $('heroCeremonyBadge');
-                    if (hBadge) hBadge.textContent = ceremonyLabel;
-                    const hDate = $('hDateBig');
-                    if (hDate) hDate.textContent = `${dd} ${MO_KK[mm - 1]?.toLowerCase() || ''} ${yy}`;
-                    const hH = $('hHour'); if (hH) hH.textContent = config.hour || '';
-
-                    // Texts
-                    const hInline = $('heroNamesInline');
-                    if (hInline) hInline.textContent = child;
-                    const eText = $('eventText');
-                    if (eText && config.description) eText.innerHTML = config.description.replace(/\n/g, '<br>');
-
-                    // Time display
-                    const th = $('tHour'); if (th) th.textContent = hh;
-                    const tm = $('tMin'); if (tm) tm.textContent = mi;
-
-                    // Calendar
-                    const calMo = $('calMo'); if (calMo) calMo.textContent = `${MO_KK[mm - 1] || ''} ${yy}`;
-                    const grid = $('calGrid');
-                    if (grid) {
-                        grid.innerHTML = '';
-                        const first = new Date(yy, mm - 1, 1).getDay();
-                        const off = first === 0 ? 6 : first - 1;
-                        const total = new Date(yy, mm, 0).getDate();
-                        const prev = new Date(yy, mm - 1, 0).getDate();
-                        for (let i = 0; i < off; i++) {
-                            const e = document.createElement('div');
-                            e.className = 'cday other'; e.textContent = prev - off + 1 + i;
-                            grid.appendChild(e);
-                        }
-                        for (let d = 1; d <= total; d++) {
-                            const e = document.createElement('div');
-                            if (d === dd) e.className = 'cday today';
-                            else e.className = 'cday';
-                            e.textContent = d;
-                            grid.appendChild(e);
-                        }
-                        const rem = (off + total) % 7;
-                        for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
-                            const e = document.createElement('div');
-                            e.className = 'cday other'; e.textContent = i; grid.appendChild(e);
-                        }
-                    }
-
-                    // Countdown
-                    if (countdownTimer) clearInterval(countdownTimer);
-                    const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${mi}:00`);
-                    if (!isNaN(target)) {
-                        const set = (id, v) => { const el = $(id); if (el) el.textContent = String(v).padStart(2, '0'); };
-                        const tick = () => {
-                            const diff = Math.max(0, target - Date.now());
-                            set('cdS', Math.floor(diff / 1000) % 60);
-                            set('cdM', Math.floor(diff / 60000) % 60);
-                            set('cdH', Math.floor(diff / 3600000) % 24);
-                            set('cdD', Math.floor(diff / 86400000));
-                        };
-                        tick(); countdownTimer = setInterval(tick, 1000);
-                    }
-
-                    // Owners / Parents
-                    const ol = $('ownersList'); if (ol) ol.innerHTML = '';
-                    const parents = config.parents || [];
-                    if (ol) {
-                        if (parents.length) {
-                            parents.forEach(p => {
-                                ol.innerHTML += `<div class="owner-row">
-                        <div class="owner-ava">👤</div>
-                        <div>
-                            <div class="owner-role">${p.role || ''}</div>
-                            <div class="owner-name">${p.name || ''}</div>
-                        </div>
-                    </div>`;
-                            });
-                        } else if (config.toiOwners) {
-                            ol.innerHTML = `<div class="owner-row">
-                    <div class="owner-ava">👪</div>
-                    <div>
-                        <div class="owner-role">Той иелері</div>
-                        <div class="owner-name">${config.toiOwners}</div>
-                    </div>
-                </div>`;
-                        }
-                    }
-
-                    // Location
-                    const locD = $('locDate'); if (locD) locD.textContent = `${dd} ${MO_KK[mm - 1]?.toLowerCase() || ''} ${yy}`;
-                    const locDS = $('locDaySub'); if (locDS) locDS.textContent = DAYS_KK[new Date(yy, mm - 1, dd).getDay()];
-                    const locT = $('locTime'); if (locT) locT.textContent = config.hour || '';
-                    const locN = $('locName'); if (locN) locN.textContent = config.location || '';
-                    const mapWrap = $('mapBtnWrap'); const mapBtn = $('mapBtn');
-                    if (mapBtn && config.locationUrl) { mapBtn.href = config.locationUrl; if (mapWrap) mapWrap.style.display = 'block'; }
-                    else if (mapWrap) { mapWrap.style.display = 'none'; }
-
-                    // Footer
-                    const fd = $('footerDate'); if (fd) fd.textContent = `${dd} · ${MO_ROM[mm - 1] || ''} · ${yy}`;
-                    const fn = $('footerName'); if (fn) fn.textContent = `${child} — ${ceremonyLabel}`;
-                    const fv = $('footerVenue'); if (fv && config.location) fv.textContent = config.location;
-
-                    // Photo
-                    const heroUrl = config.heroPhoto || config.previewPhotoUrl || '';
-                    const r = $('heroPhoto');
-                    if (r && heroUrl) {
-                        r.innerHTML = `<img src="${heroUrl}" alt="photo">`;
-                    }
-
-                    // Gallery
-                    if (carouselTimer) clearInterval(carouselTimer);
-                    cIdx = 0;
-                    const list = config.gallery && config.gallery.length ? config.gallery : [];
-                    const track = $('cTrack');
-                    const cWrap = $('cWrap');
-                    const dotsW = $('cDots');
-                    if (track) track.innerHTML = '';
-                    if (dotsW) dotsW.innerHTML = '';
-                    if (!list.length) {
-                        if (cWrap) {
-                            const e = document.createElement('div');
-                            e.className = 'gallery-empty';
-                            e.textContent = 'Фото суреттер той алдында жаңартылады';
-                            cWrap.replaceWith(e);
-                        }
-                    } else {
-                        if (track) {
-                            track.innerHTML = '';
-                            list.forEach(url => {
-                                const img = document.createElement('img');
-                                img.src = url; img.alt = 'gallery'; track.appendChild(img);
-                            });
-                            if (list.length > 1) {
-                                $('cPrev').style.display = '';
-                                $('cNext').style.display = '';
-                                list.forEach((_, i) => {
-                                    const d = document.createElement('div');
-                                    d.className = 'cdot' + (i === 0 ? ' active' : '');
-                                    d.onclick = () => cGo(i);
-                                    dotsW.appendChild(d);
-                                });
-                                carouselTimer = setInterval(() => cMove(1), 4000);
-                            }
-                        }
-                    }
-
-                    // Music
-                    if (config.music && config.music.url) {
-                        const audio = $('audioEl');
-                        audio.src = config.music.url;
-                        const tryPlay = () => audio.play().then(() => { musicPlaying = true; updateMusicIcon(); }).catch(() => { });
-                        tryPlay();
-                        document.addEventListener('touchstart', tryPlay, { once: true });
-                        document.addEventListener('click', tryPlay, { once: true });
-                    }
-                }
-
-                function cGo(idx) {
-                    const track = document.getElementById('cTrack');
-                    const imgs = track ? track.querySelectorAll('img') : [];
-                    if (!imgs.length) return;
-                    cIdx = (idx + imgs.length) % imgs.length;
-                    track.style.transform = `translateX(-${cIdx * 100}%)`;
-                    document.querySelectorAll('.cdot').forEach((d, i) => d.classList.toggle('active', i === cIdx));
-                }
-                function cMove(dir) { cGo(cIdx + dir); }
-
-                function toggleMusic() {
-                    const audio = document.getElementById('audioEl');
-                    if (!audio.src || audio.src === window.location.href) {
-                        const inp = document.createElement('input');
-                        inp.type = 'file'; inp.accept = 'audio/*';
-                        inp.onchange = ev => {
-                            const f = ev.target.files[0]; if (!f) return;
-                            audio.src = URL.createObjectURL(f);
-                            audio.play().catch(() => { });
-                            musicPlaying = true; updateMusicIcon();
-                        };
-                        inp.click(); return;
-                    }
-                    if (musicPlaying) { audio.pause(); musicPlaying = false; }
-                    else { audio.play().catch(() => { }); musicPlaying = true; }
-                    updateMusicIcon();
-                }
-                function updateMusicIcon() {
-                    const ico = document.getElementById('mIcon');
-                    if (!ico) return;
-                    ico.innerHTML = musicPlaying
-                        ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
-                        : '<path d="M8 5v14l11-7z"/>';
-                    const btn = document.getElementById('musicBtn');
-                    if (btn) btn.classList.toggle('playing', musicPlaying);
-                }
-
-                function changeGuests(d) {
-                    const inp = document.getElementById('rGuests');
-                    inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
-                }
-                function submitRSVP() {
-                    const n = document.getElementById('rName').value.trim();
-                    const p = document.getElementById('rPhone').value.trim();
-                    if (!n) { document.getElementById('rName').focus(); return; }
-                    if (!p) { document.getElementById('rPhone').focus(); return; }
-                    document.getElementById('rsvpForm').style.display = 'none';
-                    document.getElementById('successMsg').style.display = 'block';
-                }
-
-                function setupReveal() {
-                    const els = document.querySelectorAll('.reveal');
-                    if ('IntersectionObserver' in window) {
-                        const obs = new IntersectionObserver(entries => {
-                            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-                        }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
-                        els.forEach((el, i) => { el.style.transitionDelay = (i * 0.05) + 's'; obs.observe(el); });
-                    } else {
-                        els.forEach(el => el.classList.add('visible'));
-                    }
-                }
-
-                // Initial render and listeners
-                applyConfig(CONFIG);
-                setupReveal();
-                window.addEventListener('message', (e) => {
-                    if (e.data && e.data.type === 'UPDATE_CONFIG') {
-                        applyConfig(e.data.config);
-                    }
-                });
-            })();
-        </script>
 
 
         <!-- ①  HERO -->
@@ -1516,240 +1252,278 @@
     </div><!-- .app -->
 
     <script>
-        (function init() {
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+        // Global configuration
+        window.CONFIG = {
+            childName: "Арлан",
+            childAge: "7 жаста",
+            day: "15-06-2026",
+            hour: "14:00",
+            location: "Astana, Grand Hall",
+            locationUrl: "https://2gis.kz/astana",
+            gallery: [],
+            toiOwners: "Сейітовтар әулеті",
+            description: "",
+            parents: []
+        };
+
+        (function () {
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const MO_ROM = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
             const DAYS_KK = ["Жк", "Дс", "Сс", "Ср", "Бс", "Жм", "Сб"];
-
-            const child = CONFIG.names?.child
-                || CONFIG.childName
-                || CONFIG.names?.bride
-                || CONFIG.names?.groom
-                || (CONFIG.title || '').trim()
-                || 'Бала';
-            document.title = `${child} — Сүндет тойы`;
-
             const $ = id => document.getElementById(id);
 
-            // Hero
-            const hc = $('hChildName');
-            if (hc) hc.innerHTML = child + '<div class="hero-name-under"></div>';
-            const hd = $('hDateBig');
-            if (hd) hd.textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}`;
-            const ht = $('hHour');
-            if (ht) ht.textContent = CONFIG.hour;
+            let countdownTimer = null;
+            let carouselTimer = null;
+            let cIdx = 0;
+            let musicPlaying = false;
+            let touchX = 0;
 
-            // Time display
-            const th = $('tHour'); if (th) th.textContent = hh;
-            const tm = $('tMin'); if (tm) tm.textContent = mi;
+            function applyConfig(cfg) {
+                const config = cfg || window.CONFIG;
+                const child = config.childName || config.names?.child || 'Бала';
+                const ceremonyLabel = config.ceremony || config.ceremonyTitle || config.templateTitle || 'Сүндет той';
+                const dayStr = config.day || '15-06-2026';
+                const [dd, mm, yy] = dayStr.split('-').map(Number);
+                const [hh = "00", mi = "00"] = (config.hour || '00:00').split(':');
 
-            // Calendar
-            const calMo = $('calMo');
-            if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
-            const grid = $('calGrid');
-            if (grid) {
-                grid.innerHTML = '';
-                const first = new Date(yy, mm - 1, 1).getDay();
-                const off = first === 0 ? 6 : first - 1;
-                const total = new Date(yy, mm, 0).getDate();
-                const prev = new Date(yy, mm - 1, 0).getDate();
-                for (let i = 0; i < off; i++) {
-                    const e = document.createElement('div');
-                    e.className = 'cday other'; e.textContent = prev - off + 1 + i;
-                    grid.appendChild(e);
-                }
-                for (let d = 1; d <= total; d++) {
-                    const e = document.createElement('div');
-                    e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d;
-                    grid.appendChild(e);
-                }
-                const rem = (off + total) % 7;
-                for (let i = 1; i <= (rem ? 7 - rem : 0); i++) {
-                    const e = document.createElement('div');
-                    e.className = 'cday other'; e.textContent = i; grid.appendChild(e);
-                }
-            }
+                document.title = `${child} — ${ceremonyLabel}`;
 
-            // Countdown
-            (function countdown() {
+                // Hero
+                const hName = $('heroNamesLine');
+                if (hName) hName.innerHTML = `${child}<div class="hero-name-under"></div>`;
+                const hBadge = $('heroCeremonyBadge');
+                if (hBadge) hBadge.textContent = ceremonyLabel;
+                const hDate = $('hDateBig');
+                if (hDate) hDate.textContent = `${dd} ${MO_KK[mm - 1]?.toLowerCase() || ''} ${yy}`;
+
+                // Old IDs for compatibility if needed
+                const hc = $('hChildName'); if (hc) hc.innerHTML = child + '<div class="hero-name-under"></div>';
+                const hd = $('hDateBigOld'); if (hd) hd.textContent = `${dd} ${MO_KK[mm - 1]?.toLowerCase() || ''} ${yy}`;
+                const ht = $('hHour'); if (ht) ht.textContent = config.hour || '';
+
+                // Texts
+                const hInline = $('heroNamesInline');
+                if (hInline) hInline.textContent = child;
+                const eText = $('eventText');
+                if (eText && config.description) eText.innerHTML = config.description.replace(/\n/g, '<br>');
+                // old id
+                const dt = $('descText');
+                if (dt && config.description) dt.innerHTML = config.description.replace(/\n/g, '<br>');
+
+                // Time display
+                const th = $('tHour'); if (th) th.textContent = hh;
+                const tm = $('tMin'); if (tm) tm.textContent = mi;
+
+                // Calendar
+                const calMo = $('calMo'); if (calMo) calMo.textContent = `${MO_KK[mm - 1] || ''} ${yy}`;
+                const grid = $('calGrid');
+                if (grid) {
+                    grid.innerHTML = '';
+                    const first = new Date(yy, mm - 1, 1).getDay();
+                    const off = first === 0 ? 6 : first - 1;
+                    const total = new Date(yy, mm, 0).getDate();
+                    const prev = new Date(yy, mm - 1, 0).getDate();
+                    for (let i = 0; i < off; i++) {
+                        const e = document.createElement('div');
+                        e.className = 'cday other'; e.textContent = prev - off + 1 + i;
+                        grid.appendChild(e);
+                    }
+                    for (let d = 1; d <= total; d++) {
+                        const e = document.createElement('div');
+                        if (d === dd) e.className = 'cday today';
+                        else e.className = 'cday';
+                        e.textContent = d;
+                        grid.appendChild(e);
+                    }
+                }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
                 const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${mi}:00`);
-                if (isNaN(target)) return;
-                const set = (id, v) => { const el = $(id); if (el) el.textContent = String(v).padStart(2, '0'); };
-                const tick = () => {
-                    const diff = Math.max(0, target - Date.now());
-                    set('cdS', Math.floor(diff / 1000) % 60);
-                    set('cdM', Math.floor(diff / 60000) % 60);
-                    set('cdH', Math.floor(diff / 3600000) % 24);
-                    set('cdD', Math.floor(diff / 86400000));
-                };
-                tick(); setInterval(tick, 1000);
-            })();
+                if (!isNaN(target)) {
+                    const set = (id, v) => { const el = $(id); if (el) el.textContent = String(v).padStart(2, '0'); };
+                    const tick = () => {
+                        const diff = Math.max(0, target - Date.now());
+                        set('cdS', Math.floor(diff / 1000) % 60);
+                        set('cdM', Math.floor(diff / 60000) % 60);
+                        set('cdH', Math.floor(diff / 3600000) % 24);
+                        set('cdD', Math.floor(diff / 86400000));
+                    };
+                    tick(); countdownTimer = setInterval(tick, 1000);
+                }
 
-            // Description
-            const dt = $('descText');
-            if (dt && CONFIG.description) dt.innerHTML = CONFIG.description.replace('\n', '<br>');
+                // Owners / Parents
+                const ol = $('ownersList'); if (ol) ol.innerHTML = '';
+                const parents = config.parents || [];
+                if (ol) {
+                    if (parents.length) {
+                        parents.forEach(p => {
+                            ol.innerHTML += `<div class="owner-row">
+                    <div class="owner-ava">👤</div>
+                    <div>
+                        <div class="owner-role">${p.role || ''}</div>
+                        <div class="owner-name">${p.name || ''}</div>
+                    </div>
+                </div>`;
+                        });
+                    } else if (config.toiOwners) {
+                        ol.innerHTML = `<div class="owner-row">
+                <div class="owner-ava">�</div>
+                <div>
+                    <div class="owner-role">Той иелері</div>
+                    <div class="owner-name">${config.toiOwners}</div>
+                </div>
+            </div>`;
+                    }
+                }
 
-            // Owners
-            const ol = $('ownersList');
-            const owners = CONFIG.owners && CONFIG.owners.length
-                ? CONFIG.owners
-                : (CONFIG.toiOwners ? [{ role: "Той иелері", name: CONFIG.toiOwners, emoji: "👪" }] : []);
-            if (ol && owners.length) {
-                owners.forEach(o => {
-                    ol.innerHTML += `<div class="owner-row">
-        <div class="owner-ava">${o.emoji || '👤'}</div>
-        <div>
-          <div class="owner-role">${o.role || ''}</div>
-          <div class="owner-name">${o.name || ''}</div>
-        </div>
-      </div>`;
-                });
-            }
+                // Location
+                const locDate = $('locDate'); if (locDate) locDate.textContent = `${dd} ${MO_KK[mm - 1]?.toLowerCase() || ''} ${yy}`;
+                const locDS = $('locDaySub'); if (locDS) locDS.textContent = DAYS_KK[new Date(yy, mm - 1, dd).getDay()];
+                const locT = $('locTime'); if (locT) locT.textContent = config.hour || '';
+                const locN = $('locName'); if (locN) locN.textContent = config.location || '';
+                const mapWrap = $('mapBtnWrap'); const mapBtn = $('mapBtn');
+                if (mapBtn && config.locationUrl) { mapBtn.href = config.locationUrl; if (mapWrap) mapWrap.style.display = 'block'; }
+                else if (mapWrap) { mapWrap.style.display = 'none'; }
 
-            // Location
-            const locD = $('locDate');
-            if (locD) locD.textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}`;
-            const locDS = $('locDaySub');
-            if (locDS) locDS.textContent = DAYS_KK[new Date(yy, mm - 1, dd).getDay()];
-            const locT = $('locTime'); if (locT) locT.textContent = CONFIG.hour;
-            const locN = $('locName'); if (locN) locN.textContent = CONFIG.location || '';
-            const mapWrap = $('mapBtnWrap');
-            const mapBtn = $('mapBtn');
-            if (mapBtn && CONFIG.locationUrl) {
-                mapBtn.href = CONFIG.locationUrl;
-                if (mapWrap) mapWrap.style.display = 'block';
-            }
+                // Footer
+                const fd = $('footerDate'); if (fd) fd.textContent = `${dd} · ${MO_ROM[mm - 1] || ''} · ${yy}`;
+                const fn = $('footerName'); if (fn) fn.textContent = `${child} — ${ceremonyLabel}`;
+                const fv = $('footerVenue'); if (fv && config.location) fv.textContent = config.location;
 
-            // Footer
-            const fd = $('footerDate'); if (fd) fd.textContent = `${dd} · ${MO_ROM[mm - 1]} · ${yy}`;
-            const fn = $('footerName'); if (fn) fn.textContent = `${child} — Сүндет тойы`;
-            const fv = $('footerVenue'); if (fv && CONFIG.location) fv.textContent = CONFIG.location;
-
-            // Hero photo
-            const heroUrl = CONFIG.heroPhoto || CONFIG.heroPhotoUrl || CONFIG.heroPhotoURL || CONFIG.previewPhotoUrl || '';
-            if (heroUrl) {
+                // Photo
+                const heroUrl = config.heroPhoto || config.previewPhotoUrl || '';
                 const r = $('heroPhoto');
-                if (r) {
-                    const img = document.createElement('img');
-                    img.src = heroUrl; img.alt = child || 'photo';
-                    r.innerHTML = ''; r.appendChild(img);
+                if (r && heroUrl) {
+                    r.innerHTML = `<img src="${heroUrl}" alt="photo">`;
+                }
+
+                // Gallery
+                if (carouselTimer) clearInterval(carouselTimer);
+                const list = config.gallery && config.gallery.length ? config.gallery : [];
+                const track = $('cTrack');
+                const dotsW = $('cDots');
+                const cWrap = $('cWrap');
+                if (track) {
+                    track.innerHTML = '';
+                    list.forEach(url => {
+                        const img = document.createElement('img');
+                        img.src = url; img.alt = 'gallery'; track.appendChild(img);
+                    });
+                    if (list.length > 1) {
+                        $('cPrev').style.display = '';
+                        $('cNext').style.display = '';
+                        dotsW.innerHTML = '';
+                        list.forEach((_, i) => {
+                            const d = document.createElement('div');
+                            d.className = 'cdot' + (i === 0 ? ' active' : '');
+                            d.onclick = () => cGo(i);
+                            dotsW.appendChild(d);
+                        });
+                        carouselTimer = setInterval(() => cMove(1), 4000);
+                        if (cWrap) {
+                            cWrap.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+                            cWrap.addEventListener('touchend', e => {
+                                const dx = e.changedTouches[0].clientX - touchX;
+                                if (Math.abs(dx) > 40) cMove(dx < 0 ? 1 : -1);
+                            }, { passive: true });
+                        }
+                    }
+                }
+
+                // Music
+                if (config.music && config.music.url) {
+                    const audio = $('audioEl');
+                    audio.src = config.music.url;
+                    const tryPlay = () => audio.play().then(() => { musicPlaying = true; updateMusicIcon(); }).catch(() => { });
+                    tryPlay();
+                    document.addEventListener('touchstart', tryPlay, { once: true });
+                    document.addEventListener('click', tryPlay, { once: true });
                 }
             }
 
-            // Gallery
-            const list = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : [];
-            const track = $('cTrack');
-            const cWrap = $('cWrap');
-            const dotsW = $('cDots');
-            if (!list.length) {
-                const e = document.createElement('div');
-                e.className = 'gallery-empty';
-                e.textContent = 'Фото суреттер той алдында жаңартылады';
-                if (cWrap) cWrap.replaceWith(e);
-            } else {
-                list.forEach(url => {
-                    const img = document.createElement('img');
-                    img.src = url; img.alt = 'photo'; img.draggable = false;
-                    track.appendChild(img);
-                });
-                if (list.length > 1) {
-                    $('cPrev').style.display = '';
-                    $('cNext').style.display = '';
-                    list.forEach((_, i) => {
-                        const d = document.createElement('div');
-                        d.className = 'cdot' + (i === 0 ? ' active' : '');
-                        d.onclick = () => cGo(i);
-                        dotsW.appendChild(d);
-                    });
-                    let tx = 0;
-                    cWrap.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
-                    cWrap.addEventListener('touchend', e => {
-                        const dx = e.changedTouches[0].clientX - tx;
-                        if (Math.abs(dx) > 40) cMove(dx < 0 ? 1 : -1);
-                    });
-                    window.addEventListener('load', () => setInterval(() => cMove(1), 4000));
+            // Carousel helper
+            function cGo(idx) {
+                const track = document.getElementById('cTrack');
+                if (!track) return;
+                const imgs = track.querySelectorAll('img');
+                if (!imgs.length) return;
+                cIdx = (idx + imgs.length) % imgs.length;
+                track.style.transform = `translateX(-${cIdx * 100}%)`;
+                document.querySelectorAll('.cdot').forEach((d, i) => d.classList.toggle('active', i === cIdx));
+            }
+            function cMove(dir) { cGo(cIdx + dir); }
+
+            function toggleMusic() {
+                const audio = document.getElementById('audioEl');
+                if (!audio.src || audio.src === window.location.href) {
+                    const inp = document.createElement('input');
+                    inp.type = 'file'; inp.accept = 'audio/*';
+                    inp.onchange = ev => {
+                        const f = ev.target.files[0]; if (!f) return;
+                        audio.src = URL.createObjectURL(f);
+                        audio.play().catch(() => { });
+                        musicPlaying = true; updateMusicIcon();
+                    };
+                    inp.click(); return;
+                }
+                if (musicPlaying) { audio.pause(); musicPlaying = false; }
+                else { audio.play().catch(() => { }); musicPlaying = true; }
+                updateMusicIcon();
+            }
+            function updateMusicIcon() {
+                const mIco = document.getElementById('mIcon');
+                if (!mIco) return;
+                mIco.innerHTML = musicPlaying
+                    ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+                    : '<path d="M8 5v14l11-7z"/>';
+                const btn = document.getElementById('musicBtn');
+                if (btn) btn.classList.toggle('playing', musicPlaying);
+            }
+
+            function changeGuests(d) {
+                const inp = document.getElementById('rGuests');
+                if (inp) inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
+            }
+            function submitRSVP() {
+                const n = document.getElementById('rName');
+                const p = document.getElementById('rPhone');
+                if (!n || !n.value.trim()) { if (n) n.focus(); return; }
+                if (!p || !p.value.trim()) { if (p) p.focus(); return; }
+                const form = document.getElementById('rsvpForm');
+                const success = document.getElementById('successMsg');
+                if (form) form.style.display = 'none';
+                if (success) success.style.display = 'block';
+            }
+
+            function setupReveal() {
+                const els = document.querySelectorAll('.reveal');
+                if ('IntersectionObserver' in window) {
+                    const obs = new IntersectionObserver(entries => {
+                        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+                    }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+                    els.forEach((el, i) => { el.style.transitionDelay = (i * 0.05) + 's'; obs.observe(el); });
+                } else {
+                    els.forEach(el => el.classList.add('visible'));
                 }
             }
 
-            // Music
-            if (CONFIG.music && CONFIG.music.url) {
-                const audio = $('audioEl');
-                audio.src = CONFIG.music.url;
-                const tryPlay = () => audio.play().then(() => { musicPlaying = true; updateMusicIcon(); }).catch(() => { });
-                tryPlay();
-                document.addEventListener('touchstart', tryPlay, { once: true });
-                document.addEventListener('click', tryPlay, { once: true });
-            }
-        })();
+            // Expose to window
+            window.cGo = cGo;
+            window.cMove = cMove;
+            window.toggleMusic = toggleMusic;
+            window.changeGuests = changeGuests;
+            window.submitRSVP = submitRSVP;
 
-        // Carousel
-        let cIdx = 0;
-        function cGo(idx) {
-            const track = document.getElementById('cTrack');
-            const imgs = track.querySelectorAll('img');
-            if (!imgs.length) return;
-            cIdx = (idx + imgs.length) % imgs.length;
-            track.style.transform = `translateX(-${cIdx * 100}%)`;
-            document.querySelectorAll('.cdot').forEach((d, i) => d.classList.toggle('active', i === cIdx));
-        }
-        function cMove(dir) { cGo(cIdx + dir); }
+            // Initial run
+            applyConfig(window.CONFIG);
+            setupReveal();
 
-        // Music
-        let musicPlaying = false;
-        function toggleMusic() {
-            const audio = document.getElementById('audioEl');
-            if (!audio.src || audio.src === window.location.href) {
-                const inp = document.createElement('input');
-                inp.type = 'file'; inp.accept = 'audio/*';
-                inp.onchange = ev => {
-                    const f = ev.target.files[0]; if (!f) return;
-                    audio.src = URL.createObjectURL(f);
-                    audio.play().catch(() => { });
-                    musicPlaying = true; updateMusicIcon();
-                };
-                inp.click(); return;
-            }
-            if (musicPlaying) { audio.pause(); musicPlaying = false; }
-            else { audio.play().catch(() => { }); musicPlaying = true; }
-            updateMusicIcon();
-        }
-        function updateMusicIcon() {
-            document.getElementById('mIcon').innerHTML = musicPlaying
-                ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
-                : '<path d="M8 5v14l11-7z"/>';
-            const btn = document.getElementById('musicBtn');
-            if (btn) btn.classList.toggle('playing', musicPlaying);
-        }
-
-        // RSVP
-        function changeGuests(d) {
-            const inp = document.getElementById('rGuests');
-            inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d));
-        }
-        function submitRSVP() {
-            const n = document.getElementById('rName').value.trim();
-            const p = document.getElementById('rPhone').value.trim();
-            if (!n) { document.getElementById('rName').focus(); return; }
-            if (!p) { document.getElementById('rPhone').focus(); return; }
-            document.getElementById('rsvpForm').style.display = 'none';
-            document.getElementById('successMsg').style.display = 'block';
-        }
-
-        // Scroll reveal
-        (function () {
-            const els = document.querySelectorAll('.reveal');
-            if ('IntersectionObserver' in window) {
-                const obs = new IntersectionObserver(entries => {
-                    entries.forEach(e => {
-                        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-                    });
-                }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
-                els.forEach((el, i) => { el.style.transitionDelay = (i * 0.05) + 's'; obs.observe(el); });
-            } else {
-                els.forEach(el => el.classList.add('visible'));
-            }
+            window.addEventListener('message', (e) => {
+                if (e.data && e.data.type === 'UPDATE_CONFIG') {
+                    applyConfig(e.data.config);
+                }
+            });
         })();
     </script>
 

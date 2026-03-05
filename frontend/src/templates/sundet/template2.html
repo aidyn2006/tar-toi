@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Сүндет тойы — Шақыру</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #0c1a30;
+            --navy-lt: #1a2e4c;
+            --gold: #d4af37;
+            --gold-lt: #f1d592;
+            --cream: #fbf7f0;
+            --text: #1a1a1a;
+            --muted: #666;
+            --serif: 'Playfair Display', serif;
+            --sans: 'Montserrat', sans-serif;
+            --border: rgba(212, 175, 55, 0.3);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--navy);
+            font-family: var(--sans);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            background: var(--cream);
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* ── ORNAMENT BORDERS ── */
+        .border-strip {
+            position: fixed;
+            top: 0;
+            width: 14px;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .border-strip.left {
+            left: 0;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
+            filter: sepia(0.3) saturate(1.2);
+        }
+
+        .border-strip.right {
+            right: 0;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
+            transform: scaleX(-1);
+            filter: sepia(0.3) saturate(1.2);
+        }
+
+        @media (min-width: 481px) {
+            .border-strip.left {
+                left: calc(50% - 240px);
+            }
+
+            .border-strip.right {
+                right: calc(50% - 240px);
+            }
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://shaqyrtu.kz/template9/oiu.png') no-repeat center;
+            background-size: 80%;
+            opacity: 0.1;
+        }
+
+        .hero-badge {
+            font-size: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold-lt);
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .hero-name {
+            font-family: var(--serif);
+            font-size: clamp(48px, 15vw, 72px);
+            color: white;
+            line-height: 1;
+            margin-bottom: 16px;
+            position: relative;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-date {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-style: italic;
+            color: var(--gold);
+            margin-top: 20px;
+        }
+
+        .hero-photo-wrap {
+            margin-top: 40px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            padding: 8px;
+            position: relative;
+        }
+
+        .hero-photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* ── SECTIONS ── */
+        .section {
+            padding: 60px 30px;
+            position: relative;
+        }
+
+        .sec-title {
+            font-family: var(--serif);
+            font-size: 32px;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .sec-title::after {
+            content: '✦';
+            display: block;
+            font-size: 14px;
+            color: var(--gold);
+            margin-top: 8px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0;
+            padding: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(12, 26, 48, 0.05);
+            position: relative;
+        }
+
+        /* ── WISH ── */
+        .wish-text {
+            font-family: var(--serif);
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: center;
+            color: var(--navy-lt);
+            font-style: italic;
+        }
+
+        .wish-text strong {
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        /* ── CALENDAR ── */
+        .cal-mo {
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .cal-head {
+            font-weight: 700;
+            color: var(--gold);
+            padding-bottom: 10px;
+        }
+
+        .cal-day {
+            padding: 8px 0;
+            border-radius: 4px;
+            color: var(--muted);
+        }
+
+        .cal-day.today {
+            background: var(--navy);
+            color: var(--gold-lt);
+            font-weight: 700;
+        }
+
+        .cal-day.other {
+            opacity: 0.3;
+        }
+
+        /* ── COUNTDOWN ── */
+        .timer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .timer-item {
+            background: var(--navy);
+            color: white;
+            padding: 15px 5px;
+            text-align: center;
+        }
+
+        .t-num {
+            font-family: var(--serif);
+            font-size: 24px;
+            color: var(--gold-lt);
+            display: block;
+        }
+
+        .t-lab {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* ── OWNERS ── */
+        .owner-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .owner-item:last-child {
+            border: 0;
+        }
+
+        .owner-ava {
+            width: 50px;
+            height: 50px;
+            background: var(--navy);
+            color: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .owner-role {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .owner-name {
+            font-family: var(--serif);
+            font-size: 18px;
+            color: var(--navy);
+        }
+
+        /* ── RSVP ── */
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--navy);
+            color: var(--gold-lt);
+            border: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--navy);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .footer-name {
+            font-family: var(--serif);
+            font-size: 28px;
+            color: var(--gold-lt);
+            margin-bottom: 10px;
+        }
+
+        .footer-info {
+            font-size: 12px;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="border-strip left"></div>
+        <div class="border-strip right"></div>
+
+        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+            <svg id="mIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+            </svg>
+        </button>
+        <audio id="audioEl" loop></audio>
+
+        <section class="hero reveal">
+            <div class="hero-badge" id="heroCeremonyBadge">Сүндет тойы</div>
+            <h1 class="hero-name" id="heroNamesLine">Батырхан</h1>
+            <div class="hero-date" id="hDateBig">25 Шілде 2026</div>
+            <div class="hero-photo-wrap" id="heroPhoto">
+                <img src="https://shaqyrtu.kz/template9/hero.jpg" alt="photo">
+            </div>
+            <p style="margin-top:20px; color:var(--gold-lt); font-size:14px; letter-spacing:3px;">Бүгін ұлы той</p>
+        </section>
+
+        <section class="section reveal" style="padding-top:0; padding-bottom:0; text-align:center;">
+            <img src="https://shaqyrtu.kz/template12/decor.png" width="200" style="opacity:0.4; margin-bottom:-30px;">
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Шақыру</h2>
+            <div class="card">
+                <p class="wish-text" id="eventText">
+                    Ардақты ағайын, құрметті қонақтар! <br>
+                    Отбасымыздың қуанышы, ұлымыз <strong id="heroNamesInline">Батырханның</strong> сүндет тойына
+                    арналған салтанатты дастарқанымыздың қадірлі қонағы болуға шақырамыз!
+                </p>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Той уақыты</h2>
+            <div class="card">
+                <div class="cal-mo" id="calMo">Шілде 2026</div>
+                <div class="cal-grid" id="calHead">
+                    <div class="cal-head">Дс</div>
+                    <div class="cal-head">Сс</div>
+                    <div class="cal-head">Ср</div>
+                    <div class="cal-head">Бс</div>
+                    <div class="cal-head">Жм</div>
+                    <div class="cal-head">Сб</div>
+                    <div class="cal-head">Жк</div>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+
+                <div style="text-align:center; margin-top:30px;">
+                    <div style="font-size:48px; font-family:var(--serif); color:var(--navy);" id="tTime">18:00</div>
+                    <div style="font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--gold);">
+                        Басталу уақыты</div>
+                </div>
+
+                <div class="timer">
+                    <div class="timer-item"><span class="t-num" id="cdD">00</span><span class="t-lab">күн</span></div>
+                    <div class="timer-item"><span class="t-num" id="cdH">00</span><span class="t-lab">сағ</span></div>
+                    <div class="timer-item"><span class="t-num" id="cdM">00</span><span class="t-lab">мин</span></div>
+                    <div class="timer-item"><span class="t-num" id="cdS">00</span><span class="t-lab">сек</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Мекенжай</h2>
+            <div class="card" style="text-align:center;">
+                <p style="font-family:var(--serif); font-size:20px; color:var(--navy);" id="locName">"Алтын Сарай"
+                    мейрамханасы</p>
+                <p style="font-size:14px; color:var(--muted); margin:10px 0 20px;">Астана қаласы, Мәңгілік Ел көшесі, 1
+                </p>
+                <a id="mapBtn" href="#" target="_blank" class="btn-submit"
+                    style="display:flex; align-items:center; justify-content:center; gap:10px; text-decoration:none;">
+                    <img src="https://shaqyrtu.kz/images/twogis.svg" width="24" height="24" alt="2GIS">
+                    Карта арқылы ашу
+                </a>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Той иелері</h2>
+            <div class="card" id="ownersList"></div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Растауыңызды күтеміз</h2>
+            <div class="card">
+                <div id="rsvpForm">
+                    <p style="font-size:14px; color:var(--muted); margin-bottom:20px; text-align:center;">Той басталуына
+                        3 күн бұрын хабарлауыңызды сұраймыз</p>
+                    <input type="text" id="rName" placeholder="Есіміңіз">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                        <button onclick="changeGuests(-1)"
+                            style="padding:10px; background:#eee; border:0; cursor:pointer;">-</button>
+                        <input type="number" id="rGuests" value="1" readonly style="margin:0; text-align:center;">
+                        <button onclick="changeGuests(1)"
+                            style="padding:10px; background:#eee; border:0; cursor:pointer;">+</button>
+                    </div>
+                    <textarea id="rNote" placeholder="Тілегіңіз..." rows="3"></textarea>
+                    <button class="btn-submit" onclick="submitRSVP()">Растау</button>
+                </div>
+                <div id="successMsg" style="display:none; text-align:center; padding:20px;">
+                    <p style="font-family:var(--serif); font-size:18px; color:var(--navy);">Рахмет! Сізді той
+                        дастарханынан күтеміз.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer" style="padding-bottom: 80px; position:relative;">
+            <img src="https://shaqyrtu.kz/template9/oiu.png" width="120"
+                style="position:absolute; top:-30px; left:50%; transform:translateX(-50%); opacity:0.1; filter: invert(1);">
+            <div class="footer-name" id="footerName">Батырхан</div>
+            <div id="footerCeremony"
+                style="color:var(--gold-lt); font-size:14px; text-transform:uppercase; letter-spacing:3px; margin: 10px 0;">
+                Сүндет тойы</div>
+            <div class="footer-info" id="footerDate">2026</div>
+        </footer>
+    </div>
+
+    <script>
+        window.CONFIG = {
+            childName: "Батырхан",
+            day: "25-07-2026",
+            hour: "18:00",
+            location: "Алтын Сарай",
+            locationUrl: "https://2gis.kz",
+            description: "",
+            toiOwners: "Дархан & Әсел",
+            parents: []
+        };
+
+        (function () {
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const $ = id => document.getElementById(id);
+            let countdownTimer = null;
+
+            function applyConfig(cfg) {
+                const config = cfg || window.CONFIG;
+                const child = config.childName || 'Бала';
+                const dayStr = config.day || '25-07-2026';
+                const [dd, mm, yy] = dayStr.split('-').map(Number);
+                const [hh, mi] = (config.hour || '18:00').split(':');
+
+                $('heroNamesLine').textContent = child;
+                const badges = document.querySelectorAll('#heroCeremonyBadge');
+                badges.forEach(b => b.textContent = config.ceremony || 'Сүндет тойы');
+
+                $('hDateBig').textContent = `${dd} ${MO_KK[mm - 1]} ${yy}`;
+                $('tTime').textContent = config.hour || '18:00';
+
+                const namesInline = document.querySelectorAll('#heroNamesInline');
+                namesInline.forEach(el => el.textContent = child);
+
+                const et = $('eventText');
+                if (et && config.description) et.innerHTML = config.description.replace(/\n/g, '<br>');
+
+                $('locName').textContent = config.location || '';
+                const map = $('mapBtn'); if (map) map.href = config.locationUrl || '#';
+
+                $('footerName').textContent = child;
+                const fc = $('footerCeremony'); if (fc) fc.textContent = config.ceremony || 'Сүндет тойы';
+                const fD = $('footerDate'); if (fD) fD.textContent = yy;
+
+                const photo = $('heroPhoto');
+                const photoUrl = config.heroPhoto || config.heroPhotoUrl || config.previewPhotoUrl || '';
+                if (photo && photoUrl) {
+                    photo.innerHTML = `<img src="${photoUrl}" alt="photo">`;
+                }
+
+                // Calendar
+                const calMo = $('calMo'); if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
+                const grid = $('calGrid');
+                if (grid) {
+                    grid.innerHTML = '';
+                    const first = new Date(yy, mm - 1, 1).getDay();
+                    const off = first === 0 ? 6 : first - 1;
+                    const total = new Date(yy, mm, 0).getDate();
+                    for (let i = 0; i < off; i++) grid.innerHTML += '<div class="cal-day other"></div>';
+                    for (let d = 1; d <= total; d++) {
+                        const isToday = d === dd;
+                        grid.innerHTML += `<div class="cal-day ${isToday ? 'today' : ''}">${d}</div>`;
+                    }
+                }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
+                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
+                const tick = () => {
+                    const diff = Math.max(0, target - Date.now());
+                    $('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    $('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    $('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                    $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
+
+                // Owners
+                const ol = $('ownersList'); if (ol) {
+                    ol.innerHTML = '';
+                    const parents = config.parents || [];
+                    if (parents.length) {
+                        parents.forEach(p => {
+                            ol.innerHTML += `<div class="owner-item"><div class="owner-ava">👤</div><div><div class="owner-role">${p.role}</div><div class="owner-name">${p.name}</div></div></div>`;
+                        });
+                    } else if (config.toiOwners) {
+                        ol.innerHTML = `<div class="owner-item"><div class="owner-ava">👪</div><div><div class="owner-role">Той иелері</div><div class="owner-name">${config.toiOwners}</div></div></div>`;
+                    }
+                }
+
+            }
+
+            window.toggleMusic = () => {
+                const aud = $('audioEl');
+                if (!aud.src) return;
+                if (aud.paused) { aud.play(); $('mIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
+                else { aud.pause(); $('mIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+            }
+
+            window.changeGuests = (d) => {
+                const i = $('rGuests'); i.value = Math.max(1, parseInt(i.value) + d);
+            }
+
+            window.submitRSVP = () => {
+                $('rsvpForm').style.display = 'none'; $('successMsg').style.display = 'block';
+            }
+
+            function setupReveal() {
+                const els = document.querySelectorAll('.reveal');
+                const obs = new IntersectionObserver(ents => ents.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }), { threshold: 0.1 });
+                els.forEach(el => obs.observe(el));
+            }
+
+            applyConfig(window.CONFIG);
+            setupReveal();
+            window.addEventListener('message', e => { if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config); });
+        })();
+    </script>
+</body>
+
+</html>

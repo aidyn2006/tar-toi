@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Сүндет тойы — Көркем Шақыру</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --sage: #6b8e6b;
+            --sage-lt: #ecf3ec;
+            --sage-dk: #4a634a;
+            --gold: #b2945a;
+            --white: #ffffff;
+            --text: #34495e;
+            --serif: 'Cormorant Garamond', serif;
+            --sans: 'Montserrat', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #dce4dd;
+            font-family: var(--sans);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            background: var(--white);
+            position: relative;
+            min-height: 100vh;
+            border: 15px solid var(--white);
+        }
+
+        /* ── PREMIUM BORDERS ── */
+        .border-strip {
+            position: fixed;
+            top: 0;
+            width: 14px;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .border-strip.left {
+            left: 0;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
+            filter: sepia(0.3) saturate(1.2);
+        }
+
+        .border-strip.right {
+            right: 0;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
+            transform: scaleX(-1);
+            filter: sepia(0.3) saturate(1.2);
+        }
+
+        @media (min-width: 481px) {
+            .border-strip.left {
+                left: calc(50% - 240px);
+            }
+
+            .border-strip.right {
+                right: calc(50% - 240px);
+            }
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            background: var(--sage-lt);
+            border-radius: 40px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 150px;
+            height: 150px;
+            background: url('https://shaqyrtu.kz/template9/oiu.png') no-repeat;
+            background-size: contain;
+            opacity: 0.1;
+            transform: rotate(45deg);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            width: 150px;
+            height: 150px;
+            background: url('https://shaqyrtu.kz/template9/oiu.png') no-repeat;
+            background-size: contain;
+            opacity: 0.1;
+            transform: rotate(-135deg);
+        }
+
+        .hero-badge {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-style: italic;
+            color: var(--sage);
+            margin-bottom: 15px;
+        }
+
+        .hero-name {
+            font-family: var(--serif);
+            font-size: clamp(56px, 18vw, 84px);
+            font-weight: 600;
+            color: var(--sage-dk);
+            line-height: 1;
+            position: relative;
+        }
+
+        .hero-name::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin: 15px auto;
+        }
+
+        .hero-date {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--sage);
+        }
+
+        .hero-photo-frame {
+            margin-top: 40px;
+            width: 200px;
+            height: 260px;
+            border-radius: 100px 100px 0 0;
+            overflow: hidden;
+            border: 8px solid var(--white);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── SECTION ── */
+        .section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .sec-title {
+            font-family: var(--serif);
+            font-size: 36px;
+            font-weight: 400;
+            color: var(--sage-dk);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .ornament {
+            display: block;
+            margin: 0 auto 20px;
+            opacity: 0.4;
+        }
+
+        /* ── WISH ── */
+        .wish-card {
+            background: var(--sage-lt);
+            padding: 40px 25px;
+            border-radius: 100px 100px 20px 20px;
+        }
+
+        .wish-text {
+            font-family: var(--serif);
+            font-size: 22px;
+            line-height: 1.6;
+            color: var(--sage-dk);
+        }
+
+        .wish-text strong {
+            color: var(--gold);
+        }
+
+        /* ── CALENDAR ── */
+        .cal-box {
+            border: 1px solid var(--sage-lt);
+            padding: 25px;
+            border-radius: 20px;
+        }
+
+        .cal-mo {
+            font-family: var(--serif);
+            font-size: 24px;
+            color: var(--sage);
+            margin-bottom: 15px;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            font-size: 13px;
+        }
+
+        .cal-day {
+            padding: 10px 0;
+            border-radius: 50%;
+            color: var(--text);
+        }
+
+        .cal-day.today {
+            background: var(--sage);
+            color: white;
+            font-weight: 700;
+            transform: scale(1.1);
+        }
+
+        .cal-head {
+            font-weight: 600;
+            color: var(--gold);
+            padding-bottom: 10px;
+        }
+
+        /* ── TIMER ── */
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .t-item {
+            width: 70px;
+        }
+
+        .t-val {
+            font-family: var(--serif);
+            font-size: 32px;
+            color: var(--sage-dk);
+            display: block;
+            line-height: 1;
+        }
+
+        .t-lbl {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+        }
+
+        /* ── INFO ── */
+        .info-row {
+            margin-bottom: 30px;
+        }
+
+        .info-lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .info-val {
+            font-family: var(--serif);
+            font-size: 24px;
+            color: var(--sage-dk);
+        }
+
+        .btn-map {
+            display: inline-block;
+            padding: 14px 40px;
+            border: 1px solid var(--sage);
+            color: var(--sage);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-map:hover {
+            background: var(--sage);
+            color: white;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            padding: 60px 20px;
+            background: var(--sage-lt);
+            border-radius: 20px;
+            margin-top: 50px;
+        }
+
+        .footer-name {
+            font-family: var(--serif);
+            font-size: 36px;
+            color: var(--sage-dk);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: 1s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .m-ctrl {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 100;
+            background: var(--white);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 0;
+            color: var(--sage);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="border-strip left"></div>
+        <div class="border-strip right"></div>
+        <button class="m-ctrl" onclick="toggleMusic()">
+            <svg id="mIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+            </svg>
+        </button>
+        <audio id="audioEl" loop></audio>
+
+        <section class="hero reveal">
+            <div class="hero-badge" id="heroCeremonyBadge">Сүндет тойына шақыру</div>
+            <h1 class="hero-name" id="heroNamesLine">Әлихан</h1>
+            <div class="hero-date" id="hDateBig">18 ТАМЫЗ 2026</div>
+            <div class="hero-photo-frame" id="heroPhoto">
+                <img src="https://shaqyrtu.kz/template9/hero.jpg" alt="photo">
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <img src="https://shaqyrtu.kz/template12/gul.png" width="120" class="ornament">
+            <div class="wish-card">
+                <p class="wish-text" id="eventText">
+                    Ардақты ағайын! <br>
+                    Ұлымыз <strong id="heroNamesInline">Әлиханның</strong> мұсылмандық қарызын өтеу тойының қадірлі
+                    қонағы болуыңызды сұраймыз!
+                </p>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Қуаныштың уақыты</h2>
+            <div class="cal-box">
+                <div class="cal-mo" id="calMo">Тамыз 2026</div>
+                <div class="cal-grid">
+                    <div class="cal-head">Дс</div>
+                    <div class="cal-head">Сс</div>
+                    <div class="cal-head">Ср</div>
+                    <div class="cal-head">Бс</div>
+                    <div class="cal-head">Жм</div>
+                    <div class="cal-head">Сб</div>
+                    <div class="cal-head">Жк</div>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+            </div>
+
+            <div class="timer">
+                <div class="t-item"><span class="t-val" id="cdD">00</span><span class="t-lbl">күн</span></div>
+                <div class="t-item"><span class="t-val" id="cdH">00</span><span class="t-lbl">сағ</span></div>
+                <div class="t-item"><span class="t-val" id="cdM">00</span><span class="t-lbl">мин</span></div>
+                <div class="t-item"><span class="t-val" id="cdS">00</span><span class="t-lbl">сек</span></div>
+            </div>
+        </section>
+
+        <section class="section reveal"
+            style="background:var(--sage-lt); border-radius:100px 20px 100px 20px; position:relative;">
+            <img src="https://shaqyrtu.kz/template4/decor.png" width="100"
+                style="position:absolute; top:-40px; right:-20px; z-index:-1; opacity:0.3;">
+            <div class="info-row">
+                <p class="info-lbl">Күні</p>
+                <p class="info-val" id="locDate">18.08.2026</p>
+            </div>
+            <div class="info-row">
+                <p class="info-lbl">Уақыты</p>
+                <p class="info-val" id="locHour">19:00</p>
+            </div>
+            <div class="info-row">
+                <p class="info-lbl">Мекенжай</p>
+                <p class="info-val" id="locName">"Golden Palace"</p>
+                <p style="font-size:13px; color:var(--sage); margin-top:5px;">Алматы қаласы, Жібек Жолы, 10</p>
+            </div>
+            <a id="mapBtn" href="#" target="_blank" class="btn-map"
+                style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://shaqyrtu.kz/images/twogis.svg" width="20" height="20" alt="2GIS">
+                Картаны ашу
+            </a>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Қатысуыңызды растаңыз</h2>
+            <div class="wish-card" style="border-radius: 20px;">
+                <div id="rsvpForm">
+                    <p style="font-size:14px; color:var(--muted); margin-bottom:20px;">Тойға келетініңізді алдын ала
+                        хабарлауыңызды сұраймыз</p>
+                    <input type="text" id="rName" placeholder="Есіміңіз"
+                        style="width:100%; padding:14px; border:1px solid var(--sage-lt); border-radius:12px; margin-bottom:12px; font-family:inherit;">
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:0 10px;">
+                        <span style="font-size:14px; color:var(--text);">Қонақ саны:</span>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <button onclick="changeGuests(-1)"
+                                style="width:32px; height:32px; border-radius:50%; border:1px solid var(--sage); background:transparent; color:var(--sage); cursor:pointer;">-</button>
+                            <span id="rGuests" style="font-weight:700; width:20px; text-align:center;">1</span>
+                            <button onclick="changeGuests(1)"
+                                style="width:32px; height:32px; border-radius:50%; border:1px solid var(--sage); background:transparent; color:var(--sage); cursor:pointer;">+</button>
+                        </div>
+                    </div>
+                    <button class="btn-map" onclick="submitRSVP()"
+                        style="width:100%; cursor:pointer; background:var(--sage); color:white;">Растау</button>
+                </div>
+                <div id="successMsg" style="display:none; text-align:center; padding:20px;">
+                    <p style="font-family:var(--serif); font-size:20px; color:var(--sage-dk);">Рахмет! Тойда күтеміз!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title" style="display:flex; align-items:center; justify-content:center; gap:15px;">
+                <img src="https://shaqyrtu.kz/template9/oiu.png" width="30" style="opacity:0.3;">
+                Той иелері
+                <img src="https://shaqyrtu.kz/template9/oiu.png" width="30" style="opacity:0.3; transform: scaleX(-1);">
+            </h2>
+            <div id="ownersList"></div>
+        </section>
+
+        <footer class="footer" style="position:relative; overflow:hidden;">
+            <img src="https://shaqyrtu.kz/template9/oiu.png" width="100"
+                style="position:absolute; top:-20px; left:50%; transform:translateX(-50%); opacity:0.1;">
+            <div class="footer-name" id="footerName">Әлихан</div>
+            <div id="footerCeremony"
+                style="font-size:14px; color:var(--gold); margin-top:5px; text-transform:uppercase; letter-spacing:2px;">
+                Сүндет тойы</div>
+            <div id="footerDate" style="font-size:12px; color:var(--muted); margin-top:20px;">2026</div>
+        </footer>
+    </div>
+
+    <script>
+        window.CONFIG = {
+            childName: "Әлихан",
+            day: "18-08-2026",
+            hour: "19:00",
+            location: "Golden Palace",
+            locationUrl: "https://maps.apple.com",
+            toiOwners: "Дәулет & Салтанат",
+            parents: []
+        };
+
+        (function () {
+            const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
+            const $ = id => document.getElementById(id);
+            let countdownTimer = null;
+
+            function applyConfig(cfg) {
+                const config = cfg || window.CONFIG;
+                const child = config.childName || 'Бала';
+                const dayStr = config.day || '18-08-2026';
+                const [dd, mm, yy] = dayStr.split('-').map(Number);
+                const [hh, mi] = (config.hour || '19:00').split(':');
+
+                $('heroNamesLine').textContent = child;
+                const badges = document.querySelectorAll('#heroCeremonyBadge');
+                badges.forEach(b => b.textContent = config.ceremony || 'Сүндет тойы');
+
+                $('hDateBig').textContent = `${dd} ${MO_KK[mm - 1].toUpperCase()} ${yy}`;
+                const locH = $('locHour'); if (locH) locH.textContent = config.hour || '19:00';
+
+                const namesInline = document.querySelectorAll('#heroNamesInline');
+                namesInline.forEach(el => el.textContent = child);
+
+                const et = $('eventText');
+                if (et && config.description) et.innerHTML = config.description.replace(/\n/g, '<br>');
+
+                $('locName').textContent = config.location || '';
+                const map = $('mapBtn'); if (map) map.href = config.locationUrl || '#';
+
+                $('footerName').textContent = child;
+                const fc = $('footerCeremony'); if (fc) fc.textContent = config.ceremony || 'Сүндет тойы';
+                const fD = $('footerDate'); if (fD) fD.textContent = yy;
+
+                // Calendar
+                const calMo = $('calMo'); if (calMo) calMo.textContent = `${MO_KK[mm - 1]} ${yy}`;
+                const grid = $('calGrid');
+                if (grid) {
+                    grid.innerHTML = '';
+                    const first = new Date(yy, mm - 1, 1).getDay();
+                    const off = first === 0 ? 6 : first - 1;
+                    const total = new Date(yy, mm, 0).getDate();
+                    for (let i = 0; i < off; i++) grid.innerHTML += '<div class="cal-day other"></div>';
+                    for (let d = 1; d <= total; d++) {
+                        const isToday = d === dd;
+                        grid.innerHTML += `<div class="cal-day ${isToday ? 'today' : ''}">${d}</div>`;
+                    }
+                }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
+                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
+                const tick = () => {
+                    const diff = Math.max(0, target - Date.now());
+                    if ($('cdD')) $('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    if ($('cdH')) $('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    if ($('cdM')) $('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                    if ($('cdS')) $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
+
+                // Owners
+                const ol = $('ownersList'); if (ol) {
+                    ol.innerHTML = '';
+                    const parents = config.parents || [];
+                    if (parents.length) {
+                        parents.forEach(p => {
+                            ol.innerHTML += `<div style="margin-bottom:15px;"><p style="font-size:12px; color:var(--gold); text-transform:uppercase;">${p.role}</p><p style="font-family:var(--serif); font-size:24px;">${p.name}</p></div>`;
+                        });
+                    } else if (config.toiOwners) {
+                        ol.innerHTML = `<div style="margin-bottom:15px;"><p style="font-size:12px; color:var(--gold); text-transform:uppercase;">Той иелері</p><p style="font-family:var(--serif); font-size:24px;">${config.toiOwners}</p></div>`;
+                    }
+                }
+
+                const photo = $('heroPhoto');
+                const photoUrl = config.heroPhoto || config.heroPhotoUrl || config.previewPhotoUrl || '';
+                if (photo && photoUrl) {
+                    photo.innerHTML = `<img src="${photoUrl}" alt="photo">`;
+                }
+            }
+
+            window.toggleMusic = () => {
+                const aud = $('audioEl');
+                if (!aud.src) return;
+                if (aud.paused) { aud.play(); $('mIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
+                else { aud.pause(); $('mIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+            }
+
+            window.changeGuests = (d) => {
+                const i = $('rGuests'); i.textContent = Math.max(1, parseInt(i.textContent) + d);
+            }
+
+            window.submitRSVP = () => {
+                $('rsvpForm').style.display = 'none'; $('successMsg').style.display = 'block';
+            }
+
+            function setupReveal() {
+                const els = document.querySelectorAll('.reveal');
+                const obs = new IntersectionObserver(ents => ents.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }), { threshold: 0.1 });
+                els.forEach(el => obs.observe(el));
+            }
+
+            applyConfig(window.CONFIG);
+            setupReveal();
+            window.addEventListener('message', e => { if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config); });
+        })();
+    </script>
+</body>
+
+</html>
