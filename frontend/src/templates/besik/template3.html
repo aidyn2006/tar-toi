@@ -46,23 +46,25 @@
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
         }
 
-        /* Border */
+        /* Premium Borders */
         .border-strip {
             position: fixed;
             top: 0;
-            bottom: 0;
             width: 14px;
+            height: 100%;
             z-index: 1000;
+            pointer-events: none;
             background-image: url('https://shaqyrtu.kz/template4/border.png');
             background-size: 14px auto;
             background-repeat: repeat-y;
+            filter: sepia(0.3) saturate(1.2);
         }
 
-        .border-left {
+        .border-strip.left {
             left: 0;
         }
 
-        .border-right {
+        .border-strip.right {
             right: 0;
             transform: scaleX(-1);
         }
@@ -410,8 +412,8 @@
 <body>
 
     <div class="page-root">
-        <div class="border-strip border-left"></div>
-        <div class="border-strip border-right"></div>
+        <div class="border-strip left"></div>
+        <div class="border-strip right"></div>
 
         <button class="music-btn" onclick="toggleMusic()">
             <svg id="mIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -495,12 +497,22 @@
                     <input type="text" id="rName" placeholder="Кім болып жазыласыз?">
                 </div>
                 <div class="f-group">
+                    <label>Телефон нөміріңіз</label>
+                    <input type="tel" id="rPhone" placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="f-group">
                     <label>Қонақтар саны</label>
                     <div class="guest-row">
                         <button class="gc-btn" onclick="changeGuests(-1)">-</button>
                         <span id="rGuests" style="font-weight:700; width:40px; text-align:center;">1</span>
                         <button class="gc-btn" onclick="changeGuests(1)">+</button>
                     </div>
+                </div>
+                <div class="f-group">
+                    <label>Тілегіңіз</label>
+                    <textarea id="rNote" placeholder="Ақ тілегіңізді жазыңыз..."
+                        style="width: 100%; border: 1px solid #eee; padding: 15px; background: white; border-radius: 10px; font-family: inherit; font-size: 15px; outline: none; resize: vertical;"
+                        rows="3"></textarea>
                 </div>
                 <button class="submit-btn" onclick="submitRSVP()">Растау</button>
             </div>
@@ -523,7 +535,7 @@
 
             function applyConfig(cfg) {
                 const config = cfg || window.CONFIG || {};
-                const child = config.childName || config.personName || config.names?.child || 'Бала';
+                const child = config.childName || config.personName || config.names?.child || config.names?.bride || 'Бала';
                 const dayStr = config.day || '15-06-2026';
                 const [dd, mm, yy] = dayStr.split('-').map(Number);
                 const [hh, mi] = (config.hour || '18:00').split(':');

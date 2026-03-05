@@ -45,27 +45,28 @@
             border-right: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        /* Premium Border */
-        .border-strip {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            width: 14px;
-            z-index: 100;
-            background-image: url('https://shaqyrtu.kz/template4/border.png');
-            background-size: 100% auto;
-            background-repeat: repeat-y;
-            filter: brightness(0.8) sepia(1) hue-rotate(-15deg) saturate(3);
-            /* Gold on Dark */
-        }
-
-        .border-left {
+        /* Premium Borders */
+        .border-strip.left {
             left: 0;
+            width: 14px;
+            height: 100%;
+            z-index: 1000;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
+            filter: sepia(0.3) saturate(1.2);
         }
 
-        .border-right {
+        .border-strip.right {
             right: 0;
+            width: 14px;
+            height: 100%;
+            z-index: 1000;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
             transform: scaleX(-1);
+            filter: sepia(0.3) saturate(1.2);
         }
 
         .section {
@@ -332,8 +333,8 @@
 <body>
 
     <div class="app">
-        <div class="border-strip border-left"></div>
-        <div class="border-strip border-right"></div>
+        <div class="border-strip left"></div>
+        <div class="border-strip right"></div>
 
         <button class="music-btn" onclick="toggleMusic()">
             <svg id="mIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -398,6 +399,17 @@
             </a>
         </section>
 
+        <!-- OWNERS -->
+        <section class="section reveal"
+            style="background:rgba(212,175,55,0.02); border-top:1px solid rgba(212,175,55,0.1); border-bottom:1px solid rgba(212,175,55,0.1);">
+            <img src="https://shaqyrtu.kz/template9/oiu.png" style="width:60px; opacity:0.3; margin-bottom:20px;"
+                alt="">
+            <div
+                style="font-family:var(--display); color:var(--gold); font-size:12px; letter-spacing:4px; margin-bottom:15px;">
+                ТОЙ ИЕЛЕРІ</div>
+            <div id="toiOwners" style="font-family:var(--serif); font-size:24px; color:var(--gold-lt);">—</div>
+        </section>
+
         <section class="section reveal">
             <div class="rsvp-wrap">
                 <h3 style="font-family:var(--display); color:var(--gold); margin-bottom:30px;">Растауыңызды күтеміз</h3>
@@ -453,7 +465,9 @@
                 $('dispDate').textContent = `${d} ${MO[m - 1]}`;
                 $('dispTime').textContent = c.hour || '19:00';
                 $('locName').textContent = c.location || '';
+                if ($('locDesc')) $('locDesc').textContent = c.locationDescription || c.address || '';
                 $('mapLink').href = c.locationUrl || '#';
+                if ($('toiOwners')) $('toiOwners').textContent = c.toiOwners || '';
                 if (c.description) $('eventDesc').innerHTML = c.description.replace(/\n/g, '<br>');
 
                 const ph = $('heroPhoto');

@@ -45,25 +45,25 @@
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
         }
 
-        /* Border */
+        /* Premium Borders */
         .border-strip {
             position: fixed;
             top: 0;
-            bottom: 0;
             width: 14px;
+            height: 100%;
             z-index: 1000;
+            pointer-events: none;
             background-image: url('https://shaqyrtu.kz/template4/border.png');
             background-size: 14px auto;
             background-repeat: repeat-y;
-            filter: hue-rotate(200deg) saturate(0.5);
-            /* Blue-ish tint */
+            filter: sepia(0.3) saturate(1.2);
         }
 
-        .border-left {
+        .border-strip.left {
             left: 0;
         }
 
-        .border-right {
+        .border-strip.right {
             right: 0;
             transform: scaleX(-1);
         }
@@ -191,6 +191,35 @@
             color: white;
             border-radius: 50%;
             font-weight: 700;
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .cd-item {
+            flex: 1;
+            padding: 10px;
+            background: var(--sky);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cd-num {
+            display: block;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--blue-dark);
+        }
+
+        .cd-lbl {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--muted);
         }
 
         .info-row {
@@ -330,8 +359,8 @@
 <body>
 
     <div class="app-wrap">
-        <div class="border-strip border-left"></div>
-        <div class="border-strip border-right"></div>
+        <div class="border-strip left"></div>
+        <div class="border-strip right"></div>
 
         <button class="music-btn" onclick="toggleMusic()">
             <svg id="mIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -364,6 +393,13 @@
                 <div class="cal-grid" id="calGrid"></div>
             </div>
 
+            <div class="countdown">
+                <div class="cd-item"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">күн</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">сағат</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">мин</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">сек</span></div>
+            </div>
+
             <div class="info-row">
                 <div class="info-item">
                     <div class="info-label">КҮНІ</div>
@@ -373,6 +409,14 @@
                     <div class="info-label">УАҚЫТЫ</div>
                     <div class="info-val" id="dispTime">18:00</div>
                 </div>
+            </div>
+
+            <!-- OWNERS -->
+            <div style="margin-top:40px; padding:20px; border:1px solid var(--sky); border-radius:15px;">
+                <div class="info-label" style="margin-bottom:10px;">ТОЙ ИЕЛЕРІ</div>
+                <div id="toiOwners"
+                    style="font-family:var(--serif); font-size:20px; font-weight:700; color:var(--blue-dark);">Дәулет &
+                    Салтанат</div>
             </div>
         </section>
 
@@ -400,6 +444,7 @@
                         <span id="rGuests" style="font-weight:700; width:30px;">1</span>
                         <button class="c-btn" onclick="changeGuests(1)">+</button>
                     </div>
+                    <textarea id="rNote" class="f-input" placeholder="Ақ тілегіңіз..." rows="3"></textarea>
                     <button class="btn-submit" onclick="submitRSVP()">Жіберу</button>
                 </div>
                 <div id="success" style="display:none; text-align:center; padding:20px;">
@@ -421,11 +466,13 @@
         (function () {
             const MO = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const $ = id => document.getElementById(id);
+            let countdownTimer = null;
 
             function applyConfig(cfg) {
                 const c = cfg || window.CONFIG || {};
                 const child = c.childName || c.personName || c.names?.child || 'Бала';
                 const [d, m, y] = (c.day || '20-05-2026').split('-').map(Number);
+                const [hh, mi] = (c.hour || '18:00').split(':');
 
                 $('heroName').textContent = child;
                 $('footerName').textContent = `${child} — Бесік тойы`;
@@ -433,7 +480,9 @@
                 $('dispDate').textContent = `${d} ${MO[m - 1]}`;
                 $('dispTime').textContent = c.hour || '18:00';
                 $('locName').textContent = c.location || '';
+                if ($('locDesc')) $('locDesc').textContent = c.locationDescription || c.address || '';
                 $('mapLink').href = c.locationUrl || '#';
+                if ($('toiOwners')) $('toiOwners').textContent = c.toiOwners || '';
                 $('footerDate').textContent = y;
                 if (c.description) $('eventText').innerHTML = c.description.replace(/\n/g, '<br>');
 
@@ -454,6 +503,18 @@
                         grid.innerHTML += `<div class="cal-day ${i === d ? 'today' : ''}">${i}</div>`;
                     }
                 }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
+                const target = new Date(`${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T${hh}:${mi}:00`);
+                const tick = () => {
+                    const diff = Math.max(0, target - Date.now());
+                    if ($('cdD')) $('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    if ($('cdH')) $('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    if ($('cdM')) $('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                    if ($('cdS')) $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
             }
 
             window.CONFIG = {

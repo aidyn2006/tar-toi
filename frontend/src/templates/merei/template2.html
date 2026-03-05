@@ -44,26 +44,28 @@
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
         }
 
-        /* Premium Border */
-        .border-strip {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            width: 14px;
-            z-index: 100;
-            background-image: url('https://shaqyrtu.kz/template4/border.png');
-            background-size: 100% auto;
-            background-repeat: repeat-y;
-            filter: sepia(0.5) saturate(1.5) hue-rotate(-10deg);
-        }
-
-        .border-left {
+        /* Premium Borders */
+        .border-strip.left {
             left: 0;
+            width: 14px;
+            height: 100%;
+            z-index: 1000;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
+            filter: sepia(0.3) saturate(1.2);
         }
 
-        .border-right {
+        .border-strip.right {
             right: 0;
+            width: 14px;
+            height: 100%;
+            z-index: 1000;
+            background-image: url('https://shaqyrtu.kz/template4/border.png');
+            background-size: 14px auto;
+            background-repeat: repeat-y;
             transform: scaleX(-1);
+            filter: sepia(0.3) saturate(1.2);
         }
 
         .section {
@@ -208,6 +210,35 @@
             box-shadow: 0 5px 15px rgba(212, 140, 112, 0.4);
         }
 
+        /* Countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .cd-item {
+            flex: 1;
+            padding: 10px;
+            background: var(--peach);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cd-num {
+            display: block;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--rose);
+        }
+
+        .cd-lbl {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
         /* Info */
         .detail-row {
             display: flex;
@@ -343,8 +374,8 @@
 <body>
 
     <div class="app">
-        <div class="border-strip border-left"></div>
-        <div class="border-strip border-right"></div>
+        <div class="border-strip left"></div>
+        <div class="border-strip right"></div>
 
         <button class="music-btn" onclick="toggleMusic()">
             <svg id="mIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -379,6 +410,13 @@
                 <div class="cal-grid" id="calGrid"></div>
             </div>
 
+            <div class="countdown">
+                <div class="cd-item"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">күн</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">сағат</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">мин</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">сек</span></div>
+            </div>
+
             <div class="detail-row">
                 <div>
                     <div class="detail-lbl">КҮНІ</div>
@@ -405,6 +443,14 @@
 
         <img src="https://shaqyrtu.kz/template12/decor.png" style="width:100%; opacity:0.3; margin: 30px 0;" alt="">
 
+        <!-- OWNERS -->
+        <section class="section reveal" style="padding-top:0;">
+            <div class="detail-lbl">ТОЙ ИЕЛЕРІ</div>
+            <div id="toiOwners"
+                style="font-family:var(--serif); font-size:24px; color:var(--rose); margin-top:15px; font-weight:700;">—
+            </div>
+        </section>
+
         <section class="section reveal">
             <div class="rsvp-section">
                 <h3 style="font-family:var(--serif); margin-bottom:25px;">Тойға қатысуыңызды растаңыз</h3>
@@ -419,6 +465,7 @@
                             <button class="g-btn" onclick="changeGuests(1)">+</button>
                         </div>
                     </div>
+                    <textarea id="rNote" class="f-input" placeholder="Ақ тілегіңіз..." rows="3"></textarea>
                     <button class="submit-btn" onclick="submitRSVP()">Растаймын</button>
                 </div>
                 <div id="success" style="display:none; text-align:center;">
@@ -450,21 +497,26 @@
             const MO = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const $ = id => document.getElementById(id);
 
+            let countdownTimer = null;
+
             function applyConfig(cfg) {
                 const c = cfg || window.CONFIG;
-                const name = c.personName || c.childName || 'Қонақ';
+                const name = c.personName || c.childName || c.names?.bride || 'Есімі';
                 const age = c.personAge || '50';
-                const [d, m, y] = c.day.split('-').map(Number);
+                const [d, m, y] = (c.day || '20-05-2026').split('-').map(Number);
+                const [hh, mi] = (c.hour || '19:00').split(':');
 
                 $('pName').textContent = name;
                 $('pDetail').textContent = age + ' жас мерейтойы';
                 $('ageLabel').textContent = age + ' жасқа';
                 $('footName').textContent = `${name} — ${age} жас`;
 
-                $('dispDate').textContent = `${d} ${MO[m - 1]}`;
+                $('dispDate').textContent = `${d} ${MO[m - 1]} ${y}`;
                 $('dispTime').textContent = c.hour || '19:00';
                 $('locName').textContent = c.location || '';
+                if ($('locDesc')) $('locDesc').textContent = c.locationDescription || c.address || '';
                 $('mapLink').href = c.locationUrl || '#';
+                if ($('toiOwners')) $('toiOwners').textContent = c.toiOwners || '';
                 if (c.description) $('eventDesc').innerHTML = c.description.replace(/\n/g, '<br>');
 
                 const ph = $('heroPhoto');
@@ -483,6 +535,18 @@
                         grid.innerHTML += `<div class="cal-d ${i === d ? 'sel' : ''}">${i}</div>`;
                     }
                 }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
+                const target = new Date(`${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T${hh}:${mi}:00`);
+                const tick = () => {
+                    const diff = Math.max(0, target - Date.now());
+                    if ($('cdD')) $('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    if ($('cdH')) $('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    if ($('cdM')) $('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                    if ($('cdS')) $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
             }
 
             window.toggleMusic = () => {
