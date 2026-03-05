@@ -193,6 +193,35 @@
             border-radius: 2px;
         }
 
+        /* Countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .cd-item {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+        }
+
+        .cd-num {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .cd-lbl {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #ccc;
+        }
+
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -339,6 +368,13 @@
                 <div class="cal-grid" id="calGrid"></div>
             </div>
 
+            <div class="countdown">
+                <div class="cd-item"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">күн</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">сағат</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">мин</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">сек</span></div>
+            </div>
+
             <div class="info-grid">
                 <div class="info-card">
                     <i>🕒</i>
@@ -368,6 +404,9 @@
                 <div id="rsvpForm">
                     <input type="text" id="rName" class="f-input" placeholder="Есіміңіз">
                     <input type="tel" id="rPhone" class="f-input" placeholder="+7 (___) ___-__-__">
+                    <div class="f-group" style="margin-top:20px;">
+                        <textarea id="rNote" class="f-input" placeholder="Ақ тілегіңіз..."></textarea>
+                    </div>
                     <button class="btn-submit" onclick="submitRSVP()">Растау</button>
                 </div>
                 <div id="success" style="display:none; text-align:center;">
@@ -397,11 +436,14 @@
             const MO = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const $ = id => document.getElementById(id);
 
+            let countdownTimer = null;
+
             function applyConfig(cfg) {
                 const c = cfg || window.CONFIG;
-                const name = c.personName || c.childName || 'Қонақ';
+                const name = c.personName || c.childName || c.names?.bride || 'Есімі';
                 const age = c.personAge || '60';
-                const [d, m, y] = c.day.split('-').map(Number);
+                const [d, m, y] = (c.day || '15-10-2026').split('-').map(Number);
+                const [hh, mi] = (c.hour || '19:00').split(':');
 
                 $('pName').textContent = name;
                 $('pAge').textContent = age;
@@ -430,6 +472,18 @@
                         grid.innerHTML += `<div class="cal-d ${i === d ? 'sel' : ''}">${i}</div>`;
                     }
                 }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
+                const target = new Date(`${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T${hh}:${mi}:00`);
+                const tick = () => {
+                    const diff = Math.max(0, target - Date.now());
+                    if ($('cdD')) $('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    if ($('cdH')) $('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    if ($('cdM')) $('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                    if ($('cdS')) $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
             }
 
             window.toggleMusic = () => {

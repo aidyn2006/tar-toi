@@ -218,6 +218,35 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
+        /* Countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .cd-item {
+            flex: 1;
+            padding: 10px;
+            background: var(--mint);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cd-num {
+            display: block;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--mint-dk);
+        }
+
+        .cd-lbl {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
         .map-box {
             margin-top: 30px;
         }
@@ -373,6 +402,13 @@
                 <div class="cal-grid" id="calGrid"></div>
             </div>
 
+            <div class="countdown">
+                <div class="cd-item"><span class="cd-num" id="cdD">00</span><span class="cd-lbl">күн</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdH">00</span><span class="cd-lbl">сағат</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">мин</span></div>
+                <div class="cd-item"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">сек</span></div>
+            </div>
+
             <div class="event-details">
                 <div class="detail-item">
                     <div class="detail-icon">📅</div>
@@ -426,6 +462,12 @@
                             <button class="c-btn" onclick="changeGuests(1)">+</button>
                         </div>
                     </div>
+                    <div class="f-group">
+                        <label>Тілегіңіз</label>
+                        <textarea id="rNote" placeholder="Ақ тілегіңізді жазыңыз..."
+                            style="width: 100%; border: 1px solid #eee; padding: 15px; border-radius: 12px; outline: none; font-family: inherit; resize: vertical;"
+                            rows="3"></textarea>
+                    </div>
                     <button class="submit" onclick="submitRSVP()">Жіберу</button>
                 </div>
                 <div id="success" style="display:none; text-align:center; padding:20px;">
@@ -456,12 +498,16 @@
             const MO = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const $ = id => document.getElementById(id);
 
+            let countdownTimer = null;
+
             function applyConfig(cfg) {
                 const c = cfg || window.CONFIG;
+                const child = c.childName || c.personName || c.names?.child || 'Бала';
                 const [d, m, y] = c.day.split('-').map(Number);
+                const [hh, mi] = (c.hour || '18:00').split(':');
 
-                $('cName').textContent = c.childName;
-                $('footName').textContent = `${c.childName} — Бесік тойы`;
+                $('cName').textContent = child;
+                $('footName').textContent = `${child} — Бесік тойы`;
                 $('cTitle').textContent = c.ceremony || 'Бесік тойына шақыру';
 
                 $('dispDate').textContent = `${d} ${MO[m - 1]} ${y}`;
@@ -487,6 +533,18 @@
                         grid.innerHTML += `<div class="cal-d ${i === d ? 'sel' : ''}">${i}</div>`;
                     }
                 }
+
+                // Countdown
+                if (countdownTimer) clearInterval(countdownTimer);
+                const target = new Date(`${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T${hh}:${mi}:00`);
+                const tick = () => {
+                    const diff = Math.max(0, target - Date.now());
+                    if ($('cdD')) $('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    if ($('cdH')) $('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    if ($('cdM')) $('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                    if ($('cdS')) $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
             }
 
             window.toggleMusic = () => {
