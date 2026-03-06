@@ -9,6 +9,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 7171,
     strictPort: true,
+    allowedHosts: ['toi.com.kz'],
     proxy: {
       '/api': {
         target: apiProxyTarget,
