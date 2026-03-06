@@ -4,7 +4,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 7171 --strictPort"
+    "dev": "vite --host 0.0.0.0 --port 7171 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.4",
