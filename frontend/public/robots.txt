@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /invite/edit/
+Disallow: /invite/new
+Disallow: /invite/*/guests
+
+Sitemap: https://toi.com.kz/sitemap.xml
