@@ -298,6 +298,62 @@ const features = [
     },
 ];
 
+const faqItems = [
+    {
+        q: { kk: 'Шақырту қалай жасалады?', ru: 'Как создать приглашение?' },
+        a: { kk: 'Тіркеліп, шаблонды таңдаңыз, мәтін мен суреттерді қосыңыз. 3 минутта дайын шақырту жасай аласыз.', ru: 'Зарегистрируйтесь, выберите шаблон, добавьте текст и фото. Создание занимает всего 3 минуты.' },
+    },
+    {
+        q: { kk: 'Бұл тегін бе?', ru: 'Это бесплатно?' },
+        a: { kk: 'Иә! Қазіргі уақытта барлық мүмкіндіктер толығымен тегін. Тіркеліп, бірден бастаңыз.', ru: 'Да! Сейчас все функции полностью бесплатны. Зарегистрируйтесь и начните прямо сейчас.' },
+    },
+    {
+        q: { kk: 'Қанша қонақ шақыруға болады?', ru: 'Сколько гостей можно пригласить?' },
+        a: { kk: 'Шектеу жоқ. Қалағаныңызша қонақ шақыра аласыз және олардың жауаптарын бақылай аласыз.', ru: 'Без ограничений. Приглашайте сколько угодно гостей и отслеживайте их ответы.' },
+    },
+    {
+        q: { kk: 'WhatsApp арқылы қалай жіберемін?', ru: 'Как отправить через WhatsApp?' },
+        a: { kk: 'Шақырту дайын болғанда, "Жіберу" батырмасын басыңыз. Сілтеме автоматты түрде WhatsApp-қа жіберіледі.', ru: 'Когда приглашение готово, нажмите кнопку "Отправить". Ссылка автоматически отправится в WhatsApp.' },
+    },
+    {
+        q: { kk: 'Шаблонды өзгертуге бола ма?', ru: 'Можно ли изменить шаблон?' },
+        a: { kk: 'Иә, мәтінді, суреттерді, музыканы және басқа деректерді өзіңіз реттей аласыз.', ru: 'Да, вы можете настроить текст, фотографии, музыку и другие данные по своему вкусу.' },
+    },
+    {
+        q: { kk: 'Деректерім қауіпсіз бе?', ru: 'Мои данные в безопасности?' },
+        a: { kk: 'Иә, біз деректеріңізді қауіпсіз сақтаймыз. Сіздің ақпаратыңыз үшінші тарапқа берілмейді.', ru: 'Да, мы надёжно храним ваши данные. Ваша информация не передаётся третьим лицам.' },
+    },
+];
+
+/* ─── FAQ Accordion Item ─────────────────────────────── */
+const FaqItem = ({ question, answer }) => {
+    const [open, setOpen] = React.useState(false);
+    return (
+        <div onClick={() => setOpen(!open)} style={{
+            padding: '1.5rem 1.75rem', borderRadius: '1.25rem', cursor: 'pointer',
+            background: open ? '#ecfdf5' : 'white',
+            border: `1.5px solid ${open ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.1)'}`,
+            transition: 'all 0.25s ease', marginBottom: '0.75rem'
+        }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ fontWeight: 700, fontSize: '1.0625rem', color: '#064e3b', lineHeight: 1.5 }}>{question}</div>
+                <div style={{
+                    width: '2rem', height: '2rem', borderRadius: '50%', flexShrink: 0,
+                    background: open ? '#10b981' : '#f1f5f9', color: open ? 'white' : '#64748b',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '1.25rem', fontWeight: 700, transition: 'all 0.25s ease',
+                    transform: open ? 'rotate(45deg)' : 'none'
+                }}>+</div>
+            </div>
+            {open && (
+                <div style={{ marginTop: '1rem', color: '#64748b', fontSize: '0.95rem', lineHeight: 1.7 }}>
+                    {answer}
+                </div>
+            )}
+        </div>
+    );
+};
+
 /* ─── Home Page ───────────────────────────────────────── */
 const Home = () => {
     const [modal, setModal] = useState(null); // null | 'login' | 'register'
@@ -306,6 +362,47 @@ const Home = () => {
 
     return (
         <div className="home-page" style={{ minHeight: '100vh', background: '#f8fffe', fontFamily: "'Manrope', sans-serif" }}>
+            {/* JSON-LD Structured Data */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{
+                __html: JSON.stringify([
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "Organization",
+                        "name": "toi.com.kz",
+                        "url": "https://toi.com.kz",
+                        "description": "Онлайн шақырту жасау сервисі — электронные приглашения на той",
+                        "contactPoint": {
+                            "@type": "ContactPoint",
+                            "telephone": "+77056842747",
+                            "contactType": "customer service",
+                            "availableLanguage": ["Kazakh", "Russian"]
+                        },
+                        "sameAs": [
+                            "https://instagram.com/codejaz.kz",
+                            "https://wa.me/77056842747"
+                        ]
+                    },
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "name": "toi.com.kz",
+                        "url": "https://toi.com.kz",
+                        "inLanguage": ["kk", "ru"]
+                    },
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": faqItems.map(item => ({
+                            "@type": "Question",
+                            "name": item.q.kk + ' / ' + item.q.ru,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": item.a.kk + ' ' + item.a.ru
+                            }
+                        }))
+                    }
+                ])
+            }} />
             {modal && <AuthModal onClose={() => setModal(null)} defaultMode={modal} />}
 
             {/* ── HEADER ───────────────────────────────────────── */}
@@ -322,6 +419,8 @@ const Home = () => {
                 <nav className="home-nav" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                     <a className="home-nav-link" href="#features" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Мүмкіндіктер', 'Возможности')}</a>
                     <a className="home-nav-link" href="#categories" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Үлгілер', 'Шаблоны')}</a>
+                    <a className="home-nav-link" href="#blog" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Блог', 'Блог')}</a>
+                    <a className="home-nav-link" href="#faq" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>FAQ</a>
                     <a className="home-nav-link" href="#contact" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Байланыс', 'Контакты')}</a>
                     <LanguageSwitch compact />
                     <Button className="home-nav-btn desktop-only" variant="outline" onClick={() => setModal('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>{tr('Кіру', 'Войти')}</Button>
@@ -355,10 +454,10 @@ const Home = () => {
                         </div>
                     </div>
                     <div className="home-hero-points" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                        {[ 
-                            tr('3 мин тіркелу', 'Регистрация за 3 мин'), 
-                            tr('Фото мен музыка', 'Фото и музыка'), 
-                            tr('WhatsApp жіберу', 'Отправка в WhatsApp'), 
+                        {[
+                            tr('3 мин тіркелу', 'Регистрация за 3 мин'),
+                            tr('Фото мен музыка', 'Фото и музыка'),
+                            tr('WhatsApp жіберу', 'Отправка в WhatsApp'),
                             tr('Жауаптарды бақылау', 'Контроль ответов')
                         ].map((item, i) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#054535', fontWeight: 600, fontSize: '0.9rem' }}>
@@ -467,6 +566,125 @@ const Home = () => {
                     <Button variant="secondary" onClick={() => setModal('register')} style={{ marginTop: '3.5rem', padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}>
                         {tr('Қазір бастау', 'Начать сейчас')}
                     </Button>
+                </div>
+            </section>
+
+            {/* ── BLOG ──────────────────────────────────────────── */}
+            <section id="blog" style={{ padding: '5rem 1.5rem' }}>
+                <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', background: '#ecfdf5', color: '#065f46', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, marginBottom: '1rem' }}>
+                            {tr('📝 Блог', '📝 Блог')}
+                        </div>
+                        <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 700, color: '#064e3b', marginBottom: '1rem' }}>
+                            {tr('Пайдалы мақалалар', 'Полезные статьи')}
+                        </h2>
+                        <p style={{ color: '#64748b', fontSize: '1.0625rem' }}>
+                            {tr('Тойға дайындық туралы кеңестер мен жаңалықтар', 'Советы и новости о подготовке к торжеству')}
+                        </p>
+                    </div>
+                    <div className="home-blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                        {/* Blog Card 1 */}
+                        <article style={{
+                            borderRadius: '1.75rem', overflow: 'hidden', background: 'white',
+                            border: '1px solid rgba(16,185,129,0.1)', transition: 'all 0.25s ease',
+                            cursor: 'default'
+                        }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(16,185,129,0.12)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
+                            <div style={{ height: '12rem', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span style={{ fontSize: '4rem' }}>🎉</span>
+                            </div>
+                            <div style={{ padding: '1.75rem' }}>
+                                <div style={{ display: 'inline-block', padding: '0.25rem 0.75rem', background: '#ecfdf5', color: '#065f46', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.875rem' }}>
+                                    {tr('Тегін', 'Бесплатно')}
+                                </div>
+                                <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.125rem', fontWeight: 700, color: '#064e3b', marginBottom: '0.75rem', lineHeight: 1.4 }}>
+                                    {tr('🔥 Тегін шақырту шаблондары — ақша төлемей-ақ тойға шақырыңыз!', '🔥 Бесплатные шаблоны приглашений — пригласите всех на той без затрат!')}
+                                </h3>
+                                <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.7 }}>
+                                    {tr(
+                                        'Енді тойға шақырту жасау үшін ақша төлеудің қажеті жоқ! toi.com.kz сервисінде 30-дан астам тегін шаблон бар — ұзату, үйлену тойы, сүндет той, бесік той, мерейтой және тұсаукесер. Шаблонды таңдап, мәтінді жазып, суреттерді қосып, WhatsApp арқылы жіберіңіз. Барлығы тегін, тіркелу — 1 минут!',
+                                        'Больше не нужно платить за приглашения на той! На toi.com.kz — более 30 бесплатных шаблонов для узату, свадьбы, сүндет тоя, бесік тоя, юбилея и тұсаукесера. Выберите шаблон, добавьте текст, фото и отправьте через WhatsApp. Всё бесплатно, регистрация — 1 минута!'
+                                    )}
+                                </p>
+                            </div>
+                        </article>
+
+                        {/* Blog Card 2 */}
+                        <article style={{
+                            borderRadius: '1.75rem', overflow: 'hidden', background: 'white',
+                            border: '1px solid rgba(16,185,129,0.1)', transition: 'all 0.25s ease',
+                            cursor: 'default'
+                        }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(16,185,129,0.12)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
+                            <div style={{ height: '12rem', background: 'linear-gradient(135deg, #f59e0b, #d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span style={{ fontSize: '4rem' }}>📲</span>
+                            </div>
+                            <div style={{ padding: '1.75rem' }}>
+                                <div style={{ display: 'inline-block', padding: '0.25rem 0.75rem', background: '#fffbeb', color: '#92400e', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.875rem' }}>
+                                    WhatsApp
+                                </div>
+                                <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.125rem', fontWeight: 700, color: '#064e3b', marginBottom: '0.75rem', lineHeight: 1.4 }}>
+                                    {tr('📱 WhatsApp-та шақырту жіберу — қағаз шақыртудан 10 есе тиімді!', '📱 Приглашения через WhatsApp — в 10 раз выгоднее бумажных!')}
+                                </h3>
+                                <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.7 }}>
+                                    {tr(
+                                        'Қағаз шақырту — қымбат, ұзақ, қиын. Ал электронды шақырту — тез, тегін, əдемі! toi.com.kz арқылы шақыртуды жасап, бір батырмамен WhatsApp-қа жіберіңіз. Қонақтар телефоннан ашып, RSVP жауабын береді. Кім келеді, кім келмейді — бəрін панельден көресіз!',
+                                        'Бумажные приглашения — дорого, долго, сложно. А электронные — быстро, бесплатно, красиво! Через toi.com.kz создайте приглашение и отправьте его в WhatsApp одним нажатием. Гости откроют на телефоне и ответят через RSVP. Кто придёт, кто нет — всё видно в панели!'
+                                    )}
+                                </p>
+                            </div>
+                        </article>
+
+                        {/* Blog Card 3 */}
+                        <article style={{
+                            borderRadius: '1.75rem', overflow: 'hidden', background: 'white',
+                            border: '1px solid rgba(16,185,129,0.1)', transition: 'all 0.25s ease',
+                            cursor: 'default'
+                        }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(16,185,129,0.12)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}>
+                            <div style={{ height: '12rem', background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span style={{ fontSize: '4rem' }}>✨</span>
+                            </div>
+                            <div style={{ padding: '1.75rem' }}>
+                                <div style={{ display: 'inline-block', padding: '0.25rem 0.75rem', background: '#f5f3ff', color: '#5b21b6', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.875rem' }}>
+                                    {tr('Кеңестер', 'Советы')}
+                                </div>
+                                <h3 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.125rem', fontWeight: 700, color: '#064e3b', marginBottom: '0.75rem', lineHeight: 1.4 }}>
+                                    {tr('💡 Тойға дайындық — 5 кеңес, уақытты үнемдеңіз!', '💡 Подготовка к тою — 5 советов, которые сэкономят ваше время!')}
+                                </h3>
+                                <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.7 }}>
+                                    {tr(
+                                        '1. Шақыртуды алдын ала жасаңыз — кемінде 2 апта бұрын. 2. Электронды шақырту қолданыңыз — тез жəне ыңғайлы. 3. RSVP функциясын пайдаланыңыз — кім келетінін біліңіз. 4. Қонақтар тізімін жүргізіңіз. 5. toi.com.kz сервисін қолданыңыз — барлығы бір жерде!',
+                                        '1. Делайте приглашения заранее — минимум за 2 недели. 2. Используйте электронные приглашения — быстро и удобно. 3. Используйте RSVP — узнайте, кто придёт. 4. Ведите список гостей. 5. Используйте toi.com.kz — всё в одном месте!'
+                                    )}
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── FAQ ────────────────────────────────────────── */}
+            <section id="faq" style={{ padding: '5rem 1.5rem', background: 'white' }}>
+                <div style={{ maxWidth: '48rem', margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', background: '#ecfdf5', color: '#065f46', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, marginBottom: '1rem' }}>
+                            {tr('❓ Жиі қойылатын сұрақтар', '❓ Часто задаваемые вопросы')}
+                        </div>
+                        <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 700, color: '#064e3b', marginBottom: '1rem' }}>
+                            FAQ
+                        </h2>
+                        <p style={{ color: '#64748b', fontSize: '1.0625rem' }}>
+                            {tr('Сұрақтарыңызға жауап табыңыз', 'Найдите ответы на ваши вопросы')}
+                        </p>
+                    </div>
+                    {faqItems.map((item, i) => (
+                        <FaqItem key={i} question={tr(item.q.kk, item.q.ru)} answer={tr(item.a.kk, item.a.ru)} />
+                    ))}
                 </div>
             </section>
 
@@ -601,7 +819,8 @@ const Home = () => {
 
                     .home-categories-grid,
                     .home-steps-grid,
-                    .home-contact-grid {
+                    .home-contact-grid,
+                    .home-blog-grid {
                         grid-template-columns: 1fr !important;
                     }
 
