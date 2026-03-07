@@ -11,31 +11,9 @@ const ContactPage = () => {
     return (
         <Layout>
             <SEO
-                title={tr('Сұрақтар мен Кері байланыс', 'Вопросы и Обратная связь')}
-                description={tr(
-                    'Toiga Shaqyru командасымен байланысыңыз. WhatsApp, Instagram немесе телефон арқылы сұрақтарыңызға жауап береміз.',
-                    'Свяжитесь с командой Toiga Shaqyru. Ответим на ваши вопросы через WhatsApp, Instagram или по телефону.'
-                )}
-                keywords={tr('тойға шақыру байланыс, тех қолдау, ватсап номер', 'контакты пригласительные, техподдержка, номер ватсап')}
+                title={tr('Байланыс', 'Контакты')}
+                description={tr('Сұрақтарыңыз болса, бізбен байланысыңыз. Көмектесуге әрқашан дайынбыз.', 'Свяжитесь с нами, если у вас есть вопросы. Мы всегда готовы помочь.')}
                 canonical="/contact"
-                schemaData={{
-                    "@context": "https://schema.org",
-                    "@type": "ContactPage",
-                    "mainEntity": {
-                        "@type": "Organization",
-                        "name": "Toiga Shaqyru",
-                        "url": "https://toi.com.kz",
-                        "contactPoint": {
-                            "@type": "ContactPoint",
-                            "telephone": "+7-705-684-2747",
-                            "contactType": "customer service",
-                            "availableLanguage": ["Kazakh", "Russian"]
-                        },
-                        "sameAs": [
-                            "https://instagram.com/codejaz.kz"
-                        ]
-                    }
-                }}
             />
 
             <section style={{ paddingTop: '8rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '72rem', margin: '0 auto' }}>

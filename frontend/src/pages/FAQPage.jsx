@@ -65,22 +65,9 @@ const FAQPage = () => {
     return (
         <Layout>
             <SEO
-                title={tr('Жиі қойылатын сұрақтар', 'Часто задаваемые вопросы')}
-                description={tr('Тойға онлайн шақырту жасау туралы жиі қойылатын сұрақтар мен жауаптар. Қалай жасау керек? Бұл тегін бе? Жауаптар осында.', 'Частые вопросы и ответы о создании онлайн-приглашений на той. Как создать? Это бесплатно? Ответы здесь.')}
-                keywords={tr('сұрақ-жауап, шақырту жасау көмек, faq қазақша, той көмек', 'вопросы и ответы, как создать приглашение, помощь по сервису, faq пригласительные')}
+                title="FAQ"
+                description={tr('Тойға онлайн шақырту жасау туралы жиі қойылатын сұрақтар мен жауаптар.', 'Частые вопросы и ответы о создании онлайн-приглашений на той.')}
                 canonical="/faq"
-                schemaData={{
-                    "@context": "https://schema.org",
-                    "@type": "FAQPage",
-                    "mainEntity": faqItems.map(item => ({
-                        "@type": "Question",
-                        "name": tr(item.q.kk, item.q.ru),
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": tr(item.a.kk, item.a.ru)
-                        }
-                    }))
-                }}
             />
 
             <section style={{ paddingTop: '8rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '48rem', margin: '0 auto' }}>

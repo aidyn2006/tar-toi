@@ -35,25 +35,9 @@ const BlogPage = () => {
     return (
         <Layout>
             <SEO
-                title={tr('Блог - Пайдалы мақалалар', 'Блог - Полезные статьи')}
-                description={tr(
-                    'Той дайындығы, шақыртулар стилі және мерекелерді ұйымдастыру туралы пайдалы кеңестер мен мақалалар. Электронды шақыртудың артықшылықтары.',
-                    'Полезные советы и статьи о подготовке к тою, стилях пригласительных и организации праздников. Преимущества электронных приглашений.'
-                )}
-                keywords={tr('той блогы, шақырту жасау кеңестері, той жоспарлау', 'блог о свадьбах, советы по пригласительным, планирование тоя')}
+                title={tr('Блог', 'Блог')}
+                description={tr('Той бизнесі, шақыртулар және мерекелер туралы қызықты мақалалар.', 'Интересные статьи о свадебном бизнесе, пригласительных и праздниках.')}
                 canonical="/blog"
-                schemaData={{
-                    "@context": "https://schema.org",
-                    "@type": "Blog",
-                    "name": tr("Toiga Shaqyru Блогы", "Блог Toiga Shaqyru"),
-                    "description": tr("Той және шақыртулар туралы пайдалы мәліметтер", "Полезная информация о свадьбах и пригласительных"),
-                    "blogPost": blogPosts.map(post => ({
-                        "@type": "BlogPosting",
-                        "headline": tr(post.title.kk, post.title.ru),
-                        "description": tr(post.desc.kk, post.desc.ru),
-                        "datePublished": post.date.split('.').reverse().join('-')
-                    }))
-                }}
             />
 
             <section style={{ paddingTop: '8rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '72rem', margin: '0 auto' }}>
