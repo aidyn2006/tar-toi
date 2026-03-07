@@ -567,15 +567,13 @@ const EditInvitePage = () => {
         setUploadingAudio(true);
         try {
             const { path } = await uploadService.uploadAudio(file, currentCategory);
-            if (path) {
-                setData(prev => ({
-                    ...prev,
-                    musicUrl: path,
-                    musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle,
-                    musicSource: MUSIC_SOURCE.UPLOAD,
-                    musicKey: '',
-                }));
-            }
+            setData(prev => ({
+                ...prev,
+                musicUrl: path,
+                musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle,
+                musicSource: MUSIC_SOURCE.UPLOAD,
+                musicKey: '',
+            }));
         } catch (e) {
             alert('Аудио жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
         } finally {
@@ -846,7 +844,7 @@ const EditInvitePage = () => {
                                     </label>
                                     {data.previewPhotoUrl && (
                                         <div style={{ position: 'relative' }}>
-                                            <img src={data.previewPhotoUrl} alt="preview" style={{ width: '110px', height: '80px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
+                                            <img src={normalizeUrl(data.previewPhotoUrl)} alt="preview" style={{ width: '110px', height: '80px', objectFit: 'cover', borderRadius: '10px', border: `1px solid ${C.border}` }} />
                                             <button onClick={() => setData(d => ({ ...d, previewPhotoUrl: '' }))} style={{
                                                 position: 'absolute', top: 4, right: 4, border: 'none', background: 'rgba(0,0,0,0.45)',
                                                 color: '#fff', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer'
