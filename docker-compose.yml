@@ -41,19 +41,11 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: node:20-alpine
+    build:
+      context: ./frontend
     container_name: toi-frontend
-    working_dir: /app
-    command: sh -c "npm install && npm run dev"
-    environment:
-      # If backend работает вне Docker (на хосте), используйте host.docker.internal
-      # Перекрой через .env или export VITE_API_PROXY_TARGET
-      VITE_API_PROXY_TARGET: "http://host.docker.internal:9191"
     ports:
-      - "7171:7171"
-    volumes:
-      - ./frontend:/app
-      - toi_frontend_node_modules:/app/node_modules
+      - "7171:80"
     depends_on:
       - backend
     restart: unless-stopped
