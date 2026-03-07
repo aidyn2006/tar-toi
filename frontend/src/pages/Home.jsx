@@ -414,7 +414,7 @@ const Home = () => {
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                     <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', background: '#10b981', color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(16,185,129,0.3)', fontSize: '0.875rem' }}>sh</div>
-                    <span className="home-logo-text" style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#064e3b' }}>shaqyrtu.kz</span>
+                    <span className="home-logo-text" style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#064e3b' }}>Toiga Shaqyru</span>
                 </div>
                 <nav className="home-nav" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                     <a className="home-nav-link" href="#features" style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>{tr('Мүмкіндіктер', 'Возможности')}</a>
@@ -737,12 +737,12 @@ const Home = () => {
                 <div className="home-footer-inner" style={{ maxWidth: '72rem', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <div style={{ width: '2rem', height: '2rem', borderRadius: '0.5rem', background: '#10b981', color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>sh</div>
-                        <span style={{ color: 'white', fontWeight: 700 }}>shaqyrtu.kz</span>
+                        <span style={{ color: 'white', fontWeight: 700 }}>Toiga Shaqyru</span>
                     </div>
-                    <div>{tr('© 2025 shaqyrtu.kz — Барлық құқықтар қорғалған', '© 2025 shaqyrtu.kz — Все права защищены')}</div>
+                    <div>{tr('© 2025 Toiga Shaqyru — Барлық құқықтар қорғалған', '© 2025 Toiga Shaqyru — Все права защищены')}</div>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
                         <a href="https://wa.me/77056842747" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>WhatsApp</a>
-                        <a href="https://instagram.com/shaqyrtu" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>Instagram</a>
+                        <a href="https://instagram.com/codejaz.kz" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>Instagram</a>
                     </div>
                 </div>
             </footer>

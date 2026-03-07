@@ -78,6 +78,55 @@ const PendingModal = () => {
     );
 };
 
+/* ─── Limit Exceeded Modal ───────────────────────────── */
+const LimitModal = ({ onClose }) => {
+    const { lang } = useLang();
+    const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+
+    return (
+        <div style={{
+            position: 'fixed', inset: 0, zIndex: 1000,
+            background: 'rgba(23,63,51,0.55)', backdropFilter: 'blur(6px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
+        }}>
+            <div style={{
+                background: C.bg, borderRadius: '24px', padding: '2.5rem', width: '100%', maxWidth: '26rem',
+                border: `1px solid ${C.line}`, boxShadow: '0 24px 64px rgba(23,63,51,0.2)', textAlign: 'center'
+            }}>
+                <div style={{ fontSize: '3.5rem', marginBottom: '1.25rem' }}>🚀</div>
+                <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', fontWeight: 700, color: C.green900, marginBottom: '0.75rem' }}>
+                    {tr('Шектеуге жеттіңіз', 'Вы достигли лимита')}
+                </h2>
+                <p style={{ color: C.green700, fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+                    {tr('Сіз 2 шақырту жасадыңыз. Көбірек жасау үшін бізбен хабарласыңыз.', 'Вы создали 2 приглашения. Чтобы создать больше, свяжитесь с нами.')}
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <a href="https://t.me/nur_kun" target="_blank" rel="noopener noreferrer" style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
+                        padding: '0.875rem 2rem', borderRadius: '999px', textDecoration: 'none',
+                        background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`,
+                        color: C.green900, fontWeight: 800, fontSize: '1rem',
+                        boxShadow: '0 8px 20px rgba(31,91,70,0.14)'
+                    }}>
+                        ✈️ Telegram: @nur_kun
+                    </a>
+                    <a href="tel:87056842747" style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
+                        padding: '0.875rem 2rem', borderRadius: '999px', textDecoration: 'none',
+                        background: 'white', border: `1px solid ${C.line}`,
+                        color: C.green900, fontWeight: 800, fontSize: '1rem'
+                    }}>
+                        📞 8 705 684 27 47
+                    </a>
+                </div>
+                <button onClick={onClose} style={{
+                    background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '1.5rem'
+                }}>{tr('Жабу', 'Закрыть')}</button>
+            </div>
+        </div>
+    );
+};
+
 /* ─── Create Invite Modal ─────────────────────────────── */
 const CreateInviteModal = ({ onClose }) => {
     const navigate = useNavigate();
@@ -289,6 +338,15 @@ const Dashboard = () => {
     const [invites, setInvites] = useState([]);
     const [loadingInvites, setLoadingInvites] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
+    const [showLimit, setShowLimit] = useState(false);
+
+    const handleCreateClick = () => {
+        if (invites.length >= 2) {
+            setShowLimit(true);
+        } else {
+            setShowCreate(true);
+        }
+    };
     const handleDeleteInvite = async (invite) => {
         if (!invite) return;
         if (!window.confirm(tr('Шақыртуды өшіру? Бұл әрекет қайтарылмайды.', 'Удалить приглашение? Действие необратимо.'))) return;
@@ -320,6 +378,7 @@ const Dashboard = () => {
 
             {/* Create Invite Modal */}
             {showCreate && <CreateInviteModal onClose={() => setShowCreate(false)} />}
+            {showLimit && <LimitModal onClose={() => setShowLimit(false)} />}
 
             {/* Top strip (matching original design) */}
             <div style={{ height: '10px', background: C.green900 }} />
@@ -328,7 +387,7 @@ const Dashboard = () => {
             <header className="dashboard-header" style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.125rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${C.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: C.yellow500, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '13px', color: C.green900 }}>sh</div>
-                    <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 2vw, 28px)', color: C.green900 }}>shaqyrtu.kz</span>
+                    <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 2vw, 28px)', color: C.green900 }}>Toiga Shaqyru</span>
                 </div>
                 <div className="dashboard-user" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <LanguageSwitch compact />
@@ -368,7 +427,7 @@ const Dashboard = () => {
                                 </p>
                             </div>
                             {approved && (
-                                <button onClick={() => setShowCreate(true)} style={{
+                                <button onClick={handleCreateClick} style={{
                                     display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 1.5rem',
                                     borderRadius: '999px', border: 'none',
                                     background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`,
@@ -389,7 +448,7 @@ const Dashboard = () => {
                                 <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', color: C.green900, marginBottom: '0.75rem' }}>{tr('Шақырту жоқ', 'Нет приглашений')}</h2>
                                 <p style={{ color: C.green700, marginBottom: '2rem', fontSize: '1rem' }}>{tr('Бірінші шақыртуыңызды жасаңыз', 'Создайте своё первое приглашение')}</p>
                                 {approved && (
-                                    <button onClick={() => setShowCreate(true)} style={{
+                                    <button onClick={handleCreateClick} style={{
                                         display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 2rem',
                                         borderRadius: '999px', border: 'none',
                                         background: `linear-gradient(110deg, ${C.yellow500}, #f8da7b)`,
