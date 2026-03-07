@@ -435,8 +435,8 @@ const EditInvitePage = () => {
                 const srcRaw = (inv.musicSource || '').toString().toUpperCase();
                 const musicSource = srcRaw === MUSIC_SOURCE.SYSTEM || srcRaw === MUSIC_SOURCE.UPLOAD ? srcRaw
                     : inv.musicKey ? MUSIC_SOURCE.SYSTEM
-                    : inv.musicUrl ? MUSIC_SOURCE.UPLOAD
-                    : MUSIC_SOURCE.NONE;
+                        : inv.musicUrl ? MUSIC_SOURCE.UPLOAD
+                            : MUSIC_SOURCE.NONE;
                 const musicKey = inv.musicKey || '';
                 const presetTitle = musicKey ? (SYSTEM_MUSIC_MAP[musicKey]?.title || '') : '';
                 setSlug(inv.slug || '');
@@ -485,8 +485,8 @@ const EditInvitePage = () => {
         if (!file) return;
         setUploadingPhoto(true);
         try {
-            const { url } = await uploadService.uploadImage(file, currentCategory);
-            setData(prev => ({ ...prev, previewPhotoUrl: url || prev.previewPhotoUrl }));
+            const { path } = await uploadService.uploadImage(file, currentCategory);
+            setData(prev => ({ ...prev, previewPhotoUrl: path || prev.previewPhotoUrl }));
         } catch (e) {
             alert('Суретті жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
         } finally {
@@ -500,8 +500,8 @@ const EditInvitePage = () => {
         try {
             const uploads = [];
             for (const f of files) {
-                const { url } = await uploadService.uploadImage(f, currentCategory);
-                if (url) uploads.push(url);
+                const { path } = await uploadService.uploadImage(f, currentCategory);
+                if (path) uploads.push(path);
             }
             if (uploads.length) {
                 setData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...uploads] }));
@@ -566,14 +566,16 @@ const EditInvitePage = () => {
         if (!file) return;
         setUploadingAudio(true);
         try {
-            const { url } = await uploadService.uploadAudio(file, currentCategory);
-            setData(prev => ({
-                ...prev,
-                musicUrl: url,
-                musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle,
-                musicSource: MUSIC_SOURCE.UPLOAD,
-                musicKey: '',
-            }));
+            const { path } = await uploadService.uploadAudio(file, currentCategory);
+            if (path) {
+                setData(prev => ({
+                    ...prev,
+                    musicUrl: path,
+                    musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle,
+                    musicSource: MUSIC_SOURCE.UPLOAD,
+                    musicKey: '',
+                }));
+            }
         } catch (e) {
             alert('Аудио жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
         } finally {
@@ -790,7 +792,7 @@ const EditInvitePage = () => {
                                         const active = templateValue === opt.id;
                                         const pretty = opt.label.trim() || 'Template';
                                         const [cat, file] = opt.id.split('/');
-                                        const subtitle = `${cat || 'template'} / ${file?.replace('.html','') || ''}`;
+                                        const subtitle = `${cat || 'template'} / ${file?.replace('.html', '') || ''}`;
                                         return (
                                             <button
                                                 key={opt.id}

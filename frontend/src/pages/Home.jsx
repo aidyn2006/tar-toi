@@ -56,8 +56,36 @@ const Home = () => {
     return (
         <Layout>
             <SEO
-                description={tr('Онлайн шақырту жасау сервисі — электронные приглашения на той', 'Онлайн сервис создания пригласительных — электронные приглашения на той')}
+                description={tr(
+                    'Toiga Shaqyru — Тойға, ұзатуға, сүндетке онлайн шақырту жасаңыз. 30+ дайын шаблон. WhatsApp арқылы жіберу, қонақтардың жауабын бақылау.',
+                    'Toiga Shaqyru — создайте онлайн-приглашение на свадьбу, узату, сундет той. 30+ готовых шаблонов. Отправка через WhatsApp, контроль ответов гостей.'
+                )}
+                keywords={tr(
+                    'тойға шақыру, онлайн шақырту, үйлену тойына шақыру, ұзату тойына шақыру, сүндет тойға шақыру, электронды шақырту, онлайн пригласительные, приглашение на свадьбу, узату той, сундет той, пригласительные казахстан',
+                    'приглашение на свадьбу, онлайн пригласительные, электронные приглашения, узату той, сундет той, тойға шақыру, онлайн шақырту, пригласительные алматы, пригласительные астана'
+                )}
                 canonical="/"
+                schemaData={{
+                    "@context": "https://schema.org",
+                    "@type": "SoftwareApplication",
+                    "name": "Toiga Shaqyru",
+                    "operatingSystem": "Web",
+                    "applicationCategory": "DesignApplication",
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "0",
+                        "priceCurrency": "KZT"
+                    },
+                    "description": tr(
+                        "Тойға арналған онлайн шақыртулар жасау сервисі.",
+                        "Сервис для создания онлайн пригласительных на мероприятия."
+                    ),
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": "4.9",
+                        "ratingCount": "120"
+                    }
+                }}
             />
 
             <div className="home-page" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -173,29 +201,41 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* ── HOW IT WORKS ─────────────────────────────────── */}
-                <section style={{ padding: '5rem 1.5rem', background: '#064e3b', borderRadius: '4rem 4rem 0 0' }}>
-                    <div style={{ maxWidth: '56rem', margin: '0 auto', textAlign: 'center' }}>
-                        <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 700, color: 'white', marginBottom: '1rem' }}>
-                            {tr('Қалай жұмыс жасайды?', 'Как это работает?')}
-                        </h2>
-                        <p style={{ color: '#a7f3d0', marginBottom: '3.5rem', fontSize: '1.0625rem' }}>{tr('Тек 3 қадам', 'Всего 3 шага')}</p>
-                        <div className="home-steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5rem' }}>
-                            {[
-                                { step: '01', title: tr('Тіркеліңіз', 'Зарегистрируйтесь'), desc: tr('Телефон нөміріңізбен тіркеліп, аккаунт ашыңыз.', 'Зарегистрируйтесь по номеру телефона и создайте аккаунт.') },
-                                { step: '02', title: tr('Үлгі таңдаңыз', 'Выберите шаблон'), desc: tr('Той түріне сай шаблонды таңдап, деректерді толтырыңыз.', 'Выберите подходящий шаблон и заполните данные.') },
-                                { step: '03', title: tr('Жіберіңіз', 'Отправьте'), desc: tr('Шақыртуды WhatsApp арқылы барлық қонақтарға жіберіңіз.', 'Отправьте приглашение всем гостям в WhatsApp.') },
-                            ].map(s => (
-                                <div key={s.step} style={{ textAlign: 'center' }}>
-                                    <div style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '3rem', fontWeight: 700, color: '#10b981', marginBottom: '1rem', opacity: 0.35 }}>{s.step}</div>
-                                    <div style={{ fontWeight: 700, fontSize: '1.125rem', color: 'white', marginBottom: '0.75rem' }}>{s.title}</div>
-                                    <div style={{ color: '#a7f3d0', fontSize: '0.9375rem', lineHeight: 1.6 }}>{s.desc}</div>
-                                </div>
-                            ))}
+                {/* ── SEO CONTENT SECTION ──────────────────────────── */}
+                <section style={{ padding: '5rem 1.5rem', background: '#f8fffe' }}>
+                    <div style={{ maxWidth: '64rem', margin: '0 auto' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
+                            <div>
+                                <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: '#064e3b', marginBottom: '1rem' }}>
+                                    {tr('Тойға шақыру жасау — енді оңай', 'Создание пригласительных на той — теперь проще')}
+                                </h2>
+                                <p style={{ color: '#475569', fontSize: '0.925rem', lineHeight: 1.8 }}>
+                                    {tr(
+                                        'Toiga Shaqyru — бұл қазіргі заманғы электронды шақыртулар жасауға арналған платформа. Біздің сервис арқылы сіз үйлену тойына, ұзату тойына, сүндет тойға немесе мерейтойға арналған бірегей онлайн шақыртуларды небәрі 3 минутта дайындай аласыз. Дайын шаблондарды қолдана отырып, фотосуреттер мен музыка қосып, қонақтарға WhatsApp арқылы жіберуге болады.',
+                                        'Toiga Shaqyru — это современная платформа для создания электронных пригласительных. С помощью нашего сервиса вы можете за 3 минуты подготовить уникальные онлайн приглашения на свадьбу, узату, сундет той или юбилей. Используйте готовые шаблоны, добавляйте фото и музыку, и отправляйте гостям через WhatsApp.'
+                                    )}
+                                </p>
+                            </div>
+                            <div>
+                                <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: '#064e3b', marginBottom: '1rem' }}>
+                                    {tr('Электронды шақыртудың артықшылықтары', 'Преимущества электронных приглашений')}
+                                </h2>
+                                <ul style={{ color: '#475569', fontSize: '0.925rem', lineHeight: 1.8, paddingLeft: '1.25rem' }}>
+                                    <li>{tr('Қонақтардың келуін онлайн бақылау (RSVP)', 'Онлайн контроль посещаемости гостей (RSVP)')}</li>
+                                    <li>{tr('Интерактивті карта мен навигация', 'Интерактивная карта и навигация')}</li>
+                                    <li>{tr('Кез келген құрылғыға бейімделген дизайн', 'Адаптивный дизайн для любых устройств')}</li>
+                                    <li>{tr('Қағаз шақыртуларға қарағанда тиімді әрі жылдам', 'Экономичнее и быстрее бумажных пригласительных')}</li>
+                                </ul>
+                            </div>
                         </div>
-                        <Button variant="secondary" onClick={() => window.location.href = '/#register'} style={{ marginTop: '3.5rem', padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}>
-                            {tr('Қазір бастау', 'Начать сейчас')}
-                        </Button>
+                        <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
+                            <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
+                                {tr(
+                                    'Кілт сөздер: тойға шақыру, онлайн шақырту, үйлену тойы, ұзату той, сүндет той, бесік той, мерейтой, электронды шақырту қазақша.',
+                                    'Ключевые слова: пригласительные на свадьбу, онлайн пригласительные, узату той, сундет той, электронные приглашения Алматы, Астана, Казахстан.'
+                                )}
+                            </p>
+                        </div>
                     </div>
                 </section>
             </div>

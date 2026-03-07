@@ -25,7 +25,7 @@ const normalizeUrl = (url) => {
     if (/^https?:\/\//i.test(url)) return url;
     if (typeof window === 'undefined') return url;
     if (url.startsWith('/uploads/')) {
-        return `${window.location.protocol}//${window.location.hostname}:9191${url}`;
+        return window.location.origin + url;
     }
     return window.location.origin + url;
 };
@@ -386,7 +386,7 @@ const Dashboard = () => {
             {/* Header */}
             <header className="dashboard-header" style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.125rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${C.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: C.yellow500, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '13px', color: C.green900 }}>sh</div>
+                    <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: C.yellow500, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '13px', color: C.green900 }}>TS</div>
                     <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 2vw, 28px)', color: C.green900 }}>Toiga Shaqyru</span>
                 </div>
                 <div className="dashboard-user" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
