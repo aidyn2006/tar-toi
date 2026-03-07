@@ -1,64 +1,92 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import EditInvitePage from './pages/EditInvitePage';
-import PublicInvitePage from './pages/PublicInvitePage';
-import GuestListPage from './pages/GuestListPage';
+import { HelmetProvider } from 'react-helmet-async';
 import { authService } from './api/authService';
 import { LanguageProvider } from './context/LanguageContext';
+
+// Lazy load all pages for better performance
+const Home = lazy(() => import('./pages/Home'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const EditInvitePage = lazy(() => import('./pages/EditInvitePage'));
+const PublicInvitePage = lazy(() => import('./pages/PublicInvitePage'));
+const GuestListPage = lazy(() => import('./pages/GuestListPage'));
+const CategoriesPage = lazy(() => import('./pages/CategoriesPage'));
+const FAQPage = lazy(() => import('./pages/FAQPage'));
+const BlogPage = lazy(() => import('./pages/BlogPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const MereiPage = lazy(() => import('./pages/MereiPage'));
 
 const ProtectedRoute = ({ children }) => {
     return authService.isLoggedIn() ? children : <Navigate to="/" />;
 };
 
+const PageLoader = () => (
+    <div style={{
+        height: '100vh', width: '100vw', display: 'flex', alignItems: 'center',
+        justifyContent: 'center', background: '#f8fffe', color: '#10b981',
+        fontFamily: 'Unbounded, sans-serif'
+    }}>
+        Жүктелуде...
+    </div>
+);
+
 function App() {
     return (
-        <LanguageProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/invite/:id/guests"
-                        element={
-                            <ProtectedRoute>
-                                <GuestListPage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    {/* Protected: edit existing invite */}
-                    <Route
-                        path="/invite/edit/:id"
-                        element={
-                            <ProtectedRoute>
-                                <EditInvitePage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    {/* Protected: create new invite */}
-                    <Route
-                        path="/invite/new"
-                        element={
-                            <ProtectedRoute>
-                                <EditInvitePage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    {/* Public: view invite by slug */}
-                    <Route path="/invite/:slug" element={<PublicInvitePage />} />
-                    <Route path="*" element={<Navigate to="/" />} />
-                </Routes>
-            </Router>
-        </LanguageProvider>
+        <HelmetProvider>
+            <LanguageProvider>
+                <Router>
+                    <Suspense fallback={<PageLoader />}>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+
+                            {/* SEO Routes */}
+                            <Route path="/categories" element={<CategoriesPage />} />
+                            <Route path="/faq" element={<FAQPage />} />
+                            <Route path="/blog" element={<BlogPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/meretoi-shakyru" element={<MereiPage />} />
+
+                            <Route
+                                path="/dashboard"
+                                element={
+                                    <ProtectedRoute>
+                                        <Dashboard />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/invite/:id/guests"
+                                element={
+                                    <ProtectedRoute>
+                                        <GuestListPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/invite/edit/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <EditInvitePage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/invite/new"
+                                element={
+                                    <ProtectedRoute>
+                                        <EditInvitePage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route path="/invite/:slug" element={<PublicInvitePage />} />
+                            <Route path="*" element={<Navigate to="/" />} />
+                        </Routes>
+                    </Suspense>
+                </Router>
+            </LanguageProvider>
+        </HelmetProvider>
     );
 }
 
 export default App;
+

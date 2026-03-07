@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useEffect } from 'react';
 import { resolveMusicTrack } from '../constants/systemMusic';
 
-const TEMPLATE_RAW_MAP = import.meta.glob('../templates/**/*.html', { as: 'raw', eager: true });
+const TEMPLATE_LOADERS = import.meta.glob('../templates/**/*.html', { as: 'raw' });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
 const LEGACY_KEYS = ['classic', 'royal', 'nature', 'modern'];
 
@@ -291,22 +291,24 @@ function injectLiveBridge(html) {
         const isWeddingPair = tplKey.startsWith('wedding/');
         const primary = cfg.names?.groom || cfg.names?.bride || '';
         const pair = cfg.names?.bride || '';
-        const namesLine = isWeddingPair && pair
-            ? \`\${pair} & \${cfg.names?.groom || ''}\`.trim()
+        
+        const namesLine = (isWeddingPair && pair) 
+            ? (pair + ' & ' + (cfg.names?.groom || '')).trim()
             : primary;
+            
         const dateLine = [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : '');
         const ownersVal = cfg.toiOwners || '';
 
         // Primary hero / about texts
         setText('heroNames', namesLine);
-        setText('heroNamesLine', isWeddingPair && pair ? \`\${cfg.names?.groom || ''} & \${pair}\` : primary);
+        setText('heroNamesLine', (isWeddingPair && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
         setText('hBride', isWeddingPair ? pair : primary);
         setText('hGroom', isWeddingPair ? primary : '');
         setText('heroDateLine', dateLine);
         setText('hDate', dateLine);
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
-        setText('footLine', isWeddingPair && pair ? \`\${pair || ''} & \${primary}  ·  \${yy}\` : \`\${primary} · \${yy}\`);
+        setText('footLine', (isWeddingPair && pair) ? (pair + ' & ' + primary + '  ·  ' + yy) : (primary + ' · ' + yy));
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
@@ -552,7 +554,7 @@ function localizeTemplate(html, lang) {
     });
 
     out = out.replace(
-        /<span>Пн<\/span><span>Вт<\/span><span>Ср<\/span>\s*<span>Чт<\/span><span>Пт<\/span><span>Сб<\/span><span>Вс<\/span>/,
+        /<span>Пн<\/span><span>Вт<\/span><span>Ср<\/span>\s*<span>Чт<\/span><span>Пт<\/span><span>Сб<\/span><span>Vс<\/span>/,
         '<span>Дс</span><span>Сс</span><span>Ср</span><span>Бс</span><span>Жм</span><span>Сб</span><span>Жс</span>'
     );
 
@@ -583,15 +585,13 @@ function pickPalette(invite) {
     return PALETTES[key] || PALETTES.classic;
 }
 
-function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang = 'kk', mode = 'edit' } = {}) {
+function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inviteId = null, lang = 'kk', mode = 'edit' } = {}) {
     const palette = pickPalette(invite);
     const isViewMode = mode === 'view';
     const config = { ...buildConfig(invite || {}), autoplay: isViewMode };
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
     const tplKey = normalizeTemplateKey(invite?.template);
-    const fallbackHtml = Object.values(TEMPLATE_RAW_MAP)[0] || '';
-    const htmlSource = TEMPLATE_RAW_MAP[tplKey] || TEMPLATE_RAW_MAP[DEFAULT_TEMPLATE_KEY] || fallbackHtml;
     const skipPalette = tplKey.includes('/wedding/template4.html') || (htmlSource && /NO_PALETTE/i.test(htmlSource));
     let html = htmlSource;
     html = skipPalette ? html : applyPalette(html, palette);
@@ -608,7 +608,33 @@ function buildTemplate2Html(invite, { enableRsvp = false, inviteId = null, lang 
 
 const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false, mode = 'edit' }) => {
     const iframeRef = useRef(null);
-    const templateKey = useMemo(() => normalizeTemplateKey(invite?.template), [invite?.template]);
+    const [html, setHtml] = React.useState('');
+    const [templateKey, setTemplateKey] = React.useState(() => normalizeTemplateKey(invite?.template));
+
+    // Async template loading
+    useEffect(() => {
+        const nextKey = normalizeTemplateKey(invite?.template);
+        let active = true;
+
+        const load = async () => {
+            const loader = TEMPLATE_LOADERS[nextKey] || TEMPLATE_LOADERS[DEFAULT_TEMPLATE_KEY];
+            if (!loader) return;
+            try {
+                const raw = await loader();
+                if (active) {
+                    const fullHtml = buildTemplate2Html(invite, raw, { enableRsvp, inviteId, lang, mode });
+                    setHtml(fullHtml);
+                    setTemplateKey(nextKey);
+                }
+            } catch (err) {
+                console.error('Template load failed:', err);
+            }
+        };
+
+        load();
+        return () => { active = false; };
+    }, [invite?.template, enableRsvp, inviteId, lang, mode, invite?.previewPhotoUrl, invite?.gallery, invite?.musicUrl, invite?.musicKey, invite?.musicSource]);
+
     const isEmptyInvite = useMemo(() => {
         if (!invite) return true;
         const hasMain =
@@ -621,19 +647,7 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
             (Array.isArray(invite.gallery) && invite.gallery.length > 0);
         return !hasMain;
     }, [invite]);
-    // Rebuild full HTML when template, photo, gallery, or mode changes
-    const structureKey = useMemo(
-        () => JSON.stringify([
-            templateKey, invite?.previewPhotoUrl,
-            invite?.gallery, invite?.musicUrl, invite?.musicKey, invite?.musicSource,
-            enableRsvp, inviteId, lang, mode,
-        ]),
-        [templateKey, invite?.previewPhotoUrl, invite?.gallery, invite?.musicUrl, invite?.musicKey, invite?.musicSource, enableRsvp, inviteId, lang, mode]
-    );
-    const initialDoc = useMemo(
-        () => buildTemplate2Html(invite, { enableRsvp, inviteId, lang, mode }),
-        [structureKey]
-    );
+
     const liveConfig = useMemo(() => buildConfig(invite || {}), [invite]);
     const prevHashRef = useRef('');
 
@@ -687,11 +701,23 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         );
     }
 
+    if (!html && !isEmptyInvite) {
+        return (
+            <div style={{
+                width: '100%', height: '100%', background: '#F8FFFE',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#10B981', fontFamily: 'Manrope, sans-serif'
+            }}>
+                Жүктелуде...
+            </div>
+        );
+    }
+
     return (
         <iframe
             ref={iframeRef}
             title="template-2-preview"
-            srcDoc={initialDoc}
+            srcDoc={html}
             onLoad={handleIframeLoad}
             className={className}
             style={{

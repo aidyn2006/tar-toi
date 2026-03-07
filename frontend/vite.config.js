@@ -22,5 +22,16 @@ export default defineConfig({
         secure: false,
       }
     }
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
+          'vendor-icons': ['lucide-react'],
+        },
+      },
+    },
+  },
 });
+
