@@ -5,7 +5,9 @@ import { authService } from './api/authService';
 import { LanguageProvider } from './context/LanguageContext';
 
 // Lazy load all pages for better performance
-const Home = lazy(() => import('./pages/Home'));
+import Home from './pages/Home';
+// Lazy load other pages for better performance
+// const Home = lazy(() => import('./pages/Home'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const EditInvitePage = lazy(() => import('./pages/EditInvitePage'));
 const PublicInvitePage = lazy(() => import('./pages/PublicInvitePage'));
