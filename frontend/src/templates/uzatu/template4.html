@@ -58,7 +58,7 @@
             position: relative;
             overflow-x: hidden;
             border-radius: 20px;
-            box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
         }
 
         .page-wrap {
@@ -83,7 +83,7 @@
             padding: 32px 22px;
             margin-bottom: 22px;
             position: relative;
-            box-shadow: 0 12px 40px rgba(17,5,5,0.12);
+            box-shadow: 0 12px 40px rgba(17, 5, 5, 0.12);
         }
 
         .section-label {
@@ -112,7 +112,7 @@
             padding: 48px 20px;
             border-radius: 24px;
             background: linear-gradient(180deg, #fff9f2 0%, #fff6ea 100%);
-            box-shadow: 0 16px 45px rgba(107,17,17,0.12);
+            box-shadow: 0 16px 45px rgba(107, 17, 17, 0.12);
         }
 
         .hero-event-label {
@@ -132,7 +132,7 @@
             background: #fff;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(107,17,17,0.18);
+            box-shadow: 0 10px 30px rgba(107, 17, 17, 0.18);
         }
 
         #heroPhoto img {
@@ -285,7 +285,7 @@
             border: 1px solid var(--gold);
             border-radius: 16px;
             scroll-snap-align: center;
-            box-shadow: 0 10px 26px rgba(17,5,5,0.1);
+            box-shadow: 0 10px 26px rgba(17, 5, 5, 0.1);
         }
 
         /* ─── COUNTDOWN ──────────────────────────────────── */
@@ -323,6 +323,7 @@
             max-width: 360px;
             margin: 0 auto;
         }
+
         .rsvp input {
             width: 100%;
             padding: 14px 16px;
@@ -336,10 +337,12 @@
             background: #fff;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         .rsvp input:focus {
             border-color: var(--emerald);
-            box-shadow: 0 0 0 3px rgba(107,17,17,0.15);
+            box-shadow: 0 0 0 3px rgba(107, 17, 17, 0.15);
         }
+
         .guest-counter {
             display: flex;
             align-items: center;
@@ -347,6 +350,7 @@
             gap: 12px;
             margin: 8px 0 18px;
         }
+
         .gc-btn {
             width: 38px;
             height: 38px;
@@ -357,6 +361,7 @@
             font-size: 18px;
             cursor: pointer;
         }
+
         #rGuests {
             display: inline-block;
             min-width: 46px;
@@ -364,6 +369,7 @@
             font-weight: 700;
             color: var(--text);
         }
+
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -374,10 +380,14 @@
             font-family: var(--sans);
             letter-spacing: 2px;
             cursor: pointer;
-            box-shadow: 0 12px 28px rgba(107,17,17,0.28);
+            box-shadow: 0 12px 28px rgba(107, 17, 17, 0.28);
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 14px 32px rgba(107,17,17,0.32); }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 32px rgba(107, 17, 17, 0.32);
+        }
 
         .music-btn {
             position: fixed;
@@ -450,7 +460,8 @@
             <!-- ③ INVITE TEXT -->
             <section class="card reveal" style="border-top: 4px solid var(--emerald);">
                 <p class="invite-text" id="eventText">Құрметті ағайын-туыс!</p>
-                <p class="invite-text">Біздің әулеттің үкілеген үміті, мәпелеген қызымыз <strong id="heroNamesLine">Аружанның</strong>
+                <p class="invite-text">Біздің әулеттің үкілеген үміті, мәпелеген қызымыз <strong
+                        id="heroNamesLine">Аружанның</strong>
                     ұзату тойына арналған салтанатты кешіміздің қадірлі қонағы болуға шақырамыз.</p>
             </section>
 
@@ -520,19 +531,23 @@
     </div>
 
     <script>
-        (function init() {
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+        let countdownTimer = null;
+        function applyConfig(newConf) {
+            const config = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : window.CONFIG);
+            if (!window.CONFIG) window.CONFIG = config;
+            const configObj = config;
+            const [dd, mm, yy] = configObj.day.split('-').map(Number);
+            const [hh, mi] = configObj.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
-            const mainName = (CONFIG.names?.bride || 'ҚОНАҚ').toUpperCase();
+            const mainName = (configObj.names?.bride || 'ҚОНАҚ').toUpperCase();
             document.getElementById('hBride').textContent = mainName;
             const nl = document.getElementById('heroNamesLine');
             if (nl) nl.textContent = mainName;
-            document.getElementById('eventText').textContent = CONFIG.description;
-            document.getElementById('ownersBigName').textContent = CONFIG.toiOwners;
-            document.getElementById('locDateTimeVal').textContent = `${dd}.${mm}.${yy} | ${CONFIG.hour}`;
-            document.getElementById('locationName').textContent = CONFIG.location;
-            if (CONFIG.locationUrl) { document.getElementById('mapBtn').href = CONFIG.locationUrl; document.getElementById('mapBtnWrap').style.display = 'block'; }
+            document.getElementById('eventText').textContent = configObj.description || '';
+            document.getElementById('ownersBigName').textContent = configObj.toiOwners || '';
+            document.getElementById('locDateTimeVal').textContent = `${dd}.${mm}.${yy} | ${configObj.hour}`;
+            document.getElementById('locationName').textContent = configObj.location || '';
+            if (configObj.locationUrl) { document.getElementById('mapBtn').href = configObj.locationUrl; document.getElementById('mapBtnWrap').style.display = 'block'; }
 
             const calMo = document.getElementById('calMo'), calGrid = document.getElementById('calGrid');
             calMo.textContent = MO_KK[mm - 1].toUpperCase();
@@ -542,19 +557,28 @@
             for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'cday other'; e.textContent = new Date(yy, mm - 1, 0).getDate() - off + 1 + i; calGrid.appendChild(e); }
             for (let d = 1; d <= total; d++) { const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d; calGrid.appendChild(e); }
 
-            (function tick() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
-                const diff = Math.max(0, target - new Date());
-                document.getElementById('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
-                document.getElementById('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-                document.getElementById('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-                setTimeout(tick, 1000);
-            })();
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
+                const tick = () => {
+                    const diff = Math.max(0, target - new Date());
+                    document.getElementById('cdD').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+                    document.getElementById('cdH').textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+                    document.getElementById('cdM').textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
 
             const g = document.getElementById('gallerySlides');
-            (CONFIG.gallery || []).forEach(u => { const img = document.createElement('img'); img.src = u; g.appendChild(img); });
-            if (CONFIG.heroPhoto) { const h = document.getElementById('heroPhoto'); h.innerHTML = `<img src="${CONFIG.heroPhoto}">`; }
-        })();
+            g.innerHTML = '';
+            (configObj.gallery || []).forEach(u => { const img = document.createElement('img'); img.src = u; g.appendChild(img); });
+            if (configObj.heroPhoto) { const h = document.getElementById('heroPhoto'); h.innerHTML = `<img src="${configObj.heroPhoto}">`; }
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         let playing = false;
         function toggleMusic() {

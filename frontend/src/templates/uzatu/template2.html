@@ -1063,9 +1063,13 @@
     </div>
 
     <script>
-        (function applyConfig() {
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+        let countdownTimer = null;
+        function applyConfig(newConf) {
+            const config = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : window.CONFIG);
+            if (!window.CONFIG) window.CONFIG = config;
+            const configObj = config;
+            const [dd, mm, yy] = configObj.day.split('-').map(Number);
+            const [hh, mi] = configObj.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             const MO_ROM = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
             const mainName = (CONFIG.names?.bride || CONFIG.names?.groom || 'Қонақ').trim();
@@ -1107,9 +1111,10 @@
             const dtLine = document.getElementById('heroDateLine');
             if (dtLine) dtLine.textContent = `сағат ${hh} : ${mi}`;
 
-            (function countdown() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
-                if (isNaN(target.getTime())) return;
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
                 const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2, '0'); };
                 const tick = () => {
                     let diff = Math.max(0, target - new Date());
@@ -1118,8 +1123,8 @@
                     set('cdH', Math.floor(diff / 3600000) % 24);
                     set('cdD', Math.floor(diff / 86400000));
                 };
-                tick(); setInterval(tick, 1000);
-            })();
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
 
             const ownersBig = document.getElementById('ownersBigName');
             if (ownersBig && CONFIG.toiOwners) ownersBig.textContent = CONFIG.toiOwners;
@@ -1175,7 +1180,11 @@
                 };
                 document.addEventListener('touchstart', start, { once: true }); document.addEventListener('click', start, { once: true });
             })();
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         let gIdx = 0, playing = false;
         function updateGallery() {

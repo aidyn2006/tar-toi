@@ -349,6 +349,7 @@
             max-width: 360px;
             margin: 0 auto;
         }
+
         .rsvp input,
         .rsvp textarea {
             width: 100%;
@@ -362,12 +363,14 @@
             color: var(--text);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         .rsvp input:focus,
         .rsvp textarea:focus {
             outline: none;
             border-color: var(--emerald);
             box-shadow: 0 0 0 3px rgba(141, 93, 93, 0.18);
         }
+
         .guest-counter {
             display: flex;
             align-items: center;
@@ -375,6 +378,7 @@
             gap: 12px;
             margin: 6px 0 16px;
         }
+
         .gc-btn {
             width: 38px;
             height: 38px;
@@ -386,7 +390,11 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .gc-btn:hover { background: var(--cream); }
+
+        .gc-btn:hover {
+            background: var(--cream);
+        }
+
         #rGuests {
             width: 70px;
             text-align: center;
@@ -397,6 +405,7 @@
             background: #fff;
             color: var(--text);
         }
+
         .submit-btn {
             width: 100%;
             padding: 15px;
@@ -410,7 +419,11 @@
             box-shadow: 0 10px 26px rgba(141, 93, 93, 0.28);
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(141,93,93,0.32); }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(141, 93, 93, 0.32);
+        }
 
         /* ─── COUNTDOWN ──────────────────────────────────── */
         .countdown {
@@ -504,7 +517,8 @@
             <section class="card reveal">
                 <p class="invite-text" id="eventText">Құрметті қауым!</p>
                 <div style="height:1px; background:var(--gold); margin:15px auto; width:40px; opacity:0.5;"></div>
-                <p class="invite-text">Көркіне ақылы сай қызымыз <strong id="heroNamesLine">Аружанның</strong> қияға қонуына арналған
+                <p class="invite-text">Көркіне ақылы сай қызымыз <strong id="heroNamesLine">Аружанның</strong> қияға
+                    қонуына арналған
                     салтанатты кешіміздің куәсі болыңыздар.</p>
             </section>
 
@@ -571,7 +585,8 @@
                     </div>
                     <button class="submit-btn" onclick="submitRSVP()">Растаймын</button>
                 </div>
-                <div id="successMsg" style="display:none; text-align:center; color:var(--emerald); font-weight:600; padding-top:8px;">
+                <div id="successMsg"
+                    style="display:none; text-align:center; color:var(--emerald); font-weight:600; padding-top:8px;">
                     Рахмет! Күтеміз.</div>
             </section>
 
@@ -595,22 +610,26 @@
     </div>
 
     <script>
-        (function init() {
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+        let countdownTimer = null;
+        function applyConfig(newConf) {
+            const config = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : window.CONFIG);
+            if (!window.CONFIG) window.CONFIG = config;
+            const configObj = config;
+            const [dd, mm, yy] = configObj.day.split('-').map(Number);
+            const [hh, mi] = configObj.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
-            const mainName = (CONFIG.names?.bride || 'Қонақ').trim();
+            const mainName = (configObj.names?.bride || 'Қонақ').trim();
 
             document.getElementById('hBride').textContent = mainName;
             const nl = document.getElementById('heroNamesLine');
             if (nl) nl.textContent = mainName;
             document.getElementById('hCeremony').textContent = `${dd} ${MO_KK[mm - 1]} ${yy}`;
-            document.getElementById('eventText').textContent = CONFIG.description;
-            document.getElementById('ownersBigName').textContent = CONFIG.toiOwners;
-            document.getElementById('locTimeVal').textContent = CONFIG.hour;
-            document.getElementById('locationName').textContent = CONFIG.location;
-            if (CONFIG.locationUrl) { document.getElementById('mapBtn').href = CONFIG.locationUrl; document.getElementById('mapBtnWrap').style.display = 'block'; }
-            document.getElementById('heroDateLine').textContent = `Сағат ${CONFIG.hour}`;
+            document.getElementById('eventText').textContent = configObj.description || '';
+            document.getElementById('ownersBigName').textContent = configObj.toiOwners || '';
+            document.getElementById('locTimeVal').textContent = configObj.hour;
+            document.getElementById('locationName').textContent = configObj.location || '';
+            if (configObj.locationUrl) { document.getElementById('mapBtn').href = configObj.locationUrl; document.getElementById('mapBtnWrap').style.display = 'block'; }
+            document.getElementById('heroDateLine').textContent = `Сағат ${configObj.hour}`;
 
             const calGrid = document.getElementById('calGrid');
             const first = new Date(yy, mm - 1, 1).getDay();
@@ -620,18 +639,27 @@
             for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'cday other'; e.textContent = new Date(yy, mm - 1, 0).getDate() - off + 1 + i; calGrid.appendChild(e); }
             for (let d = 1; d <= total; d++) { const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d; calGrid.appendChild(e); }
 
-            (function tick() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
-                const diff = Math.max(0, target - new Date());
-                document.getElementById('cdD').textContent = Math.floor(diff / 86400000);
-                document.getElementById('cdH').textContent = Math.floor(diff / 3600000) % 24;
-                document.getElementById('cdM').textContent = Math.floor(diff / 60000) % 60;
-                setTimeout(tick, 1000);
-            })();
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${hh}:${mi}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
+                const tick = () => {
+                    const diff = Math.max(0, target - new Date());
+                    document.getElementById('cdD').textContent = Math.floor(diff / 86400000);
+                    document.getElementById('cdH').textContent = Math.floor(diff / 3600000) % 24;
+                    document.getElementById('cdM').textContent = Math.floor(diff / 60000) % 60;
+                };
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
 
             const slides = document.getElementById('gallerySlides');
-            (CONFIG.gallery || []).forEach((u, i) => { const img = document.createElement('img'); img.src = u; slides.appendChild(img); });
-        })();
+            slides.innerHTML = '';
+            (configObj.gallery || []).forEach((u) => { const img = document.createElement('img'); img.src = u; slides.appendChild(img); });
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         let playing = false;
         function toggleMusic() {
