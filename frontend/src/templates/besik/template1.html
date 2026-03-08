@@ -30,14 +30,17 @@
         }
 
         body {
-            background: var(--cream);
+            background: #ddd8d0;
             color: var(--text);
             font-family: var(--sans);
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .app {
-            max-width: 500px;
+            width: 100%;
+            max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
             position: relative;
@@ -56,16 +59,26 @@
             background-image: url('https://shaqyrtu.kz/template4/border.png');
             background-size: 14px auto;
             background-repeat: repeat-y;
-            filter: sepia(0.3) saturate(1.2);
+            filter: sepia(0.5) saturate(1.5) hue-rotate(5deg);
         }
 
         .border-strip.left {
-            left: 0;
+            left: calc(50% - 240px);
         }
 
         .border-strip.right {
-            right: 0;
+            right: calc(50% - 240px);
             transform: scaleX(-1);
+        }
+
+        @media (max-width: 480px) {
+            .border-strip.left {
+                left: 0;
+            }
+
+            .border-strip.right {
+                right: 0;
+            }
         }
 
         .section {
@@ -391,11 +404,11 @@
 
         /* Music */
         .music-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 45px;
-            height: 45px;
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: white;
             border: 1px solid var(--gold);
@@ -479,65 +492,66 @@
                 <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-lbl">мин</span></div>
                 <div class="cd-box"><span class="cd-num" id="cdS">00</span><span class="cd-lbl">сек</span></div>
             </div>
-    </div>
-    </section>
+        </section>
 
-    <!-- OWNERS SECTION -->
-    <section class="section reveal" id="ownerSection">
-        <img src="https://shaqyrtu.kz/template9/oiu.png" style="width:80px; opacity:0.1; margin-bottom:20px;" alt="">
-        <div class="hero-ceremony">Той иелері</div>
-        <div id="toiOwners"
-            style="font-family:var(--serif); font-size:22px; margin-top:15px; color:var(--text); font-weight:700;">
-            Дәулет & Салтанат</div>
-    </section>
+        <!-- OWNERS SECTION -->
+        <section class="section reveal" id="ownerSection">
+            <img src="https://shaqyrtu.kz/template9/oiu.png" style="width:80px; opacity:0.1; margin-bottom:20px;"
+                alt="">
+            <div class="hero-ceremony">Той иелері</div>
+            <div id="toiOwners"
+                style="font-family:var(--serif); font-size:22px; margin-top:15px; color:var(--text); font-weight:700;">
+                Дәулет & Салтанат</div>
+        </section>
 
-    <section class="section reveal">
-        <h2 class="sec-title">Мекенжай</h2>
-        <div class="loc-box">
-            <div class="loc-name" id="locName">Golden Hall</div>
-            <p style="font-size:14px; color:var(--muted);" id="locDesc">Astana қаласы, Мәңгілік Ел көшесі, 23</p>
-            <a id="mapBtn" href="#" target="_blank" class="map-btn">
-                <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2GIS">
-                Карта арқылы ашу
-            </a>
-        </div>
-    </section>
-
-    <section class="section reveal">
-        <h2 class="sec-title">Қатысуыңызды растаңыз</h2>
-        <div id="rsvpForm" class="rsvp-form">
-            <div class="rsvp-field">
-                <label>Есіміңіз</label>
-                <input type="text" id="rName" placeholder="Аты-жөніңізді жазыңыз">
+        <section class="section reveal">
+            <h2 class="sec-title">Мекенжай</h2>
+            <div class="loc-box">
+                <div class="loc-name" id="locName">Golden Hall</div>
+                <p style="font-size:14px; color:var(--muted);" id="locDesc">Astana қаласы, Мәңгілік Ел көшесі, 23</p>
+                <a id="mapBtn" href="#" target="_blank" class="map-btn">
+                    <img src="https://shaqyrtu.kz/images/twogis.svg" alt="2GIS">
+                    Карта арқылы ашу
+                </a>
             </div>
-            <div class="rsvp-field">
-                <label>Телефон нөміріңіз</label>
-                <input type="tel" id="rPhone" placeholder="+7 (___) ___-__-__">
-            </div>
-            <div class="rsvp-field">
-                <label>Қонақтар саны</label>
-                <div class="guest-row">
-                    <button class="gc-btn" onclick="changeGuests(-1)">-</button>
-                    <span id="rGuests" style="font-weight:700; width:30px; text-align:center;">1</span>
-                    <button class="gc-btn" onclick="changeGuests(1)">+</button>
+        </section>
+
+        <section class="section reveal">
+            <h2 class="sec-title">Қатысуыңызды растаңыз</h2>
+            <div id="rsvpForm" class="rsvp-form">
+                <div class="rsvp-field">
+                    <label>Есіміңіз</label>
+                    <input type="text" id="rName" placeholder="Аты-жөніңізді жазыңыз">
                 </div>
+                <div class="rsvp-field">
+                    <label>Телефон нөміріңіз</label>
+                    <input type="tel" id="rPhone" placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="rsvp-field">
+                    <label>Қонақтар саны</label>
+                    <div class="guest-row">
+                        <button class="gc-btn" onclick="changeGuests(-1)">-</button>
+                        <span id="rGuests" style="font-weight:700; width:30px; text-align:center;">1</span>
+                        <button class="gc-btn" onclick="changeGuests(1)">+</button>
+                    </div>
+                </div>
+                <div class="rsvp-field">
+                    <label>Тілегіңіз</label>
+                    <textarea id="rNote" placeholder="Ақ тілегіңізді жазыңыз..." rows="3"></textarea>
+                </div>
+                <button class="submit-btn" onclick="submitRSVP()">Растау</button>
             </div>
-            <div class="rsvp-field">
-                <label>Тілегіңіз</label>
-                <textarea id="rNote" placeholder="Ақ тілегіңізді жазыңыз..." rows="3"></textarea>
+            <div id="successMsg" style="display:none; text-align:center; padding:20px;">
+                <p style="font-family:var(--serif); font-size:18px; color:var(--gold);">Рахмет! Күтеміз!</p>
             </div>
-            <button class="submit-btn" onclick="submitRSVP()">Растау</button>
-        </div>
-        <div id="successMsg" style="display:none; text-align:center; padding:20px;">
-            <p style="font-family:var(--serif); font-size:18px; color:var(--gold);">Рахмет! Күтеміз!</p>
-        </div>
-    </section>
+        </section>
 
-    <footer class="reveal">
-        <img src="https://shaqyrtu.kz/template12/decor.png" width="150" style="opacity:0.3; margin-bottom:30px;" alt="">
-        <div class="footer-name" id="footerName">Әлихан — Бесік тойы</div>
-        <div style="font-size:12px; color:var(--gold); letter-spacing:4px;" id="footerDate">2026</div>
-    </footer>
+        <footer class="reveal">
+            <img src="https://shaqyrtu.kz/template12/decor.png" width="150" style="opacity:0.3; margin-bottom:30px;"
+                alt="">
+            <div class="footer-name" id="footerName">Әлихан — Бесік тойы</div>
+            <div style="font-size:12px; color:var(--gold); letter-spacing:4px;" id="footerDate">2026</div>
+        </footer>
     </div>
 
     <script>
