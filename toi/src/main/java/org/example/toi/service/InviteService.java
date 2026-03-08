@@ -207,8 +207,11 @@ public class InviteService {
         }
 
         List<InviteResponse> responses = responseRepository.findAllByInviteId(id);
-        responseRepository.deleteAll(responses);
-        inviteRepository.delete(invite);
+        responses.forEach(r -> r.setDeleted(true));
+        responseRepository.saveAll(responses);
+
+        invite.setDeleted(true);
+        inviteRepository.save(invite);
     }
 
     /* ── helpers ─────────────────────────────────────────── */

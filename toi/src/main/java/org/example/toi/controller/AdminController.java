@@ -66,7 +66,10 @@ public class AdminController {
     /** Reject (delete) a user */
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setDeleted(true);
+        userRepository.save(user);
         return ResponseEntity.ok(Map.of("message", "User deleted"));
     }
 }
