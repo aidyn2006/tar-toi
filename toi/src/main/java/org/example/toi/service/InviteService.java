@@ -9,6 +9,7 @@ import org.example.toi.dto.response.InviteResponseDTO;
 import org.example.toi.entity.Invite;
 import org.example.toi.entity.InviteResponse;
 import org.example.toi.entity.MusicSource;
+import org.example.toi.entity.Role;
 import org.example.toi.entity.User;
 import org.example.toi.repository.InviteRepository;
 import org.example.toi.repository.InviteResponseRepository;
@@ -81,6 +82,13 @@ public class InviteService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
+    @Transactional(readOnly = true)
+    public List<InviteResponseDTO> getAllInvites() {
+        return inviteRepository.findAll().stream()
+                .map(this::sanitizeAndMaybePersist)
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
 
     /** Public — no auth required. Fetches invite by its unique slug. */
     @Transactional
@@ -100,7 +108,7 @@ public class InviteService {
         Invite invite = inviteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Invite not found"));
 
-        if (!invite.getOwner().getId().equals(owner.getId())) {
+        if (!invite.getOwner().getId().equals(owner.getId()) && owner.getRole() != Role.ADMIN) {
             throw new RuntimeException("Access denied");
         }
 
@@ -136,7 +144,7 @@ public class InviteService {
         Invite invite = inviteRepository.findById(inviteId)
                 .orElseThrow(() -> new RuntimeException("Invite not found"));
 
-        if (!invite.getOwner().getId().equals(owner.getId())) {
+        if (!invite.getOwner().getId().equals(owner.getId()) && owner.getRole() != Role.ADMIN) {
             throw new RuntimeException("Access denied");
         }
 
@@ -194,7 +202,7 @@ public class InviteService {
         Invite invite = inviteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Invite not found"));
 
-        if (!invite.getOwner().getId().equals(owner.getId())) {
+        if (!invite.getOwner().getId().equals(owner.getId()) && owner.getRole() != Role.ADMIN) {
             throw new RuntimeException("Access denied");
         }
 

@@ -22,11 +22,18 @@ const C = {
 
 const normalizeUrl = (url) => {
     if (!url) return '';
-    if (/^https?:\/\//i.test(url)) return url;
-    if (typeof window === 'undefined') return url;
-    if (url.startsWith('/uploads/')) {
-        return window.location.origin + url;
+    if (/^https?:\/\//i.test(url)) {
+        if (typeof window !== 'undefined') {
+            try {
+                const u = new URL(url);
+                if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') {
+                    return window.location.origin + u.pathname + u.search;
+                }
+            } catch (_) { /* ignore */ }
+        }
+        return url;
     }
+    if (typeof window === 'undefined') return url;
     return window.location.origin + url;
 };
 
@@ -275,52 +282,218 @@ const InviteCard = ({ invite, onDelete }) => {
 
 /* ─── Admin Panel ─────────────────────────────────────── */
 const AdminPanel = () => {
-    const [users, setUsers] = useState([]);
+    const [adminTab, setAdminTab] = useState('users'); // 'users' | 'invites'
+    const [usersData, setUsersData] = useState({ content: [], page: { number: 0, totalPages: 0, totalElements: 0 } });
+    const [invites, setInvites] = useState([]);
+    const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(true);
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+    const navigate = useNavigate();
 
-    const load = async () => {
+    const loadUsers = async (p = 0) => {
         setLoading(true);
-        try { setUsers(await adminService.getAllUsers()); } finally { setLoading(false); }
+        try {
+            const res = await adminService.getAllUsers(p, 20);
+            setUsersData(res);
+            setPage(p);
+        } catch (e) {
+            console.error("Failed to load users", e);
+        } finally {
+            setLoading(false);
+        }
     };
-    useEffect(() => { load(); }, []);
 
-    const approve = async (id) => { await adminService.approveUser(id); load(); };
-    const remove = async (id) => { if (window.confirm(tr('Пайдаланушыны жою?', 'Удалить пользователя?'))) { await adminService.deleteUser(id); load(); } };
+    const loadInvites = async () => {
+        setLoading(true);
+        try {
+            const res = await adminService.getAllInvites();
+            setInvites(res);
+        } catch (e) {
+            console.error("Failed to load invites", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (adminTab === 'users') loadUsers(0);
+        else loadInvites();
+    }, [adminTab]);
+
+    const approve = async (id) => { await adminService.approveUser(id); loadUsers(page); };
+    const remove = async (id) => {
+        if (window.confirm(tr('Пайдаланушыны жою?', 'Удалить пользователя?'))) {
+            await adminService.deleteUser(id);
+            loadUsers(page);
+        }
+    };
+
+    const removeInvite = async (id) => {
+        if (window.confirm(tr('Шақыртуды өшіру?', 'Удалить приглашение?'))) {
+            await inviteService.deleteInvite(id);
+            loadInvites();
+        }
+    };
+
+    const getEventType = (template) => {
+        if (!template) return '—';
+        const t = template.toLowerCase();
+        if (t.includes('uzatu')) return tr('Ұзату', 'Проводы');
+        if (t.includes('wedding')) return tr('Үйлену тойы', 'Свадьба');
+        if (t.includes('sundet')) return tr('Сүндет той', 'Сүндет той');
+        if (t.includes('tusau')) return tr('Тұсаукесер', 'Тұсаукесер');
+        if (t.includes('merei')) return tr('Мерейтой', 'Юбилей');
+        if (t.includes('besik')) return tr('Бесік той', 'Бесік той');
+        return template;
+    };
+
+    const users = usersData.content || [];
+    const pagination = usersData.page || {};
 
     if (loading) return <div style={{ padding: '3rem', textAlign: 'center', color: C.green700 }}>{tr('Жүктелуде...', 'Загрузка...')}</div>;
 
     return (
         <div>
-            <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: C.green900, marginBottom: '1.5rem' }}>
-                {tr('Пайдаланушылар', 'Пользователи')} — {users.length}
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {users.map(u => (
-                    <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: C.bg, borderRadius: '16px', border: `1px solid ${C.line}`, flexWrap: 'wrap' }}>
-                        <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: u.approved ? C.green100 : C.yellow100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            {u.approved ? <CheckCircle size={18} color={C.green500} /> : <Clock size={18} color="#ca8a04" />}
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 700, color: C.green900 }}>{u.fullName}</div>
-                            <div style={{ fontSize: '0.85rem', color: C.green700 }}>{u.phone}</div>
-                        </div>
-                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, background: u.approved ? C.green100 : C.yellow100, color: u.approved ? C.green700 : '#92400e' }}>
-                            {u.approved ? tr('Расталған', 'Подтвержден') : tr('Күтілуде', 'В ожидании')}
-                        </span>
-                        {!u.approved && (
-                            <button onClick={() => approve(u.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: '10px', border: 'none', background: C.green500, color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
-                                <CheckCircle size={14} /> {tr('Растау', 'Подтвердить')}
-                            </button>
-                        )}
-                        <button onClick={() => remove(u.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 0.75rem', borderRadius: '10px', border: 'none', background: '#fef2f2', color: '#ef4444', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
-                            <XCircle size={14} />
-                        </button>
-                    </div>
-                ))}
-                {users.length === 0 && <div style={{ textAlign: 'center', padding: '3rem', color: C.green700 }}>{tr('Пайдаланушылар жоқ', 'Пользователей нет')}</div>}
+            <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '1.5rem', borderBottom: `1px solid ${C.line}` }}>
+                <button 
+                    onClick={() => setAdminTab('users')}
+                    style={{ 
+                        background: 'none', border: 'none', padding: '0.75rem 0.25rem', cursor: 'pointer',
+                        color: adminTab === 'users' ? C.green900 : '#94a3b8',
+                        fontWeight: 700, fontSize: '0.95rem',
+                        borderBottom: adminTab === 'users' ? `2px solid ${C.green500}` : '2px solid transparent'
+                    }}
+                >
+                    {tr('Пайдаланушылар', 'Пользователи')}
+                </button>
+                <button 
+                    onClick={() => setAdminTab('invites')}
+                    style={{ 
+                        background: 'none', border: 'none', padding: '0.75rem 0.25rem', cursor: 'pointer',
+                        color: adminTab === 'invites' ? C.green900 : '#94a3b8',
+                        fontWeight: 700, fontSize: '0.95rem',
+                        borderBottom: adminTab === 'invites' ? `2px solid ${C.green500}` : '2px solid transparent'
+                    }}
+                >
+                    {tr('Шақыртулар', 'Приглашения')}
+                </button>
             </div>
+
+            {adminTab === 'users' ? (
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                        <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: C.green900, margin: 0 }}>
+                            {tr('Пайдаланушылар', 'Пользователи')} — {pagination.totalElements || 0}
+                        </h2>
+                        
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <button 
+                                disabled={page === 0}
+                                onClick={() => loadUsers(page - 1)}
+                                style={{ 
+                                    padding: '0.4rem 0.8rem', borderRadius: '8px', border: `1px solid ${C.line}`, 
+                                    background: 'white', cursor: page === 0 ? 'default' : 'pointer', opacity: page === 0 ? 0.5 : 1,
+                                    color: C.green700, fontWeight: 700, fontSize: '0.85rem'
+                                }}
+                            >
+                                {tr('Алдыңғы', 'Назад')}
+                            </button>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: C.green900 }}>
+                                {page + 1} / {pagination.totalPages || 1}
+                            </span>
+                            <button 
+                                disabled={page >= (pagination.totalPages || 1) - 1}
+                                onClick={() => loadUsers(page + 1)}
+                                style={{ 
+                                    padding: '0.4rem 0.8rem', borderRadius: '8px', border: `1px solid ${C.line}`, 
+                                    background: 'white', cursor: (page >= (pagination.totalPages || 1) - 1) ? 'default' : 'pointer', 
+                                    opacity: (page >= (pagination.totalPages || 1) - 1) ? 0.5 : 1,
+                                    color: C.green700, fontWeight: 700, fontSize: '0.85rem'
+                                }}
+                            >
+                                {tr('Келесі', 'Далее')}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        {users.map(u => (
+                            <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: C.bg, borderRadius: '16px', border: `1px solid ${C.line}`, flexWrap: 'wrap' }}>
+                                <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: u.approved ? C.green100 : C.yellow100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {u.approved ? <CheckCircle size={18} color={C.green500} /> : <Clock size={18} color="#ca8a04" />}
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 700, color: C.green900 }}>{u.fullName || '—'}</div>
+                                    <div style={{ fontSize: '0.85rem', color: C.green700 }}>{u.phone}</div>
+                                </div>
+                                <span style={{ padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, background: u.approved ? C.green100 : C.yellow100, color: u.approved ? C.green700 : '#92400e' }}>
+                                    {tr(u.approved ? 'Расталған' : 'Күтілуде', u.approved ? 'Подтвержден' : 'В ожидании')}
+                                </span>
+                                {!u.approved && (
+                                    <button onClick={() => approve(u.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: '10px', border: 'none', background: C.green500, color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
+                                        <CheckCircle size={14} /> {tr('Растау', 'Подтвердить')}
+                                    </button>
+                                )}
+                                <button onClick={() => remove(u.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 0.75rem', borderRadius: '10px', border: 'none', background: '#fef2f2', color: '#ef4444', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
+                                    <XCircle size={14} />
+                                </button>
+                            </div>
+                        ))}
+                        {users.length === 0 && <div style={{ textAlign: 'center', padding: '3rem', color: C.green700 }}>{tr('Пайдаланушылар жоқ', 'Пользователей нет')}</div>}
+                    </div>
+                </>
+            ) : (
+                <>
+                    <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.25rem', color: C.green900, marginBottom: '1.5rem' }}>
+                        {tr('Барлық шақыртулар', 'Все приглашения')} — {invites.length}
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        {invites.map(inv => (
+                            <div key={inv.id} style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', padding: '1.25rem 1.5rem', background: C.bg, borderRadius: '16px', border: `1px solid ${C.line}`, flexWrap: 'wrap' }}>
+                                <div style={{ flex: 1, minWidth: '200px' }}>
+                                    <div style={{ fontWeight: 700, color: C.green900, marginBottom: '0.2rem' }}>{inv.title}</div>
+                                    <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.85rem' }}>
+                                        <div style={{ color: C.green700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                            <Users size={14} /> {inv.ownerFullName || tr('Белгісіз', 'Неизвестно')}
+                                        </div>
+                                        <div style={{ color: C.green500, fontWeight: 700 }}>
+                                            {getEventType(inv.template)}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <button 
+                                        onClick={() => window.open(`/invite/${inv.slug}`, '_blank')}
+                                        style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 0.875rem', borderRadius: '10px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}
+                                    >
+                                        <Eye size={14} /> {tr('Көру', 'Просмотр')}
+                                    </button>
+                                    <button 
+                                        onClick={() => navigate(`/invite/edit/${inv.id}`)}
+                                        style={{ padding: '0.5rem 0.875rem', borderRadius: '10px', border: `1.5px solid ${C.green500}`, background: 'transparent', color: C.green700, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}
+                                    >
+                                        {tr('Өңдеу', 'Редакт.')}
+                                    </button>
+                                    <button 
+                                        onClick={() => navigate(`/invite/${inv.id}/guests`)}
+                                        style={{ padding: '0.5rem 0.875rem', borderRadius: '10px', border: `1.5px solid ${C.line}`, background: 'transparent', color: C.text, fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}
+                                    >
+                                        {tr('Қонақтар', 'Гости')}
+                                    </button>
+                                    <button 
+                                        onClick={() => removeInvite(inv.id)}
+                                        style={{ padding: '0.5rem 0.75rem', borderRadius: '10px', border: 'none', background: '#fef2f2', color: '#ef4444', fontWeight: 700, cursor: 'pointer' }}
+                                    >
+                                        <XCircle size={14} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                        {invites.length === 0 && <div style={{ textAlign: 'center', padding: '3rem', color: C.green700 }}>{tr('Шақыртулар жоқ', 'Приглашений нет')}</div>}
+                    </div>
+                </>
+            )}
         </div>
     );
 };
@@ -386,7 +559,7 @@ const Dashboard = () => {
             {/* Header */}
             <header className="dashboard-header" style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.125rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${C.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: C.yellow500, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '13px', color: C.green900 }}>TS</div>
+                    <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: C.yellow500, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '13px', color: C.green900 }}>sh</div>
                     <span style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: 'clamp(18px, 2vw, 28px)', color: C.green900 }}>Toiga Shaqyru</span>
                 </div>
                 <div className="dashboard-user" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

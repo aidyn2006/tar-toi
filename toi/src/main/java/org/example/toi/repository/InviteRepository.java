@@ -19,4 +19,6 @@ public interface InviteRepository extends JpaRepository<Invite, UUID> {
 
     @EntityGraph(attributePaths = {"owner"})
     Optional<Invite> findBySlug(String slug);
+    @EntityGraph(attributePaths = {"owner"})
+    List<Invite> findAll();
 }

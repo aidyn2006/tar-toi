@@ -1,8 +1,10 @@
 package org.example.toi.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.toi.dto.response.InviteResponseDTO;
 import org.example.toi.entity.User;
 import org.example.toi.repository.UserRepository;
+import org.example.toi.service.InviteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +19,25 @@ import java.util.Map;
 public class AdminController {
 
     private final UserRepository userRepository;
+    private final InviteService inviteService;
 
-    /** List all users (for admin panel) */
+    /** List all users (for admin panel) with pagination */
     @GetMapping("/users")
-    public List<Map<String, Object>> listUsers() {
-        return userRepository.findAll().stream().map(u -> Map.<String, Object>of(
+    public org.springframework.data.domain.Page<Map<String, Object>> listUsers(
+            @org.springframework.data.web.PageableDefault(size = 20, sort = "createdAt", direction = org.springframework.data.domain.Sort.Direction.DESC) org.springframework.data.domain.Pageable pageable) {
+        return userRepository.findAll(pageable).map(u -> Map.<String, Object>of(
                 "id", u.getId(),
                 "phone", u.getPhone(),
-                "fullName", u.getFullName(),
+                "fullName", u.getFullName() != null ? u.getFullName() : "",
                 "role", u.getRole().name(),
                 "approved", u.isApproved(),
-                "createdAt", u.getCreatedAt()
-        )).toList();
+                "createdAt", u.getCreatedAt() != null ? u.getCreatedAt().toString() : ""
+        ));
+    }
+
+    @GetMapping("/invites")
+    public ResponseEntity<List<InviteResponseDTO>> getMyInvites() {
+        return ResponseEntity.ok(inviteService.getAllInvites());
     }
 
     /** List only pending (not approved) users */
