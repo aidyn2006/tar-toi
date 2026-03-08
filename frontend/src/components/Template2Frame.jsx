@@ -3,7 +3,17 @@ import { resolveMusicTrack } from '../constants/systemMusic';
 
 const TEMPLATE_LOADERS = import.meta.glob('../templates/**/*.html', { as: 'raw' });
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
-const LEGACY_KEYS = ['classic', 'royal', 'nature', 'modern'];
+const LEGACY_KEYS = ['classic', 'royal', 'nature', 'modern', 'default'];
+
+const CAT_DEFAULT_MAP = {
+    'uzatu': '../templates/uzatu/template1.html',
+    'wedding': '../templates/wedding/template1.html',
+    'sundet': '../templates/sundet/template1.html',
+    'tusaukeser': '../templates/tusaukeser/template1.html',
+    'tusau': '../templates/tusaukeser/template1.html',
+    'merei': '../templates/merei/template1.html',
+    'besik': '../templates/besik/template1.html'
+};
 
 const PALETTES = {
     classic: {
@@ -88,10 +98,16 @@ function normalizeUrl(url) {
 
 function normalizeTemplateKey(key) {
     if (!key) return DEFAULT_TEMPLATE_KEY;
-    if (LEGACY_KEYS.includes(key)) return DEFAULT_TEMPLATE_KEY;
-    if (key.startsWith('../templates/')) return key;
-    if (key.startsWith('templates/')) return `../${key}`;
-    return `../templates/${key}`;
+    if (LEGACY_KEYS.includes(key)) {
+        // Try to pick category default if we can guess category from context (passed later) or just fallback
+        return DEFAULT_TEMPLATE_KEY;
+    }
+    let k = key;
+    if (k.startsWith('tusau/')) k = k.replace('tusau/', 'tusaukeser/');
+
+    if (k.startsWith('../templates/')) return k;
+    if (k.startsWith('templates/')) return `../${k}`;
+    return `../templates/${k}`;
 }
 
 function buildConfig(invite) {
@@ -300,15 +316,20 @@ function injectLiveBridge(html) {
         const ownersVal = cfg.toiOwners || '';
 
         // Primary hero / about texts
+        setText('heroName', primary);
         setText('heroNames', namesLine);
         setText('heroNamesLine', (isWeddingPair && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
+        setText('heroNamesInline', (isWeddingPair && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
         setText('hBride', isWeddingPair ? pair : primary);
         setText('hGroom', isWeddingPair ? primary : '');
         setText('heroDateLine', dateLine);
         setText('hDate', dateLine);
+        setText('evDate', [dd, mm, yy].filter(Boolean).join('.'));
+        setText('evTime', cfg.hour || '');
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
         setText('footLine', (isWeddingPair && pair) ? (pair + ' & ' + primary + '  ·  ' + yy) : (primary + ' · ' + yy));
+        setText('footerName', isWeddingPair ? 'Үйлену тойы' : (tplKey.includes('tusau') ? 'Тұсаукесер тойы' : (tplKey.includes('uzatu') ? 'Ұзату тойы' : 'Той')));
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
@@ -611,13 +632,19 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
     const [html, setHtml] = React.useState('');
     const [templateKey, setTemplateKey] = React.useState(() => normalizeTemplateKey(invite?.template));
 
+    const getOptimalFallback = () => {
+        const tpl = invite?.template || '';
+        const cat = tpl.split('/')[0];
+        return CAT_DEFAULT_MAP[cat] || DEFAULT_TEMPLATE_KEY;
+    };
+
     // Async template loading
     useEffect(() => {
         const nextKey = normalizeTemplateKey(invite?.template);
         let active = true;
 
         const load = async () => {
-            const loader = TEMPLATE_LOADERS[nextKey] || TEMPLATE_LOADERS[DEFAULT_TEMPLATE_KEY];
+            const loader = TEMPLATE_LOADERS[nextKey] || TEMPLATE_LOADERS[getOptimalFallback()];
             if (!loader) return;
             try {
                 const raw = await loader();
