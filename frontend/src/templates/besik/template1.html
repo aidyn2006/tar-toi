@@ -572,13 +572,13 @@
 
             function applyConfig(cfg) {
                 const config = cfg || window.CONFIG;
-                const child = config.childName || config.personName || config.names?.child || 'Бала';
+                const child = config.childName || config.names?.child || config.names?.bride || (config.title || '').trim() || 'Бала';
                 const dayStr = config.day || '12-06-2026';
                 const [dd, mm, yy] = dayStr.split('-').map(Number);
                 const [hh, mi] = (config.hour || '18:00').split(':');
 
                 $('heroName').textContent = child;
-                $('heroBadge').textContent = config.ceremony || 'Бесік тойы';
+                $('heroBadge').textContent = config.ceremony || config.templateTitle || 'Бесік тойы';
                 $('heroDate').textContent = `${dd} ${MO_KK[mm - 1]} ${yy}`;
                 $('footerName').textContent = `${child} — Бесік тойы`;
                 $('footerDate').textContent = yy;
@@ -590,8 +590,16 @@
                 if ($('toiOwners')) $('toiOwners').textContent = config.toiOwners || '';
 
                 const photoEl = $('heroPhoto');
-                const photoUrl = config.heroPhoto || config.heroPhotoUrl || config.previewPhotoUrl;
-                if (photoEl && photoUrl) photoEl.innerHTML = `<img src="${photoUrl}" alt="">`;
+                const photoUrl = config.heroPhotoUrl || config.previewPhotoUrl || config.heroPhoto;
+                if (photoEl && photoUrl) {
+                    let img = photoEl.querySelector('img');
+                    if (img) {
+                        img.src = photoUrl;
+                        if (!img.classList.contains('hero-photo-img')) img.classList.add('hero-photo-img');
+                    } else {
+                        photoEl.innerHTML = `<img class="hero-photo-img" src="${photoUrl}" alt="${child}">`;
+                    }
+                }
 
                 // Calendar
                 $('calMo').textContent = `${MO_KK[mm - 1]} ${yy}`;

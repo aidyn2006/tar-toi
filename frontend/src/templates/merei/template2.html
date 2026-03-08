@@ -514,7 +514,7 @@
 
             function applyConfig(cfg) {
                 const c = cfg || window.CONFIG;
-                const name = c.personName || c.childName || c.names?.bride || 'Есімі';
+                const name = c.personName || c.childName || c.names?.bride || c.names?.child || 'Есімі';
                 const age = c.personAge || '50';
                 const [d, m, y] = (c.day || '20-05-2026').split('-').map(Number);
                 const [hh, mi] = (c.hour || '19:00').split(':');
@@ -533,8 +533,16 @@
                 if (c.description) $('eventDesc').innerHTML = c.description.replace(/\n/g, '<br>');
 
                 const ph = $('heroPhoto');
-                const url = c.heroPhoto || c.heroPhotoUrl || c.previewPhotoUrl;
-                if (ph && url) ph.innerHTML = `<img src="${url}" alt="">`;
+                const url = c.heroPhotoUrl || c.previewPhotoUrl || c.heroPhoto;
+                if (ph && url) {
+                    let img = ph.querySelector('img');
+                    if (img) {
+                        img.src = url;
+                        if (!img.classList.contains('hero-photo-img')) img.classList.add('hero-photo-img');
+                    } else {
+                        ph.innerHTML = `<img class="hero-photo-img" src="${url}" alt="${name}">`;
+                    }
+                }
 
                 $('calMo').textContent = `${MO[m - 1]} ${y}`;
                 const grid = $('calGrid');

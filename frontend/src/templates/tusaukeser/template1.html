@@ -1350,11 +1350,10 @@
             toiOwners: "Сейітовтар әулеті",
             parents: []
         };
-        const conf = (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
-        if (!window.CONFIG) window.CONFIG = conf;
-
-        /* ── Apply CONFIG ───────────────────────────────── */
-        (function applyConfig() {
+        let countdownTimer = null;
+        function applyConfig(newConf) {
+            const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
+            if (!window.CONFIG) window.CONFIG = conf;
             const [dd, mm, yy] = (conf.day || '21-03-2026').split('-').map(Number);
             const [hh, mi] = (conf.hour || '18:00').split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым",
@@ -1417,9 +1416,10 @@
             }
 
             // Countdown
-            (function countdown() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh || 0).padStart(2, '0')}:${String(mi || 0).padStart(2, '0')}:00`);
-                if (isNaN(target.getTime())) return;
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh || 0).padStart(2, '0')}:${String(mi || 0).padStart(2, '0')}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
                 const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2, '0'); };
                 const tick = () => {
                     let diff = Math.max(0, target - new Date());
@@ -1428,8 +1428,8 @@
                     set('cdH', Math.floor(diff / 3600000) % 24);
                     set('cdD', Math.floor(diff / 86400000));
                 };
-                tick(); setInterval(tick, 1000);
-            })();
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
 
             // Owners
             const ownersCard = document.getElementById('ownersBigName');
@@ -1553,7 +1553,11 @@
                     ring.innerHTML = `<img class="child-photo" src="${heroUrl}" alt="${child}">`;
                 }
             }
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', e => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         /* ── Guest counter ──────────────────────────────── */
         function changeGuests(d) {

@@ -179,14 +179,45 @@ function injectPhoto(html, url) {
     if (!url) return html;
     const absoluteUrl = normalizeUrl(url);
     const safeUrl = absoluteUrl.replace(/"/g, '&quot;');
+
+    // 1. Try to replace specific placeholder div with img
     let out = html.replace(
-        /<div class="hero-photo-placeholder">[\s\S]*?<\/div>/,
+        /<div\s+class="hero-photo-placeholder"[^>]*>[\s\S]*?<\/div>/i,
         `<img class="hero-photo-img" src="${safeUrl}" alt="photo">`
     );
+
+    // 2. Try to update existing img inside div with id heroPhoto
+    // This is more surgical to preserve classes/styles
     out = out.replace(
-        /<div id="heroPhoto"([^>]*)>[\s\S]*?<\/div>/,
-        `<div id="heroPhoto"$1><img class="hero-photo-img" src="${safeUrl}" alt="photo" style="width:100%;height:100%;object-fit:cover;display:block;"></div>`
+        /(<div\s+[^>]*?id="heroPhoto"[^>]*>)([\s\S]*?)(<\/div>)/i,
+        (match, open, inner, close) => {
+            if (inner.includes('<img')) {
+                // Surgically update existing img src and add class
+                const updatedInner = inner.replace(
+                    /(<img\s+[^>]*?src=")([^"]*)("[^>]*>)/i,
+                    (m, start, src, end) => {
+                        let res = m;
+                        if (!m.includes('hero-photo-img')) {
+                            res = m.replace(/<img/i, '<img class="hero-photo-img"');
+                        }
+                        return res.replace(/(src=")([^"]*)(")/i, `$1${safeUrl}$3`);
+                    }
+                );
+                return open + updatedInner + close;
+            }
+            // If no img, append one with default "fit" styles
+            return open + `<img class="hero-photo-img" src="${safeUrl}" alt="photo" style="width:100%;height:100%;object-fit:cover;display:block;">` + close;
+        }
     );
+
+    // 3. Fallback: update any existing img with hero-photo-img class
+    if (out === html) {
+        out = html.replace(
+            /(<img[^>]+class="[^"]*hero-photo-img[^"]*"[^>]*src=")([^"]*)(")/i,
+            `$1${safeUrl}$3`
+        );
+    }
+
     return out;
 }
 
@@ -305,8 +336,11 @@ function injectLiveBridge(html) {
         const yy = dayParts[2] || '';
         const tplKey = (cfg.template || '').toString();
         const isWeddingPair = tplKey.startsWith('wedding/');
-        const primary = cfg.names?.groom || cfg.names?.bride || '';
+        
+        // Handle common property name variants
+        const primary = cfg.childName || cfg.names?.child || cfg.names?.groom || cfg.names?.bride || cfg.title || '';
         const pair = cfg.names?.bride || '';
+        const photoUrl = cfg.heroPhotoUrl || cfg.previewPhotoUrl || cfg.heroPhoto || (cfg.gallery && cfg.gallery[0]) || '';
         
         const namesLine = (isWeddingPair && pair) 
             ? (pair + ' & ' + (cfg.names?.groom || '')).trim()
@@ -329,7 +363,7 @@ function injectLiveBridge(html) {
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
         setText('footLine', (isWeddingPair && pair) ? (pair + ' & ' + primary + '  ·  ' + yy) : (primary + ' · ' + yy));
-        setText('footerName', isWeddingPair ? 'Үйлену тойы' : (tplKey.includes('tusau') ? 'Тұсаукесер тойы' : (tplKey.includes('uzatu') ? 'Ұзату тойы' : 'Той')));
+        setText('footerName', isWeddingPair ? 'Үйлену тойы' : (tplKey.includes('tusau') ? 'Тұсаукесер тойы' : (tplKey.includes('uzatu') ? 'Ұзату тойы' : (tplKey.includes('besik') ? 'Бесік тойы' : (tplKey.includes('merei') ? 'Мерейтой' : 'Той')))));
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
@@ -359,21 +393,24 @@ function injectLiveBridge(html) {
             mapBtn.style.opacity = cfg.locationUrl ? '1' : '0.55';
         }
 
-        if (cfg.heroPhotoUrl) {
-            const heroImg = qs('.hero-photo-img');
-            if (heroImg) {
-                heroImg.src = cfg.heroPhotoUrl;
-            } else {
-                const ph = qs('.hero-photo-placeholder');
-                if (ph) {
-                    const img = document.createElement('img');
-                    img.className = 'hero-photo-img';
-                    img.src = cfg.heroPhotoUrl;
-                    img.alt = 'photo';
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'cover';
-                    ph.replaceWith(img);
+        if (photoUrl) {
+            const ph = qs('.hero-photo-placeholder') || byId('heroPhoto');
+            if (ph) {
+                let img = ph.querySelector('img') || (ph.tagName.toLowerCase() === 'img' ? ph : null);
+                if (img) {
+                    img.src = photoUrl;
+                    if (!img.classList.contains('hero-photo-img')) img.classList.add('hero-photo-img');
+                } else {
+                    ph.innerHTML = '';
+                    const newImg = document.createElement('img');
+                    newImg.className = 'hero-photo-img';
+                    newImg.id = 'heroPhotoImg';
+                    newImg.src = photoUrl;
+                    newImg.alt = 'photo';
+                    newImg.style.width = '100%';
+                    newImg.style.height = '100%';
+                    newImg.style.objectFit = 'cover';
+                    ph.appendChild(newImg);
                 }
             }
         }
