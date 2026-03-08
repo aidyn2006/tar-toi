@@ -29,16 +29,19 @@
         }
 
         body {
-            background: var(--cream);
+            background: #ddd8d0;
             color: var(--dark);
             font-family: var(--sans);
             line-height: 1.6;
             overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .page-root {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
             background: var(--white);
@@ -57,16 +60,26 @@
             background-image: url('https://shaqyrtu.kz/template4/border.png');
             background-size: 14px auto;
             background-repeat: repeat-y;
-            filter: sepia(0.3) saturate(1.2);
+            filter: sepia(0.5) saturate(1.5) hue-rotate(5deg);
         }
 
         .border-strip.left {
-            left: 0;
+            left: calc(50% - 240px);
         }
 
         .border-strip.right {
-            right: 0;
+            right: calc(50% - 240px);
             transform: scaleX(-1);
+        }
+
+        @media (max-width: 480px) {
+            .border-strip.left {
+                left: 0;
+            }
+
+            .border-strip.right {
+                right: 0;
+            }
         }
 
         .section {

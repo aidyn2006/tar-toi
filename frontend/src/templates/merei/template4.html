@@ -30,13 +30,17 @@
         }
 
         body {
-            background: var(--peach);
+            background: #ddd8d0;
             color: var(--text);
             font-family: var(--sans);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .app {
-            max-width: 500px;
+            width: 100%;
+            max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
             background: var(--white);
@@ -45,27 +49,36 @@
         }
 
         /* Premium Borders */
-        .border-strip.left {
-            left: 0;
+        .border-strip {
+            position: fixed;
+            top: 0;
             width: 14px;
             height: 100%;
             z-index: 1000;
+            pointer-events: none;
             background-image: url('https://shaqyrtu.kz/template4/border.png');
             background-size: 14px auto;
             background-repeat: repeat-y;
-            filter: sepia(0.3) saturate(1.2);
+            filter: sepia(1) hue-rotate(330deg) saturate(1.8) brightness(1);
+        }
+
+        .border-strip.left {
+            left: calc(50% - 240px);
         }
 
         .border-strip.right {
-            right: 0;
-            width: 14px;
-            height: 100%;
-            z-index: 1000;
-            background-image: url('https://shaqyrtu.kz/template4/border.png');
-            background-size: 14px auto;
-            background-repeat: repeat-y;
+            right: calc(50% - 240px);
             transform: scaleX(-1);
-            filter: sepia(0.3) saturate(1.2);
+        }
+
+        @media (max-width: 480px) {
+            .border-strip.left {
+                left: 0;
+            }
+
+            .border-strip.right {
+                right: 0;
+            }
         }
 
         .section {
