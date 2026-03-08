@@ -206,7 +206,8 @@ public class InviteService {
             throw new RuntimeException("Access denied");
         }
 
-        responseRepository.deleteAllByInviteId(id);
+        List<InviteResponse> responses = responseRepository.findAllByInviteId(id);
+        responseRepository.deleteAll(responses);
         inviteRepository.delete(invite);
     }
 

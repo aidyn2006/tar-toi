@@ -7,6 +7,8 @@ import lombok.*;
 @Table(name = "invite_responses", indexes = {
     @Index(name = "idx_responses_invite", columnList = "invite_id")
 })
+@org.hibernate.annotations.SQLRestriction("is_deleted = false")
+@org.hibernate.annotations.SQLDelete(sql = "UPDATE invite_responses SET is_deleted = true WHERE id = ?")
 @Getter
 @Setter
 @NoArgsConstructor

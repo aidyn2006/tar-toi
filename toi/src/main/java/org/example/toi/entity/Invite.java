@@ -12,6 +12,8 @@ import lombok.*;
     @Index(name = "idx_invites_owner", columnList = "owner_id"),
     @Index(name = "idx_invites_slug", columnList = "slug", unique = true)
 })
+@org.hibernate.annotations.SQLRestriction("is_deleted = false")
+@org.hibernate.annotations.SQLDelete(sql = "UPDATE invites SET is_deleted = true WHERE id = ?")
 @Getter
 @Setter
 @NoArgsConstructor

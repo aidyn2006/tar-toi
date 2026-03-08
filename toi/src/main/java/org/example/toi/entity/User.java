@@ -7,6 +7,8 @@ import lombok.*;
 @Table(name = "app_users", uniqueConstraints = {
     @UniqueConstraint(name = "uk_users_phone", columnNames = "phone")
 })
+@org.hibernate.annotations.SQLRestriction("is_deleted = false")
+@org.hibernate.annotations.SQLDelete(sql = "UPDATE app_users SET is_deleted = true WHERE id = ?")
 @Getter
 @Setter
 @NoArgsConstructor
