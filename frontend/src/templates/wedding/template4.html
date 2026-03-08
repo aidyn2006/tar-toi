@@ -1222,9 +1222,12 @@
     </div><!-- /page-root -->
 
     <script>
-        (function applyConfig() {
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+        let countdownTimer = null;
+        function applyConfig(newConf) {
+            const config = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : window.CONFIG);
+            if (!window.CONFIG) window.CONFIG = config;
+            const [dd, mm, yy] = config.day.split('-').map(Number);
+            const [hh, mi] = config.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым",
                 "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
@@ -1264,9 +1267,10 @@
                     calGrid.appendChild(e);
                 }
             }
-            (function countdown() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
-                if (isNaN(target.getTime())) return;
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
                 const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2, '0'); };
                 const tick = () => {
                     const now = new Date();
@@ -1276,9 +1280,8 @@
                     set('cdH', Math.floor(diff / 3600000) % 24);
                     set('cdD', Math.floor(diff / 86400000));
                 };
-                tick();
-                setInterval(tick, 1000);
-            })();
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
             const loc = document.getElementById('locationName');
             if (loc) loc.textContent = CONFIG.location || '';
             const ownersBig = document.getElementById('ownersBigName');
@@ -1328,14 +1331,14 @@
                     const pageH = document.body.scrollHeight - window.innerHeight;
                     const dur = 22000;
                     const t0 = performance.now();
-                    function tick(now) {
+                    function tickY(now) {
                         if (window._us) return;
                         const p = Math.min((now - t0) / dur, 1);
                         const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
                         window.scrollTo(0, pageH * e);
-                        if (p < 1) requestAnimationFrame(tick);
+                        if (p < 1) requestAnimationFrame(tickY);
                     }
-                    requestAnimationFrame(tick);
+                    requestAnimationFrame(tickY);
                     ['touchstart', 'wheel', 'keydown'].forEach(ev =>
                         window.addEventListener(ev, () => { window._us = true; }, { once: true, passive: true })
                     );
@@ -1362,7 +1365,11 @@
                     document.addEventListener('click', start, { once: true });
                 });
             })();
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         let gIdx = 0, galleryInterval = null;
         function startGalleryAuto() {

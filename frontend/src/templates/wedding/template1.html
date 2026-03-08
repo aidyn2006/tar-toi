@@ -1075,7 +1075,23 @@
     </div>
 
     <script>
-        (function applyConfig() {
+        const confDefaults = {
+            names: { bride: "Аружан", groom: "Данияр" },
+            day: "21-03-2026",
+            hour: "19:00",
+            location: "Astana, Farhi Hall",
+            locationUrl: "https://2gis.kz/astana",
+            music: { title: "Песня", artist: "Исполнитель", url: "" },
+            gallery: [],
+            description: "Құрметті ағайын-туыс, сізді тойымызға шақырамыз...",
+            toiOwners: "Сырымбетовтар әулеті",
+        };
+        let countdownTimer = null;
+
+        function applyConfig(newConf) {
+            const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
+            if (!window.CONFIG) window.CONFIG = conf;
+            const config = conf;
             const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
             const [hh, mi] = CONFIG.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
@@ -1102,13 +1118,14 @@
                 for (let i = 0; i < off; i++) { const e = document.createElement('div'); e.className = 'cday other'; e.textContent = prev - off + 1 + i; calGrid.appendChild(e); }
                 for (let d = 1; d <= total; d++) { const e = document.createElement('div'); e.className = 'cday' + (d === dd ? ' today' : ''); e.textContent = d; calGrid.appendChild(e); }
             }
-            (function countdown() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
-                if (isNaN(target.getTime())) return;
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
                 const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = String(val).padStart(2, '0'); };
                 const tick = () => { const now = new Date(); let diff = Math.max(0, target - now); set('cdS', Math.floor(diff / 1000) % 60); set('cdM', Math.floor(diff / 60000) % 60); set('cdH', Math.floor(diff / 3600000) % 24); set('cdD', Math.floor(diff / 86400000)); };
-                tick(); setInterval(tick, 1000);
-            })();
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
             const loc = document.getElementById('locationName');
             if (loc) loc.textContent = CONFIG.location || '';
             const ownersBig = document.getElementById('ownersBigName');
@@ -1137,7 +1154,11 @@
                 const start = () => { audio.play().then(() => { playing = true; updateMIcon(); }).catch(() => { }); };
                 audio.play().then(() => { playing = true; updateMIcon(); }).catch(() => { document.addEventListener('touchstart', start, { once: true }); document.addEventListener('click', start, { once: true }); });
             })();
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         let gIdx = 0;
         function updateGallery() { const s = document.getElementById('gallerySlides'); const items = Array.from(s.querySelectorAll('img')); if (!items.length) return; const dots = Array.from(document.getElementById('gDots').children); const sw = items[0].offsetWidth + 14; const vw = s.parentElement.offsetWidth; s.style.transform = `translateX(${-Math.max(0, gIdx * sw - vw / 2 + sw / 2 - 28)}px)`; items.forEach((el, i) => el.classList.toggle('active-slide', i === gIdx)); dots.forEach((d, i) => d.classList.toggle('lit', i === gIdx)); }

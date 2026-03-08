@@ -507,15 +507,19 @@
     </div>
 
     <script>
-        const CONFIG = {
+        const confDefaults = {
             childName: "Айлин", childAge: "1 жаста",
             day: "21-03-2026", hour: "18:00",
             location: "Astana, Farhi Hall", locationUrl: "https://2gis.kz/astana",
             gallery: [], toiOwners: "Сейітовтар әулеті", parents: [],
             description: ""
         };
+        let countdownTimer = null;
 
-        (function applyConfig() {
+        function applyConfig(newConf) {
+            const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
+            if (!window.CONFIG) window.CONFIG = conf;
+            const config = conf;
             const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
             const [hh, mi] = CONFIG.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
@@ -535,15 +539,16 @@
             if (CONFIG.locationUrl) mapBtn.href = CONFIG.locationUrl;
 
             // Countdown
-            (function () {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
                 const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2, '0'); };
                 const tick = () => {
                     let diff = Math.max(0, target - new Date());
                     set('cdS', Math.floor(diff / 1000) % 60); set('cdM', Math.floor(diff / 60000) % 60); set('cdH', Math.floor(diff / 3600000) % 24); set('cdD', Math.floor(diff / 86400000));
                 };
-                tick(); setInterval(tick, 1000);
-            })();
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
 
             // Owners
             const ownersCard = document.getElementById('ownersBigName');
@@ -565,7 +570,11 @@
                 const box = document.getElementById('heroPhoto');
                 if (box) box.innerHTML = `<img src="${heroUrl}" class="main-photo" alt="Photo">`;
             }
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, Math.min(10, parseInt(inp.value) + d)); }
         function submitRSVP(e) { e.preventDefault(); document.getElementById('rsvpForm').style.display = 'none'; document.getElementById('successMsg').style.display = 'block'; }

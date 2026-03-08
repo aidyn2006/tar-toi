@@ -1001,7 +1001,7 @@
     </div>
 
     <script>
-        (function applyConfig() {
+        function applyConfig() {
             const [dd, mm, yy] = CONFIG.day.split('-').map(Number); const [hh, mi] = CONFIG.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
             document.title = `${CONFIG.names.bride} & ${CONFIG.names.groom}`;
@@ -1021,7 +1021,11 @@
             const mapBtnWrap = document.getElementById('mapBtnWrap'); const mapBtn = document.getElementById('mapBtn'); if (mapBtn && (CONFIG.locationUrl || CONFIG.location)) { mapBtn.href = CONFIG.locationUrl || '#'; mapBtnWrap.style.display = 'block'; }
             const slides = document.getElementById('gallerySlides'); if (slides) { slides.innerHTML = ''; const list = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : []; if (!list.length) { const e = document.createElement('div'); e.className = 'gallery-empty'; e.textContent = 'Галереяға фото қосыңыз'; slides.appendChild(e); } else { list.forEach((url, i) => { const img = document.createElement('img'); img.src = url; img.alt = 'photo'; img.addEventListener('click', () => { gIdx = i; updateGallery(); }); slides.appendChild(img); }); document.getElementById('galleryControls').style.display = 'flex'; const dw = document.getElementById('gDots'); list.forEach((_, i) => { const d = document.createElement('div'); d.className = 'g-dot' + (i === 0 ? ' lit' : ''); d.addEventListener('click', () => { gIdx = i; updateGallery(); }); dw.appendChild(d); }); let tx = 0; slides.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true }); slides.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) dx < 0 ? goNext() : goPrev(); }); } }
             (() => { const url = CONFIG.music && CONFIG.music.url; if (!url) return; const audio = document.getElementById('audioEl'); audio.src = url; const start = () => { audio.play().then(() => { playing = true; updateMIcon(); }).catch(() => { }); }; audio.play().then(() => { playing = true; updateMIcon(); }).catch(() => { document.addEventListener('touchstart', start, { once: true }); document.addEventListener('click', start, { once: true }); }); })();
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
         let gIdx = 0; function updateGallery() { const s = document.getElementById('gallerySlides'); const items = Array.from(s.querySelectorAll('img')); if (!items.length) return; const dots = Array.from(document.getElementById('gDots').children); const sw = items[0].offsetWidth + 14; const vw = s.parentElement.offsetWidth; s.style.transform = `translateX(${-Math.max(0, gIdx * sw - vw / 2 + sw / 2 - 28)}px)`; items.forEach((el, i) => el.classList.toggle('active-slide', i === gIdx)); dots.forEach((d, i) => d.classList.toggle('lit', i === gIdx)); }
         function goNext() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if (n) { gIdx = (gIdx + 1) % n; updateGallery(); } }
         function goPrev() { const n = document.getElementById('gallerySlides').querySelectorAll('img').length; if (n) { gIdx = (gIdx - 1 + n) % n; updateGallery(); } }

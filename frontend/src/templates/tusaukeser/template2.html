@@ -1122,7 +1122,7 @@
     </div>
 
     <script>
-        const CONFIG = {
+        const confDefaults = {
             childName: "Айлин", childAge: "1 жасқа толды",
             day: "21-03-2026", hour: "18:00",
             location: "Astana, Farhi Hall", locationUrl: "https://2gis.kz/astana",
@@ -1130,8 +1130,12 @@
             toiOwners: "Сейітовтар әулеті", parents: [],
             description: ""
         };
+        let countdownTimer = null;
 
-        (function applyConfig() {
+        function applyConfig(newConf) {
+            const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
+            if (!window.CONFIG) window.CONFIG = conf;
+            const config = conf;
             const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
             const [hh, mi] = CONFIG.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
@@ -1165,13 +1169,14 @@
                 const rem = (off + total) % 7;
                 for (let i = 1; i <= (rem ? 7 - rem : 0); i++) { const e = document.createElement('div'); e.className = 'other'; e.textContent = i; calGrid.appendChild(e); }
             }
-            (function countdown() {
-                const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
-                if (isNaN(target.getTime())) return;
+            // Countdown
+            const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
+            if (countdownTimer) clearInterval(countdownTimer);
+            if (!isNaN(target.getTime())) {
                 const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2, '0'); };
                 const tick = () => { let diff = Math.max(0, target - new Date()); set('cdS', Math.floor(diff / 1000) % 60); set('cdM', Math.floor(diff / 60000) % 60); set('cdH', Math.floor(diff / 3600000) % 24); set('cdD', Math.floor(diff / 86400000)); };
-                tick(); setInterval(tick, 1000);
-            })();
+                tick(); countdownTimer = setInterval(tick, 1000);
+            }
             const ownersCard = document.getElementById('ownersBigName');
             const ownersWrap = document.getElementById('ownersCardWrap');
             const parentsGrid = document.getElementById('parentsGrid');
@@ -1227,7 +1232,11 @@
                 const bgEl = document.getElementById('heroBgPhoto');
                 if (bgEl) { bgEl.style.display = 'block'; bgEl.style.backgroundImage = `url(${heroUrl})`; bgEl.style.backgroundSize = 'cover'; bgEl.style.backgroundPosition = 'center'; }
             }
-        })();
+        }
+        applyConfig();
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
 
         function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d)); }
         function submitRSVP(e) {
