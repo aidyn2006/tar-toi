@@ -523,9 +523,10 @@
             let countdownTimer = null;
 
             function applyConfig(cfg) {
-                const c = cfg || window.CONFIG;
-                const child = c.childName || c.names?.child || c.names?.bride || c.personName || 'Бала';
-                const [d, m, y] = c.day.split('-').map(Number);
+                const c = cfg || window.CONFIG || {};
+                const child = c.childName || c.names?.child || c.names?.bride || c.personName || (c.title || '').trim() || 'Бала';
+                const dayStr = c.day || '25-07-2026';
+                const [d, m, y] = dayStr.split('-').map(Number);
                 const [hh, mi] = (c.hour || '18:00').split(':');
 
                 $('cName').textContent = child;
@@ -577,13 +578,38 @@
                     if ($('cdS')) $('cdS').textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
                 };
                 tick(); countdownTimer = setInterval(tick, 1000);
+
+                // Music
+                const musicUrl = c.music?.url || c.musicUrl;
+                const aud = $('audioEl');
+                const mToggle = document.querySelector('.music-toggle');
+                if (musicUrl) {
+                    if (mToggle) mToggle.style.display = 'flex';
+                    if (aud && aud.src !== musicUrl) {
+                        aud.src = musicUrl;
+                        if (c.autoplay) {
+                            const startMusic = () => { aud.play().catch(() => { }); document.removeEventListener('click', startMusic); document.removeEventListener('touchstart', startMusic); document.removeEventListener('scroll', startMusic); };
+                            document.addEventListener('click', startMusic);
+                            document.addEventListener('touchstart', startMusic);
+                            document.addEventListener('scroll', startMusic);
+                        }
+                    }
+                } else {
+                    if (mToggle) mToggle.style.display = 'none';
+                    if (aud) { aud.pause(); aud.src = ''; }
+                }
             }
 
             window.toggleMusic = () => {
                 const a = $('audioEl');
-                if (!a.src) return;
-                if (a.paused) { a.play(); $('mIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'; }
-                else { a.pause(); $('mIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+                if (!a.src || a.src === window.location.href) return;
+                if (a.paused) {
+                    a.play().catch(() => { });
+                    $('mIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+                } else {
+                    a.pause();
+                    $('mIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+                }
             }
 
             window.changeGuests = (val) => {
