@@ -96,4 +96,8 @@ public class Invite extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "music_source", length = 20)
     private MusicSource musicSource;
+
+    @Column(name = "is_active", nullable = false)
+    @Builder.Default
+    private boolean isActive = false;
 }

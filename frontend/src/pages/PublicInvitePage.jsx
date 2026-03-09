@@ -58,7 +58,36 @@ const PublicInvitePage = () => {
     }
 
     return (
-        <div style={{ width: '100%', height: '100vh', background: '#f7fff9' }}>
+        <div style={{ width: '100%', height: '100vh', background: '#f7fff9', position: 'relative' }}>
+            {invite && invite.isActive === false && (
+                <div style={{
+                    position: 'fixed', inset: 0, zIndex: 1000,
+                    background: 'rgba(23,63,51,0.65)', backdropFilter: 'blur(8px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
+                }}>
+                    <div style={{
+                        background: '#ffffff', borderRadius: '24px', padding: '2.5rem', width: '100%', maxWidth: '26rem',
+                        border: `1px solid #d7e9df`, boxShadow: '0 24px 64px rgba(23,63,51,0.3)', textAlign: 'center'
+                    }}>
+                        <div style={{ fontSize: '3.5rem', marginBottom: '1.25rem' }}>🔒</div>
+                        <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', fontWeight: 700, color: '#173f33', marginBottom: '0.75rem' }}>
+                            {tr('Шақырту жабық', 'Приглашение закрыто')}
+                        </h2>
+                        <p style={{ color: '#1f5b46', fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+                            {tr('Доступ алу үшін ватсапқа жазыңыз', 'Чтобы получить доступ напишите на ватсап')}
+                        </p>
+                        <a href="https://wa.me/77766255581" target="_blank" rel="noopener noreferrer" style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
+                            padding: '0.875rem 2rem', borderRadius: '999px', textDecoration: 'none',
+                            background: `linear-gradient(110deg, #f3c94f, #f8da7b)`,
+                            color: '#173f33', fontWeight: 800, fontSize: '1rem',
+                            boxShadow: '0 8px 20px rgba(31,91,70,0.14)', marginBottom: '0.75rem'
+                        }}>
+                            💬 WhatsApp: 8 776 625 55 81
+                        </a>
+                    </div>
+                </div>
+            )}
             <Template2Frame invite={invite} inviteId={invite.id} enableRsvp lang={lang} mode="view" />
         </div>
     );

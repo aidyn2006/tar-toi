@@ -72,4 +72,11 @@ public class AdminController {
         userRepository.save(user);
         return ResponseEntity.ok(Map.of("message", "User deleted"));
     }
+
+    /** Toggle invite active status */
+    @PostMapping("/invites/{id}/toggle-active")
+    public ResponseEntity<Map<String, String>> toggleInviteActive(@PathVariable java.util.UUID id) {
+        inviteService.toggleActive(id);
+        return ResponseEntity.ok(Map.of("message", "Invite active status toggled"));
+    }
 }

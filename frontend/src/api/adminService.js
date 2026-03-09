@@ -15,4 +15,7 @@ export const adminService = {
 
     /** Get all invitations for admin */
     getAllInvites: () => apiClient.get('/admin/invites').then(r => r.data),
+
+    /** Toggle invite active status */
+    toggleInviteActive: (id) => apiClient.post(`/admin/invites/${id}/toggle-active`).then(r => r.data),
 };

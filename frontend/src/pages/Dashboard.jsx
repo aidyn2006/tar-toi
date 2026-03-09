@@ -336,6 +336,11 @@ const AdminPanel = () => {
         }
     };
 
+    const toggleInviteActive = async (id) => {
+        await adminService.toggleInviteActive(id);
+        loadInvites();
+    };
+
     const getEventType = (template) => {
         if (!template) return '—';
         const t = template.toLowerCase();
@@ -482,6 +487,12 @@ const AdminPanel = () => {
                                         {tr('Қонақтар', 'Гости')}
                                     </button>
                                     <button 
+                                        onClick={() => toggleInviteActive(inv.id)}
+                                        style={{ padding: '0.5rem 0.875rem', borderRadius: '10px', border: `1.5px solid ${inv.isActive ? C.green500 : '#ca8a04'}`, background: inv.isActive ? C.green100 : C.yellow100, color: inv.isActive ? C.green700 : '#92400e', fontWeight: 700, fontSize: '0.8125rem', cursor: 'pointer' }}
+                                    >
+                                        {inv.isActive ? tr('Ажырату', 'Отключить') : tr('Қосу', 'Включить')}
+                                    </button>
+                                    <button 
                                         onClick={() => removeInvite(inv.id)}
                                         style={{ padding: '0.5rem 0.75rem', borderRadius: '10px', border: 'none', background: '#fef2f2', color: '#ef4444', fontWeight: 700, cursor: 'pointer' }}
                                     >
@@ -514,11 +525,7 @@ const Dashboard = () => {
     const [showLimit, setShowLimit] = useState(false);
 
     const handleCreateClick = () => {
-        if (invites.length >= 2) {
-            setShowLimit(true);
-        } else {
-            setShowCreate(true);
-        }
+        setShowCreate(true);
     };
     const handleDeleteInvite = async (invite) => {
         if (!invite) return;

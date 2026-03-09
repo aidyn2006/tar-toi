@@ -214,6 +214,15 @@ public class InviteService {
         inviteRepository.save(invite);
     }
 
+    /** Admin-only toggle active status */
+    @Transactional
+    public void toggleActive(UUID id) {
+        Invite invite = inviteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invite not found"));
+        invite.setActive(!invite.isActive());
+        inviteRepository.save(invite);
+    }
+
     /* ── helpers ─────────────────────────────────────────── */
 
     private String currentUserPhone() {
@@ -257,7 +266,8 @@ public class InviteService {
                 invite.getMusicUrl(),
                 invite.getMusicTitle(),
                 invite.getMusicKey(),
-                invite.getMusicSource() == null ? null : invite.getMusicSource().name()
+                invite.getMusicSource() == null ? null : invite.getMusicSource().name(),
+                invite.isActive()
         );
     }
 

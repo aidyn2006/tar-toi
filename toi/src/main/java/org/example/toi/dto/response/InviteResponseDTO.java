@@ -24,5 +24,6 @@ public record InviteResponseDTO(
     String musicUrl,
     String musicTitle,
     String musicKey,
-    String musicSource
+    String musicSource,
+    boolean isActive
 ) {}
