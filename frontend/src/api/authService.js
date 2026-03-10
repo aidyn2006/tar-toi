@@ -11,26 +11,6 @@ export const authService = {
         return response.data;
     },
 
-    loginWithFacebook: async (accessToken) => {
-        const response = await apiClient.post('/auth/facebook', { accessToken });
-        if (response.data?.accessToken) {
-            localStorage.setItem('access_token', response.data.accessToken);
-            localStorage.setItem('refresh_token', response.data.refreshToken);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-        }
-        return response.data;
-    },
-
-    loginWithThreads: async (code) => {
-        const response = await apiClient.post('/auth/threads', { code });
-        if (response.data?.accessToken) {
-            localStorage.setItem('access_token', response.data.accessToken);
-            localStorage.setItem('refresh_token', response.data.refreshToken);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-        }
-        return response.data;
-    },
-
     register: async (userData) => {
         const response = await apiClient.post('/auth/register', userData);
         if (response.data?.accessToken) {

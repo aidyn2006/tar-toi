@@ -94,42 +94,6 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
         }
     };
 
-    const handleFacebookLogin = () => {
-        if (!window.FB) {
-            setStatus('error:' + tr('Facebook SDK қателігі', 'Ошибка загрузки Facebook SDK'));
-            return;
-        }
-        setLoading(true);
-        setStatus('');
-        window.FB.login((response) => {
-            if (response.authResponse) {
-                const accessToken = response.authResponse.accessToken;
-                authService.loginWithFacebook(accessToken)
-                    .then(() => {
-                        onClose();
-                        navigate('/dashboard');
-                    })
-                    .catch((err) => {
-                        const msg = err.response?.data?.message || tr('Қате шықты. Қайталап көріңіз.', 'Произошла ошибка. Попробуйте ещё раз.');
-                        setStatus('error:' + msg);
-                        setLoading(false);
-                    });
-            } else {
-                setStatus('error:' + tr('Facebook арқылы кіруден бас тартылды', 'Авторизация через Facebook отменена'));
-                setLoading(false);
-            }
-        }, { scope: 'public_profile' });
-    };
-
-    const handleThreadsLogin = () => {
-        setLoading(true);
-        const clientId = '2066590687240614'; // FB App ID used for Threads
-        const redirectUri = encodeURIComponent('https://toi.com.kz/auth/callback');
-        const scope = encodeURIComponent('threads_basic');
-        const authUrl = `https://threads.net/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=code`;
-        window.location.href = authUrl;
-    };
-
     const isSuccess = status.startsWith('success:');
     const message = status.replace(/^(success|error):/, '');
 
@@ -243,74 +207,6 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
                         {loading ? tr('Жүктелуде...', 'Загрузка...') : mode === 'login' ? tr('Кіру', 'Вход') : tr('Тіркелу', 'Регистрация')}
                         {!loading && <ArrowRight size={18} />}
                     </Button>
-
-                    <div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0', gap: '0.75rem' }}>
-                        <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-                        <span style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500 }}>{tr('немесе', 'или')}</span>
-                        <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        <button
-                            type="button"
-                            onClick={handleFacebookLogin}
-                            disabled={loading}
-                            style={{
-                                flex: 1,
-                                height: '3.25rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                background: '#1877F2',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '0.875rem',
-                                fontSize: '0.95rem',
-                                fontWeight: 600,
-                                fontFamily: "'Manrope', sans-serif",
-                                cursor: loading ? 'not-allowed' : 'pointer',
-                                opacity: loading ? 0.7 : 1,
-                                transition: 'all 0.2s',
-                                boxShadow: '0 4px 12px rgba(24, 119, 242, 0.2)'
-                            }}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M24 12.0733C24 5.40523 18.6274 0 12 0C5.37258 0 0 5.40523 0 12.0733C0 18.1009 4.38823 23.0945 10.125 24V15.5625H7.07812V12.0733H10.125V9.41323C10.125 6.38612 11.9165 4.71761 14.6576 4.71761C15.9705 4.71761 17.3438 4.9535 17.3438 4.9535V7.92542H15.8306C14.3399 7.92542 13.875 8.85591 13.875 9.80931V12.0733H17.2031L16.6711 15.5625H13.875V24C19.6118 23.0945 24 18.1009 24 12.0733Z" fill="white"/>
-                            </svg>
-                            Facebook
-                        </button>
-                        
-                        <button
-                            type="button"
-                            onClick={handleThreadsLogin}
-                            disabled={loading}
-                            style={{
-                                flex: 1,
-                                height: '3.25rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem',
-                                background: '#000000',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '0.875rem',
-                                fontSize: '0.95rem',
-                                fontWeight: 600,
-                                fontFamily: "'Manrope', sans-serif",
-                                cursor: loading ? 'not-allowed' : 'pointer',
-                                opacity: loading ? 0.7 : 1,
-                                transition: 'all 0.2s',
-                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
-                            }}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            </svg>
-                            Threads
-                        </button>
-                    </div>
                 </form>
 
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
