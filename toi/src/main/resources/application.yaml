@@ -25,3 +25,8 @@ jwt:
 uploads:
   dir: ${UPLOAD_DIR:uploads}
   public-url: ${UPLOAD_PUBLIC_URL:http://localhost:9191}
+
+threads:
+  client-id: ${THREADS_CLIENT_ID:your_app_id}
+  client-secret: ${THREADS_CLIENT_SECRET:your_app_secret}
+  redirect-uri: ${THREADS_REDIRECT_URI:https://toi.com.kz/auth/callback}
