@@ -28,4 +28,14 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+
+    @PostMapping("/facebook")
+    public ResponseEntity<AuthResponse> loginWithFacebook(@Valid @RequestBody org.example.toi.dto.request.FacebookAuthRequest request) {
+        return ResponseEntity.ok(authService.loginWithFacebook(request.accessToken()));
+    }
+
+    @PostMapping("/threads")
+    public ResponseEntity<AuthResponse> loginWithThreads(@Valid @RequestBody org.example.toi.dto.request.ThreadsAuthRequest request) {
+        return ResponseEntity.ok(authService.loginWithThreads(request.code()));
+    }
 }
