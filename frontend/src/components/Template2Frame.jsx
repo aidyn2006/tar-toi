@@ -10,8 +10,8 @@ const CAT_DEFAULT_MAP = {
     'uzatu': '../templates/uzatu/template1.html',
     'wedding': '../templates/wedding/template1.html',
     'sundet': '../templates/sundet/template1.html',
-    'tusaukeser': '../templates/tusaukeser/template1.html',
-    'tusau': '../templates/tusaukeser/template1.html',
+    'tusaukeser': '../templates/tusaukeser/template1.php',
+    'tusau': '../templates/tusaukeser/template1.php',
     'merei': '../templates/merei/template1.html',
     'besik': '../templates/besik/template1.html'
 };

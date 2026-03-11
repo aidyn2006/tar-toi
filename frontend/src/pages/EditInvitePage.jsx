@@ -135,12 +135,12 @@ const EMPTY_INVITE_DATA = {
 };
 
 const CATEGORY_PRESETS = {
-    uzatu: { title: 'Ұзату тойы', template: 'uzatu/default.html' },
+    uzatu: { title: 'Ұзату тойы', template: 'uzatu/template1.html' },
     wedding: { title: 'Үйлену тойы', template: 'wedding/template1.html' },
-    sundet: { title: 'Сүндет той', template: 'sundet/default.html' },
-    tusaukeser: { title: 'Тұсаукесер', template: 'tusaukeser/default.html' },
-    merei: { title: 'Мерейтой', template: 'merei/default.html' },
-    besik: { title: 'Бесік той', template: 'besik/default.html' },
+    sundet: { title: 'Сүндет той', template: 'sundet/template1.html' },
+    tusaukeser: { title: 'Тұсаукесер', template: 'tusaukeser/template1.php' },
+    merei: { title: 'Мерейтой', template: 'merei/template1.html' },
+    besik: { title: 'Бесік той', template: 'besik/template1.html' },
 };
 
 function getNewInviteDefaults(search) {
