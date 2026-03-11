@@ -6,13 +6,6 @@ import Input from './Input';
 import { authService } from '../api/authService';
 import { useLang } from '../context/LanguageContext';
 
-/* ─── Threads Icon SVG ───────────────────────────────── */
-const ThreadsIcon = () => (
-    <svg width="18" height="18" viewBox="0 0 192 192" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.69 16.124 6.985 25.557 6.47 12.455-.684 22.222-5.446 29.033-14.15 5.177-6.6 8.452-15.153 9.898-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.3-11.322 11.24-24.931 16.1-45.492 16.25-22.764-.168-39.994-7.487-51.225-21.766C36.411 127.033 31.15 110.7 30.94 92c.21-18.7 5.47-35.033 15.625-48.572C57.795 29.15 75.025 21.83 97.79 21.662c22.926.169 40.43 7.52 52.022 21.853 5.678 7.04 9.941 15.832 12.65 26.01l16.147-4.317c-3.35-12.511-8.66-23.396-15.855-32.411C147.062 15.363 125.163 6.057 97.824 5.847h-.06C70.479 6.057 48.762 15.397 33.743 37.187 20.328 56.864 13.386 82.261 13.15 92c.236 9.739 7.178 35.136 20.593 54.813 15.019 21.79 36.736 31.13 64.081 31.34h.059c24.396-.186 41.408-6.621 55.467-20.867 18.6-18.799 18.06-42.223 11.948-56.606-4.418-10.298-12.86-18.498-23.761-22.692Zm-41.48 55.258c-10.44.587-21.286-4.098-27.264-11.987-3.999-5.261-5.049-10.707-2.85-15.584 2.744-6.178 10.154-9.867 20.238-10.447 1.785-.103 3.543-.152 5.277-.152 6.059 0 11.73.592 16.927 1.739-1.927 24.056-11.662 35.897-32.328 36.431Z"/>
-    </svg>
-);
-
 /* ─── Phone format helpers ────────────────────────────── */
 const formatLocal = (digits) => {
     const d = digits.slice(0, 10);
@@ -215,32 +208,6 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
                         {!loading && <ArrowRight size={18} />}
                     </Button>
                 </form>
-
-                <div style={{ display: 'flex', alignItems: 'center', margin: '1.25rem 0 1rem', gap: '0.75rem' }}>
-                    <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }} />
-                    <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                        {tr('немесе', 'или')}
-                    </span>
-                    <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }} />
-                </div>
-
-                <button
-                    type="button"
-                    onClick={() => { window.location.href = authService.getThreadsOAuthUrl(); }}
-                    style={{
-                        width: '100%', height: '3rem',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.625rem',
-                        background: '#000', color: '#fff',
-                        border: 'none', borderRadius: '0.875rem',
-                        fontFamily: "'Manrope', sans-serif", fontWeight: 600, fontSize: '0.95rem',
-                        cursor: 'pointer', transition: 'opacity 0.2s',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                >
-                    <ThreadsIcon />
-                    {tr('Threads арқылы кіру', 'Войти через Threads')}
-                </button>
 
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
                     {mode === 'login' ? tr('Аккаунт жоқ па?', 'Нет аккаунта?') : tr('Аккаунт бар ма?', 'Уже есть аккаунт?')}{' '}

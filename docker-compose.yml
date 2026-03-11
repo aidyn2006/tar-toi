@@ -35,9 +35,6 @@ services:
       DB_URL: "jdbc:postgresql://db:5432/toi_db_fresh"
       DB_USERNAME: "toi_user"
       DB_PASSWORD: "toi_pass"
-      THREADS_CLIENT_ID: "2641741729534125"
-      THREADS_CLIENT_SECRET: "0ef7185cc8f2d0347ef83a28b8db3b36"
-      THREADS_REDIRECT_URI: "https://toi.com.kz/auth/callback"
     depends_on:
       db:
         condition: service_healthy

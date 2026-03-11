@@ -1,9 +1,5 @@
 import apiClient from './apiClient';
 
-const THREADS_CLIENT_ID = '2641741729534125';
-const THREADS_REDIRECT_URI = 'https://toi.com.kz/auth/callback';
-const THREADS_SCOPE = 'threads_basic';
-
 export const authService = {
     login: async (credentials) => {
         const response = await apiClient.post('/auth/login', credentials);
@@ -23,26 +19,6 @@ export const authService = {
             localStorage.setItem('user', JSON.stringify(response.data.user));
         }
         return response.data;
-    },
-
-    loginWithThreads: async (code) => {
-        const response = await apiClient.post('/auth/threads', { code });
-        if (response.data?.accessToken) {
-            localStorage.setItem('access_token', response.data.accessToken);
-            localStorage.setItem('refresh_token', response.data.refreshToken);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-        }
-        return response.data;
-    },
-
-    getThreadsOAuthUrl: () => {
-        const params = new URLSearchParams({
-            client_id: THREADS_CLIENT_ID,
-            redirect_uri: THREADS_REDIRECT_URI,
-            scope: THREADS_SCOPE,
-            response_type: 'code',
-        });
-        return `https://threads.net/oauth/authorize?${params.toString()}`;
     },
 
     logout: () => {
@@ -65,4 +41,3 @@ export const authService = {
         return u?.role === 'ADMIN';
     }
 };
-
