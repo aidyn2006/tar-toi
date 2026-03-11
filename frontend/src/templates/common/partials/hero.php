@@ -1,3 +1,4 @@
+<section class="music-inline" id="musicBar"></section>
 <section class="section hero reveal">
     <div class="hero-photo-box" id="heroPhoto">
         <div class="hero-photo-placeholder"></div>

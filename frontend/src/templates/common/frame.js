@@ -151,7 +151,8 @@
       if (musicAudio.paused) { musicAudio.play().catch(function(){}); musicBtn.textContent = '⏸ Музыка'; }
       else { musicAudio.pause(); musicBtn.textContent = '▶ Музыка'; }
     });
-    document.body.appendChild(musicBtn);
+    var holder = document.getElementById('musicBar');
+    if (holder) holder.appendChild(musicBtn); else document.body.appendChild(musicBtn);
     return musicBtn;
   }
 
@@ -173,8 +174,40 @@
       musicAudio.pause();
       musicAudio.src = url;
     }
-    musicBtn.style.display = 'flex';
-    musicBtn.textContent = musicAudio.paused ? '▶ Музыка' : '⏸ Музыка';
+    musicBtn.style.display = 'inline-flex';
+    musicBtn.innerHTML = musicAudio.paused ? '▶' : '⏸';
+
+    var tryStart = function(){
+      musicAudio.play().then(function(){ musicBtn.textContent = '⏸'; cleanup(); }).catch(function(){});
+    };
+    var cleanup = function(){
+      ['click','touchstart','keydown'].forEach(function(ev){ document.removeEventListener(ev, tryStartOnce, true); });
+    };
+    var tryStartOnce = function(){ tryStart(); };
+
+    // Autoplay attempt if allowed
+    if (cfg.autoplay && musicAudio.paused) {
+      setTimeout(tryStart, 300);
+      ['click','touchstart','keydown'].forEach(function(ev){ document.addEventListener(ev, tryStartOnce, true); });
+    }
+  }
+
+  function startAutoScroll(cfg){
+    if (!cfg.autoplay) return;
+    var speed = 1; // px per frame
+    var scrolling = true;
+    var stop = function(){ scrolling = false; };
+    document.addEventListener('wheel', stop, { once: true });
+    document.addEventListener('touchstart', stop, { once: true });
+
+    function step(){
+      if (!scrolling) return;
+      var maxY = document.documentElement.scrollHeight - window.innerHeight;
+      if (window.scrollY >= maxY) { scrolling = false; return; }
+      window.scrollBy({ top: speed, behavior: 'instant' });
+      requestAnimationFrame(step);
+    }
+    setTimeout(function(){ requestAnimationFrame(step); }, 1200);
   }
 
   function applyConfig(cfg){
@@ -203,12 +236,16 @@
     var foot = (cfg.ceremony || 'Той') + ' · ' + getYear(cfg.day);
     setText('footLine', foot);
     setText('ownersLine', cfg.toiOwners || '');
+    setText('ownersText', cfg.toiOwners || '');
+    var ownersBlock = byId('ownersBlock');
+    if (ownersBlock) ownersBlock.style.display = cfg.toiOwners ? 'flex' : 'none';
 
     setPhoto(cfg);
     setGallery(cfg);
     setMap(cfg);
     updateCountdown(cfg);
     updateMusic(cfg);
+    startAutoScroll(cfg);
   }
 
   function onMessage(e){

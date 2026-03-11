@@ -13,6 +13,7 @@ $cfg = [
     'toiOwners' => isset($config['toiOwners']) ? $config['toiOwners'] : '',
     'template' => isset($config['template']) ? $config['template'] : '',
     'ceremony' => isset($config['ceremony']) ? $config['ceremony'] : 'Той',
+    'autoplay' => isset($config['autoplay']) ? (bool)$config['autoplay'] : false,
     'music' => [
         'url' => isset($config['musicUrl']) ? $config['musicUrl'] : '',
     ],
