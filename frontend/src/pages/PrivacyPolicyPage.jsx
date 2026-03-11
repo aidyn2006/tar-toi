@@ -1,5 +1,6 @@
 import React from 'react';
-import Layout from '../components/layout/Layout';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import SEO from '../components/SEO';
 import { useLang } from '../context/LanguageContext';
 
@@ -7,11 +8,12 @@ const PrivacyPolicyPage = () => {
     const { lang } = useLang();
     
     return (
-        <Layout>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fffe' }}>
             <SEO 
                 title={lang === 'ru' ? "Политика конфиденциальности - Toi" : "Құпиялылық саясаты - Toi"}
                 description={lang === 'ru' ? "Политика конфиденциальности сервиса электронных пригласительных Toi" : "Toi электронды шақыру сервисінің құпиялылық саясаты"}
             />
+            <Header />
             
             <main style={{ flex: 1, paddingTop: '100px', paddingBottom: '4rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
                 <div style={{
@@ -104,7 +106,9 @@ const PrivacyPolicyPage = () => {
                     )}
                 </div>
             </main>
-        </Layout>
+            
+            <Footer />
+        </div>
     );
 };
 

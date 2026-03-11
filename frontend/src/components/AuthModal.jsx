@@ -124,7 +124,7 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
     const handleThreadsLogin = () => {
         setLoading(true);
         const clientId = '2066590687240614'; // FB App ID used for Threads
-        const redirectUri = encodeURIComponent(window.location.origin + '/auth/callback');
+        const redirectUri = encodeURIComponent('https://toi.com.kz/auth/callback');
         const scope = encodeURIComponent('threads_basic');
         const authUrl = `https://threads.net/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=code`;
         window.location.href = authUrl;
