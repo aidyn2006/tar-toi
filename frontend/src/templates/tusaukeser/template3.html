@@ -57,7 +57,7 @@
             max-width: 480px;
             min-height: 100dvh;
             background: var(--cream);
-            overflow: hidden;
+            overflow-x: hidden;
             padding-bottom: 60px;
         }
 
@@ -304,6 +304,7 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             padding: 6px 4px 10px;
+            touch-action: pan-x;
         }
 
         #gallerySlides img {
@@ -691,7 +692,7 @@
 
             <footer class="footer reveal">
                 <div class="footer-logo" id="footerName">Айлин</div>
-                <div class="footer-text">Тұсаукесер · 2026</div>
+                <div class="footer-text" id="footerYear">Тұсаукесер · 2026</div>
             </footer>
 
         </div>
@@ -709,26 +710,27 @@
 
         function applyConfig(newConf) {
             const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
-            if (!window.CONFIG) window.CONFIG = conf;
+            window.CONFIG = conf;
             const config = conf;
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+            const [dd, mm, yy] = conf.day.split('-').map(Number);
+            const [hh, mi] = conf.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
-            const child = CONFIG.childName || 'Бала';
+            const child = conf.childName || 'Бала';
 
             document.getElementById('heroNamesLine').textContent = child;
             document.getElementById('heroNamesInline').textContent = child;
             if (document.getElementById('footerName')) document.getElementById('footerName').textContent = child;
-            if (document.getElementById('heroAge')) document.getElementById('heroAge').textContent = CONFIG.childAge || '1 жас';
+            if (document.getElementById('footerYear')) document.getElementById('footerYear').textContent = `Тұсаукесер · ${yy}`;
+            if (document.getElementById('heroAge')) document.getElementById('heroAge').textContent = conf.childAge || '1 жас';
 
             const descEl = document.getElementById('eventText');
-            if (descEl && CONFIG.description) descEl.innerHTML = CONFIG.description.replace(/\n/g, '<br>');
+            if (descEl && conf.description) descEl.innerHTML = conf.description.replace(/\n/g, '<br>');
 
             document.getElementById('evDate').textContent = `${dd} ${MO_KK[mm - 1]}, ${yy}`;
-            document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm - 1]} ${yy} · ${CONFIG.hour}`;
-            document.getElementById('locationName').textContent = CONFIG.location;
+            document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm - 1]} ${yy} · ${conf.hour}`;
+            document.getElementById('locationName').textContent = conf.location;
             const mapBtn = document.getElementById('mapBtn');
-            if (CONFIG.locationUrl) mapBtn.href = CONFIG.locationUrl;
+            if (conf.locationUrl) mapBtn.href = conf.locationUrl;
 
             // Calendar
             const calGrid = document.getElementById('calGrid');
@@ -760,8 +762,8 @@
             const ownersCard = document.getElementById('ownersBigName');
             const ownersWrap = document.getElementById('ownersCardWrap');
             const pg = document.getElementById('parentsGrid');
-            const parents = CONFIG.parents || [];
-            if (ownersCard) ownersCard.textContent = CONFIG.toiOwners || '';
+            const parents = conf.parents || [];
+            if (ownersCard) ownersCard.textContent = conf.toiOwners || '';
             if (pg && parents.length) {
                 pg.style.display = 'grid'; pg.innerHTML = '';
                 parents.forEach((p, idx) => {
@@ -769,7 +771,7 @@
                     if (idx === 0 && parents.length > 1) pg.innerHTML += '<div class="parents-sep"></div>';
                 });
             }
-            if (!CONFIG.toiOwners && !parents.length && ownersWrap) ownersWrap.style.display = 'none';
+            if (!conf.toiOwners && !parents.length && ownersWrap) ownersWrap.style.display = 'none';
 
             // Gallery
             const slides = document.getElementById('gallerySlides');

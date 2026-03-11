@@ -75,7 +75,7 @@
             min-height: 100dvh;
             background: var(--ivory);
             padding: 0 24px 60px;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* ═══ ORNAMENT BORDERS ═══ */
@@ -665,6 +665,7 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             padding: 6px 4px 10px;
+            touch-action: pan-x;
         }
 
         #gallerySlides img {
@@ -1165,7 +1166,7 @@
                         <div>
                             <div class="ev-label">Күні</div>
                             <div class="ev-val" id="evDate">21 наурыз 2026</div>
-                            <div class="ev-sub">Сенбі</div>
+                            <div class="ev-sub" id="evWeekday">Сенбі</div>
                         </div>
                     </div>
                     <div class="event-row">
@@ -1178,7 +1179,7 @@
                         </div>
                         <div>
                             <div class="ev-label">Уақыты</div>
-                            <div class="ev-val">18:00</div>
+                            <div class="ev-val" id="evTime">18:00</div>
                             <div class="ev-sub">Қонақтар күтіледі</div>
                         </div>
                     </div>
@@ -1328,7 +1329,7 @@
                     <circle cx="100" cy="18" r="8" stroke="#c49a4a" stroke-width="2" fill="none" />
                     <circle cx="100" cy="18" r="3" fill="#c49a4a" />
                 </svg>
-                <div class="footer-date">21 · III · 2026</div>
+                <div class="footer-date" id="footerDate">21 · III · 2026</div>
                 <div class="footer-name"> Тұсаукесер тойы</div>
             </footer>
 
@@ -1353,9 +1354,12 @@
         let countdownTimer = null;
         function applyConfig(newConf) {
             const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
-            if (!window.CONFIG) window.CONFIG = conf;
+            window.CONFIG = conf;
             const [dd, mm, yy] = (conf.day || '21-03-2026').split('-').map(Number);
             const [hh, mi] = (conf.hour || '18:00').split(':');
+            const DAYS_KK = ['Жексенбі', 'Дүйсенбі', 'Сейсенбі', 'Сәрсенбі', 'Бейсенбі', 'Жұма', 'Сенбі'];
+            const weekday = DAYS_KK[new Date(yy, mm - 1, dd).getDay()];
+            const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым",
                 "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
 
@@ -1458,6 +1462,12 @@
             if (loc) loc.textContent = conf.location || '';
             const evDate = document.getElementById('evDate');
             if (evDate) evDate.textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}`;
+            const evWeekday = document.getElementById('evWeekday');
+            if (evWeekday) evWeekday.textContent = weekday;
+            const evTime = document.getElementById('evTime');
+            if (evTime) evTime.textContent = conf.hour || '18:00';
+            const footerDate = document.getElementById('footerDate');
+            if (footerDate) footerDate.textContent = `${dd} · ${ROMAN[mm]} · ${yy}`;
             const mapBtn = document.getElementById('mapBtn');
             if (mapBtn) {
                 if (conf.locationUrl) {
@@ -1495,37 +1505,8 @@
                 });
             }
 
-            let gIdx = 0;
-            function setGalleryIndex(idx) {
-                const imgs = slides ? Array.from(slides.querySelectorAll('img')) : [];
-                if (!imgs.length) return;
-                gIdx = (idx + imgs.length) % imgs.length;
-                const target = imgs[gIdx];
-                target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                if (dotsWrap) {
-                    dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
-                }
-            }
-            if (slides && galleryList.length > 1) {
-                let auto;
-                const restart = () => {
-                    clearInterval(auto);
-                    auto = setInterval(() => setGalleryIndex(gIdx + 1), 3500);
-                };
-                slides.addEventListener('scroll', () => {
-                    const imgs = Array.from(slides.querySelectorAll('img'));
-                    if (!imgs.length) return;
-                    const mid = slides.scrollLeft + slides.clientWidth / 2;
-                    const nearest = imgs.reduce((best, img, i) => {
-                        const box = img.getBoundingClientRect();
-                        const center = box.left + window.scrollX + box.width / 2;
-                        const dist = Math.abs(center - mid - window.scrollX);
-                        return dist < best.dist ? { i, dist } : best;
-                    }, { i: gIdx, dist: Infinity });
-                    if (nearest.i !== gIdx) setGalleryIndex(nearest.i);
-                }, { passive: true });
-                restart();
-            }
+            // Gallery images updated, scroll to first
+            if (slides) slides.scrollLeft = 0;
 
             // Parents grid (optional)
             const pg = document.getElementById('parentsGrid');
@@ -1555,6 +1536,37 @@
             }
         }
         applyConfig();
+
+        /* ── Gallery scroll (runs once) ─────────────────── */
+        (function () {
+            const slides = document.getElementById('gallerySlides');
+            const dotsWrap = document.getElementById('galleryDots');
+            let gIdx = 0;
+            function setGalleryIndex(idx) {
+                const imgs = slides ? Array.from(slides.querySelectorAll('img')) : [];
+                if (!imgs.length) return;
+                gIdx = (idx + imgs.length) % imgs.length;
+                slides.scrollTo({ left: imgs[gIdx].offsetLeft - (slides.clientWidth - imgs[gIdx].offsetWidth) / 2, behavior: 'smooth' });
+                if (dotsWrap) dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
+            }
+            if (!slides) return;
+            slides.addEventListener('scroll', () => {
+                const imgs = Array.from(slides.querySelectorAll('img'));
+                if (!imgs.length) return;
+                const mid = slides.scrollLeft + slides.clientWidth / 2;
+                const nearest = imgs.reduce((best, img, i) => {
+                    const center = img.offsetLeft + img.offsetWidth / 2;
+                    const dist = Math.abs(center - mid);
+                    return dist < best.dist ? { i, dist } : best;
+                }, { i: gIdx, dist: Infinity });
+                if (nearest.i !== gIdx) {
+                    gIdx = nearest.i;
+                    if (dotsWrap) dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
+                }
+            }, { passive: true });
+            setInterval(() => setGalleryIndex(gIdx + 1), 3500);
+        })();
+
         window.addEventListener('message', e => {
             if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
         });

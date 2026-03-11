@@ -58,7 +58,7 @@
             max-width: 480px;
             min-height: 100dvh;
             background: var(--ivory);
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* ═══ ORNAMENT BORDERS ═══ */
@@ -628,6 +628,7 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             padding: 6px 4px 10px;
+            touch-action: pan-x;
         }
 
         #gallerySlides img {
@@ -986,7 +987,7 @@
                         <div>
                             <div class="ev-label">Күні</div>
                             <div class="ev-val" id="evDate">21 наурыз 2026</div>
-                            <div class="ev-sub">Сенбі</div>
+                            <div class="ev-sub" id="evWeekday">Сенбі</div>
                         </div>
                     </div>
                     <div class="event-row">
@@ -997,7 +998,7 @@
                             </svg></div>
                         <div>
                             <div class="ev-label">Уақыты</div>
-                            <div class="ev-val">18:00</div>
+                            <div class="ev-val" id="evTime">18:00</div>
                             <div class="ev-sub">Қонақтар күтіледі</div>
                         </div>
                     </div>
@@ -1113,9 +1114,9 @@
             <footer class="footer reveal">
                 <img src="https://shaqyrtu.kz/template9/oiu.png" class="footer-oyu" alt=""
                     onerror="this.style.display='none'">
-                <div class="footer-date">21 · III · 2026</div>
+                <div class="footer-date" id="footerDate">21 · III · 2026</div>
                 <div class="footer-name" id="footerName">Айлин · Тұсаукесер тойы</div>
-                <div class="footer-tagline">Астана · Farhi Hall · 18:00</div>
+                <div class="footer-tagline" id="footerTagline">Астана · Farhi Hall · 18:00</div>
             </footer>
 
         </div>
@@ -1134,13 +1135,16 @@
 
         function applyConfig(newConf) {
             const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
-            if (!window.CONFIG) window.CONFIG = conf;
+            window.CONFIG = conf;
             const config = conf;
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+            const [dd, mm, yy] = conf.day.split('-').map(Number);
+            const [hh, mi] = conf.hour.split(':');
+            const DAYS_KK = ['Жексенбі', 'Дүйсенбі', 'Сейсенбі', 'Сәрсенбі', 'Бейсенбі', 'Жұма', 'Сенбі'];
+            const weekday = DAYS_KK[new Date(yy, mm - 1, dd).getDay()];
+            const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
-            const child = CONFIG.childName || CONFIG.names?.child || CONFIG.names?.bride || CONFIG.names?.groom || (CONFIG.title || '').trim() || 'Бала';
-            const ceremonyLabel = CONFIG.ceremony || CONFIG.ceremonyTitle || CONFIG.templateTitle || 'Тұсаукесер той';
+            const child = conf.childName || conf.names?.child || conf.names?.bride || conf.names?.groom || (conf.title || '').trim() || 'Бала';
+            const ceremonyLabel = conf.ceremony || conf.ceremonyTitle || conf.templateTitle || 'Тұсаукесер той';
             document.title = `${child} · ${ceremonyLabel}`;
             const badge = document.getElementById('heroCeremonyBadge');
             if (badge) badge.textContent = ceremonyLabel;
@@ -1180,8 +1184,8 @@
             const ownersCard = document.getElementById('ownersBigName');
             const ownersWrap = document.getElementById('ownersCardWrap');
             const parentsGrid = document.getElementById('parentsGrid');
-            const parentsList = CONFIG.parents || [];
-            if (ownersCard) ownersCard.textContent = CONFIG.toiOwners || '';
+            const parentsList = conf.parents || [];
+            if (ownersCard) ownersCard.textContent = conf.toiOwners || '';
             if (parentsGrid && parentsList.length) {
                 parentsGrid.style.display = 'grid'; parentsGrid.innerHTML = '';
                 parentsList.forEach((p, idx) => {
@@ -1189,51 +1193,73 @@
                     if (idx === 0 && parentsList.length > 1) parentsGrid.innerHTML += '<div class="parents-sep"></div>';
                 });
             }
-            if (!CONFIG.toiOwners && (!parentsList || !parentsList.length) && ownersWrap) ownersWrap.style.display = 'none';
+            if (!conf.toiOwners && (!parentsList || !parentsList.length) && ownersWrap) ownersWrap.style.display = 'none';
             const loc = document.getElementById('locationName');
-            if (loc) loc.textContent = CONFIG.location || '';
+            if (loc) loc.textContent = conf.location || '';
+            const evDate = document.getElementById('evDate');
+            if (evDate) evDate.textContent = `${dd} ${MO_KK[mm - 1].toLowerCase()} ${yy}`;
+            const evWeekday = document.getElementById('evWeekday');
+            if (evWeekday) evWeekday.textContent = weekday;
+            const evTime = document.getElementById('evTime');
+            if (evTime) evTime.textContent = conf.hour || '18:00';
+            const footerDate = document.getElementById('footerDate');
+            if (footerDate) footerDate.textContent = `${dd} · ${ROMAN[mm]} · ${yy}`;
+            const footerTagline = document.getElementById('footerTagline');
+            if (footerTagline) footerTagline.textContent = `${conf.location || ''} · ${conf.hour || '18:00'}`;
             const mapBtn = document.getElementById('mapBtn');
-            if (mapBtn) { if (CONFIG.locationUrl) { mapBtn.href = CONFIG.locationUrl; mapBtn.style.display = 'inline-flex'; } else { mapBtn.style.display = 'none'; } }
+            if (mapBtn) { if (conf.locationUrl) { mapBtn.href = conf.locationUrl; mapBtn.style.display = 'inline-flex'; } else { mapBtn.style.display = 'none'; } }
             const slides = document.getElementById('gallerySlides');
-            const galleryList = CONFIG.gallery && CONFIG.gallery.length ? CONFIG.gallery : [
+            const galleryList = conf.gallery && conf.gallery.length ? conf.gallery : [
                 "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
                 "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
                 "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80"
             ];
-            if (slides) { slides.innerHTML = ''; galleryList.forEach(url => { const img = document.createElement('img'); img.src = url; img.alt = 'photo'; slides.appendChild(img); }); }
+            if (slides) { slides.innerHTML = ''; galleryList.forEach(url => { const img = document.createElement('img'); img.src = url; img.alt = 'photo'; slides.appendChild(img); }); slides.scrollLeft = 0; }
             const dotsWrap = document.getElementById('galleryDots');
             if (dotsWrap && galleryList.length > 1) {
                 dotsWrap.style.display = 'flex'; dotsWrap.innerHTML = '';
-                galleryList.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' active' : ''); d.onclick = () => setGalleryIndex(i); dotsWrap.appendChild(d); });
-            }
-            let gIdx = 0;
-            function setGalleryIndex(idx) {
-                const imgs = slides ? Array.from(slides.querySelectorAll('img')) : [];
-                if (!imgs.length) return;
-                gIdx = (idx + imgs.length) % imgs.length;
-                imgs[gIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                if (dotsWrap) dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
-            }
-            if (slides && galleryList.length > 1) {
-                let auto;
-                const restart = () => { clearInterval(auto); auto = setInterval(() => setGalleryIndex(gIdx + 1), 3500); };
-                slides.addEventListener('scroll', () => {
-                    const imgs = Array.from(slides.querySelectorAll('img'));
-                    if (!imgs.length) return;
-                    const mid = slides.scrollLeft + slides.clientWidth / 2;
-                    const nearest = imgs.reduce((best, img, i) => { const box = img.getBoundingClientRect(); const center = box.left + window.scrollX + box.width / 2; const dist = Math.abs(center - mid - window.scrollX); return dist < best.dist ? { i, dist } : best; }, { i: gIdx, dist: Infinity });
-                    if (nearest.i !== gIdx) setGalleryIndex(nearest.i);
-                }, { passive: true });
-                restart();
+                galleryList.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' active' : ''); d.onclick = () => window._galleryGo && window._galleryGo(i); dotsWrap.appendChild(d); });
             }
             // Hero photo — full-screen bg
-            const heroUrl = CONFIG.heroPhoto || CONFIG.previewPhotoUrl || (galleryList.length ? galleryList[0] : '');
+            const heroUrl = conf.heroPhoto || conf.previewPhotoUrl || (galleryList.length ? galleryList[0] : '');
             if (heroUrl) {
                 const bgEl = document.getElementById('heroBgPhoto');
                 if (bgEl) { bgEl.style.display = 'block'; bgEl.style.backgroundImage = `url(${heroUrl})`; bgEl.style.backgroundSize = 'cover'; bgEl.style.backgroundPosition = 'center'; }
             }
         }
         applyConfig();
+
+        /* ── Gallery scroll (runs once) ─────────────────── */
+        (function () {
+            const slides = document.getElementById('gallerySlides');
+            const dotsWrap = document.getElementById('galleryDots');
+            let gIdx = 0;
+            function setGalleryIndex(idx) {
+                const imgs = slides ? Array.from(slides.querySelectorAll('img')) : [];
+                if (!imgs.length) return;
+                gIdx = (idx + imgs.length) % imgs.length;
+                slides.scrollTo({ left: imgs[gIdx].offsetLeft - (slides.clientWidth - imgs[gIdx].offsetWidth) / 2, behavior: 'smooth' });
+                if (dotsWrap) dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
+            }
+            window._galleryGo = setGalleryIndex;
+            if (!slides) return;
+            slides.addEventListener('scroll', () => {
+                const imgs = Array.from(slides.querySelectorAll('img'));
+                if (!imgs.length) return;
+                const mid = slides.scrollLeft + slides.clientWidth / 2;
+                const nearest = imgs.reduce((best, img, i) => {
+                    const center = img.offsetLeft + img.offsetWidth / 2;
+                    const dist = Math.abs(center - mid);
+                    return dist < best.dist ? { i, dist } : best;
+                }, { i: gIdx, dist: Infinity });
+                if (nearest.i !== gIdx) {
+                    gIdx = nearest.i;
+                    if (dotsWrap) dotsWrap.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === gIdx));
+                }
+            }, { passive: true });
+            setInterval(() => setGalleryIndex(gIdx + 1), 3500);
+        })();
+
         window.addEventListener('message', (e) => {
             if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
         });

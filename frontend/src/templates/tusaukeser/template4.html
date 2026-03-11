@@ -500,7 +500,7 @@
             <!-- FOOTER -->
             <footer class="footer">
                 <div class="footer-name" id="footerName">Айлин</div>
-                <p style="letter-spacing: 5px; opacity: 0.5;">2026</p>
+                <p id="footerYear" style="letter-spacing: 5px; opacity: 0.5;">2026</p>
             </footer>
 
         </div>
@@ -518,25 +518,28 @@
 
         function applyConfig(newConf) {
             const conf = newConf || (typeof CONFIG !== 'undefined' ? CONFIG : (window.CONFIG || confDefaults));
-            if (!window.CONFIG) window.CONFIG = conf;
+            window.CONFIG = conf;
             const config = conf;
-            const [dd, mm, yy] = CONFIG.day.split('-').map(Number);
-            const [hh, mi] = CONFIG.hour.split(':');
+            const [dd, mm, yy] = conf.day.split('-').map(Number);
+            const [hh, mi] = conf.hour.split(':');
             const MO_KK = ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"];
-            const child = CONFIG.childName || 'Бала';
+            const child = conf.childName || 'Бала';
 
             document.getElementById('heroNamesLine').textContent = child;
             document.getElementById('heroNamesInline').textContent = child;
             if (document.getElementById('footerName')) document.getElementById('footerName').textContent = child;
+            if (document.getElementById('footerYear')) document.getElementById('footerYear').textContent = `${yy}`;
+            const heroBadge = document.getElementById('heroBadge');
+            if (heroBadge) heroBadge.textContent = `${dd} ${MO_KK[mm - 1]} ${yy}`;
 
             const descEl = document.getElementById('eventText');
-            if (descEl && CONFIG.description) descEl.innerHTML = CONFIG.description.replace(/\n/g, '<br>');
+            if (descEl && conf.description) descEl.innerHTML = conf.description.replace(/\n/g, '<br>');
 
             document.getElementById('evDate').textContent = `${dd}.${mm}.${yy}`;
-            document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm - 1]} ${yy} · ${CONFIG.hour}`;
-            document.getElementById('locationName').textContent = CONFIG.location;
+            document.getElementById('heroDateLine').textContent = `${dd} ${MO_KK[mm - 1]} ${yy} · ${conf.hour}`;
+            document.getElementById('locationName').textContent = conf.location;
             const mapBtn = document.getElementById('mapBtn');
-            if (CONFIG.locationUrl) mapBtn.href = CONFIG.locationUrl;
+            if (conf.locationUrl) mapBtn.href = conf.locationUrl;
 
             // Countdown
             const target = new Date(`${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}T${String(hh).padStart(2, '0')}:${String(mi).padStart(2, '0')}:00`);
@@ -554,8 +557,8 @@
             const ownersCard = document.getElementById('ownersBigName');
             const ownersWrap = document.getElementById('ownersCardWrap');
             const pg = document.getElementById('parentsGrid');
-            const parents = CONFIG.parents || [];
-            if (ownersCard) ownersCard.textContent = CONFIG.toiOwners || '';
+            const parents = conf.parents || [];
+            if (ownersCard) ownersCard.textContent = conf.toiOwners || '';
             if (pg && parents.length) {
                 pg.style.display = 'grid'; pg.innerHTML = '';
                 parents.forEach((p, idx) => {
@@ -563,9 +566,9 @@
                     if (idx === 0 && parents.length > 1) pg.innerHTML += '<div class="parents-sep"></div>';
                 });
             }
-            if (!CONFIG.toiOwners && !parents.length && ownersWrap) ownersWrap.style.display = 'none';
+            if (!conf.toiOwners && !parents.length && ownersWrap) ownersWrap.style.display = 'none';
 
-            const heroUrl = CONFIG.heroPhoto || (CONFIG.gallery && CONFIG.gallery[0]);
+            const heroUrl = conf.heroPhoto || (conf.gallery && conf.gallery[0]);
             if (heroUrl) {
                 const box = document.getElementById('heroPhoto');
                 if (box) box.innerHTML = `<img src="${heroUrl}" class="main-photo" alt="Photo">`;
