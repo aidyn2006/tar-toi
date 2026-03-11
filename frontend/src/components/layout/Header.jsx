@@ -46,10 +46,10 @@ const Header = ({ onAuthClick }) => {
 
                 <LanguageSwitch compact />
 
-                <Button className="home-nav-btn desktop-only" variant="outline" onClick={() => onAuthClick('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>
+                <Button className="home-nav-btn desktop-only" variant="outline" onClick={() => onAuthClick && onAuthClick('login')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>
                     {tr('Кіру', 'Войти')}
                 </Button>
-                <Button className="home-nav-btn desktop-only" onClick={() => onAuthClick('register')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>
+                <Button className="home-nav-btn desktop-only" onClick={() => onAuthClick && onAuthClick('register')} style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}>
                     {tr('Тіркелу', 'Регистрация')}
                 </Button>
             </nav>
