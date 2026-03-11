@@ -676,8 +676,9 @@ function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inviteId =
 
 const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false, mode = 'edit' }) => {
     const iframeRef = useRef(null);
+    const initialTpl = normalizeTemplateKey(invite?.template || DEFAULT_TEMPLATE_KEY);
     const [html, setHtml] = React.useState('');
-    const [srcUrl, setSrcUrl] = React.useState('');
+    const [srcUrl, setSrcUrl] = React.useState(isPhpTemplate(initialTpl) ? buildPhpUrl(initialTpl) : '');
     const [templateKey, setTemplateKey] = React.useState(() => normalizeTemplateKey(invite?.template));
 
     const getOptimalFallback = () => {
@@ -809,7 +810,7 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
             ref={iframeRef}
             title="template-2-preview"
             src={srcUrl || undefined}
-            srcDoc={srcUrl ? undefined : html}
+            srcDoc={srcUrl ? undefined : html || '<!doctype html><html><head><style>body{font-family:Manrope,sans-serif;background:#f7fff9;color:#173f33;display:flex;align-items:center;justify-content:center;height:100vh;margin:0} </style></head><body>Алдын ала қарау…</body></html>'}
             onLoad={handleIframeLoad}
             className={className}
             style={{
