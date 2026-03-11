@@ -655,7 +655,7 @@
                     </div>
                 </div>
 
-                <a href="#" id="mapBtn" class="map-btn">Картаны ашу</a>
+                <a href="#" id="mapBtn" class="map-btn" target="_blank" rel="noreferrer noopener">Картаны ашу</a>
             </section>
 
             <!-- GALLERY -->
@@ -790,6 +790,15 @@
         applyConfig();
         window.addEventListener('message', (e) => {
             if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
+
+        /* 2GIS / map: open in new tab so the invitation stays open */
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('#mapBtn');
+            if (!btn || !btn.href || btn.href === '#' || btn.getAttribute('href') === '#') return;
+            if (!/^https?:/i.test(btn.href)) return;
+            e.preventDefault();
+            window.open(btn.href, '_blank', 'noopener,noreferrer');
         });
 
         function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, Math.min(10, parseInt(inp.value) + d)); }

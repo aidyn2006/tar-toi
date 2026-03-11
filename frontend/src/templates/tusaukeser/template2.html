@@ -1088,9 +1088,7 @@
             <section class="card reveal">
                 <div class="label">Растауыңызды күтеміз</div>
                 <div class="section-title">Келетіндігіңізді растаңыз</div>
-                <p
-                    style="text-align:center;font-family:var(--serif);font-size:13px;font-style:italic;color:var(--muted);margin:8px 0 18px;">
-                    Той басталуына 3 күн бұрын хабарлаңыз</p>
+
                 <form id="rsvpForm" onsubmit="submitRSVP(event)">
                     <div class="rsvp-field"><input type="text" id="rName" placeholder="Есіміңіз" required
                             autocomplete="name"></div>
@@ -1262,6 +1260,15 @@
 
         window.addEventListener('message', (e) => {
             if (e.data && e.data.type === 'UPDATE_CONFIG') applyConfig(e.data.config);
+        });
+
+        /* 2GIS / map: open in new tab so the invitation stays open */
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('#mapBtn');
+            if (!btn || !btn.href || btn.href === '#' || btn.getAttribute('href') === '#') return;
+            if (!/^https?:/i.test(btn.href)) return;
+            e.preventDefault();
+            window.open(btn.href, '_blank', 'noopener,noreferrer');
         });
 
         function changeGuests(d) { const inp = document.getElementById('rGuests'); inp.value = Math.max(1, Math.min(20, parseInt(inp.value || 1) + d)); }
