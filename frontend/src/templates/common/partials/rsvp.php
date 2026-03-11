@@ -1,6 +1,6 @@
 <section class="section reveal" id="rsvpSection">
   <h2 class="heading">Қатысамын</h2>
-  <form class="rsvp-form" id="rsvpForm" onsubmit="event.preventDefault(); submitRSVP();">
+  <form class="rsvp-form" id="rsvpForm">
     <input id="rName" name="name" placeholder="Аты-жөні" required>
     <input id="rPhone" name="phone" placeholder="Телефон" required>
     <div class="rsvp-guests">
