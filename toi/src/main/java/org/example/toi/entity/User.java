@@ -20,12 +20,6 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "facebook_id", unique = true, length = 100)
-    private String facebookId;
-
-    @Column(name = "threads_id", unique = true, length = 100)
-    private String threadsId;
-
     @Column(nullable = false, length = 20)
     private String phone;
 
