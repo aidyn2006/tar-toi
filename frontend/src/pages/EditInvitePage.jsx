@@ -9,7 +9,7 @@ import {
     Image, Calendar, Clock, ArrowLeft, Check, UploadCloud, Trash2
 } from 'lucide-react';
 
-const TEMPLATE_FILES = Object.keys(import.meta.glob('../templates/**/*.html'));
+const TEMPLATE_FILES = Object.keys(import.meta.glob('../templates/**/*.{html,php}'));
 
 /* ─── Design tokens ──────────────────────────────────────── */
 const C = {
@@ -72,12 +72,12 @@ const MUSIC_SOURCE = {
 function buildTemplateOptions() {
     const groups = {};
     TEMPLATE_FILES.forEach((path) => {
-        const m = path.match(/\.\.\/templates\/([^/]+)\/(.+\.html)$/);
+        const m = path.match(/\.\.\/templates\/([^/]+)\/(.+\.(html|php))$/);
         if (!m) return;
         const category = m[1];
         const file = m[2];
         const id = `${category}/${file}`;
-        const fileBase = file.replace(/\.html$/, '');
+        const fileBase = file.replace(/\.(html|php)$/, '');
         const key = `${category}/${fileBase}`;
         const fallback = fileBase.replace(/[-_]/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
         const label = TEMPLATE_NAME_MAP[key] || fallback;
@@ -93,14 +93,14 @@ const TEMPLATE_OPTIONS = buildTemplateOptions();
 const pickFirstTemplate = (category) => {
     const list = (category && TEMPLATE_OPTIONS[category]) ? TEMPLATE_OPTIONS[category] : null;
     if (list?.length) {
-        const nonDefault = list.find(t => !t.id.endsWith('/default.html'));
+        const nonDefault = list.find(t => !t.id.match(/\/default\.(html|php)$/));
         return (nonDefault || list[0]).id;
     }
     // fallback: first non-default overall
     const anyCategory = Object.keys(TEMPLATE_OPTIONS)[0];
     if (anyCategory) {
         const listAny = TEMPLATE_OPTIONS[anyCategory] || [];
-        const nonDefaultAny = listAny.find(t => !t.id.endsWith('/default.html'));
+        const nonDefaultAny = listAny.find(t => !t.id.match(/\/default\.(html|php)$/));
         if (nonDefaultAny) return nonDefaultAny.id;
         if (listAny[0]) return listAny[0].id;
     }

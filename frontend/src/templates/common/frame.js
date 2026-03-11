@@ -1,112 +1,162 @@
-/**
- * Shared frame logic for invitation templates. Expects window.CONFIG to be set by the page.
- */
-(function() {
-  const byId = (id) => document.getElementById(id);
-  const CONFIG = window.CONFIG || {};
+(function(){
+  'use strict';
 
-  function applyReveal() {
-    const els = document.querySelectorAll('.reveal');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    els.forEach(el => obs.observe(el));
+  function byId(id){ return document.getElementById(id); }
+  function setText(id, text){ var el = byId(id); if (el) el.textContent = text || ''; }
+
+  function fmtDate(day){
+    if (!day) return '01.01.2027';
+    var p = day.split('-');
+    var dd = p[0] || '01';
+    var mm = p[1] || '01';
+    var yy = p[2] || '2027';
+    return dd + '.' + mm + '.' + yy;
   }
 
-  function updateCalendar(cfg) {
-    const dateStr = cfg.day || '';
-    const parts = dateStr.split('-');
-    const calMo = byId('calMo');
-    const grid = byId('calGrid');
-    if (!calMo || !grid || parts.length < 3) return;
-    const [dd, mm, yy] = parts.map(Number);
-    const months = ['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'];
-    calMo.textContent = `${months[mm - 1] || ''} ${yy || ''}`;
-    const first = new Date(yy, mm - 1, 1).getDay();
-    const offset = first === 0 ? 6 : first - 1;
-    const total = new Date(yy, mm, 0).getDate();
-    grid.innerHTML = '';
-    for (let i = 0; i < offset; i++) grid.innerHTML += '<div class="cal-day other"></div>';
-    for (let d = 1; d <= total; d++) {
-      const cls = d === dd ? 'cal-day today' : 'cal-day';
-      grid.innerHTML += `<div class="${cls}">${d}</div>`;
+  function getYear(day){
+    if (!day) return '2027';
+    var p = day.split('-');
+    return p[2] || '2027';
+  }
+
+  function applyReveal(){
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function(el){ el.classList.add('visible'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target);} });
+    }, { threshold: 0.1 });
+    els.forEach(function(el){ obs.observe(el); });
+  }
+
+  function setPhoto(cfg){
+    var url = cfg.heroPhotoUrl || cfg.previewPhotoUrl || (cfg.gallery && cfg.gallery[0]) || '';
+    var box = byId('heroPhoto');
+    if (!box) return;
+    if (!url) return;
+    box.innerHTML = '<img src="'+url+'" alt="photo" class="hero-photo-img" style="width:100%;height:100%;object-fit:cover;display:block;">';
+  }
+
+  function setGallery(cfg){
+    var slides = byId('gallerySlides'); if (!slides) return;
+    var g = cfg.gallery || [];
+    slides.innerHTML = '';
+    if (!g.length) {
+      slides.innerHTML = '<div class="card" style="grid-column: 1 / -1; text-align:center; color: var(--muted); font-weight:600;">Фотоларды жүктеңіз — олар осында шығады.</div>';
+      return;
+    }
+    g.forEach(function(url){
+      var img = document.createElement('img');
+      img.src = url; img.alt = 'photo';
+      slides.appendChild(img);
+    });
+  }
+
+  function setMap(cfg){
+    var btn = byId('mapBtn');
+    if (!btn) return;
+    if (cfg.locationUrl) {
+      btn.href = cfg.locationUrl;
+      btn.style.display = 'inline-flex';
+    } else {
+      btn.style.display = 'none';
     }
   }
 
-  function updateCountdown(cfg) {
-    const dateStr = cfg.day || '';
-    const timeStr = cfg.hour || '00:00';
-    const parts = dateStr.split('-');
+  function updateCalendar(cfg){
+    var dateStr = cfg.day || '';
+    var parts = dateStr.split('-');
+    var calMo = byId('calMo');
+    var grid = byId('calGrid');
+    if (!calMo || !grid || parts.length < 3) return;
+    var dd = parseInt(parts[0], 10) || 1;
+    var mm = parseInt(parts[1], 10) || 1;
+    var yy = parseInt(parts[2], 10) || 2027;
+    var months = ['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'];
+    calMo.textContent = (months[mm - 1] || '') + ' ' + yy;
+    var first = new Date(yy, mm - 1, 1).getDay();
+    var offset = first === 0 ? 6 : first - 1;
+    var total = new Date(yy, mm, 0).getDate();
+    grid.innerHTML = '';
+    for (var i=0; i<offset; i++) grid.innerHTML += '<div class="cal-day other"></div>';
+    for (var d=1; d<=total; d++) {
+      var cls = d === dd ? 'cal-day today' : 'cal-day';
+      grid.innerHTML += '<div class="'+cls+'">'+d+'</div>';
+    }
+  }
+
+  var countdownTimer = null;
+  function updateCountdown(cfg){
+    var dateStr = cfg.day || '';
+    var timeStr = cfg.hour || '00:00';
+    var parts = dateStr.split('-');
     if (parts.length < 3) return;
-    const [dd, mm, yy] = parts.map(Number);
-    const target = new Date(`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}T${timeStr}:00`);
-    const dateLine = `${String(dd).padStart(2,'0')}.${String(mm).padStart(2,'0')}.${yy}`;
-    const hDateLine = byId('heroDateLine');
-    if (hDateLine) hDateLine.textContent = cfg.hour ? `${dateLine} · ${cfg.hour}` : dateLine;
-    const evDate = byId('evDate');
-    if (evDate) evDate.textContent = dateLine;
-    const evTime = byId('evTime');
-    if (evTime) evTime.textContent = cfg.hour || '';
-    const cdD = byId('cdD'), cdH = byId('cdH'), cdM = byId('cdM'), cdS = byId('cdS');
+    var dd = parseInt(parts[0], 10) || 1;
+    var mm = parseInt(parts[1], 10) || 1;
+    var yy = parseInt(parts[2], 10) || 2027;
+    var target = new Date(yy + '-' + ('0'+mm).slice(-2) + '-' + ('0'+dd).slice(-2) + 'T' + timeStr + ':00');
+    var cdD = byId('cdD'), cdH = byId('cdH'), cdM = byId('cdM'), cdS = byId('cdS');
     if (!cdD || !cdH || !cdM || !cdS) return;
-    const tick = () => {
-      const diff = Math.max(0, target - Date.now());
-      cdD.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
-      cdH.textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-      cdM.textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-      cdS.textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+    var tick = function(){
+      var diff = Math.max(0, target - Date.now());
+      cdD.textContent = ('0'+Math.floor(diff/86400000)).slice(-2);
+      cdH.textContent = ('0'+Math.floor(diff/3600000)%24).slice(-2);
+      cdM.textContent = ('0'+Math.floor(diff/60000)%60).slice(-2);
+      cdS.textContent = ('0'+Math.floor(diff/1000)%60).slice(-2);
     };
     tick();
-    if (window.__cdInterval) clearInterval(window.__cdInterval);
-    window.__cdInterval = setInterval(tick, 1000);
+    if (countdownTimer) clearInterval(countdownTimer);
+    countdownTimer = setInterval(tick, 1000);
     updateCalendar(cfg);
   }
 
-  window.changeGuests = function(delta) {
-    const inp = byId('rGuests');
+  function changeGuests(delta){
+    var inp = byId('rGuests');
     if (!inp) return;
-    const next = Math.max(1, (parseInt(inp.value || '1', 10) || 1) + delta);
+    var next = Math.max(1, (parseInt(inp.value || '1', 10) || 1) + delta);
     inp.value = String(next);
-  };
+  }
+  window.changeGuests = changeGuests;
 
-  window.submitRSVP = function() {
-    const form = byId('rsvpForm');
-    const ok = form && form.checkValidity();
-    if (ok) {
-      const success = byId('successMsg');
-      if (success) success.style.display = 'block';
-      if (form) form.style.display = 'none';
-    }
-  };
+  function submitRSVP(){
+    var form = byId('rsvpForm');
+    if (!form) return;
+    if (form.checkValidity && !form.checkValidity()) return;
+    var success = byId('successMsg');
+    if (success) success.style.display = 'block';
+    form.style.display = 'none';
+  }
+  window.submitRSVP = submitRSVP;
 
-  let musicBtn = null;
-  let musicAudio = null;
-  function ensureMusicBtn() {
+  function wireForm(){
+    var dec = document.querySelector('.gc-btn:first-of-type');
+    var inc = document.querySelector('.gc-btn:last-of-type');
+    if (dec) dec.addEventListener('click', function(){ changeGuests(-1); });
+    if (inc) inc.addEventListener('click', function(){ changeGuests(1); });
+    var form = byId('rsvpForm');
+    if (form) form.addEventListener('submit', function(e){ e.preventDefault(); submitRSVP(); });
+  }
+
+  var musicBtn = null;
+  var musicAudio = null;
+  function ensureMusicBtn(){
     if (musicBtn) return musicBtn;
     musicBtn = document.createElement('button');
     musicBtn.className = 'music-btn';
     musicBtn.textContent = '▶ Музыка';
-    musicBtn.addEventListener('click', () => {
+    musicBtn.addEventListener('click', function(){
       if (!musicAudio) return;
-      if (musicAudio.paused) {
-        musicAudio.play().catch(() => {});
-        musicBtn.textContent = '⏸ Музыка';
-      } else {
-        musicAudio.pause();
-        musicBtn.textContent = '▶ Музыка';
-      }
+      if (musicAudio.paused) { musicAudio.play().catch(function(){}); musicBtn.textContent = '⏸ Музыка'; }
+      else { musicAudio.pause(); musicBtn.textContent = '▶ Музыка'; }
     });
     document.body.appendChild(musicBtn);
     return musicBtn;
   }
 
-  function updateMusic(cfg) {
-    const url = cfg?.music?.url || '';
+  function updateMusic(cfg){
+    var url = (cfg.music && cfg.music.url) ? cfg.music.url : '';
     if (!url) {
       if (musicBtn) musicBtn.style.display = 'none';
       if (musicAudio) { musicAudio.pause(); musicAudio.src = ''; }
@@ -127,14 +177,58 @@
     musicBtn.textContent = musicAudio.paused ? '▶ Музыка' : '⏸ Музыка';
   }
 
-  applyReveal();
-  updateCountdown(CONFIG);
-  updateMusic(CONFIG);
+  function applyConfig(cfg){
+    if (!cfg) return;
+    var tplKey = (cfg.template || '').toString();
+    var isWedding = tplKey.indexOf('wedding/') === 0;
+    var bride = cfg.names && cfg.names.bride ? cfg.names.bride : (cfg.title || 'Қонақ');
+    var groom = cfg.names && cfg.names.groom ? cfg.names.groom : '';
+    var mainName = isWedding && groom ? groom : bride;
+    var pairName = isWedding ? bride : '';
+    var namesLine = isWedding && pairName ? (groom + ' & ' + pairName) : bride;
 
-  window.addEventListener('message', (e) => {
-    if (e?.data?.type === 'UPDATE_CONFIG' && e.data.config) {
-      updateCountdown(e.data.config);
-      updateMusic(e.data.config);
+    setText('heroName', mainName);
+    setText('heroNames', namesLine);
+    setText('heroNamesLine', namesLine);
+    setText('heroNamesInline', namesLine);
+    setText('heroCeremony', cfg.ceremony || (isWedding ? 'Үйлену тойы' : 'Тұсаукесер'));
+
+    var dateLine = fmtDate(cfg.day) + (cfg.hour ? ' · ' + cfg.hour : '');
+    setText('heroDateLine', dateLine);
+    setText('evDate', fmtDate(cfg.day));
+    setText('evTime', cfg.hour || '');
+    setText('eventText', cfg.description || '');
+    setText('locationName', cfg.location || '');
+
+    var foot = (cfg.ceremony || 'Той') + ' · ' + getYear(cfg.day);
+    setText('footLine', foot);
+    setText('ownersLine', cfg.toiOwners || '');
+
+    setPhoto(cfg);
+    setGallery(cfg);
+    setMap(cfg);
+    updateCountdown(cfg);
+    updateMusic(cfg);
+  }
+
+  function onMessage(e){
+    if (e && e.data && e.data.type === 'UPDATE_CONFIG') {
+      applyConfig(e.data.config || {});
     }
-  });
+  }
+
+  function init(){
+    applyReveal();
+    wireForm();
+    if (typeof window.CONFIG !== 'undefined') {
+      applyConfig(window.CONFIG);
+    }
+    window.addEventListener('message', onMessage);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, false);
+  } else {
+    init();
+  }
 })();

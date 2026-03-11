@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useEffect } from 'react';
 import { resolveMusicTrack } from '../constants/systemMusic';
 
 const TEMPLATE_LOADERS = import.meta.glob('../templates/**/*.html', { as: 'raw' });
+const PHP_TEMPLATE_BASE = import.meta.env.VITE_PHP_TEMPLATE_BASE || 'http://127.0.0.1:8088';
 const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
 const LEGACY_KEYS = ['classic', 'royal', 'nature', 'modern', 'default'];
 
@@ -104,10 +105,19 @@ function normalizeTemplateKey(key) {
     }
     let k = key;
     if (k.startsWith('tusau/')) k = k.replace('tusau/', 'tusaukeser/');
-
     if (k.startsWith('../templates/')) return k;
     if (k.startsWith('templates/')) return `../${k}`;
     return `../templates/${k}`;
+}
+
+function isPhpTemplate(key) {
+    return key && key.toLowerCase().endsWith('.php');
+}
+
+function buildPhpUrl(key) {
+    // key like ../templates/tusaukeser/template1.php
+    const clean = key.replace(/^\.\.\//, '');
+    return `${PHP_TEMPLATE_BASE}/${clean.replace(/^templates\//, '')}`;
 }
 
 function buildConfig(invite) {
@@ -667,6 +677,7 @@ function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inviteId =
 const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false, mode = 'edit' }) => {
     const iframeRef = useRef(null);
     const [html, setHtml] = React.useState('');
+    const [srcUrl, setSrcUrl] = React.useState('');
     const [templateKey, setTemplateKey] = React.useState(() => normalizeTemplateKey(invite?.template));
 
     const getOptimalFallback = () => {
@@ -681,6 +692,15 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         let active = true;
 
         const load = async () => {
+            // PHP templates are served over HTTP, not loaded as raw html
+            if (isPhpTemplate(nextKey)) {
+                if (!active) return;
+                setSrcUrl(buildPhpUrl(nextKey));
+                setHtml('');
+                setTemplateKey(nextKey);
+                return;
+            }
+
             const loader = TEMPLATE_LOADERS[nextKey] || TEMPLATE_LOADERS[getOptimalFallback()];
             if (!loader) return;
             try {
@@ -688,6 +708,7 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
                 if (active) {
                     const fullHtml = buildTemplate2Html(invite, raw, { enableRsvp, inviteId, lang, mode });
                     setHtml(fullHtml);
+                    setSrcUrl('');
                     setTemplateKey(nextKey);
                 }
             } catch (err) {
@@ -725,7 +746,7 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
     }, [liveConfig]);
 
-    // Re-send config when iframe finishes loading (srcDoc loads asynchronously)
+    // Re-send config when iframe finishes loading (src/srcDoc loads asynchronously)
     const handleIframeLoad = () => {
         const iframe = iframeRef.current;
         if (!iframe?.contentWindow) return;
@@ -765,7 +786,7 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         );
     }
 
-    if (!html && !isEmptyInvite) {
+    if (!html && !srcUrl && !isEmptyInvite) {
         return (
             <div style={{
                 width: '100%', height: '100%', background: '#F8FFFE',
@@ -781,7 +802,8 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         <iframe
             ref={iframeRef}
             title="template-2-preview"
-            srcDoc={html}
+            src={srcUrl || undefined}
+            srcDoc={srcUrl ? undefined : html}
             onLoad={handleIframeLoad}
             className={className}
             style={{

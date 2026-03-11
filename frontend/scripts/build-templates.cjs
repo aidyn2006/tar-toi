@@ -16,6 +16,7 @@ function load(file) {
 function loadPartials() {
   const dir = path.join(root, 'common/partials');
   const entries = fs.readdirSync(dir).filter(f => f.endsWith('.html'));
+  if (!entries.length) return null;
   const map = {};
   entries.forEach(f => {
     const key = path.basename(f, '.html');
@@ -108,6 +109,10 @@ function main() {
   }
   const themes = JSON.parse(load(themesPath));
   const partials = loadPartials();
+  if (!partials) {
+    console.log('No HTML partials found. HTML template generation skipped (PHP system in use).');
+    process.exit(0);
+  }
   let built = 0;
 
   themes.forEach(entry => {
