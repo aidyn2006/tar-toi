@@ -14,6 +14,9 @@ $cfg = [
     'template' => isset($config['template']) ? $config['template'] : '',
     'ceremony' => isset($config['ceremony']) ? $config['ceremony'] : 'Той',
     'autoplay' => isset($config['autoplay']) ? (bool)$config['autoplay'] : false,
+    'inviteId' => isset($config['inviteId']) ? $config['inviteId'] : '',
+    'maxGuests' => isset($config['maxGuests']) ? (int)$config['maxGuests'] : 0,
+    'apiBase' => isset($config['apiBase']) ? $config['apiBase'] : '',
     'music' => [
         'url' => isset($config['musicUrl']) ? $config['musicUrl'] : '',
     ],

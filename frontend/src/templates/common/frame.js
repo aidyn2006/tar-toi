@@ -125,8 +125,13 @@
     if (!form) return;
     if (form.checkValidity && !form.checkValidity()) return;
     var success = byId('successMsg');
-    if (success) success.style.display = 'block';
-    form.style.display = 'none';
+    var cfg = (typeof window.CONFIG !== 'undefined') ? window.CONFIG : {};
+    var doOk = function(){ if (success) success.style.display = 'block'; form.style.display = 'none'; };
+    if (cfg.inviteId) {
+      submitRsvpApi(cfg).then(function(ok){ if (ok) doOk(); });
+    } else {
+      doOk();
+    }
   }
   window.submitRSVP = submitRSVP;
 
@@ -248,9 +253,28 @@
     startAutoScroll(cfg);
   }
 
+  function submitRsvpApi(cfg){
+    var inviteId = cfg.inviteId;
+    if (!inviteId) return Promise.resolve(false);
+    var base = cfg.apiBase || (window.location ? window.location.origin : '');
+    // Avoid cross-origin access to parent: never read window.parent
+    var url = base.replace(/\/$/, '') + '/api/v1/invites/' + inviteId + '/respond';
+    var name = (byId('rName') && byId('rName').value) || '';
+    var phone = (byId('rPhone') && byId('rPhone').value) || '';
+    var guests = (byId('rGuests') && byId('rGuests').value) || '1';
+    var note = (byId('rNote') && byId('rNote').value) || '';
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestName: name, phone: phone, guestsCount: Number(guests) || 1, note: note, attending: true })
+    }).then(function(res){ return res.ok; }).catch(function(){ return false; });
+  }
+
   function onMessage(e){
     if (e && e.data && e.data.type === 'UPDATE_CONFIG') {
-      applyConfig(e.data.config || {});
+      var cfg = e.data.config || {};
+      window.CONFIG = cfg;
+      applyConfig(cfg);
     }
   }
 

@@ -733,7 +733,13 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         return !hasMain;
     }, [invite]);
 
-    const liveConfig = useMemo(() => ({ ...buildConfig(invite || {}), autoplay: mode === 'view' }), [invite, mode]);
+    const liveConfig = useMemo(() => ({
+        ...buildConfig(invite || {}),
+        autoplay: mode === 'view',
+        inviteId: inviteId || null,
+        maxGuests: Number(invite?.maxGuests) || 0,
+        apiBase: (typeof window !== 'undefined' && window.location) ? window.location.origin : '',
+    }), [invite, mode, inviteId]);
     const prevHashRef = useRef('');
 
     // Send live config updates instantly (no debounce) for reactive text preview

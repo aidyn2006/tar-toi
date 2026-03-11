@@ -108,15 +108,6 @@ include $partials . '/head.php';
             <img src="https://shaqyrtu.kz/template4/3.svg" alt="">
         </div>
 
-        <div class="greeting-section reveal">
-            <div class="greeting-label">Хабарлама</div>
-            <div class="greeting-text" id="eventText">
-                Құрметті ағайын-туыс,<br>
-                дос-жарандар!<br><br>
-                Сіздерді тойымызға<br>шақырамыз.
-            </div>
-            <div class="greeting-sign">Тойға шақырамыз</div>
-        </div>
 
         <div class="decor-flower side">
             <img src="https://shaqyrtu.kz/template12/gul.png" alt="">
