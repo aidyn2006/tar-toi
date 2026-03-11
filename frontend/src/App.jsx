@@ -18,7 +18,6 @@ const BlogPage = lazy(() => import('./pages/BlogPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const MereiPage = lazy(() => import('./pages/MereiPage'));
 const CallbackPage = lazy(() => import('./pages/auth/CallbackPage'));
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 
 const ProtectedRoute = ({ children }) => {
     return authService.isLoggedIn() ? children : <Navigate to="/" />;
@@ -52,7 +51,6 @@ function App() {
                             <Route path="/blog" element={<BlogPage />} />
                             <Route path="/contact" element={<ContactPage />} />
                             <Route path="/meretoi-shakyru" element={<MereiPage />} />
-                            <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
                             <Route
                                 path="/dashboard"

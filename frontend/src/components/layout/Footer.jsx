@@ -14,8 +14,7 @@ const Footer = () => {
                     <span style={{ color: 'white', fontWeight: 700 }}>Toiga Shaqyru</span>
                 </Link>
                 <div>{tr('© 2025 Toiga Shaqyru — Барлық құқықтар қорғалған', '© 2025 Toiga Shaqyru — Все права защищены')}</div>
-                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    <Link to="/privacy" style={{ color: '#a7f3d0', textDecoration: 'none' }}>{tr('Құпиялылық саясаты', 'Политика конфиденциальности')}</Link>
+                <div style={{ display: 'flex', gap: '1.5rem' }}>
                     <a href="https://wa.me/77056842747" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>WhatsApp</a>
                     <a href="https://instagram.com/codejaz.kz" target="_blank" rel="noopener noreferrer" style={{ color: '#a7f3d0', textDecoration: 'none' }}>Instagram</a>
                 </div>
