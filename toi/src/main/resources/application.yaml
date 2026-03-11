@@ -27,6 +27,6 @@ uploads:
   public-url: ${UPLOAD_PUBLIC_URL:http://localhost:9191}
 
 threads:
-  client-id: ${THREADS_CLIENT_ID:1241875974190861}
-  client-secret: ${THREADS_CLIENT_SECRET:0ef7185cc8f2d0347ef83a28b8db3b36}
+  client-id: ${THREADS_CLIENT_ID:your_app_id}
+  client-secret: ${THREADS_CLIENT_SECRET:your_app_secret}
   redirect-uri: ${THREADS_REDIRECT_URI:https://toi.com.kz/auth/callback}
