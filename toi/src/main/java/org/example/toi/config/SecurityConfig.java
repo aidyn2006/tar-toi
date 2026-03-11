@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/api/v1/invites/slug/**",
                                 "/api/v1/invites/*/respond",
+                                "/api/v1/pages/**",
                                 "/uploads/**"
                         ).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
