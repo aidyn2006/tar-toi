@@ -55,7 +55,7 @@ public class AdminController {
 
     /** Approve a user */
     @PostMapping("/users/{id}/approve")
-    public ResponseEntity<Map<String, String>> approveUser(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> approveUser(@PathVariable("id") Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setApproved(true);
@@ -65,7 +65,7 @@ public class AdminController {
 
     /** Reject (delete) a user */
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable("id") Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setDeleted(true);
@@ -75,7 +75,7 @@ public class AdminController {
 
     /** Toggle invite active status */
     @PostMapping("/invites/{id}/toggle-active")
-    public ResponseEntity<Map<String, String>> toggleInviteActive(@PathVariable java.util.UUID id) {
+    public ResponseEntity<Map<String, String>> toggleInviteActive(@PathVariable("id") java.util.UUID id) {
         inviteService.toggleActive(id);
         return ResponseEntity.ok(Map.of("message", "Invite active status toggled"));
     }

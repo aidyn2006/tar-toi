@@ -35,14 +35,14 @@ public class InviteController {
 
     /** GET /api/v1/invites/slug/{slug} — public, no auth required */
     @GetMapping("/slug/{slug}")
-    public ResponseEntity<InviteResponseDTO> getPublicInvite(@PathVariable String slug) {
+    public ResponseEntity<InviteResponseDTO> getPublicInvite(@PathVariable("slug") String slug) {
         return ResponseEntity.ok(inviteService.getPublicInvite(slug));
     }
 
     /** PUT /api/v1/invites/{id} — update invite (owner only, authenticated) */
     @PutMapping("/{id}")
     public ResponseEntity<InviteResponseDTO> updateInvite(
-            @PathVariable UUID id,
+            @PathVariable("id") UUID id,
             @Valid @RequestBody UpdateInviteRequest request
     ) {
         return ResponseEntity.ok(inviteService.updateInvite(id, request));
@@ -50,14 +50,14 @@ public class InviteController {
 
     /** GET /api/v1/invites/{id}/responses — CRM guest list (owner only, authenticated) */
     @GetMapping("/{id}/responses")
-    public ResponseEntity<List<GuestResponseDTO>> getResponses(@PathVariable UUID id) {
+    public ResponseEntity<List<GuestResponseDTO>> getResponses(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(inviteService.getResponses(id));
     }
 
     /** POST /api/v1/invites/{id}/respond — RSVP (public, no auth required) */
     @PostMapping("/{id}/respond")
     public ResponseEntity<Void> respondToInvite(
-            @PathVariable UUID id,
+            @PathVariable("id") UUID id,
             @Valid @RequestBody RespondInviteRequest request
     ) {
         inviteService.respondToInvite(id, request);
@@ -66,7 +66,7 @@ public class InviteController {
 
     /** DELETE /api/v1/invites/{id} — delete invite (owner only, authenticated) */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInvite(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteInvite(@PathVariable("id") UUID id) {
         inviteService.deleteInvite(id);
         return ResponseEntity.noContent().build();
     }
