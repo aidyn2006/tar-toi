@@ -17,6 +17,7 @@ const FAQPage = lazy(() => import('./pages/FAQPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const MereiPage = lazy(() => import('./pages/MereiPage'));
+const CallbackPage = lazy(() => import('./pages/CallbackPage'));
 
 const ProtectedRoute = ({ children }) => {
     return authService.isLoggedIn() ? children : <Navigate to="/" />;
@@ -42,6 +43,7 @@ function App() {
                             <Route path="/" element={<Home />} />
 
                             {/* SEO Routes */}
+                            <Route path="/auth/callback" element={<CallbackPage />} />
                             <Route path="/categories" element={<CategoriesPage />} />
                             <Route path="/faq" element={<FAQPage />} />
                             <Route path="/blog" element={<BlogPage />} />

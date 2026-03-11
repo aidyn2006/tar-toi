@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.toi.dto.request.LoginRequest;
 import org.example.toi.dto.request.RegisterRequest;
+import org.example.toi.dto.request.ThreadsAuthRequest;
 import org.example.toi.dto.response.AuthResponse;
 import org.example.toi.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/threads")
+    public ResponseEntity<AuthResponse> threadsAuth(@Valid @RequestBody ThreadsAuthRequest request) {
+        return ResponseEntity.ok(authService.loginWithThreads(request.code()));
     }
 }

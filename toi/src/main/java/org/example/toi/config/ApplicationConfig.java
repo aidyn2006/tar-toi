@@ -14,9 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import java.util.Collections;
+import org.springframework.web.client.RestTemplate;
 
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
@@ -27,14 +28,20 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByPhone(username)
-                .map(u -> User.withUsername(u.getPhone())
-                        .password(u.getPasswordHash())
-                        .authorities("ROLE_" + u.getRole().name())
-                        .disabled(!u.isApproved())
-                        .build()
-                )
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> {
+            // Try phone first, then threads_id (for JWT re-validation)
+            var user = userRepository.findByPhone(username)
+                    .or(() -> userRepository.findByThreadsId(username))
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+            String principalName = user.getPhone() != null ? user.getPhone() : "TH_" + user.getThreadsId();
+            String password = user.getPasswordHash() != null ? user.getPasswordHash() : "";
+
+            return User.withUsername(principalName)
+                    .password(password)
+                    .authorities("ROLE_" + user.getRole().name())
+                    .build();
+        };
     }
 
     @Bean
@@ -53,4 +60,10 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }
+
