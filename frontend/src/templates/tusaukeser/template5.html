@@ -1,0 +1,279 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тұсаукесер · Breeze</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Manrope:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../common/utility.css">
+  <link rel="stylesheet" href="../common/base.css">
+  <style>
+:root {
+  --bg-page: #e9f3f4;
+  --bg: #fdfefe;
+  --card: #ffffff;
+  --accent: #3aa0a2;
+  --accent-soft: #d7f1f2;
+  --text: #1f3a3c;
+  --muted: #5d7476;
+  --border: rgba(58,160,162,0.18);
+  --shadow: 0 14px 34px rgba(0,0,0,0.09);
+  --font-head: 'Playfair Display', serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --bg-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 200 200' fill='none'><circle cx='100' cy='100' r='96' stroke='%233aa0a2' stroke-width='1' opacity='0.10'/><circle cx='100' cy='100' r='72' stroke='%2393d9dc' stroke-width='1' opacity='0.12'/><path d='M40 100c30-24 90-24 120 0' stroke='%233aa0a2' stroke-width='2' opacity='0.12'/><path d='M60 120c24-18 56-18 80 0' stroke='%2393d9dc' stroke-width='2' opacity='0.1'/></svg>");
+}
+.hero::after { content: ''; display: block; width: 64px; height: 64px; margin: 12px auto 0; background: url('https://shaqyrtu.kz/template9/oiu.png') center/contain no-repeat; opacity: 0.6; }
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="border-strip left" style="background-image:url('https://shaqyrtu.kz/template4/border.png')"></div>
+<div class="border-strip right" style="background-image:url('https://shaqyrtu.kz/template4/border.png')"></div>
+    <div class="inner">
+      <section class="section hero reveal">
+  <div class="hero-photo-box" id="heroPhoto">
+    <div class="hero-photo-placeholder"></div>
+  </div>
+  <div class="badge" id="heroCeremony">Тұсаукесер</div>
+  <h1 class="names hero-name" id="heroNames"><span id="heroName">Бала</span></h1>
+  <p class="date-line" id="heroNamesLine" style="display:none;">Бала</p>
+  <p class="date-line" id="heroDateLine">01.01.2027 · 18:00</p>
+  <p id="heroNamesInline" style="display:none;">Бала</p>
+</section>
+
+      <div class="divider">❧ ✦ ❧</div>
+      <section class="section reveal">
+  <div class="card details-list">
+    <div class="detail-row">
+      <div class="detail-label">Хабар</div>
+      <div class="detail-value" id="eventText">Құрметті ағайын, тұсаукесер тойына шақырамыз!</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">Мекенжай</div>
+      <div class="detail-value" id="locationName">Алматы, Farhi Hall</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">Уақыты</div>
+      <div class="detail-value"><span id="evDate">01.01.2027</span> · <span id="evTime">18:00</span></div>
+    </div>
+    <a class="btn map-btn" id="mapBtn" href="#" target="_blank" rel="noopener">Картаға өту</a>
+  </div>
+</section>
+
+      <section class="section reveal">
+  <h2 class="heading">Галерея</h2>
+  <div class="gallery-grid" id="gallerySlides">
+    <div class="card" style="grid-column: 1 / -1; text-align:center; color: var(--muted); font-weight:600;">Фотоларды жүктеңіз — олар осында шығады.</div>
+  </div>
+</section>
+
+      <section class="section reveal">
+  <h2 class="heading">Санау</h2>
+  <div class="countdown" id="countdown">
+    <div class="counter-box">
+      <div class="num" id="cdD">00</div>
+      <div class="label">Күн</div>
+    </div>
+    <div class="counter-box">
+      <div class="num" id="cdH">00</div>
+      <div class="label">Сағат</div>
+    </div>
+    <div class="counter-box">
+      <div class="num" id="cdM">00</div>
+      <div class="label">Минут</div>
+    </div>
+    <div class="counter-box">
+      <div class="num" id="cdS">00</div>
+      <div class="label">Секунд</div>
+    </div>
+  </div>
+</section>
+
+      <section class="section reveal">
+  <h2 class="heading">Күнтізбе</h2>
+  <div class="card calendar">
+    <div class="cal-head" id="calMo">Қаңтар 2027</div>
+    <div class="cal-grid" id="calGrid">
+      <!-- days filled by script -->
+    </div>
+  </div>
+</section>
+
+      <section class="section reveal" id="rsvpSection">
+  <h2 class="heading">Қатысамын</h2>
+  <form class="rsvp-form" id="rsvpForm" onsubmit="event.preventDefault(); submitRSVP();">
+    <input id="rName" name="name" placeholder="Аты-жөні" required>
+    <input id="rPhone" name="phone" placeholder="Телефон" required>
+    <div class="rsvp-guests">
+      <button type="button" class="btn gc-btn" onclick="changeGuests(-1)">−</button>
+      <input id="rGuests" value="1" readonly>
+      <button type="button" class="btn gc-btn" onclick="changeGuests(1)">+</button>
+    </div>
+    <textarea id="rNote" name="note" rows="3" placeholder="Ескерту"></textarea>
+    <div class="rsvp-cta">
+      <button type="submit" class="btn submit-btn" id="rsvpBtn">Растау</button>
+    </div>
+  </form>
+  <div class="success-msg" id="successMsg">Рахмет! Күтеміз.</div>
+</section>
+
+      <footer class="section footer reveal">
+  <div id="footLine">Тұсаукесер · 2027</div>
+  <div id="ownersLine" style="margin-top:4px;"></div>
+</footer>
+
+    </div>
+  </div>
+
+  <script>
+    // Default config placeholder; replaced by Template2Frame
+    const CONFIG = {
+      names: { bride: 'Бала', groom: '' },
+      day: '01-01-2027',
+      hour: '18:00',
+      location: 'Алматы, Grand Hall',
+      locationUrl: '',
+      gallery: [],
+      description: 'Құрметті ағайын, тұсаукесер тойына шақырамыз!',
+      toiOwners: '',
+      template: 'tusaukeser/template5.html'
+    };
+
+    (function() {
+      const qs = (sel) => document.querySelector(sel);
+      const byId = (id) => document.getElementById(id);
+
+      function applyReveal() {
+        const els = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        els.forEach(el => obs.observe(el));
+      }
+
+      function updateCalendar(cfg) {
+        const dateStr = cfg.day || '';
+        const parts = dateStr.split('-');
+        const calMo = byId('calMo');
+        const grid = byId('calGrid');
+        if (!calMo || !grid || parts.length < 3) return;
+        const [dd, mm, yy] = parts.map(Number);
+        const months = ['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'];
+        calMo.textContent = `${months[mm - 1] || ''} ${yy || ''}`;
+        const first = new Date(yy, mm - 1, 1).getDay(); // 0=Sun
+        const offset = first === 0 ? 6 : first - 1;
+        const total = new Date(yy, mm, 0).getDate();
+        grid.innerHTML = '';
+        for (let i = 0; i < offset; i++) grid.innerHTML += '<div class=\"cal-day other\"></div>';
+        for (let d = 1; d <= total; d++) {
+          const cls = d === dd ? 'cal-day today' : 'cal-day';
+          grid.innerHTML += `<div class=\"${cls}\">${d}</div>`;
+        }
+      }
+
+      function updateCountdown(cfg) {
+        const dateStr = cfg.day || '';
+        const timeStr = cfg.hour || '00:00';
+        const parts = dateStr.split('-');
+        if (parts.length < 3) return;
+        const [dd, mm, yy] = parts.map(Number);
+        const target = new Date(`${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}T${timeStr}:00`);
+        const dateLine = `${String(dd).padStart(2,'0')}.${String(mm).padStart(2,'0')}.${yy}`;
+        const hDateLine = byId('heroDateLine'); if (hDateLine) hDateLine.textContent = cfg.hour ? `${dateLine} · ${cfg.hour}` : dateLine;
+        const evDate = byId('evDate'); if (evDate) evDate.textContent = dateLine;
+        const evTime = byId('evTime'); if (evTime) evTime.textContent = cfg.hour || '';
+        const cdD = byId('cdD'), cdH = byId('cdH'), cdM = byId('cdM'), cdS = byId('cdS');
+        if (!cdD || !cdH || !cdM || !cdS) return;
+        const tick = () => {
+          const diff = Math.max(0, target - Date.now());
+          cdD.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+          cdH.textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
+          cdM.textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
+          cdS.textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+        };
+        tick();
+        if (window.__cdInterval) clearInterval(window.__cdInterval);
+        window.__cdInterval = setInterval(tick, 1000);
+
+        updateCalendar(cfg);
+      }
+
+      window.changeGuests = function(delta) {
+        const inp = byId('rGuests');
+        if (!inp) return;
+        const next = Math.max(1, (parseInt(inp.value || '1', 10) || 1) + delta);
+        inp.value = String(next);
+      };
+
+      window.submitRSVP = function() {
+        const form = byId('rsvpForm');
+        const ok = form && form.checkValidity();
+        if (ok) {
+          const success = byId('successMsg');
+          if (success) success.style.display = 'block';
+          form.style.display = 'none';
+        }
+      };
+
+      let musicBtn = null;
+      let musicAudio = null;
+      function ensureMusicBtn() {
+        if (musicBtn) return musicBtn;
+        musicBtn = document.createElement('button');
+        musicBtn.className = 'music-btn';
+        musicBtn.textContent = '▶ Музыка';
+        musicBtn.addEventListener('click', () => {
+          if (!musicAudio) return;
+          if (musicAudio.paused) {
+            musicAudio.play().catch(() => {});
+            musicBtn.textContent = '⏸ Музыка';
+          } else {
+            musicAudio.pause();
+            musicBtn.textContent = '▶ Музыка';
+          }
+        });
+        document.body.appendChild(musicBtn);
+        return musicBtn;
+      }
+
+      function updateMusic(cfg) {
+        const url = cfg?.music?.url || '';
+        if (!url) {
+          if (musicBtn) musicBtn.style.display = 'none';
+          if (musicAudio) { musicAudio.pause(); musicAudio.src = ''; }
+          return;
+        }
+        ensureMusicBtn();
+        if (!musicAudio) {
+          musicAudio = new Audio();
+          musicAudio.loop = true;
+          musicAudio.crossOrigin = 'anonymous';
+          musicAudio.volume = 0.5;
+        }
+        if (musicAudio.src !== url) {
+          musicAudio.pause();
+          musicAudio.src = url;
+        }
+        musicBtn.style.display = 'flex';
+        musicBtn.textContent = musicAudio.paused ? '▶ Музыка' : '⏸ Музыка';
+      }
+
+      // Initial reveal & countdown
+      applyReveal();
+      updateCountdown(CONFIG);
+      updateMusic(CONFIG);
+
+      // Live updates from Template2Frame postMessage
+      window.addEventListener('message', (e) => {
+        if (e?.data?.type === 'UPDATE_CONFIG' && e.data.config) {
+          updateCountdown(e.data.config);
+          updateMusic(e.data.config);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

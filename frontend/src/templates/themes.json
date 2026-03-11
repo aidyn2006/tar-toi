@@ -1,0 +1,26 @@
+[
+  {
+    "category": "tusaukeser",
+    "variant": "template1",
+    "layout": "single",
+    "title": "Тұсаукесер · Classic",
+    "tokens": {
+      "bgPage": "#f0e6e0",
+      "bg": "#fff9f5",
+      "card": "#ffffff",
+      "accent": "#f4a261",
+      "accentSoft": "#ffe3d0",
+      "text": "#4a4542",
+      "muted": "#6d635e",
+      "border": "rgba(204,109,82,0.2)",
+      "shadow": "0 12px 32px rgba(0,0,0,0.08)",
+      "fontHead": "'Playfair Display', serif",
+      "fontBody": "'Outfit', system-ui, sans-serif",
+      "bgPattern": "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 200 200' fill='none'><circle cx='100' cy='100' r='96' stroke='%23c49a4a' stroke-width='1' opacity='0.12'/><circle cx='100' cy='100' r='72' stroke='%23cc6d52' stroke-width='1' opacity='0.08'/><path d='M100 10 L120 40 L100 70 L80 40 Z' fill='none' stroke='%23c49a4a' stroke-width='1' opacity='0.12'/><path d='M100 130 L120 160 L100 190 L80 160 Z' fill='none' stroke='%23c49a4a' stroke-width='1' opacity='0.12'/></svg>\")"
+    },
+    "ornaments": {
+      "border": "https://shaqyrtu.kz/template4/border.png",
+      "hero": "https://shaqyrtu.kz/template9/oiu.png"
+    }
+  }
+]
