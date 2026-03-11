@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-import SEO from '../components/SEO';
-import { useLang } from '../context/LanguageContext';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import SEO from '../../components/SEO';
+import { useLang } from '../../context/LanguageContext';
 
 const PrivacyPolicyPage = () => {
     const { lang } = useLang();
@@ -13,7 +13,7 @@ const PrivacyPolicyPage = () => {
                 title={lang === 'ru' ? "Политика конфиденциальности - Toi" : "Құпиялылық саясаты - Toi"}
                 description={lang === 'ru' ? "Политика конфиденциальности сервиса электронных пригласительных Toi" : "Toi электронды шақыру сервисінің құпиялылық саясаты"}
             />
-            <Header />
+            <Navbar />
             
             <main style={{ flex: 1, paddingTop: '100px', paddingBottom: '4rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
                 <div style={{
