@@ -24,8 +24,8 @@ include $partials . '/head.php';
             --bg:         #ffffff;
             --card:       #fffaf0;
             --accent:     #c5a059;
-            --accent-soft: rgba(197,160,89,0.1);
             --accent-rgb: 197,160,89;
+            --accent-soft: rgba(197,160,89,0.1);
             --text:       #3e352a;
             --muted:      #8c7e6a;
             --border:     rgba(197,160,89,0.25);
@@ -95,68 +95,125 @@ include $partials . '/head.php';
         .greeting-body { font-family: var(--font-body); font-size: 17px; line-height: 1.8; color: var(--text); }
         .greeting-script { font-family: var(--font-script); font-size: 42px; color: var(--accent); margin-top: 15px; display: block; }
 
-        /* Info Blocks Override */
-        .info-blocks { padding: 20px; display: grid; gap: 15px; }
+        /* Info Blocks - Luxury Redesign */
+        .info-blocks { padding: 80px 25px; display: grid; gap: 50px; position: relative; }
         .info-block {
-            background: var(--bg); border: 1px solid var(--border); border-radius: 18px;
-            padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow);
+            background: transparent; border: none; border-radius: 0;
+            padding: 30px 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: relative; overflow: visible; display: block; text-align: center;
         }
-        .info-block-icon {
-            width: 45px; height: 45px; background: var(--accent-soft); border-radius: 12px;
-            display: grid; place-items: center; color: var(--accent); font-size: 20px;
+        /* Elegant Divider between blocks */
+        .info-block::after {
+            content: ''; position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 1px; background: linear-gradient(to right, transparent, var(--accent), transparent);
+            opacity: 0.5;
         }
-        .info-block-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-        .info-block-value { font-family: var(--font-head); font-size: 18px; color: var(--text); }
+        .info-block:last-child::after { display: none; }
 
-        /* Map Button */
-        .map-block {
-            margin: 10px 20px 30px; background: var(--accent); color: white;
-            text-decoration: none; border-radius: 18px; padding: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            box-shadow: 0 8px 25px rgba(var(--accent-rgb), 0.3); transition: transform 0.3s;
+        .info-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; position: relative; }
+        .info-dual > div { padding: 15px 15px; position: relative; }
+        .info-dual > div:first-child::after {
+            content: ''; position: absolute; right: 0; top: 15%; bottom: 15%;
+            width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
         }
-        .map-block:hover { transform: translateY(-3px); }
-        .map-block img { width: 24px; filter: brightness(0) invert(1); }
-        .map-block span { font-weight: 600; letter-spacing: 1px; }
+        
+        .detail-label { 
+            font-family: var(--font-body); font-size: 11px; text-transform: uppercase; 
+            letter-spacing: 5px; color: var(--accent); margin-bottom: 20px; font-weight: 600;
+            opacity: 0.9;
+        }
+        .detail-value { 
+            font-family: var(--font-head); font-size: 26px; color: var(--text); 
+            line-height: 1.2; font-weight: 400; letter-spacing: 0.5px;
+        }
+        
+        /* Ornamental Flower for specific blocks */
+        .info-block#ownersBlock { 
+            background: var(--accent-soft); padding: 45px 25px; border-radius: var(--radius);
+        }
+        .info-block#ownersBlock::after { display: none; }
+        .info-block#ownersBlock .detail-value { font-family: var(--font-script); font-size: 42px; color: var(--accent); }
+
+        /* Map Button - Luxury Style */
+        .map-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+            margin-top: 30px; padding: 16px 45px; background: var(--text);
+            color: white; text-decoration: none; border-radius: 0;
+            font-family: var(--font-body); font-size: 10px; font-weight: 700;
+            letter-spacing: 4px; text-transform: uppercase;
+            transition: all 0.4s; border: 1px solid var(--text); width: auto;
+        }
+        .map-btn:hover { background: transparent; color: var(--text); transform: translateY(-3px); }
+
+        /* Gallery Carousel */
+        .gallery-carousel {
+            display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+            padding: 20px 0; scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .gallery-carousel::-webkit-scrollbar { display: none; }
+        .gallery-carousel .gallery-tile,
+        .gallery-carousel img,
+        .gallery-carousel .card {
+            flex: 0 0 85%; scroll-snap-align: center; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); object-fit: cover; aspect-ratio: 4/5;
+        }
+        .gallery-carousel .gallery-tile { overflow: hidden; position: relative; }
+        .gallery-carousel .gallery-tile img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
         /* Countdown & Calendar */
-        .section { padding: 40px 20px; }
-        .heading { font-family: var(--font-head); font-size: 24px; color: var(--accent); text-align: center; margin-bottom: 25px; }
-        
-        .counter-box { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px 10px; }
-        .num { font-size: 28px; font-weight: 700; color: var(--accent); }
-        
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 10px; }
-        .cal-day { 
-            aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; 
-            font-family: var(--font-body); font-size: 13px; color: var(--muted);
-            border-radius: 50%; transition: all 0.3s;
+        .section { padding: 60px 25px; }
+        .heading { 
+            font-family: var(--font-head); font-size: 28px; color: var(--accent); 
+            text-align: center; margin-bottom: 32px; letter-spacing: 2px;
+            position: relative; padding-bottom: 10px; text-transform: uppercase;
         }
-        .cal-day.today { 
-            background: var(--accent); color: white; border-radius: 50%; 
-            box-shadow: 0 5px 15px rgba(var(--accent-rgb), 0.4);
-            position: relative; overflow: visible;
+        .heading::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 44px; height: 2px; background: var(--accent); border-radius: 2px;
+            opacity: 0.5;
         }
-        .cal-day.today::after {
-            content: '❤'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-            font-size: 10px; color: var(--accent); text-shadow: 0 0 5px white;
+        
+        /* Countdown & calendar styles now shared in common/base.css */
+
+        /* Motion & mobile tuning */
+        @media (max-width: 540px) {
+            .hero { padding: 48px 16px 32px; }
+            .hero-photo-box { width: 180px; height: 180px; }
+            .hero-photo-box::after { animation: none; }
+            .hero-name { font-size: 48px; }
+            .ceremony-type { font-size: 12px; letter-spacing: 3px; }
+            .greeting { margin: 0 12px; padding: 32px 20px; }
+            .info-blocks { padding: 60px 18px; gap: 36px; }
+            .detail-value { font-size: 22px; }
+            .map-btn { padding: 14px 30px; letter-spacing: 2px; }
+            .section { padding: 45px 18px; }
+            .heading { font-size: 26px; }
+            .gallery-carousel img, .gallery-carousel .card { flex-basis: 92%; }
+            .float-gul { display: none; }
+            .hero-top-decor img { animation: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
         }
 
         /* RSVP */
         .rsvp-form input, .rsvp-form textarea {
-            background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
-            padding: 12px 15px; width: 100%; margin-bottom: 10px;
+            background: var(--bg); border: 1px solid var(--border); border-radius: 0;
+            padding: 15px 20px; width: 100%; margin-bottom: 15px; font-family: var(--font-body);
         }
         .submit-btn {
-            background: var(--accent); color: white; border: none; padding: 15px;
-            border-radius: 12px; width: 100%; font-weight: 700; cursor: pointer;
+            background: var(--text); color: white; border: 1px solid var(--text); padding: 18px;
+            border-radius: 0; width: 100%; font-weight: 700; cursor: pointer;
+            letter-spacing: 4px; text-transform: uppercase; font-size: 10px; transition: all 0.3s;
         }
+        .submit-btn:hover { background: transparent; color: var(--text); }
 
         /* Music Button */
         .music-btn {
-            background: rgba(255,255,255,0.9); backdrop-filter: blur(5px);
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
             border: 1px solid var(--border); border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -189,21 +246,25 @@ include $partials . '/head.php';
                 <span class="greeting-script">Тойға шақырамыз!</span>
             </section>
 
+            <?php include $partials . '/countdown.php'; ?>
+
+            <?php include $partials . '/calendar.php'; ?>
+
             <div class="decor-svg">
                 <img src="https://shaqyrtu.kz/template4/3.svg" alt="">
             </div>
 
-            <?php include $partials . '/info.php'; ?>
+            <div class="info-blocks reveal">
+                <?php include $partials . '/info-datetime.php'; ?>
+                <?php include $partials . '/info-location.php'; ?>
+                <?php include $partials . '/info-owners.php'; ?>
+            </div>
 
             <div class="decor-oiu">
                 <img src="https://shaqyrtu.kz/template12/decor.png" style="width: 120px;" alt="">
             </div>
 
             <?php include $partials . '/gallery.php'; ?>
-
-            <?php include $partials . '/countdown.php'; ?>
-
-            <?php include $partials . '/calendar.php'; ?>
 
             <div class="decor-svg">
                 <img src="https://shaqyrtu.kz/template4/3.svg" alt="">

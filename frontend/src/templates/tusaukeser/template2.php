@@ -37,10 +37,12 @@ include $partials . '/head.php';
             --bg-glow: radial-gradient(circle at 50% -20%, rgba(var(--accent-rgb), 0.1), transparent 70%);
         }
 
-        .app { 
+        .app {
             position: relative; overflow-x: hidden; background: var(--bg-page); color: var(--text);
             background-image: var(--bg-glow); min-height: 100vh;
         }
+
+        .section { padding: 45px 22px; }
 
         /* Border */
         .border-strip {
@@ -70,8 +72,8 @@ include $partials . '/head.php';
             font-family: var(--font-head); font-size: 32px; font-weight: 500;
             color: var(--accent); margin: 15px 0; letter-spacing: -1px;
         }
-        .ceremony-type { 
-            font-family: var(--font-head); font-size: 8px; font-weight: 300; 
+        .ceremony-type {
+            font-family: var(--font-head); font-size: 8px; font-weight: 300;
             letter-spacing: 5px; text-transform: uppercase; color: var(--muted);
         }
 
@@ -80,7 +82,7 @@ include $partials . '/head.php';
         .decor-oiu img { width: 120px; opacity: 0.5; }
 
         /* Greeting */
-        .greeting { 
+        .greeting {
             padding: 40px 25px; background: var(--bg); border: 1px solid var(--border);
             border-radius: var(--radius); margin: 0 20px; text-align: center;
             box-shadow: var(--shadow);
@@ -89,54 +91,86 @@ include $partials . '/head.php';
         .greeting-script { font-family: var(--font-script); font-size: 44px; color: var(--accent); margin-top: 15px; display: block; }
 
         /* Info Blocks */
-        .info-blocks { padding: 25px 20px; display: grid; gap: 12px; }
+        .info-blocks { padding: 40px 20px; display: grid; gap: 15px; }
         .info-block {
-            background: var(--bg); border: 1px solid var(--border); border-radius: 18px;
-            padding: 18px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
         }
-        .info-block-icon {
-            width: 40px; height: 40px; background: var(--accent-soft); border-radius: 12px;
-            display: grid; place-items: center; color: var(--accent); font-size: 18px;
+        .info-block:hover {
+            transform: scale(1.02) translateY(-5px);
+            background: var(--bg);
+            border-color: var(--accent);
+            box-shadow: 0 15px 35px rgba(var(--accent-rgb), 0.2);
         }
-        .info-block-label { font-family: var(--font-head); font-size: 7px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-        .info-block-value { font-family: var(--font-body); font-size: 16px; color: var(--text); font-weight: 500; }
 
-        /* Map Button */
-        .map-block {
-            margin: 0 20px 40px; background: var(--accent); color: white;
-            text-decoration: none; border-radius: 14px; padding: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: all 0.3s; font-family: var(--font-head); font-size: 9px; letter-spacing: 2px;
-            text-transform: uppercase; box-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.3);
+        .info-dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+            overflow: hidden;
         }
-        .map-block:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(var(--accent-rgb), 0.4); }
-        .map-block img { width: 22px; filter: brightness(0) invert(1); }
-
-        /* Calendar */
-        .heading { font-family: var(--font-head); font-size: 10px; color: var(--accent); letter-spacing: 4px; text-transform: uppercase; text-align: center; margin-bottom: 25px; }
-        .counter-box { background: var(--card); border: 1px solid var(--border); border-radius: 15px; }
-        .num { font-family: var(--font-head); font-size: 24px; color: var(--accent); }
-        
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 10px; }
-        .cal-day { 
-            aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
-            font-size: 11px; color: var(--muted); border-radius: 50%;
-            transition: all 0.3s;
-        }
-        .cal-day.today { 
-            background: var(--accent); color: white; font-weight: 700;
-            box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+        .info-dual > div {
+            padding: 25px 15px;
             position: relative;
         }
-        .cal-day.today::before {
-            content: ''; position: absolute; inset: -4px; border: 1px solid var(--accent);
-            border-radius: 50%; opacity: 0.4; animation: ping 2.5s infinite;
+        .info-dual > div:first-child::after {
+            content: ''; position: absolute; right: 0; top: 20%; bottom: 20%;
+            width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
         }
-        .cal-day.today::after {
-            content: '❤'; position: absolute; top: -6px; right: -6px;
-            font-size: 9px; color: var(--accent); text-shadow: 0 0 3px white;
+
+        .detail-label {
+            font-family: var(--font-head); font-size: 8px; font-weight: 300;
+            letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+            margin-bottom: 10px;
         }
-        @keyframes ping { 75%, 100% { transform: scale(1.5); opacity: 0; } }
+        .detail-value {
+            font-family: var(--font-body); font-size: 18px; color: var(--text);
+            font-weight: 600; line-height: 1.4;
+        }
+
+        /* Map Button inside info-block */
+        .map-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 15px; padding: 12px 30px; background: var(--accent);
+            color: white; text-decoration: none; border-radius: 12px;
+            font-family: var(--font-head); font-size: 9px; font-weight: 500;
+            letter-spacing: 1px; text-transform: uppercase;
+            transition: all 0.3s; box-shadow: 0 5px 15px rgba(var(--accent-rgb), 0.3);
+            width: auto;
+        }
+        .map-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.4);
+            filter: brightness(1.1);
+        }
+
+        .info-block#ownersBlock {
+            background: var(--accent-soft);
+            border-color: transparent;
+        }
+
+        /* Time & calendar */
+        .time-grid { padding: 28px 14px 8px; display: grid; gap: 18px; }
+        .time-grid .section { margin: 0; }
+
+        .heading {
+            font-family: var(--font-head); font-size: 22px; color: var(--accent);
+            letter-spacing: 2px; text-transform: uppercase; text-align: center;
+            margin-bottom: 28px; position: relative; padding-bottom: 10px;
+        }
+        .heading::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 44px; height: 2px; background: var(--accent); border-radius: 2px;
+            opacity: 0.5;
+        }
+        /* Countdown & calendar styles now shared in common/base.css */
 
         /* RSVP */
         .rsvp-form input, .rsvp-form textarea {
@@ -177,17 +211,22 @@ include $partials . '/head.php';
                 <span class="greeting-script">Тойға шақырамыз!</span>
             </section>
 
-            <?php include $partials . '/info.php'; ?>
+            <div class="time-grid">
+                <?php include $partials . '/countdown.php'; ?>
+                <?php include $partials . '/calendar.php'; ?>
+            </div>
+
+            <div class="info-blocks reveal">
+                <?php include $partials . '/info-datetime.php'; ?>
+                <?php include $partials . '/info-location.php'; ?>
+                <?php include $partials . '/info-owners.php'; ?>
+            </div>
 
             <div class="decor-oiu">
                 <img src="https://shaqyrtu.kz/template12/decor.png" style="width: 100px;" alt="">
             </div>
 
             <?php include $partials . '/gallery.php'; ?>
-
-            <?php include $partials . '/countdown.php'; ?>
-
-            <?php include $partials . '/calendar.php'; ?>
 
             <div class="decor-oiu">
                 <img src="https://shaqyrtu.kz/template4/3.svg" style="width: 180px;" alt="">

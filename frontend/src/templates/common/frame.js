@@ -44,14 +44,18 @@
     var g = cfg.gallery || [];
     slides.innerHTML = '';
     if (!g.length) {
-      slides.innerHTML = '<div class="card" style="grid-column: 1 / -1; text-align:center; color: var(--muted); font-weight:600;">Фотоларды жүктеңіз — олар осында шығады.</div>';
+      slides.innerHTML = '<div class="gallery-empty" style="flex:0 0 100%; text-align:center; color: var(--muted); font-weight:600;">Фотоларды жүктеңіз — олар осында шығады.</div>';
       return;
     }
     g.forEach(function(url){
+      var card = document.createElement('figure');
+      card.className = 'gallery-tile';
       var img = document.createElement('img');
       img.src = url; img.alt = 'photo';
-      slides.appendChild(img);
+      card.appendChild(img);
+      slides.appendChild(card);
     });
+    startGalleryAutoScroll(slides, g.length);
   }
 
   function setMap(cfg){
@@ -134,6 +138,23 @@
     }
   }
   window.submitRSVP = submitRSVP;
+
+  var galleryTimer = null;
+  function startGalleryAutoScroll(slides, count){
+    if (!slides) return;
+    if (galleryTimer) { clearInterval(galleryTimer); galleryTimer = null; }
+    if (!count || count < 2) return;
+    var step = function(){
+      var next = slides.scrollLeft + slides.clientWidth * 0.9;
+      if (next >= slides.scrollWidth - slides.clientWidth) next = 0;
+      slides.scrollTo({ left: next, behavior: 'smooth' });
+    };
+    galleryTimer = setInterval(step, 3600);
+    var stop = function(){ if (galleryTimer) { clearInterval(galleryTimer); galleryTimer = null; } };
+    slides.addEventListener('pointerdown', stop, { once: true });
+    slides.addEventListener('touchstart', stop, { once: true });
+    slides.addEventListener('wheel', stop, { once: true });
+  }
 
   function wireForm(){
     var dec = document.querySelector('.gc-btn:first-of-type');
