@@ -12,9 +12,7 @@ import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.toi.common.exception.BadRequestException;
@@ -22,6 +20,7 @@ import org.example.toi.common.exception.NotFoundException;
 import org.example.toi.entity.User;
 import org.example.toi.repository.UserRepository;
 import org.example.toi.service.MediaStorageService;
+import org.example.toi.dto.response.UploadFileResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,19 +45,19 @@ public class MinioMediaStorageService implements MediaStorageService {
     private long presignSeconds;
 
     @Override
-    public Map<String, String> uploadImage(MultipartFile file, String category) throws IOException {
+    public UploadFileResponse uploadImage(MultipartFile file, String category) throws IOException {
         validateFile(file, "image/");
         return store(file, "images", category);
     }
 
     @Override
-    public Map<String, String> uploadAudio(MultipartFile file, String category) throws IOException {
+    public UploadFileResponse uploadAudio(MultipartFile file, String category) throws IOException {
         validateFile(file, "audio/");
         return store(file, "audio", category);
     }
 
     @Override
-    public List<Map<String, String>> listUploads(String type, String category) throws IOException {
+    public List<UploadFileResponse> listUploads(String type, String category) throws IOException {
         String subfolder = resolveSubfolder(type);
         String userId = currentUser().getId().toString();
         String keyPrefix = buildKeyPrefix(userId, category, subfolder);
@@ -71,17 +70,17 @@ public class MinioMediaStorageService implements MediaStorageService {
                         .build()
         );
 
-        List<Map<String, String>> list = new ArrayList<>();
+        List<UploadFileResponse> list = new ArrayList<>();
         for (Result<Item> res : results) {
             try {
                 Item item = res.get();
                 String objectName = item.objectName();
                 if (objectName.endsWith("/")) continue; // skip folders
                 String url = buildPublicUrl(objectName);
-                list.add(Map.of(
-                        "url", url,
-                        "path", "/" + bucket + "/" + objectName
-                ));
+                list.add(UploadFileResponse.builder()
+                        .url(url)
+                        .path("/" + bucket + "/" + objectName)
+                        .build());
             } catch (Exception e) {
                 throw new IOException("Failed to list objects", e);
             }
@@ -91,7 +90,7 @@ public class MinioMediaStorageService implements MediaStorageService {
 
     /* helpers */
 
-    private Map<String, String> store(MultipartFile file, String subfolder, String category) throws IOException {
+    private UploadFileResponse store(MultipartFile file, String subfolder, String category) throws IOException {
         String userId = currentUser().getId().toString();
         String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "" : file.getOriginalFilename());
         String ext = "";
@@ -116,10 +115,10 @@ public class MinioMediaStorageService implements MediaStorageService {
         }
 
         String url = buildPublicUrl(objectName);
-        Map<String, String> response = new HashMap<>();
-        response.put("url", url);
-        response.put("path", "/" + bucket + "/" + objectName);
-        return response;
+        return UploadFileResponse.builder()
+                .url(url)
+                .path("/" + bucket + "/" + objectName)
+                .build();
     }
 
     private String buildKeyPrefix(String userId, String category, String subfolder) {

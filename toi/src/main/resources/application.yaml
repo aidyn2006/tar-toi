@@ -22,6 +22,14 @@ jwt:
   expiration: 86400000
   refresh-expiration: 604800000
 
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET:${jwt.secret}}
+      expiration: ${JWT_EXPIRATION_MS:${jwt.expiration}}
+      refresh-token:
+        expiration: ${JWT_REFRESH_EXPIRATION_MS:${jwt.refresh-expiration}}
+
 uploads:
   dir: ${UPLOAD_DIR:uploads}
   public-url: ${UPLOAD_PUBLIC_URL:http://localhost:9191}
@@ -31,5 +39,5 @@ minio:
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin123}
   bucket: ${MINIO_BUCKET:uploads}
-  public-url: ${MINIO_PUBLIC_URL:http://localhost:9000/uploads}
+  public-url: ${MINIO_PUBLIC_URL:}
   presign-expiration-seconds: ${MINIO_PRESIGN_EXPIRATION_SECONDS:86400}

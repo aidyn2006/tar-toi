@@ -44,6 +44,9 @@ public class InviteServiceImpl implements InviteService {
     @Value("${uploads.dir:uploads}")
     private String uploadDir;
 
+    @Value("${minio.public-url:}")
+    private String minioPublicUrl;
+
     @Override
     @Transactional
     public InviteResponseDTO createInvite(CreateInviteRequest request) {
@@ -350,7 +353,8 @@ public class InviteServiceImpl implements InviteService {
     private boolean uploadExists(String url) {
         Path path = resolveUploadPath(url);
         if (path == null) return true;
-        return Files.exists(path);
+        if (Files.exists(path)) return true;
+        return minioPublicUrl != null && !minioPublicUrl.isBlank();
     }
 
     private Path resolveUploadPath(String url) {
