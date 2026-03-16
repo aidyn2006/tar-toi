@@ -1,6 +1,5 @@
 package org.example.toi.dto.response;
 
-import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class MessageResponse {
     private String message;
-    private Instant timestamp;
-    private String path;
 }

@@ -1,29 +1,21 @@
 package org.example.toi.dto.response;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record InviteResponseDTO(
-    UUID id,
-    String slug,
-    String title,
-    String description,
-    Integer maxGuests,
-    LocalDateTime eventDate,
-    String previewPhotoUrl,
-    String ownerName,
-    long responsesCount,
-    String topic1,
-    String topic2,
-    String locationName,
-    String locationUrl,
-    String toiOwners,
-    String template,
-    List<String> gallery,
-    String musicUrl,
-    String musicTitle,
-    String musicKey,
-    String musicSource,
-    boolean isActive
-) {}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class InviteResponseDTO {
+    private UUID id;
+    private String slug;
+    private Map<String, Object> payload;
+    private String ownerName;
+    private long responsesCount;
+    @JsonProperty("isActive")
+    private boolean active;
+}

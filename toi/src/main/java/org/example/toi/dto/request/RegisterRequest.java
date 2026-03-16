@@ -2,17 +2,23 @@ package org.example.toi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record RegisterRequest(
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RegisterRequest {
     @NotBlank(message = "Phone is required")
     @Size(min = 10, max = 20, message = "Phone must be between 10 and 20 characters")
-    String phone,
+    private String phone;
 
     @NotBlank(message = "Full name is required")
     @Size(max = 100)
-    String fullName,
+    private String fullName;
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
-    String password
-) {}
+    private String password;
+}

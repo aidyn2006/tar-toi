@@ -2,13 +2,13 @@ package org.example.toi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.toi.entity.base.BaseEntity;
+import org.example.toi.entity.enums.Role;
 
 @Entity
 @Table(name = "app_users", uniqueConstraints = {
     @UniqueConstraint(name = "uk_users_phone", columnNames = "phone")
 })
-@org.hibernate.annotations.SQLRestriction("is_deleted = false")
-@org.hibernate.annotations.SQLDelete(sql = "UPDATE app_users SET is_deleted = true WHERE id = ?")
 @Getter
 @Setter
 @NoArgsConstructor

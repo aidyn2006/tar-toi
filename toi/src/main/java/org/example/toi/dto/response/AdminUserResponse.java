@@ -2,18 +2,19 @@ package org.example.toi.dto.response;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuestResponseDTO {
+public class AdminUserResponse {
     private Long id;
-    private String guestName;
     private String phone;
-    private int guestsCount;
-    private boolean attending;
-    private String note;
+    private String fullName;
+    private String role;
+    private boolean approved;
     private LocalDateTime createdAt;
 }

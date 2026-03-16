@@ -1,4 +1,4 @@
-package org.example.toi.entity;
+package org.example.toi.entity.enums;
 
 public enum Role {
     USER,
