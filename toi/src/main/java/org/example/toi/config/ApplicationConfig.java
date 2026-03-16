@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import java.util.Collections;
 
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
@@ -27,7 +25,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByPhone(username)
+        return username -> userRepository.findByPhoneAndIsDeletedFalse(username)
                 .map(u -> User.withUsername(u.getPhone())
                         .password(u.getPasswordHash())
                         .authorities("ROLE_" + u.getRole().name())

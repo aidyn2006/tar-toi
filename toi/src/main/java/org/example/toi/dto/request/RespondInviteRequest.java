@@ -3,19 +3,25 @@ package org.example.toi.dto.request;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record RespondInviteRequest(
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RespondInviteRequest {
     @NotBlank(message = "Guest name is required")
     @Size(max = 100)
-    String guestName,
+    private String guestName;
 
-    String phone,
+    private String phone;
 
     @Min(value = 1, message = "Guests count must be at least 1")
-    Integer guestsCount,
+    private Integer guestsCount;
 
-    Boolean attending,
+    private Boolean attending;
 
     @Size(max = 500)
-    String note
-) {}
+    private String note;
+}

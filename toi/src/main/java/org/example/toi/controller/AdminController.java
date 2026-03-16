@@ -1,16 +1,24 @@
 package org.example.toi.controller;
 
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.example.toi.dto.response.AdminUserResponse;
 import org.example.toi.dto.response.InviteResponseDTO;
-import org.example.toi.entity.User;
-import org.example.toi.repository.UserRepository;
-import org.example.toi.service.InviteService;
+import org.example.toi.dto.response.MessageResponse;
+import org.example.toi.service.AdminService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -18,65 +26,41 @@ import java.util.Map;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    private final UserRepository userRepository;
-    private final InviteService inviteService;
+    private final AdminService adminService;
 
     /** List all users (for admin panel) with pagination */
     @GetMapping("/users")
-    public org.springframework.data.domain.Page<Map<String, Object>> listUsers(
-            @org.springframework.data.web.PageableDefault(size = 20, sort = "createdAt", direction = org.springframework.data.domain.Sort.Direction.DESC) org.springframework.data.domain.Pageable pageable) {
-        return userRepository.findAll(pageable).map(u -> Map.<String, Object>of(
-                "id", u.getId(),
-                "phone", u.getPhone(),
-                "fullName", u.getFullName() != null ? u.getFullName() : "",
-                "role", u.getRole().name(),
-                "approved", u.isApproved(),
-                "createdAt", u.getCreatedAt() != null ? u.getCreatedAt().toString() : ""
-        ));
+    public Page<AdminUserResponse> listUsers(
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return adminService.listUsers(pageable);
     }
 
     @GetMapping("/invites")
-    public ResponseEntity<List<InviteResponseDTO>> getMyInvites() {
-        return ResponseEntity.ok(inviteService.getAllInvites());
+    public ResponseEntity<List<InviteResponseDTO>> listInvites() {
+        return ResponseEntity.ok(adminService.listInvites());
     }
 
     /** List only pending (not approved) users */
     @GetMapping("/users/pending")
-    public List<Map<String, Object>> listPending() {
-        return userRepository.findAll().stream()
-                .filter(u -> !u.isApproved())
-                .map(u -> Map.<String, Object>of(
-                        "id", u.getId(),
-                        "phone", u.getPhone(),
-                        "fullName", u.getFullName(),
-                        "createdAt", u.getCreatedAt()
-                )).toList();
+    public List<AdminUserResponse> listPending() {
+        return adminService.listPending();
     }
 
     /** Approve a user */
     @PostMapping("/users/{id}/approve")
-    public ResponseEntity<Map<String, String>> approveUser(@PathVariable Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setApproved(true);
-        userRepository.save(user);
-        return ResponseEntity.ok(Map.of("message", "User approved"));
+    public ResponseEntity<MessageResponse> approveUser(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.approveUser(id));
     }
 
     /** Reject (delete) a user */
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setDeleted(true);
-        userRepository.save(user);
-        return ResponseEntity.ok(Map.of("message", "User deleted"));
+    public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.deleteUser(id));
     }
 
     /** Toggle invite active status */
     @PostMapping("/invites/{id}/toggle-active")
-    public ResponseEntity<Map<String, String>> toggleInviteActive(@PathVariable java.util.UUID id) {
-        inviteService.toggleActive(id);
-        return ResponseEntity.ok(Map.of("message", "Invite active status toggled"));
+    public ResponseEntity<MessageResponse> toggleInviteActive(@PathVariable UUID id) {
+        return ResponseEntity.ok(adminService.toggleInvite(id));
     }
 }

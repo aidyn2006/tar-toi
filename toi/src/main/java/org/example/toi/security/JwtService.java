@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secret-key:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
+    @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${application.security.jwt.expiration:86400000}") // 1 day
+    @Value("${application.security.jwt.expiration:900000}") // 15 minutes by default
     private long jwtExpiration;
 
     @Value("${application.security.jwt.refresh-token.expiration:604800000}") // 7 days
@@ -78,6 +78,9 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
+        if (secretKey == null || secretKey.isBlank()) {
+            throw new IllegalStateException("JWT secret not configured");
+        }
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

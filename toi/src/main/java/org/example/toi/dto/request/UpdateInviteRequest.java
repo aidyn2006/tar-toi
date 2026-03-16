@@ -1,42 +1,13 @@
 package org.example.toi.dto.request;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record UpdateInviteRequest(
-    @Size(max = 100)
-    String title,
-
-    @Size(max = 500)
-    String description,
-
-    LocalDateTime eventDate,
-
-    String previewPhotoUrl,
-
-    List<String> gallery,
-
-    String topic1,
-
-    String topic2,
-
-    String locationName,
-
-    String locationUrl,
-
-    String toiOwners,
-
-    String template,
-
-    String musicUrl,
-
-    String musicTitle,
-
-    String musicKey,
-
-    String musicSource,
-
-    Integer maxGuests
-) {}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateInviteRequest {
+    private Map<String, Object> payload;
+}
