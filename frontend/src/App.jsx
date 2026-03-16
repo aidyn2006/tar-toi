@@ -19,7 +19,20 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const MereiPage = lazy(() => import('./pages/MereiPage'));
 
 const ProtectedRoute = ({ children }) => {
-    return authService.isLoggedIn() ? children : <Navigate to="/" />;
+    if (authService.isLoggedIn()) {
+        return children;
+    }
+
+    const next = encodeURIComponent(
+        `${window.location.pathname}${window.location.search}`
+    );
+
+    return (
+        <Navigate
+            to={`/?auth=login&reason=unauthorized&next=${next}`}
+            replace
+        />
+    );
 };
 
 const PageLoader = () => (
@@ -81,7 +94,7 @@ function App() {
                                 }
                             />
                             <Route path="/invite/:slug" element={<PublicInvitePage />} />
-                            <Route path="*" element={<Navigate to="/" />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Suspense>
                 </Router>
@@ -91,4 +104,3 @@ function App() {
 }
 
 export default App;
-
