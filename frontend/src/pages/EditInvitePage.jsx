@@ -11,9 +11,6 @@ import {
 
 const TEMPLATE_FILES = Object.keys(import.meta.glob('../templates/**/*.html'));
 
-const YANDEX_RTB_BLOCK_ID = 'R-A-18955969-1';
-const YANDEX_RTB_CONTAINER_ID = 'yandex_rtb_R-A-18955969-1';
-
 /* ─── Design tokens ──────────────────────────────────────── */
 const C = {
     cream: '#f7fff9',
@@ -476,38 +473,6 @@ const EditInvitePage = () => {
         setShowEditorMobile(!isMobile);
     }, [isMobile]);
 
-    // Yandex RTB loader + render
-    useEffect(() => {
-        if (typeof window === 'undefined' || typeof document === 'undefined') return;
-        window.yaContextCb = window.yaContextCb || [];
-
-        const existing = document.getElementById('yandex-rtb-loader');
-        if (!existing) {
-            const script = document.createElement('script');
-            script.id = 'yandex-rtb-loader';
-            script.src = 'https://yandex.ru/ads/system/context.js';
-            script.async = true;
-            document.head.appendChild(script);
-        }
-
-        const renderAd = () => {
-            if (!document.getElementById(YANDEX_RTB_CONTAINER_ID)) return;
-            try {
-                const ya = window.Ya;
-                if (!ya?.Context?.AdvManager) return;
-                ya.Context.AdvManager.render({
-                    blockId: YANDEX_RTB_BLOCK_ID,
-                    renderTo: YANDEX_RTB_CONTAINER_ID,
-                });
-            } catch (err) {
-                // swallow errors to avoid breaking editor UX
-                console.error('Yandex RTB render error', err);
-            }
-        };
-
-        window.yaContextCb.push(renderAd);
-    }, []);
-
     const previewData = { ...data, eventDate: data.eventDate ? new Date(data.eventDate) : null };
 
     const currentCategory = (data.template && data.template.includes('/'))
@@ -769,27 +734,6 @@ const EditInvitePage = () => {
                     </button>
                 </div>
             </header>
-
-            {/* Yandex RTB banner */}
-            <div style={{
-                padding: isMobile ? '0.6rem 1rem 0' : '0.75rem 1.5rem 0',
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
-                <div
-                    id={YANDEX_RTB_CONTAINER_ID}
-                    style={{
-                        width: '100%',
-                        maxWidth: '1220px',
-                        minHeight: '90px',
-                        background: '#fff',
-                        borderRadius: '12px',
-                        border: `1px solid ${C.border}`,
-                        boxShadow: '0 10px 28px rgba(23,63,51,0.06)',
-                        overflow: 'hidden'
-                    }}
-                />
-            </div>
 
             {/* Mobile-first preview and edit toggle */}
             {isMobile && (
