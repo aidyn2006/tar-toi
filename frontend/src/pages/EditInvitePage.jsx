@@ -70,7 +70,7 @@ const EMPTY_INVITE_DATA = {
     locationName: '',
     locationUrl: '',
     toiOwners: '',
-    template: getDefaultTemplateId('common'),
+    template: getDefaultTemplateId('wedding'),
     musicUrl: '',
     musicTitle: '',
     musicKey: '',
@@ -86,7 +86,7 @@ function getNewInviteDefaults(search) {
     return {
         ...EMPTY_INVITE_DATA,
         title: customTitle || '',
-        template: getDefaultTemplateId(category || 'common'),
+        template: getDefaultTemplateId(category || 'wedding'),
     };
 }
 
@@ -242,14 +242,30 @@ const EditInvitePage = () => {
     useEffect(() => {
         setShowEditorMobile(!isMobile);
     }, [isMobile]);
-    const currentCategory =
-    getCategoryFromTemplateId(data.template) ||
-    normalizeCategory(new URLSearchParams(location.search).get('category') || 'common');
+const searchCategory = normalizeCategory(
+    new URLSearchParams(location.search).get('category') || 'wedding'
+);
 
-const templateValue = resolveTemplateId(data.template, currentCategory);
+const templateValue = resolveTemplateId(data.template, searchCategory);
+const currentCategory = getCategoryFromTemplateId(templateValue) || searchCategory;
 const selectedTemplateMeta = getTemplateMeta(templateValue);
 const supportsPairNames = !!selectedTemplateMeta?.features?.pairNames;
+const supportsGallery = selectedTemplateMeta?.features?.gallery ?? true;
+const supportsMusic = selectedTemplateMeta?.features?.music ?? true;
+const supportsMap = selectedTemplateMeta?.features?.map ?? true;
 const selectableTemplates = getTemplatesByCategory(currentCategory);
+
+useEffect(() => {
+  if (!selectableTemplates.length) return;
+
+  const existsInCategory = selectableTemplates.some(t => t.id === templateValue);
+  if (!existsInCategory) {
+    setData(prev => ({
+      ...prev,
+      template: getDefaultTemplateId(currentCategory),
+    }));
+  }
+}, [currentCategory, templateValue, selectableTemplates]);
 
 const previewData = {
     ...data,
@@ -569,6 +585,8 @@ const previewData = {
                             systemMusicMap={SYSTEM_MUSIC_MAP}
                             onSelectSystemMusic={selectSystemMusic}
                             onAudioUpload={handleAudioUpload}
+                            supportsGallery={supportsGallery}
+                            supportsMusic={supportsMusic}
                         />
 
                         {/* Text fields */}

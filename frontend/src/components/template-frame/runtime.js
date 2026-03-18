@@ -710,7 +710,9 @@ export function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inv
         getCategoryFromTemplateId(invite?.template)
     );
 
-    const skipPalette = tplKey.includes('/wedding/template4.html') || (htmlSource && /NO_PALETTE/i.test(htmlSource));
+    const skipPalette =
+        tplKey === 'wedding/template4.html' ||
+        (htmlSource && /NO_PALETTE/i.test(htmlSource));
 
     let html = htmlSource;
     html = skipPalette ? html : applyPalette(html, palette);

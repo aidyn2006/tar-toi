@@ -5,18 +5,48 @@ const CATEGORY_ALIASES = {
     tusau: 'tusaukeser',
 };
 
-const TEMPLATE_LABELS = {
-    'wedding/template1.html': 'Classic Wedding',
-    'wedding/template2.html': 'Modern Love',
-    'wedding/template3.html': 'Elegant Story',
-    'wedding/template4.html': 'Golden Evening',
+export function getTemplateCountByCategory(category) {
+    return getTemplatesByCategory(category).length;
+}
 
-    'common/default.html': 'Universal Classic',
-    'uzatu/default.html': 'Uzatu Classic',
-    'sundet/default.html': 'Sundet Celebration',
-    'tusaukeser/default.html': 'Tusaukeser',
-    'merei/default.html': 'Anniversary',
-    'besik/default.html': 'Besik Toy',
+const LEGACY_TEMPLATE_REDIRECTS = {
+  'uzatu/default.html': 'uzatu/template1.html',
+  'sundet/default.html': 'sundet/template1.html',
+  'tusaukeser/default.html': 'tusaukeser/template1.html',
+  'merei/default.html': 'merei/template1.html',
+  'besik/default.html': 'besik/template1.html',
+};
+const GLOBAL_FALLBACK_TEMPLATE_ID = 'wedding/template1.html';
+const TEMPLATE_LABELS = {
+  'wedding/template1.html': 'Classic Wedding',
+  'wedding/template2.html': 'Modern Love',
+  'wedding/template3.html': 'Elegant Story',
+  'wedding/template4.html': 'Golden Evening',
+
+  'uzatu/template1.html': 'Uzatu Classic Gold',
+  'uzatu/template2.html': 'Uzatu Royal Blue',
+  'uzatu/template3.html': 'Uzatu Romantic Rose',
+  'uzatu/template4.html': 'Uzatu Burgundy Classic',
+
+  'sundet/template1.html': 'Sundet Heritage Sage',
+  'sundet/template2.html': 'Sundet Classic Navy',
+  'sundet/template3.html': 'Sundet Modern Terra',
+  'sundet/template4.html': 'Sundet Elegant Sage',
+
+  'tusaukeser/template1.html': 'Tusaukeser Traditional Gold',
+  'tusaukeser/template2.html': 'Tusaukeser Royal Night',
+  'tusaukeser/template3.html': 'Tusaukeser Mint Editorial',
+  'tusaukeser/template4.html': 'Tusaukeser Warm Peach',
+
+  'merei/template1.html': 'Merei Royal Night',
+  'merei/template2.html': 'Merei Rose Blossom',
+  'merei/template3.html': 'Merei Grand Black Gold',
+  'merei/template4.html': 'Merei Soft Peach Jubilee',
+
+  'besik/template1.html': 'Besik Classic Gold',
+  'besik/template2.html': 'Besik Mint Family',
+  'besik/template3.html': 'Besik Editorial Gold',
+  'besik/template4.html': 'Besik Sky Blue',
 };
 
 const DEFAULT_TEMPLATE_FEATURES = {
@@ -27,77 +57,179 @@ const DEFAULT_TEMPLATE_FEATURES = {
 };
 
 const TEMPLATE_META = {
-    'wedding/template1.html': {
-        tags: ['classic', 'formal'],
-        features: { pairNames: true, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/wedding/template1.jpg',
-    },
-    'wedding/template2.html': {
-        tags: ['modern', 'clean'],
-        features: { pairNames: true, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/wedding/template2.jpg',
-    },
-    'wedding/template3.html': {
-        tags: ['elegant', 'story'],
-        features: { pairNames: true, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/wedding/template3.jpg',
-    },
-    'wedding/template4.html': {
-        tags: ['premium', 'gold'],
-        features: { pairNames: true, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/wedding/template4.jpg',
-    },
+  'wedding/template1.html': {
+    tags: ['classic', 'formal'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/wedding/template1.jpg',
+  },
+  'wedding/template2.html': {
+    tags: ['modern', 'clean'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/wedding/template2.jpg',
+  },
+  'wedding/template3.html': {
+    tags: ['elegant', 'story'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/wedding/template3.jpg',
+  },
+  'wedding/template4.html': {
+    tags: ['premium', 'gold'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/wedding/template4.jpg',
+  },
 
-    'uzatu/default.html': {
-        tags: ['traditional'],
-        features: { pairNames: false, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/uzatu/default.jpg',
-    },
-    'sundet/default.html': {
-        tags: ['family'],
-        features: { pairNames: false, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/sundet/default.jpg',
-    },
-    'tusaukeser/default.html': {
-        tags: ['family', 'traditional'],
-        features: { pairNames: false, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/tusaukeser/default.jpg',
-    },
-    'merei/default.html': {
-        tags: ['anniversary'],
-        features: { pairNames: false, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/merei/default.jpg',
-    },
-    'besik/default.html': {
-        tags: ['family', 'baby'],
-        features: { pairNames: false, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/besik/default.jpg',
-    },
-    'common/default.html': {
-        tags: ['universal'],
-        features: { pairNames: false, gallery: true, music: true, map: true },
-        isActive: true,
-        isPremium: false,
-        preview: '/previews/common/default.jpg',
-    },
+  'uzatu/template1.html': {
+    tags: ['traditional', 'gold', 'classic'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/uzatu/template1.jpg',
+  },
+  'uzatu/template2.html': {
+    tags: ['royal', 'blue', 'clean'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/uzatu/template2.jpg',
+  },
+  'uzatu/template3.html': {
+    tags: ['romantic', 'soft', 'pink'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/uzatu/template3.jpg',
+  },
+  'uzatu/template4.html': {
+    tags: ['premium', 'burgundy', 'formal'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/uzatu/template4.jpg',
+  },
+
+  'tusaukeser/template1.html': {
+    tags: ['traditional', 'family', 'ornament'],
+    features: { pairNames: false, gallery: true, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/tusaukeser/template1.jpg',
+  },
+  'tusaukeser/template2.html': {
+    tags: ['royal', 'dark', 'full-screen'],
+    features: { pairNames: false, gallery: true, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/tusaukeser/template2.jpg',
+  },
+  'tusaukeser/template3.html': {
+    tags: ['editorial', 'mint', 'minimal'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/tusaukeser/template3.jpg',
+  },
+  'tusaukeser/template4.html': {
+    tags: ['warm', 'playful', 'modern'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/tusaukeser/template4.jpg',
+  },
+
+  'sundet/template1.html': {
+    tags: ['heritage', 'sage', 'ornament'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/sundet/template1.jpg',
+  },
+  'sundet/template2.html': {
+    tags: ['classic', 'navy', 'formal'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/sundet/template2.jpg',
+  },
+  'sundet/template3.html': {
+    tags: ['modern', 'terra', 'clean'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/sundet/template3.jpg',
+  },
+  'sundet/template4.html': {
+    tags: ['elegant', 'sage', 'soft'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/sundet/template4.jpg',
+  },
+
+  'merei/template1.html': {
+    tags: ['royal', 'dark', 'jubilee'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/merei/template1.jpg',
+  },
+  'merei/template2.html': {
+    tags: ['rose', 'soft', 'floral'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/merei/template2.jpg',
+  },
+  'merei/template3.html': {
+    tags: ['black', 'gold', 'grand'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/merei/template3.jpg',
+  },
+  'merei/template4.html': {
+    tags: ['peach', 'soft', 'classic'],
+    features: { pairNames: false, gallery: false, music: false, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/merei/template4.jpg',
+  },
+
+  'besik/template1.html': {
+    tags: ['classic', 'gold', 'family'],
+    features: { pairNames: false, gallery: false, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/besik/template1.jpg',
+  },
+  'besik/template2.html': {
+    tags: ['mint', 'soft', 'family'],
+    features: { pairNames: false, gallery: false, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/besik/template2.jpg',
+  },
+  'besik/template3.html': {
+    tags: ['editorial', 'gold', 'formal'],
+    features: { pairNames: false, gallery: false, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/besik/template3.jpg',
+  },
+  'besik/template4.html': {
+    tags: ['blue', 'soft', 'modern'],
+    features: { pairNames: false, gallery: false, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/besik/template4.jpg',
+  },
 };
 
 function prettifyFileName(fileName) {
@@ -124,10 +256,14 @@ export function normalizeTemplateId(templateId) {
     }
 
     const [category, ...rest] = normalized.split('/');
-    if (!category || rest.length === 0) return normalized;
+    if (!category || rest.length === 0) {
+        return LEGACY_TEMPLATE_REDIRECTS[normalized] || normalized;
+    }
 
     const normalizedCategory = normalizeCategory(category);
-    return [normalizedCategory, ...rest].join('/');
+    const rebuilt = [normalizedCategory, ...rest].join('/');
+
+    return LEGACY_TEMPLATE_REDIRECTS[rebuilt] || rebuilt;
 }
 
 export function getTemplatePath(templateId) {
@@ -203,17 +339,21 @@ export function getDefaultTemplateId(category) {
     const normalizedCategory = normalizeCategory(category);
     const templates = getTemplatesByCategory(normalizedCategory);
 
-    if (!templates.length) {
-        return 'common/default.html';
+    if (templates.length) {
+        const template1 = templates.find((tpl) => tpl.fileName === 'template1.html');
+        if (template1) return template1.id;
+
+        const defaultFile = templates.find((tpl) => tpl.fileName === 'default.html');
+        if (defaultFile) return defaultFile.id;
+
+        return templates[0].id;
     }
 
-    const template1 = templates.find((tpl) => tpl.fileName === 'template1.html');
-    if (template1) return template1.id;
+    if (getTemplateById(GLOBAL_FALLBACK_TEMPLATE_ID)) {
+        return GLOBAL_FALLBACK_TEMPLATE_ID;
+    }
 
-    const defaultFile = templates.find((tpl) => tpl.fileName === 'default.html');
-    if (defaultFile) return defaultFile.id;
-
-    return templates[0].id;
+    return getActiveTemplates()[0]?.id || '';
 }
 
 export function resolveTemplateId(templateId, fallbackCategory = '') {
@@ -221,6 +361,11 @@ export function resolveTemplateId(templateId, fallbackCategory = '') {
 
     if (normalizedId && getTemplateById(normalizedId)) {
         return normalizedId;
+    }
+
+    const redirected = LEGACY_TEMPLATE_REDIRECTS[normalizedId];
+    if (redirected && getTemplateById(redirected)) {
+        return redirected;
     }
 
     return getDefaultTemplateId(fallbackCategory || getCategoryFromTemplateId(normalizedId));

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLang } from '../../context/LanguageContext';
 
 const TemplateSelectorSection = ({
@@ -12,16 +12,25 @@ const TemplateSelectorSection = ({
 }) => {
     const { t } = useLang();
     const tr = (kk, ru) => t(kk, ru);
+    const [brokenPreviews, setBrokenPreviews] = useState({});
 
     return (
         <Section title={tr('Шаблон', 'Шаблон')} isMobile={isMobile}>
             <Field label={tr('Файл шаблона', 'Файл шаблона')}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.65rem' }}>
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                        gap: '0.65rem',
+                    }}
+                >
                     {selectableTemplates.map((opt) => {
                         const active = templateValue === opt.id;
                         const pretty = opt.label.trim() || tr('Шаблон', 'Шаблон');
                         const [cat, file] = opt.id.split('/');
                         const subtitle = `${cat || 'template'} / ${file?.replace('.html', '') || ''}`;
+                        const isBroken = !!brokenPreviews[opt.id];
+                        const showImage = !!opt.preview && !isBroken;
 
                         return (
                             <button
@@ -51,10 +60,16 @@ const TemplateSelectorSection = ({
                                         overflow: 'hidden',
                                     }}
                                 >
-                                    {opt.preview ? (
+                                    {showImage ? (
                                         <img
                                             src={opt.preview}
                                             alt={pretty}
+                                            onError={() =>
+                                                setBrokenPreviews((prev) => ({
+                                                    ...prev,
+                                                    [opt.id]: true,
+                                                }))
+                                            }
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
@@ -72,6 +87,9 @@ const TemplateSelectorSection = ({
                                                 color: colors.textMuted,
                                                 fontSize: '0.75rem',
                                                 letterSpacing: '0.5px',
+                                                padding: '0.5rem',
+                                                textAlign: 'center',
+                                                fontWeight: 700,
                                             }}
                                         >
                                             {pretty}
@@ -108,7 +126,13 @@ const TemplateSelectorSection = ({
                                     {pretty}
                                 </div>
 
-                                <div style={{ color: colors.textMuted, fontSize: '0.78rem', marginTop: '0.1rem' }}>
+                                <div
+                                    style={{
+                                        color: colors.textMuted,
+                                        fontSize: '0.78rem',
+                                        marginTop: '0.1rem',
+                                    }}
+                                >
                                     {subtitle}
                                 </div>
                             </button>

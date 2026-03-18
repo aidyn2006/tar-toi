@@ -42,7 +42,7 @@ const Template2Frame = ({
 
     const getOptimalFallback = () => {
         const category = getCategoryFromTemplateId(invite?.template);
-        return getDefaultTemplateId(category || 'common');
+        return getDefaultTemplateId(category);
     };
 
     useEffect(() => {

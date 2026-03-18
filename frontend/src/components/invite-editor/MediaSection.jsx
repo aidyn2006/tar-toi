@@ -24,6 +24,8 @@ const MediaSection = ({
     systemMusicMap,
     onSelectSystemMusic,
     onAudioUpload,
+    supportsGallery,
+    supportsMusic,
 }) => {
     const { t } = useLang();
     const tr = (kk, ru) => t(kk, ru);
@@ -94,7 +96,7 @@ const MediaSection = ({
                     )}
                 </div>
             </Field>
-
+                    {supportsGallery && (
             <Field label={tr('Галерея фотолары', 'Фотогалерея')}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
                     <label
@@ -170,7 +172,8 @@ const MediaSection = ({
                     </div>
                 )}
             </Field>
-
+)}
+            {supportsMusic && (
             <Field label={tr('Музыка (қаласаңыз)', 'Музыка (необязательно)')}>
                 <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap', marginBottom: '0.6rem' }}>
                     <button
@@ -350,7 +353,7 @@ const MediaSection = ({
                         'Музыка и автоскролл работают только в предпросмотре. В редакторе они отключены.'
                     )}
                 </p>
-            </Field>
+            </Field>)}
         </Section>
     );
 };

@@ -19,6 +19,7 @@ const DateLocationSection = ({
     data,
     onChangeField,
     onChangeEventDate,
+    supportsMap,
 }) => {
     const { t } = useLang();
     const tr = (kk, ru) => t(kk, ru);
