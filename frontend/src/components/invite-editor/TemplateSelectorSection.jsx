@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLang } from '../../context/LanguageContext';
 
 const TemplateSelectorSection = ({
     isMobile,
@@ -9,13 +10,16 @@ const TemplateSelectorSection = ({
     onSelectTemplate,
     colors,
 }) => {
+    const { t } = useLang();
+    const tr = (kk, ru) => t(kk, ru);
+
     return (
-        <Section title="Шаблон" isMobile={isMobile}>
-            <Field label="Файл шаблона">
+        <Section title={tr('Шаблон', 'Шаблон')} isMobile={isMobile}>
+            <Field label={tr('Файл шаблона', 'Файл шаблона')}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.65rem' }}>
                     {selectableTemplates.map((opt) => {
                         const active = templateValue === opt.id;
-                        const pretty = opt.label.trim() || 'Template';
+                        const pretty = opt.label.trim() || tr('Шаблон', 'Шаблон');
                         const [cat, file] = opt.id.split('/');
                         const subtitle = `${cat || 'template'} / ${file?.replace('.html', '') || ''}`;
 
@@ -88,7 +92,7 @@ const TemplateSelectorSection = ({
                                                 fontWeight: 800,
                                             }}
                                         >
-                                            Premium
+                                            {tr('Премиум', 'Премиум')}
                                         </span>
                                     )}
                                 </div>

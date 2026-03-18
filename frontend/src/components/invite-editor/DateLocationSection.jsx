@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, MapPin } from 'lucide-react';
+import { useLang } from '../../context/LanguageContext';
 
 function getDatePart(eventDate) {
     return eventDate ? eventDate.slice(0, 10) : '';
@@ -19,12 +20,15 @@ const DateLocationSection = ({
     onChangeField,
     onChangeEventDate,
 }) => {
+    const { t } = useLang();
+    const tr = (kk, ru) => t(kk, ru);
+
     const dateValue = getDatePart(data.eventDate);
     const timeValue = getTimePart(data.eventDate);
 
     return (
-        <Section title="Күн және орын" isMobile={isMobile} border={false}>
-            <Field label="Дата және уақыт">
+        <Section title={tr('Күн және орын', 'Дата и место')} isMobile={isMobile} border={false}>
+            <Field label={tr('Дата және уақыт', 'Дата и время')}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <div style={{ position: 'relative' }}>
                         <Calendar
@@ -54,7 +58,7 @@ const DateLocationSection = ({
                 </div>
             </Field>
 
-            <Field label="Той өтетін орын">
+            <Field label={tr('Той өтетін орын', 'Место проведения')}>
                 <div style={{ position: 'relative', marginBottom: '0.6rem' }}>
                     <MapPin
                         size={14}
@@ -69,7 +73,7 @@ const DateLocationSection = ({
                     <input
                         value={data.locationName}
                         onChange={onChangeField('locationName')}
-                        placeholder="Astana, Farhi Hall"
+                        placeholder={tr('Astana, Farhi Hall', 'Astana, Farhi Hall')}
                         style={{ ...inputStyle, paddingLeft: '30px' }}
                     />
                 </div>
@@ -77,7 +81,7 @@ const DateLocationSection = ({
                 <input
                     value={data.locationUrl}
                     onChange={onChangeField('locationUrl')}
-                    placeholder="2GIS немесе Google Maps сілтемесі"
+                    placeholder={tr('2GIS немесе Google Maps сілтемесі', 'Ссылка на 2GIS или Google Maps')}
                     style={inputStyle}
                 />
             </Field>

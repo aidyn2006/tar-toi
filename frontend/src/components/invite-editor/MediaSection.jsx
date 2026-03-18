@@ -1,5 +1,6 @@
 import React from 'react';
 import { UploadCloud, Image, Music, Trash2 } from 'lucide-react';
+import { useLang } from '../../context/LanguageContext';
 
 const MediaSection = ({
     Section,
@@ -24,9 +25,12 @@ const MediaSection = ({
     onSelectSystemMusic,
     onAudioUpload,
 }) => {
+    const { t } = useLang();
+    const tr = (kk, ru) => t(kk, ru);
+
     return (
-        <Section title="Медиа" isMobile={isMobile}>
-            <Field label="Басты фото">
+        <Section title={tr('Медиа', 'Медиа')} isMobile={isMobile}>
+            <Field label={tr('Басты фото', 'Главное фото')}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <label
                         style={{
@@ -43,7 +47,7 @@ const MediaSection = ({
                         }}
                     >
                         <UploadCloud size={16} />
-                        {uploadingPhoto ? 'Жүктелуде...' : 'Жүктеу'}
+                        {uploadingPhoto ? tr('Жүктелуде...', 'Загрузка...') : tr('Жүктеу', 'Загрузить')}
                         <input
                             type="file"
                             accept="image/*"
@@ -59,7 +63,7 @@ const MediaSection = ({
                         <div style={{ position: 'relative' }}>
                             <img
                                 src={normalizeUrl(data.previewPhotoUrl)}
-                                alt="preview"
+                                alt={tr('Басты фото', 'Главное фото')}
                                 style={{
                                     width: '110px',
                                     height: '80px',
@@ -70,6 +74,7 @@ const MediaSection = ({
                             />
                             <button
                                 onClick={onClearMainPhoto}
+                                type="button"
                                 style={{
                                     position: 'absolute',
                                     top: 4,
@@ -90,7 +95,7 @@ const MediaSection = ({
                 </div>
             </Field>
 
-            <Field label="Галерея фотолары">
+            <Field label={tr('Галерея фотолары', 'Фотогалерея')}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
                     <label
                         style={{
@@ -107,7 +112,7 @@ const MediaSection = ({
                         }}
                     >
                         <Image size={16} />
-                        {uploadingGallery ? 'Жүктелуде...' : 'Файлдарды қосу'}
+                        {uploadingGallery ? tr('Жүктелуде...', 'Загрузка...') : tr('Файлдарды қосу', 'Добавить файлы')}
                         <input
                             type="file"
                             accept="image/*"
@@ -120,7 +125,7 @@ const MediaSection = ({
                         />
                     </label>
                     <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>
-                        Кемінде 1-2 фото қосыңыз
+                        {tr('Кемінде 1-2 фото қосыңыз', 'Добавьте хотя бы 1–2 фото')}
                     </span>
                 </div>
 
@@ -132,7 +137,7 @@ const MediaSection = ({
                                 <div key={url} style={{ position: 'relative' }}>
                                     <img
                                         src={url}
-                                        alt="g"
+                                        alt={tr('Фото', 'Фото')}
                                         style={{
                                             width: '90px',
                                             height: '70px',
@@ -143,6 +148,7 @@ const MediaSection = ({
                                     />
                                     <button
                                         onClick={() => onRemoveGalleryPhoto(urlRaw)}
+                                        type="button"
                                         style={{
                                             position: 'absolute',
                                             top: 3,
@@ -165,7 +171,7 @@ const MediaSection = ({
                 )}
             </Field>
 
-            <Field label="Музыка (қаласаңыз)">
+            <Field label={tr('Музыка (қаласаңыз)', 'Музыка (необязательно)')}>
                 <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap', marginBottom: '0.6rem' }}>
                     <button
                         type="button"
@@ -180,7 +186,7 @@ const MediaSection = ({
                             cursor: 'pointer',
                         }}
                     >
-                        Системалық
+                        {tr('Системалық', 'Системная')}
                     </button>
 
                     <button
@@ -196,7 +202,7 @@ const MediaSection = ({
                             cursor: 'pointer',
                         }}
                     >
-                        Өз файлым
+                        {tr('Өз файлым', 'Свой файл')}
                     </button>
 
                     <button
@@ -212,7 +218,7 @@ const MediaSection = ({
                             cursor: 'pointer',
                         }}
                     >
-                        Музыкасыз
+                        {tr('Музыкасыз', 'Без музыки')}
                     </button>
                 </div>
 
@@ -223,7 +229,7 @@ const MediaSection = ({
                             onChange={(e) => onSelectSystemMusic(e.target.value)}
                             style={{ ...inputStyle, width: '260px', maxWidth: '100%', padding: '0.65rem 0.75rem' }}
                         >
-                            <option value="">Тректі таңдаңыз</option>
+                            <option value="">{tr('Тректі таңдаңыз', 'Выберите трек')}</option>
                             {systemMusic.map((track) => (
                                 <option key={track.key} value={track.key}>
                                     {track.title}
@@ -245,10 +251,11 @@ const MediaSection = ({
                             >
                                 <Music size={16} color={colors.burgundy} />
                                 <span style={{ fontWeight: 700, color: colors.burgundy }}>
-                                    {systemMusicMap[data.musicKey]?.title || 'Трек'}
+                                    {systemMusicMap[data.musicKey]?.title || tr('Трек', 'Трек')}
                                 </span>
                                 <button
                                     onClick={onClearMusic}
+                                    type="button"
                                     style={{
                                         border: 'none',
                                         background: 'transparent',
@@ -256,7 +263,7 @@ const MediaSection = ({
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    Өшіру
+                                    {tr('Өшіру', 'Удалить')}
                                 </button>
                             </div>
                         )}
@@ -280,7 +287,7 @@ const MediaSection = ({
                             }}
                         >
                             <Music size={16} />
-                            {uploadingAudio ? 'Жүктелуде...' : 'MP3 жүктеу'}
+                            {uploadingAudio ? tr('Жүктелуде...', 'Загрузка...') : tr('MP3 жүктеу', 'Загрузить MP3')}
                             <input
                                 type="file"
                                 accept="audio/*"
@@ -306,10 +313,11 @@ const MediaSection = ({
                             >
                                 <Music size={16} color={colors.burgundy} />
                                 <span style={{ fontWeight: 700, color: colors.burgundy }}>
-                                    {data.musicTitle || 'Аудио файл'}
+                                    {data.musicTitle || tr('Аудио файл', 'Аудиофайл')}
                                 </span>
                                 <button
                                     onClick={onClearMusic}
+                                    type="button"
                                     style={{
                                         border: 'none',
                                         background: 'transparent',
@@ -317,14 +325,14 @@ const MediaSection = ({
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    Өшіру
+                                    {tr('Өшіру', 'Удалить')}
                                 </button>
                             </div>
                         )}
 
                         {!data.musicUrl && (
                             <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>
-                                MP3/OGG жүктеп, автоматты түрде сақтаңыз.
+                                {tr('MP3/OGG жүктеп, автоматты түрде сақтаңыз.', 'Загрузите MP3/OGG, и файл сохранится автоматически.')}
                             </span>
                         )}
                     </div>
@@ -332,12 +340,15 @@ const MediaSection = ({
 
                 {data.musicSource === musicSource.NONE && (
                     <div style={{ color: colors.textMuted, fontSize: '0.9rem' }}>
-                        Музыка қосылмаған.
+                        {tr('Музыка қосылмаған.', 'Музыка не добавлена.')}
                     </div>
                 )}
 
                 <p style={{ fontSize: '0.82rem', color: colors.textMuted, marginTop: '0.4rem' }}>
-                    Музыка мен автоскролл тек алдын ала қарауда ойнайды. Редакторда өшірілген.
+                    {tr(
+                        'Музыка мен автоскролл тек алдын ала қарауда ойнайды. Редакторда өшірілген.',
+                        'Музыка и автоскролл работают только в предпросмотре. В редакторе они отключены.'
+                    )}
                 </p>
             </Field>
         </Section>

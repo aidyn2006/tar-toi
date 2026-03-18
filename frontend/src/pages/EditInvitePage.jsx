@@ -19,6 +19,8 @@ import MediaSection from '../components/invite-editor/MediaSection';
 import TextSection from '../components/invite-editor/TextSection';
 import EditorTopBar from '../components/invite-editor/EditorTopBar';
 import DateLocationSection from '../components/invite-editor/DateLocationSection';
+
+import { useLang } from '../context/LanguageContext';
 /* ─── Design tokens ──────────────────────────────────────── */
 const C = {
     cream: '#f7fff9',
@@ -162,7 +164,8 @@ const EditInvitePage = () => {
     const location = useLocation();
     const isNew = !id;
     const isMobile = useIsMobile();
-
+    const { lang, t } = useLang();
+    const tr = (kk, ru) => t(kk, ru);
     const [data, setData] = useState(() => (isNew ? getNewInviteDefaults(location.search) : EMPTY_INVITE_DATA));
     const [loading, setLoading] = useState(!isNew);
     const [saving, setSaving] = useState(false);
@@ -185,12 +188,12 @@ const EditInvitePage = () => {
     }, []);
     const deleteInvite = async () => {
         if (!id) return;
-        if (!window.confirm('Шақыртуды өшіреміз бе?')) return;
+        if (!window.confirm(tr('Шақыртуды өшіреміз бе?', 'Удалить приглашение?'))) return;
         try {
             await inviteService.deleteInvite(id);
             navigate('/dashboard');
         } catch (e) {
-            alert('Өшіру сәтсіз: ' + (e.response?.data?.message || e.message));
+            alert(tr('Өшіру сәтсіз: ', 'Ошибка удаления: ') + (e.response?.data?.message || e.message));
         }
     };
 
@@ -262,7 +265,7 @@ const previewData = {
             const { path } = await uploadService.uploadImage(file, currentCategory);
             setData(prev => ({ ...prev, previewPhotoUrl: path || prev.previewPhotoUrl }));
         } catch (e) {
-            alert('Суретті жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
+            alert(tr('Суретті жүктеу сәтсіз: ', 'Ошибка загрузки фото: ') + (e.response?.data?.error || e.message));
         } finally {
             setUploadingPhoto(false);
         }
@@ -280,7 +283,7 @@ const previewData = {
                 setData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...uploads] }));
             }
         } catch (e) {
-            alert('Галереяға жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
+            alert(tr('Галереяға жүктеу сәтсіз: ', 'Ошибка загрузки в галерею: ') + (e.response?.data?.error || e.message));
         } finally {
             setUploadingGallery(false);
         }
@@ -381,7 +384,7 @@ const previewData = {
                 musicKey: '',
             }));
         } catch (e) {
-            alert('Аудио жүктеу сәтсіз: ' + (e.response?.data?.error || e.message));
+            alert(tr('Аудио жүктеу сәтсіз: ', 'Ошибка загрузки аудио: ') + (e.response?.data?.error || e.message));
         } finally {
             setUploadingAudio(false);
         }
@@ -426,20 +429,23 @@ const previewData = {
             setSaved(true);
             setTimeout(() => setSaved(false), 2500);
         } catch (err) {
-            alert('Сақтау кезінде қате шықты: ' + (err.response?.data?.message || err.message));
+           alert(tr('Сақтау кезінде қате шықты: ', 'Ошибка при сохранении: ') + (err.response?.data?.message || err.message));
         } finally {
             setSaving(false);
         }
     };
 
     const share = async () => {
-        if (!slug) { alert('Алдымен сақтаңыз!'); return; }
+        if (!slug) {
+            alert(tr('Алдымен сақтаңыз!', 'Сначала сохраните приглашение!'));
+            return;
+        }
+
         const link = `${window.location.origin}/invite/${slug}`;
         try {
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(link);
             } else {
-                // Fallback: hidden textarea copy
                 const ta = document.createElement('textarea');
                 ta.value = link;
                 ta.style.position = 'fixed';
@@ -453,16 +459,14 @@ const previewData = {
             setTimeout(() => setCopied(false), 2500);
         } catch {
             try {
-                prompt('Сілтемені көшіріңіз:', link);
-            } catch (_) {
-                // swallow
-            }
+                prompt(tr('Сілтемені көшіріңіз:', 'Скопируйте ссылку:'), link);
+            } catch (_) {}
         }
     };
 
     if (loading) return (
         <div style={{ minHeight: '100vh', background: C.cream, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Manrope, sans-serif', color: C.burgundy }}>
-            Жүктелуде...
+            {tr('Жүктелуде...', 'Загрузка...')}
         </div>
     );
 
@@ -471,7 +475,7 @@ const previewData = {
 
             {/* ── Top bar ── */}
             <EditorTopBar
-                title={isNew ? 'Жаңа шақырту' : 'Шақыртуды редакциялау'}
+                title={isNew ? tr('Жаңа шақырту', 'Новое приглашение') : tr('Шақыртуды редакциялау', 'Редактирование приглашения')}
                 canDelete={!isNew}
                 saving={saving}
                 saved={saved}
@@ -496,7 +500,7 @@ const previewData = {
                         border: `1px solid ${C.border}`,
                         boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
                     }}>
-                        <Template2Frame invite={previewData} mobileZoom />
+                        <Template2Frame invite={previewData} lang={lang} mobileZoom />
                     </div>
                     <button
                         onClick={() => setShowEditorMobile(v => !v)}
@@ -514,7 +518,7 @@ const previewData = {
                             cursor: 'pointer',
                         }}
                     >
-                        {showEditorMobile ? 'Жабу' : 'Редактировать'}
+                        {showEditorMobile ? tr('Жабу', 'Закрыть') : tr('Редакциялау', 'Редактировать')}
                     </button>
                 </div>
             )}
@@ -602,7 +606,7 @@ const previewData = {
                         background: `linear-gradient(135deg, ${C.burgundy}08, ${C.gold}08)`,
                     }}>
                         <p style={{ fontSize: '0.75rem', color: C.textMuted, marginBottom: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
-                            Алдын ала қарау
+                            {tr('Алдын ала қарау', 'Предпросмотр')}
                         </p>
                         <div className="edit-preview-canvas" style={{
                             flex: 1,
@@ -615,7 +619,7 @@ const previewData = {
                             boxShadow: '0 18px 40px rgba(16,46,36,0.16)',
                             scrollbarWidth: 'thin',
                         }}>
-                            <Template2Frame invite={previewData} />
+                            <Template2Frame invite={previewData} lang={lang} />
                         </div>
                     </div>
                 </div>
@@ -652,7 +656,7 @@ const previewData = {
                             boxShadow: '0 24px 60px rgba(0,0,0,0.45)',
                             scrollbarWidth: 'thin',
                         }}>
-                            <Template2Frame invite={previewData} />
+                            <Template2Frame invite={previewData} lang={lang} />
                         </div>
                     </div>
                 </div>

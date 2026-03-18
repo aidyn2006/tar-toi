@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Check, Eye, Save, Share2, Trash2 } from 'lucide-react';
+import { useLang } from '../../context/LanguageContext';
 
 const EditorTopBar = ({
     title,
@@ -14,6 +15,9 @@ const EditorTopBar = ({
     onSave,
     colors,
 }) => {
+    const { t } = useLang();
+    const tr = (kk, ru) => t(kk, ru);
+
     return (
         <header
             className="edit-topbar"
@@ -33,6 +37,7 @@ const EditorTopBar = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <button
                     onClick={onBack}
+                    type="button"
                     style={{
                         background: 'none',
                         border: 'none',
@@ -76,7 +81,7 @@ const EditorTopBar = ({
                     className="mobile-preview-btn"
                     type="button"
                 >
-                    <Eye size={15} /> Көру
+                    <Eye size={15} /> {tr('Көру', 'Просмотр')}
                 </button>
 
                 <button
@@ -97,7 +102,7 @@ const EditorTopBar = ({
                     }}
                 >
                     {copied ? <Check size={15} /> : <Share2 size={15} />}
-                    {copied ? 'Көшірілді!' : 'Бөлісу'}
+                    {copied ? tr('Көшірілді!', 'Скопировано!') : tr('Бөлісу', 'Поделиться')}
                 </button>
 
                 {canDelete && (
@@ -118,7 +123,7 @@ const EditorTopBar = ({
                             cursor: 'pointer',
                         }}
                     >
-                        <Trash2 size={15} /> Жою
+                        <Trash2 size={15} /> {tr('Жою', 'Удалить')}
                     </button>
                 )}
 
@@ -143,7 +148,11 @@ const EditorTopBar = ({
                     }}
                 >
                     {saved ? <Check size={15} /> : <Save size={15} />}
-                    {saving ? 'Сақталуда...' : saved ? 'Сақталды!' : 'Сақтау'}
+                    {saving
+                        ? tr('Сақталуда...', 'Сохранение...')
+                        : saved
+                            ? tr('Сақталды!', 'Сохранено!')
+                            : tr('Сақтау', 'Сохранить')}
                 </button>
             </div>
         </header>

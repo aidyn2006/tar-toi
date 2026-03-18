@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLang } from '../../context/LanguageContext';
 
 const TextSection = ({
     Section,
@@ -12,8 +13,11 @@ const TextSection = ({
     onChangeMaxGuests,
     colors,
 }) => {
+    const { t } = useLang();
+    const tr = (kk, ru) => t(kk, ru);
+
     return (
-        <Section title="Мәтін" isMobile={isMobile}>
+        <Section title={tr('Мәтін', 'Текст')} isMobile={isMobile}>
             <div
                 className="edit-names-grid"
                 style={{
@@ -22,47 +26,50 @@ const TextSection = ({
                     gap: '0.75rem',
                 }}
             >
-                <Field label="Тақырып 1">
+                <Field label={tr('Тақырып 1', 'Имя 1')}>
                     <input
                         value={data.topic1}
                         onChange={onChangeField('topic1')}
-                        placeholder="Аты"
+                        placeholder={tr('Аты', 'Имя')}
                         style={inputStyle}
                     />
                 </Field>
 
                 {supportsPairNames && (
-                    <Field label="Тақырып 2">
+                    <Field label={tr('Тақырып 2', 'Имя 2')}>
                         <input
                             value={data.topic2}
                             onChange={onChangeField('topic2')}
-                            placeholder="Жұбайы"
+                            placeholder={tr('Жұбайы', 'Пара')}
                             style={inputStyle}
                         />
                     </Field>
                 )}
             </div>
 
-            <Field label="Сипаттама">
+            <Field label={tr('Сипаттама', 'Описание')}>
                 <textarea
                     value={data.description}
                     onChange={onChangeField('description')}
-                    placeholder="Құрметті ағайын-туыс, сізді тойымызға шақырамыз..."
+                    placeholder={tr(
+                        'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
+                        'Дорогие родные и близкие, приглашаем вас на наше торжество...'
+                    )}
                     rows={3}
                     style={{ ...inputStyle, resize: 'vertical' }}
                 />
             </Field>
 
-            <Field label="Той иелері">
+            <Field label={tr('Той иелері', 'Хозяева торжества')}>
                 <input
                     value={data.toiOwners}
                     onChange={onChangeField('toiOwners')}
-                    placeholder="Сырымбетовтар әулеті"
+                    placeholder={tr('Сырымбетовтар әулеті', 'Семья Сырымбетовых')}
                     style={inputStyle}
                 />
             </Field>
 
-            <Field label="Қонақтар саны лимиті (0 = шексіз)">
+            <Field label={tr('Қонақтар саны лимиті (0 = шексіз)', 'Лимит гостей (0 = без лимита)')}>
                 <div
                     className="guest-counter"
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}
@@ -125,8 +132,11 @@ const TextSection = ({
 
                 <p style={{ fontSize: '0.78rem', color: colors.textMuted, marginTop: '0.35rem' }}>
                     {data.maxGuests > 0
-                        ? `Максимум ${data.maxGuests} қонақ. RSVP лимитке жеткенде жабылады.`
-                        : '0 немесе бос қалдыру — лимит жоқ.'}
+                        ? tr(
+                            `Максимум ${data.maxGuests} қонақ. RSVP лимитке жеткенде жабылады.`,
+                            `Максимум ${data.maxGuests} гостей. RSVP закроется, когда лимит будет достигнут.`
+                        )
+                        : tr('0 немесе бос қалдыру — лимит жоқ.', '0 или пустое значение — без лимита.')}
                 </p>
             </Field>
         </Section>

@@ -46,6 +46,10 @@ const PALETTES = {
     },
 };
 
+function trByLang(lang, kk, ru) {
+    return lang === 'ru' ? (ru ?? kk ?? '') : (kk ?? ru ?? '');
+}
+
 function pad2(n) {
     return String(n).padStart(2, '0');
 }
@@ -104,7 +108,7 @@ function normalizeUrl(url) {
     return window.location.origin + url;
 }
 
-function buildConfig(invite) {
+function buildConfig(invite, lang = 'kk') {
     const eventDate = invite?.eventDate ? new Date(invite.eventDate) : null;
     const { groom, bride } = parseNames(invite);
     const templateKey = getNormalizedTemplate(invite);
@@ -134,20 +138,25 @@ function buildConfig(invite) {
         location: (invite?.locationName || 'Astana, Farhi Hall').trim(),
         locationUrl: (invite?.locationUrl || '').trim(),
         music: {
-            title: (musicResolved.title || invite?.title || 'Наша Песня').trim(),
-            artist: (musicResolved.artist || '— загрузите аудио файл —').trim(),
+            title: (musicResolved.title || invite?.title || trByLang(lang, 'Біздің ән', 'Наша песня')).trim(),
+            artist: (musicResolved.artist || trByLang(lang, '— аудио файлын жүктеңіз —', '— загрузите аудио файл —')).trim(),
             url: normalizeUrl(musicResolved.url || ''),
             key: musicResolved.key || null,
             source: musicResolved.source || null,
         },
         autoplay: false,
         gallery,
-        description: invite?.description || 'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
+        description: invite?.description || trByLang(
+            lang,
+            'Құрметті ағайын-туыс, сізді тойымызға шақырамыз...',
+            'Дорогие родные и близкие, приглашаем вас на наше торжество...'
+        ),
         toiOwners: invite?.toiOwners || '',
         heroPhotoUrl,
         maxGuests: numericLimit,
         isWedding,
         template: templateKey,
+        lang,
     };
 }
 
@@ -344,6 +353,7 @@ function injectLiveBridge(html) {
         const mm = dayParts[1] || '';
         const yy = dayParts[2] || '';
         const tplKey = (cfg.template || '').toString();
+        const lang = (cfg.lang || 'kk').toString();
         const isWeddingPair = tplKey.startsWith('wedding/');
 
         const primary = cfg.childName || cfg.names?.child || cfg.names?.groom || cfg.names?.bride || cfg.title || '';
@@ -373,14 +383,16 @@ function injectLiveBridge(html) {
         setText(
             'footerName',
             isWeddingPair
-                ? 'Үйлену тойы'
+                ? (lang === 'ru' ? 'Свадьба' : 'Үйлену тойы')
                 : (tplKey.includes('tusau')
-                    ? 'Тұсаукесер тойы'
+                    ? (lang === 'ru' ? 'Тусау кесер' : 'Тұсаукесер тойы')
                     : (tplKey.includes('uzatu')
-                        ? 'Ұзату тойы'
+                        ? (lang === 'ru' ? 'Проводы невесты' : 'Ұзату тойы')
                         : (tplKey.includes('besik')
-                            ? 'Бесік тойы'
-                            : (tplKey.includes('merei') ? 'Мерейтой' : 'Той'))))
+                            ? (lang === 'ru' ? 'Бесік той' : 'Бесік тойы')
+                            : (tplKey.includes('merei')
+                                ? (lang === 'ru' ? 'Юбилей' : 'Мерейтой')
+                                : (lang === 'ru' ? 'Той' : 'Той')))))
         );
 
         const ownersBlock = byId('ownersBlock');
@@ -448,7 +460,7 @@ function injectLiveBridge(html) {
                     slides.appendChild(img);
                 });
             } else {
-                slides.textContent = 'Добавьте фото в галерею';
+                slides.textContent = lang === 'ru' ? 'Добавьте фото в галерею' : 'Галереяға фото қосыңыз';
             }
         }
     }
@@ -482,7 +494,10 @@ function injectConfig(html, config) {
         );
 }
 
-function injectRsvpApi(html, inviteId, maxGuests) {
+function injectRsvpApi(html, inviteId, maxGuests, lang = 'kk') {
+    const limitText = lang === 'ru' ? 'Лимит гостей: ' : 'Қонақ саны лимиті: ';
+    const sendFailText = lang === 'ru' ? 'Отправка не удалась' : 'Жіберу сәтсіз болды';
+    const genericErrorText = lang === 'ru' ? 'Произошла ошибка' : 'Қате орын алды';
     if (!inviteId) return html;
 
     const limit = maxGuests || 0;
@@ -577,7 +592,7 @@ function injectRsvpApi(html, inviteId, maxGuests) {
         var guestsCount = Math.max(1, parseInt(guestsInput ? guestsInput.value : '1', 10) || 1);
 
         if (MAX_GUESTS > 0 && guestsCount > MAX_GUESTS) {
-            err.textContent = '\\u049a\\u043e\\u043d\\u0430\\u049b \\u0441\\u0430\\u043d\\u044b \\u043b\\u0438\\u043c\\u0438\\u0442\\u0456: ' + MAX_GUESTS;
+            err.textContent = '${limitText}' + MAX_GUESTS;
             if (guestsInput) guestsInput.value = String(MAX_GUESTS);
             return;
         }
@@ -597,13 +612,13 @@ function injectRsvpApi(html, inviteId, maxGuests) {
 
             if (!res.ok) {
                 var data = await res.json().catch(function() { return {}; });
-                throw new Error(data.message || '\\u0416\\u0456\\u0431\\u0435\\u0440\\u0443 \\u0441\\u04d9\\u0442\\u0441\\u0456\\u0437 \\u0431\\u043e\\u043b\\u0434\\u044b');
+                throw new Error(data.message || '${sendFailText}');
             }
 
             formEl.style.display = 'none';
             successEl.style.display = 'block';
         } catch (e) {
-            err.textContent = e.message || '\\u049a\\u0430\\u0442\\u0435 \\u043e\\u0440\\u044b\\u043d \\u0430\\u043b\\u0434\\u044b';
+            err.textContent = e.message || '${genericErrorText}';
         }
     };
 })();
@@ -690,7 +705,7 @@ function pickPalette(invite) {
 function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inviteId = null, lang = 'kk', mode = 'edit' } = {}) {
     const palette = pickPalette(invite);
     const isViewMode = mode === 'view';
-    const config = { ...buildConfig(invite || {}), autoplay: isViewMode };
+    const config = { ...buildConfig(invite || {}, lang), autoplay: isViewMode };
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
     const tplKey = resolveTemplateId(
@@ -706,7 +721,7 @@ function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inviteId =
     html = injectPhoto(html, heroUrl);
 
     if (enableRsvp) {
-        html = injectRsvpApi(html, inviteId, config.maxGuests);
+        html = injectRsvpApi(html, inviteId, config.maxGuests, lang);
     }
 
     html = injectAutoplay(html, isViewMode);
@@ -796,7 +811,7 @@ const Template2Frame = ({
         return !hasMain;
     }, [invite]);
 
-    const liveConfig = useMemo(() => buildConfig(invite || {}), [invite]);
+    const liveConfig = useMemo(() => buildConfig(invite || {}, lang), [invite, lang]);
     const prevHashRef = useRef('');
 
     useEffect(() => {
@@ -846,9 +861,15 @@ const Template2Frame = ({
                 }}
             >
                 <div style={{ maxWidth: '360px', lineHeight: 1.4, fontFamily: 'Manrope, sans-serif' }}>
-                    <div style={{ fontWeight: 800, marginBottom: '6px' }}>Алдын ала қарау</div>
+                    <div style={{ fontWeight: 800, marginBottom: '6px' }}>
+                        {trByLang(lang, 'Алдын ала қарау', 'Предпросмотр')}
+                    </div>
                     <div style={{ fontSize: '14px', color: '#5f7f73' }}>
-                        Шаблон осы жерде көрсетіледі. Фото, атаулар немесе күнді қосыңыз — превью бірден жаңартылады.
+                        {trByLang(
+                            lang,
+                            'Шаблон осы жерде көрсетіледі. Фото, атаулар немесе күнді қосыңыз — превью бірден жаңартылады.',
+                            'Шаблон появится здесь. Добавьте фото, имена или дату — предпросмотр обновится сразу.'
+                        )}
                     </div>
                 </div>
             </div>
@@ -869,7 +890,7 @@ const Template2Frame = ({
                     fontFamily: 'Manrope, sans-serif',
                 }}
             >
-                Жүктелуде...
+                {trByLang(lang, 'Жүктелуде...', 'Загрузка...')}
             </div>
         );
     }
