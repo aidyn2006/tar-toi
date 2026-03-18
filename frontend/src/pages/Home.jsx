@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { useLang } from '../context/LanguageContext';
 import Layout from '../components/layout/Layout';
@@ -52,6 +52,13 @@ const handleSelectCategory = (categoryId) => {
     });
 
     navigate(`/invite/new?${params.toString()}`);
+};
+const handleOpenRegister = () => {
+    navigate('/#register');
+};
+
+const handleOpenCategories = () => {
+    navigate('/categories');
 };
     return (
         <Layout>
@@ -139,7 +146,7 @@ const handleSelectCategory = (categoryId) => {
                         >
                             <Button
                                 onClick={() => {
-                                    window.location.href = '/#register';
+                                    handleOpenRegister();
                                 }}
                                 style={{ padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}
                             >
@@ -199,36 +206,40 @@ const handleSelectCategory = (categoryId) => {
                         className="home-hero-cards"
                         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}
                     >
-                        {categories.map((cat) => (
-                            <div
-    key={cat.id}
-    onClick={() => handleSelectCategory(cat.id)}
-    style={{
-        padding: '1.75rem',
-        borderRadius: '1.75rem',
-        background: cat.bg,
-        cursor: 'pointer',
-        border: '1px solid rgba(16,185,129,0.1)',
-        transition: 'all 0.25s ease',
-        textDecoration: 'none',
-    }}
->
-    <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{cat.icon}</div>
-    <div
+{categories.map((cat) => (
+    <button
+        key={cat.id}
+        type="button"
+        onClick={() => handleSelectCategory(cat.id)}
         style={{
-            fontWeight: 700,
-            fontSize: '1rem',
-            color: '#064e3b',
-            marginBottom: '0.25rem',
+            padding: '1.75rem',
+            borderRadius: '1.75rem',
+            background: cat.bg,
+            cursor: 'pointer',
+            border: '1px solid rgba(16,185,129,0.1)',
+            transition: 'all 0.25s ease',
+            textDecoration: 'none',
+            width: '100%',
+            textAlign: 'left',
+            appearance: 'none',
         }}
     >
-        {tr(cat.title.kk, cat.title.ru)}
-    </div>
-    <div style={{ fontSize: '0.8125rem', color: '#10b981', fontWeight: 600 }}>
-        {cat.count} {tr('үлгі', 'шаблон')}
-    </div>
-</div>
-                        ))}
+        <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{cat.icon}</div>
+        <div
+            style={{
+                fontWeight: 700,
+                fontSize: '1rem',
+                color: '#064e3b',
+                marginBottom: '0.25rem',
+            }}
+        >
+            {tr(cat.title.kk, cat.title.ru)}
+        </div>
+        <div style={{ fontSize: '0.8125rem', color: '#10b981', fontWeight: 600 }}>
+            {cat.count} {tr('үлгі', 'шаблон')}
+        </div>
+    </button>
+))}
                     </div>
                 </section>
 
@@ -337,53 +348,46 @@ const handleSelectCategory = (categoryId) => {
                             className="home-categories-grid"
                             style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}
                         >
-                            {categories.map((cat) => (
-<div
-    key={cat.id}
-    onClick={() => handleSelectCategory(cat.id)}
-    style={{
-        padding: '2rem',
-        borderRadius: '2rem',
-        background: cat.bg,
-        cursor: 'pointer',
-        border: '1px solid rgba(16,185,129,0.08)',
-        transition: 'all 0.25s ease',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1.25rem',
-        textDecoration: 'none',
-    }}
->
-    <div style={{ fontSize: '3rem', flexShrink: 0 }}>{cat.icon}</div>
-    <div>
+{categories.map((cat) => (
+    <button
+        key={cat.id}
+        type="button"
+        onClick={() => handleSelectCategory(cat.id)}
+        style={{
+            padding: '1.75rem',
+            borderRadius: '1.75rem',
+            background: cat.bg,
+            cursor: 'pointer',
+            border: '1px solid rgba(16,185,129,0.1)',
+            transition: 'all 0.25s ease',
+            textDecoration: 'none',
+            width: '100%',
+            textAlign: 'left',
+            appearance: 'none',
+        }}
+    >
+        <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{cat.icon}</div>
         <div
             style={{
                 fontWeight: 700,
-                fontSize: '1.125rem',
+                fontSize: '1rem',
                 color: '#064e3b',
                 marginBottom: '0.25rem',
             }}
         >
             {tr(cat.title.kk, cat.title.ru)}
         </div>
-        <div
-            style={{
-                fontSize: '0.875rem',
-                color: '#10b981',
-                fontWeight: 600,
-            }}
-        >
-            {cat.count} {tr('үлгі қолжетімді', 'шаблонов доступно')}
+        <div style={{ fontSize: '0.8125rem', color: '#10b981', fontWeight: 600 }}>
+            {cat.count} {tr('үлгі', 'шаблон')}
         </div>
-    </div>
-</div>
-                            ))}
+    </button>
+))}
                         </div>
 
                         <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
                             <Button
                                 onClick={() => {
-                                    window.location.href = '/categories';
+                                    handleOpenCategories();
                                 }}
                                 style={{ padding: '1rem 2.5rem', height: '3.25rem', fontSize: '1rem' }}
                             >
@@ -471,11 +475,9 @@ const handleSelectCategory = (categoryId) => {
                             ))}
                         </div>
 
-                        <Button
-                            variant="secondary"
-                            onClick={() => {
-                                window.location.href = '/#register';
-                            }}
+                       <Button
+    variant="secondary"
+    onClick={handleOpenRegister}
                             style={{ marginTop: '3.5rem', padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}
                         >
                             {tr('Қазір бастау', 'Начать сейчас')}

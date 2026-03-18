@@ -1,19 +1,11 @@
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { resolveMusicTrack } from '../constants/systemMusic';
-
-const TEMPLATE_LOADERS = import.meta.glob('../templates/**/*.html', { as: 'raw' });
-const DEFAULT_TEMPLATE_KEY = '../templates/common/default.html';
-const LEGACY_KEYS = ['classic', 'royal', 'nature', 'modern', 'default'];
-
-const CAT_DEFAULT_MAP = {
-    'uzatu': '../templates/uzatu/template1.html',
-    'wedding': '../templates/wedding/template1.html',
-    'sundet': '../templates/sundet/template1.html',
-    'tusaukeser': '../templates/tusaukeser/template1.html',
-    'tusau': '../templates/tusaukeser/template1.html',
-    'merei': '../templates/merei/template1.html',
-    'besik': '../templates/besik/template1.html'
-};
+import {
+    getTemplateLoader,
+    resolveTemplateId,
+    getDefaultTemplateId,
+    getCategoryFromTemplateId,
+} from '../config/templates/templateRegistry';
 
 const PALETTES = {
     classic: {
@@ -58,11 +50,18 @@ function pad2(n) {
     return String(n).padStart(2, '0');
 }
 
+function getNormalizedTemplate(invite) {
+    return resolveTemplateId(
+        invite?.template,
+        getCategoryFromTemplateId(invite?.template)
+    );
+}
+
 function parseNames(invite) {
     const groomRaw = (invite?.topic1 || '').trim();
     const brideRaw = (invite?.topic2 || '').trim();
-    const tpl = invite?.template || '';
-    const isWeddingPair = tpl.startsWith('wedding/'); // все свадебные — два человека
+    const tpl = getNormalizedTemplate(invite);
+    const isWeddingPair = tpl.startsWith('wedding/');
 
     if (!isWeddingPair) {
         const single = groomRaw || brideRaw || (invite?.title || '').trim();
@@ -72,62 +71,60 @@ function parseNames(invite) {
     const title = (invite?.title || '').trim();
     const m = title.match(/(.+?)\s*&\s*(.+)/);
     if (m) {
-        return { groom: m[1].trim() || 'Жігіт', bride: m[2].trim() || 'Қалыңдық' };
+        return {
+            groom: m[1].trim() || 'Жігіт',
+            bride: m[2].trim() || 'Қалыңдық',
+        };
     }
-    return { groom: groomRaw || 'Жігіт', bride: brideRaw || 'Қалыңдық' };
+
+    return {
+        groom: groomRaw || 'Жігіт',
+        bride: brideRaw || 'Қалыңдық',
+    };
 }
 
 function normalizeUrl(url) {
     if (!url) return '';
+
     if (/^https?:\/\//i.test(url)) {
-        // If backend saved absolute URL with localhost, rewrite to current host
         if (typeof window !== 'undefined') {
             try {
                 const u = new URL(url);
                 if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') {
                     return `${window.location.protocol}//${window.location.host}${u.pathname}${u.search}`;
                 }
-            } catch (_) { /* ignore malformed */ }
+            } catch (_) {
+                // ignore malformed
+            }
         }
         return url;
     }
+
     if (typeof window === 'undefined') return url;
-    // relative path (e.g., /uploads/...)
     return window.location.origin + url;
-}
-
-function normalizeTemplateKey(key) {
-    if (!key) return DEFAULT_TEMPLATE_KEY;
-    if (LEGACY_KEYS.includes(key)) {
-        // Try to pick category default if we can guess category from context (passed later) or just fallback
-        return DEFAULT_TEMPLATE_KEY;
-    }
-    let k = key;
-    if (k.startsWith('tusau/')) k = k.replace('tusau/', 'tusaukeser/');
-
-    if (k.startsWith('../templates/')) return k;
-    if (k.startsWith('templates/')) return `../${k}`;
-    return `../templates/${k}`;
 }
 
 function buildConfig(invite) {
     const eventDate = invite?.eventDate ? new Date(invite.eventDate) : null;
     const { groom, bride } = parseNames(invite);
-    const templateKey = invite?.template || '';
+    const templateKey = getNormalizedTemplate(invite);
     const isWedding = templateKey.startsWith('wedding/');
     const musicResolved = resolveMusicTrack(invite);
 
     const gallery = Array.isArray(invite?.gallery)
         ? invite.gallery.filter(Boolean).map(normalizeUrl)
         : [];
+
     const heroPhotoUrl = normalizeUrl(invite?.previewPhotoUrl || gallery[0] || '');
 
     const day = eventDate
         ? `${pad2(eventDate.getDate())}-${pad2(eventDate.getMonth() + 1)}-${eventDate.getFullYear()}`
         : '01-01-2027';
+
     const hour = eventDate
         ? `${pad2(eventDate.getHours())}:${pad2(eventDate.getMinutes())}`
         : '19:00';
+
     const numericLimit = Number(invite?.maxGuests) || 0;
 
     return {
@@ -157,7 +154,9 @@ function buildConfig(invite) {
 function applyPalette(html, palette) {
     if (!html) return '';
     if (html.includes('NO_PALETTE')) return html;
+
     let out = html;
+
     const vars = {
         '--wine': palette.wine,
         '--wine-dark': palette.wineDark,
@@ -172,30 +171,28 @@ function applyPalette(html, palette) {
         const rx = new RegExp(`${name}:\\s*#[0-9a-fA-F]{3,8};`);
         out = out.replace(rx, `${name}: ${value};`);
     });
+
     return out;
 }
 
 function injectPhoto(html, url) {
     if (!url) return html;
+
     const absoluteUrl = normalizeUrl(url);
     const safeUrl = absoluteUrl.replace(/"/g, '&quot;');
 
-    // 1. Try to replace specific placeholder div with img
     let out = html.replace(
         /<div\s+class="hero-photo-placeholder"[^>]*>[\s\S]*?<\/div>/i,
         `<img class="hero-photo-img" src="${safeUrl}" alt="photo">`
     );
 
-    // 2. Try to update existing img inside div with id heroPhoto
-    // This is more surgical to preserve classes/styles
     out = out.replace(
         /(<div\s+[^>]*?id="heroPhoto"[^>]*>)([\s\S]*?)(<\/div>)/i,
         (match, open, inner, close) => {
             if (inner.includes('<img')) {
-                // Surgically update existing img src and add class
                 const updatedInner = inner.replace(
                     /(<img\s+[^>]*?src=")([^"]*)("[^>]*>)/i,
-                    (m, start, src, end) => {
+                    (m) => {
                         let res = m;
                         if (!m.includes('hero-photo-img')) {
                             res = m.replace(/<img/i, '<img class="hero-photo-img"');
@@ -205,12 +202,15 @@ function injectPhoto(html, url) {
                 );
                 return open + updatedInner + close;
             }
-            // If no img, append one with default "fit" styles
-            return open + `<img class="hero-photo-img" src="${safeUrl}" alt="photo" style="width:100%;height:100%;object-fit:cover;display:block;">` + close;
+
+            return (
+                open +
+                `<img class="hero-photo-img" src="${safeUrl}" alt="photo" style="width:100%;height:100%;object-fit:cover;display:block;">` +
+                close
+            );
         }
     );
 
-    // 3. Fallback: update any existing img with hero-photo-img class
     if (out === html) {
         out = html.replace(
             /(<img[^>]+class="[^"]*hero-photo-img[^"]*"[^>]*src=")([^"]*)(")/i,
@@ -223,12 +223,13 @@ function injectPhoto(html, url) {
 
 function injectAutoplay(html, isViewMode) {
     if (!isViewMode) return html;
+
     const script = `
 <script>
 (function(){
     function setup() {
         if (typeof CONFIG === 'undefined') return;
-        if (!CONFIG.autoplay) return; // editor mode off
+        if (!CONFIG.autoplay) return;
         if (!CONFIG.music || !CONFIG.music.url) {
             startScroll();
             return;
@@ -271,7 +272,9 @@ function injectAutoplay(html, isViewMode) {
         };
 
         const onCanPlay = () => startMusic();
-        const onVisibility = () => { if (!started && document.visibilityState === 'visible') startMusic(); };
+        const onVisibility = () => {
+            if (!started && document.visibilityState === 'visible') startMusic();
+        };
 
         const triggers = [
             [document.body, 'click', startMusic, { once: true }],
@@ -284,19 +287,15 @@ function injectAutoplay(html, isViewMode) {
         document.addEventListener('visibilitychange', onVisibility);
         triggers.forEach(([el, ev, fn, opts]) => el.addEventListener(ev, fn, opts));
 
-        // Initial attempt after a short delay
         setTimeout(startMusic, 400);
-
-        // Autoscroll kicks in regardless, only in view mode
         startScroll();
-
-        // Cleanup on unload to avoid leaks
         window.addEventListener('unload', cleanup, { once: true });
     }
 
     function startScroll() {
-        const SCROLL_SPEED = 1; // px per frame
+        const SCROLL_SPEED = 1;
         let scrolling = true;
+
         const stopScroll = () => { scrolling = false; };
         document.addEventListener('touchstart', stopScroll, { once: true });
         document.addEventListener('wheel', stopScroll, { once: true });
@@ -304,10 +303,14 @@ function injectAutoplay(html, isViewMode) {
         function autoScroll() {
             if (!scrolling) return;
             const maxY = document.documentElement.scrollHeight - window.innerHeight;
-            if (window.scrollY >= maxY) { scrolling = false; return; }
+            if (window.scrollY >= maxY) {
+                scrolling = false;
+                return;
+            }
             window.scrollBy({ top: SCROLL_SPEED, behavior: 'instant' });
             requestAnimationFrame(autoScroll);
         }
+
         setTimeout(() => requestAnimationFrame(autoScroll), 1200);
     }
 
@@ -318,6 +321,7 @@ function injectAutoplay(html, isViewMode) {
     }
 })();
 </script>`;
+
     return html.replace('</body>', `${script}\n</body>`);
 }
 
@@ -327,29 +331,32 @@ function injectLiveBridge(html) {
 (function(){
     const qs = (sel) => document.querySelector(sel);
     const byId = (id) => document.getElementById(id);
-    const setText = (id, text) => { const el = byId(id); if (el) el.textContent = text ?? ''; };
+    const setText = (id, text) => {
+        const el = byId(id);
+        if (el) el.textContent = text ?? '';
+    };
+
     function apply(cfg){
         if (!cfg) return;
+
         const dayParts = (cfg.day || '').split('-');
         const dd = dayParts[0] || '';
         const mm = dayParts[1] || '';
         const yy = dayParts[2] || '';
         const tplKey = (cfg.template || '').toString();
         const isWeddingPair = tplKey.startsWith('wedding/');
-        
-        // Handle common property name variants
+
         const primary = cfg.childName || cfg.names?.child || cfg.names?.groom || cfg.names?.bride || cfg.title || '';
         const pair = cfg.names?.bride || '';
         const photoUrl = cfg.heroPhotoUrl || cfg.previewPhotoUrl || cfg.heroPhoto || (cfg.gallery && cfg.gallery[0]) || '';
-        
-        const namesLine = (isWeddingPair && pair) 
+
+        const namesLine = (isWeddingPair && pair)
             ? (pair + ' & ' + (cfg.names?.groom || '')).trim()
             : primary;
-            
+
         const dateLine = [dd, mm, yy].filter(Boolean).join('.') + (cfg.hour ? ' · ' + cfg.hour : '');
         const ownersVal = cfg.toiOwners || '';
 
-        // Primary hero / about texts
         setText('heroName', primary);
         setText('heroNames', namesLine);
         setText('heroNamesLine', (isWeddingPair && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
@@ -363,14 +370,27 @@ function injectLiveBridge(html) {
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
         setText('footLine', (isWeddingPair && pair) ? (pair + ' & ' + primary + '  ·  ' + yy) : (primary + ' · ' + yy));
-        setText('footerName', isWeddingPair ? 'Үйлену тойы' : (tplKey.includes('tusau') ? 'Тұсаукесер тойы' : (tplKey.includes('uzatu') ? 'Ұзату тойы' : (tplKey.includes('besik') ? 'Бесік тойы' : (tplKey.includes('merei') ? 'Мерейтой' : 'Той')))));
+        setText(
+            'footerName',
+            isWeddingPair
+                ? 'Үйлену тойы'
+                : (tplKey.includes('tusau')
+                    ? 'Тұсаукесер тойы'
+                    : (tplKey.includes('uzatu')
+                        ? 'Ұзату тойы'
+                        : (tplKey.includes('besik')
+                            ? 'Бесік тойы'
+                            : (tplKey.includes('merei') ? 'Мерейтой' : 'Той'))))
+        );
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');
         const ownersBig = byId('ownersBigName');
         const ownersSection = byId('ownersSection');
         const ownerTargets = ['ownersLine','ownersName','ownersLabel','ownersLabelTxt'];
+
         ownerTargets.forEach(id => setText(id, ownersVal));
+
         if (ownersBlock) {
             if (ownersVal) {
                 if (ownersText) ownersText.textContent = ownersVal;
@@ -380,6 +400,7 @@ function injectLiveBridge(html) {
                 ownersBlock.style.display = 'none';
             }
         }
+
         if (ownersBig) ownersBig.textContent = ownersVal || '—';
         if (ownersSection) ownersSection.style.display = ownersVal ? 'block' : 'none';
 
@@ -431,9 +452,13 @@ function injectLiveBridge(html) {
             }
         }
     }
+
     window.__APPLY_DYNAMIC_CONFIG = apply;
-    // Apply CONFIG immediately on load so text is visible without waiting for postMessage
-    setTimeout(function(){ if(typeof CONFIG !== 'undefined') apply(CONFIG); }, 0);
+
+    setTimeout(function(){
+        if (typeof CONFIG !== 'undefined') apply(CONFIG);
+    }, 0);
+
     window.addEventListener('message', (e) => {
         if (e.data && e.data.type === 'UPDATE_CONFIG') {
             apply(e.data.config);
@@ -441,6 +466,7 @@ function injectLiveBridge(html) {
     });
 })();
 </script>`;
+
     return html.replace('</body>', `${bridge}\n</body>`);
 }
 
@@ -458,121 +484,137 @@ function injectConfig(html, config) {
 
 function injectRsvpApi(html, inviteId, maxGuests) {
     if (!inviteId) return html;
+
     const limit = maxGuests || 0;
     const script = `
 <script>
-    (function () {
-        // --- Replace guest-opt buttons / readonly counter with editable number input ---
-        var MAX_GUESTS = ${limit};
-        window.addEventListener('DOMContentLoaded', function() {
-            // Remove guest-opt buttons
-            document.querySelectorAll('.guest-opt').forEach(function(b) { b.style.display = 'none'; });
-            // Make rGuests input editable
-            var gInput = document.getElementById('rGuests');
-            if (gInput) {
-                gInput.removeAttribute('readonly');
-                gInput.type = 'number';
-                gInput.min = '1';
-                if (MAX_GUESTS > 0) {
-                    gInput.max = String(MAX_GUESTS);
-                } else {
-                    gInput.removeAttribute('max'); // unlimited
-                }
-                gInput.value = '1';
-                gInput.style.width = '80px';
-                gInput.style.textAlign = 'center';
-                gInput.style.display = 'block';
-                gInput.style.margin = '8px auto';
-                var clampGuests = function() {
-                    var v = parseInt(gInput.value, 10) || 1;
-                    v = Math.max(1, v);
-                    if (MAX_GUESTS > 0) v = Math.min(v, MAX_GUESTS);
-                    gInput.value = String(v);
-                };
-                gInput.addEventListener('input', clampGuests);
-                gInput.addEventListener('change', clampGuests);
-            }
+(function () {
+    var MAX_GUESTS = ${limit};
+
+    window.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.guest-opt').forEach(function(b) {
+            b.style.display = 'none';
         });
 
-        // Override changeGuests to respect MAX_GUESTS and editable input
-        window.changeGuests = function changeGuests(delta) {
-            var inp = document.getElementById('rGuests');
-            if (!inp) return;
-            var next = parseInt(inp.value || '1', 10) + (delta || 0);
-            if (isNaN(next)) next = 1;
-            next = Math.max(1, next);
-            if (MAX_GUESTS > 0) next = Math.min(next, MAX_GUESTS);
-            inp.value = String(next);
-        };
+        var gInput = document.getElementById('rGuests');
+        if (gInput) {
+            gInput.removeAttribute('readonly');
+            gInput.type = 'number';
+            gInput.min = '1';
 
-        window.submitRSVP = async function submitRSVP() {
-            var nameEl = document.getElementById('rName');
-            var phoneEl = document.getElementById('rPhone');
-            var noteEl = document.getElementById('rNote');
-            var formEl = document.getElementById('rsvpForm');
-            var successEl = document.getElementById('successMsg');
-            if (!nameEl || !phoneEl || !formEl || !successEl) return;
-
-            var name = (nameEl.value || '').trim();
-            var phone = (phoneEl.value || '').trim();
-            if (!name) { nameEl.focus(); return; }
-            if (!phone) { phoneEl.focus(); return; }
-
-            var err = document.getElementById('rsvpError');
-            if (!err) {
-                err = document.createElement('div');
-                err.id = 'rsvpError';
-                err.style.color = '#8b1e1e';
-                err.style.fontFamily = "'Cinzel', serif";
-                err.style.fontSize = '10px';
-                err.style.letterSpacing = '1.5px';
-                err.style.margin = '8px 0 14px';
-                formEl.insertBefore(err, formEl.querySelector('.submit-btn'));
-            }
-            err.textContent = '';
-
-            var guestsInput = document.getElementById('rGuests');
-            var guestsCount = Math.max(1, parseInt(guestsInput ? guestsInput.value : '1', 10) || 1);
-
-            // Client-side maxGuests validation
-            if (MAX_GUESTS > 0 && guestsCount > MAX_GUESTS) {
-                err.textContent = '\u049a\u043e\u043d\u0430\u049b \u0441\u0430\u043d\u044b \u043b\u0438\u043c\u0438\u0442\u0456: ' + MAX_GUESTS;
-                if (guestsInput) guestsInput.value = String(MAX_GUESTS);
-                return;
+            if (MAX_GUESTS > 0) {
+                gInput.max = String(MAX_GUESTS);
+            } else {
+                gInput.removeAttribute('max');
             }
 
-            try {
-                var res = await fetch('/api/v1/invites/${inviteId}/respond', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        guestName: name,
-                        phone: phone || null,
-                        guestsCount: guestsCount,
-                        attending: true,
-                        note: (noteEl ? noteEl.value : '').trim() || null
-                    })
-                });
+            gInput.value = '1';
+            gInput.style.width = '80px';
+            gInput.style.textAlign = 'center';
+            gInput.style.display = 'block';
+            gInput.style.margin = '8px auto';
 
-                if (!res.ok) {
-                    var data = await res.json().catch(function() { return {}; });
-                    throw new Error(data.message || '\u0416\u0456\u0431\u0435\u0440\u0443 \u0441\u04d9\u0442\u0441\u0456\u0437 \u0431\u043e\u043b\u0434\u044b');
-                }
+            var clampGuests = function() {
+                var v = parseInt(gInput.value, 10) || 1;
+                v = Math.max(1, v);
+                if (MAX_GUESTS > 0) v = Math.min(v, MAX_GUESTS);
+                gInput.value = String(v);
+            };
 
-                formEl.style.display = 'none';
-                successEl.style.display = 'block';
-            } catch (e) {
-                err.textContent = e.message || '\u049a\u0430\u0442\u0435 \u043e\u0440\u044b\u043d \u0430\u043b\u0434\u044b';
+            gInput.addEventListener('input', clampGuests);
+            gInput.addEventListener('change', clampGuests);
+        }
+    });
+
+    window.changeGuests = function changeGuests(delta) {
+        var inp = document.getElementById('rGuests');
+        if (!inp) return;
+
+        var next = parseInt(inp.value || '1', 10) + (delta || 0);
+        if (isNaN(next)) next = 1;
+        next = Math.max(1, next);
+        if (MAX_GUESTS > 0) next = Math.min(next, MAX_GUESTS);
+        inp.value = String(next);
+    };
+
+    window.submitRSVP = async function submitRSVP() {
+        var nameEl = document.getElementById('rName');
+        var phoneEl = document.getElementById('rPhone');
+        var noteEl = document.getElementById('rNote');
+        var formEl = document.getElementById('rsvpForm');
+        var successEl = document.getElementById('successMsg');
+
+        if (!nameEl || !phoneEl || !formEl || !successEl) return;
+
+        var name = (nameEl.value || '').trim();
+        var phone = (phoneEl.value || '').trim();
+
+        if (!name) {
+            nameEl.focus();
+            return;
+        }
+
+        if (!phone) {
+            phoneEl.focus();
+            return;
+        }
+
+        var err = document.getElementById('rsvpError');
+        if (!err) {
+            err = document.createElement('div');
+            err.id = 'rsvpError';
+            err.style.color = '#8b1e1e';
+            err.style.fontFamily = "'Cinzel', serif";
+            err.style.fontSize = '10px';
+            err.style.letterSpacing = '1.5px';
+            err.style.margin = '8px 0 14px';
+            formEl.insertBefore(err, formEl.querySelector('.submit-btn'));
+        }
+
+        err.textContent = '';
+
+        var guestsInput = document.getElementById('rGuests');
+        var guestsCount = Math.max(1, parseInt(guestsInput ? guestsInput.value : '1', 10) || 1);
+
+        if (MAX_GUESTS > 0 && guestsCount > MAX_GUESTS) {
+            err.textContent = '\\u049a\\u043e\\u043d\\u0430\\u049b \\u0441\\u0430\\u043d\\u044b \\u043b\\u0438\\u043c\\u0438\\u0442\\u0456: ' + MAX_GUESTS;
+            if (guestsInput) guestsInput.value = String(MAX_GUESTS);
+            return;
+        }
+
+        try {
+            var res = await fetch('/api/v1/invites/${inviteId}/respond', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    guestName: name,
+                    phone: phone || null,
+                    guestsCount: guestsCount,
+                    attending: true,
+                    note: (noteEl ? noteEl.value : '').trim() || null
+                })
+            });
+
+            if (!res.ok) {
+                var data = await res.json().catch(function() { return {}; });
+                throw new Error(data.message || '\\u0416\\u0456\\u0431\\u0435\\u0440\\u0443 \\u0441\\u04d9\\u0442\\u0441\\u0456\\u0437 \\u0431\\u043e\\u043b\\u0434\\u044b');
             }
-        };
-    })();
-</script>
-`;
+
+            formEl.style.display = 'none';
+            successEl.style.display = 'block';
+        } catch (e) {
+            err.textContent = e.message || '\\u049a\\u0430\\u0442\\u0435 \\u043e\\u0440\\u044b\\u043d \\u0430\\u043b\\u0434\\u044b';
+        }
+    };
+})();
+</script>`;
+
     return html.replace('</body>', `${script}\n</body>`);
 }
 
 function localizeTemplate(html, lang) {
     if (lang !== 'kk') return html;
+
     let out = html.replace('<html lang="ru">', '<html lang="kk">');
 
     const pairs = [
@@ -620,6 +662,7 @@ function localizeTemplate(html, lang) {
         /const MONTHS_RU = \[[^\]]+\];/,
         'const MONTHS_RU = ["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"];'
     );
+
     out = out.replace(
         /const MONTHS_GEN = \[[^\]]+\];/,
         'const MONTHS_GEN = ["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"];'
@@ -629,16 +672,17 @@ function localizeTemplate(html, lang) {
 }
 
 function pickPalette(invite) {
-    const tpl = invite?.template || '';
+    const tpl = getNormalizedTemplate(invite);
     const parts = tpl.split('/');
     const category = parts[0] || '';
     const fileName = (parts[parts.length - 1] || '').replace('.html', '');
+
     const candidates = [
         fileName,
         category,
-        LEGACY_KEYS.includes(tpl) ? tpl : null,
         'classic',
     ].filter(Boolean);
+
     const key = candidates.find(k => PALETTES[k]);
     return PALETTES[key] || PALETTES.classic;
 }
@@ -649,46 +693,71 @@ function buildTemplate2Html(invite, htmlSource, { enableRsvp = false, inviteId =
     const config = { ...buildConfig(invite || {}), autoplay: isViewMode };
     const heroUrl = invite?.previewPhotoUrl || config.gallery?.[0] || '';
 
-    const tplKey = normalizeTemplateKey(invite?.template);
+    const tplKey = resolveTemplateId(
+        invite?.template,
+        getCategoryFromTemplateId(invite?.template)
+    );
+
     const skipPalette = tplKey.includes('/wedding/template4.html') || (htmlSource && /NO_PALETTE/i.test(htmlSource));
+
     let html = htmlSource;
     html = skipPalette ? html : applyPalette(html, palette);
     html = injectConfig(html, config);
     html = injectPhoto(html, heroUrl);
+
     if (enableRsvp) {
         html = injectRsvpApi(html, inviteId, config.maxGuests);
     }
+
     html = injectAutoplay(html, isViewMode);
     html = injectLiveBridge(html);
     html = localizeTemplate(html, lang);
     return html;
 }
 
-const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, className, lang = 'kk', mobileZoom = false, mode = 'edit' }) => {
+const Template2Frame = ({
+    invite,
+    inviteId = null,
+    enableRsvp = false,
+    style,
+    className,
+    lang = 'kk',
+    mobileZoom = false,
+    mode = 'edit',
+}) => {
     const iframeRef = useRef(null);
-    const [html, setHtml] = React.useState('');
-    const [templateKey, setTemplateKey] = React.useState(() => normalizeTemplateKey(invite?.template));
+    const [html, setHtml] = useState('');
 
     const getOptimalFallback = () => {
-        const tpl = invite?.template || '';
-        const cat = tpl.split('/')[0];
-        return CAT_DEFAULT_MAP[cat] || DEFAULT_TEMPLATE_KEY;
+        const category = getCategoryFromTemplateId(invite?.template);
+        return getDefaultTemplateId(category || 'common');
     };
 
-    // Async template loading
     useEffect(() => {
-        const nextKey = normalizeTemplateKey(invite?.template);
+        const nextKey = resolveTemplateId(
+            invite?.template,
+            getCategoryFromTemplateId(invite?.template)
+        );
+
         let active = true;
 
         const load = async () => {
-            const loader = TEMPLATE_LOADERS[nextKey] || TEMPLATE_LOADERS[getOptimalFallback()];
+            const loader =
+                getTemplateLoader(nextKey) ||
+                getTemplateLoader(getOptimalFallback());
+
             if (!loader) return;
+
             try {
                 const raw = await loader();
                 if (active) {
-                    const fullHtml = buildTemplate2Html(invite, raw, { enableRsvp, inviteId, lang, mode });
+                    const fullHtml = buildTemplate2Html(invite, raw, {
+                        enableRsvp,
+                        inviteId,
+                        lang,
+                        mode,
+                    });
                     setHtml(fullHtml);
-                    setTemplateKey(nextKey);
                 }
             } catch (err) {
                 console.error('Template load failed:', err);
@@ -696,11 +765,25 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
         };
 
         load();
-        return () => { active = false; };
-    }, [invite?.template, enableRsvp, inviteId, lang, mode, invite?.previewPhotoUrl, invite?.gallery, invite?.musicUrl, invite?.musicKey, invite?.musicSource]);
+        return () => {
+            active = false;
+        };
+    }, [
+        invite?.template,
+        enableRsvp,
+        inviteId,
+        lang,
+        mode,
+        invite?.previewPhotoUrl,
+        invite?.gallery,
+        invite?.musicUrl,
+        invite?.musicKey,
+        invite?.musicSource,
+    ]);
 
     const isEmptyInvite = useMemo(() => {
         if (!invite) return true;
+
         const hasMain =
             (invite.title && invite.title.trim()) ||
             (invite.topic1 && invite.topic1.trim()) ||
@@ -709,29 +792,36 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
             invite.eventDate ||
             (invite.previewPhotoUrl && invite.previewPhotoUrl.trim()) ||
             (Array.isArray(invite.gallery) && invite.gallery.length > 0);
+
         return !hasMain;
     }, [invite]);
 
     const liveConfig = useMemo(() => buildConfig(invite || {}), [invite]);
     const prevHashRef = useRef('');
 
-    // Send live config updates instantly (no debounce) for reactive text preview
     useEffect(() => {
         const iframe = iframeRef.current;
         if (!iframe?.contentWindow) return;
+
         const hash = JSON.stringify(liveConfig);
         if (hash === prevHashRef.current) return;
+
         prevHashRef.current = hash;
-        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
+        iframe.contentWindow.postMessage(
+            { type: 'UPDATE_CONFIG', config: liveConfig },
+            '*'
+        );
     }, [liveConfig]);
 
-    // Re-send config when iframe finishes loading (srcDoc loads asynchronously)
     const handleIframeLoad = () => {
         const iframe = iframeRef.current;
         if (!iframe?.contentWindow) return;
-        // Force re-send so text is always up to date after iframe reload
+
         prevHashRef.current = '';
-        iframe.contentWindow.postMessage({ type: 'UPDATE_CONFIG', config: liveConfig }, '*');
+        iframe.contentWindow.postMessage(
+            { type: 'UPDATE_CONFIG', config: liveConfig },
+            '*'
+        );
     };
 
     if (mode === 'edit' && isEmptyInvite) {
@@ -767,11 +857,18 @@ const Template2Frame = ({ invite, inviteId = null, enableRsvp = false, style, cl
 
     if (!html && !isEmptyInvite) {
         return (
-            <div style={{
-                width: '100%', height: '100%', background: '#F8FFFE',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#10B981', fontFamily: 'Manrope, sans-serif'
-            }}>
+            <div
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#F8FFFE',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#10B981',
+                    fontFamily: 'Manrope, sans-serif',
+                }}
+            >
                 Жүктелуде...
             </div>
         );
