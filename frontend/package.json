@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 7171 --strictPort",
     "build": "vite build && node scripts/generate-sitemap.cjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "make-template": "node scripts/make-template.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.4",

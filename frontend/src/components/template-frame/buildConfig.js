@@ -196,13 +196,6 @@ export function buildConfig(invite, lang = 'kk') {
 }
 
 export function pickPalette(invite) {
-    const tpl = getNormalizedTemplate(invite);
-    const parts = tpl.split('/');
-    const category = parts[0] || '';
-    const fileName = (parts[parts.length - 1] || '').replace('.html', '');
-
-    const candidates = [fileName, category, 'classic'].filter(Boolean);
-    const key = candidates.find(candidate => PALETTES[candidate]);
-
-    return PALETTES[key] || PALETTES.classic;
+    const paletteKey = getTemplateMetaForInvite(invite)?.palette;
+    return PALETTES[paletteKey] || PALETTES.classic;
 }
