@@ -50,11 +50,15 @@ const TEMPLATE_LABELS = {
   'wedding/template3.html': 'Elegant Story',
   'wedding/template4.html': 'Golden Evening',
   'wedding/template5.html': 'Wedding Modern Pearl',
+  'wedding/template6.html': 'Wedding Modern Ivory',
+  'wedding/template7.html': 'Wedding Modern Ivory',
+  'wedding/template8.html': 'Wedding Modern Ivory',
 
   'uzatu/template1.html': 'Uzatu Classic Gold',
   'uzatu/template2.html': 'Uzatu Royal Blue',
   'uzatu/template3.html': 'Uzatu Romantic Rose',
   'uzatu/template4.html': 'Uzatu Burgundy Classic',
+  'uzatu/template6.html': 'Modern Modern Ivory',
 
   'sundet/template1.html': 'Sundet Heritage Sage',
   'sundet/template2.html': 'Sundet Classic Navy',
@@ -128,6 +132,30 @@ const TEMPLATE_META = {
     isPremium: true,
     preview: '/previews/wedding/template5.jpg',
   },
+  'wedding/template6.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template6.jpg',
+  },
+  'wedding/template7.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template7.jpg',
+  },
+  'wedding/template8.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template8.jpg',
+  },
 
   'uzatu/template1.html': {
     palette: 'classic',
@@ -160,6 +188,14 @@ const TEMPLATE_META = {
     isActive: true,
     isPremium: true,
     preview: '/previews/uzatu/template4.jpg',
+  },
+  'uzatu/template6.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/uzatu/template6.jpg',
   },
 
   'tusaukeser/template1.html': {

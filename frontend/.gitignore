@@ -20,3 +20,7 @@ build/
 .DS_Store
 *.swp
 *.swo
+
+*.png
+*.jpg
+uploads/

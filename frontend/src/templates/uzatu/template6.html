@@ -1,0 +1,1216 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uzatu Modern Ivory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Great+Vibes&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --background: hsl(36 33% 95%);
+      --foreground: hsl(20 30% 22%);
+      --card: hsl(34 30% 92%);
+      --card-border: hsl(30 20% 82%);
+      --red: hsl(359 85% 36%);
+      --red-soft: hsl(356 55% 50%);
+      --gold: hsl(40 72% 42%);
+      --gold-soft: hsla(40, 72%, 42%, 0.2);
+      --taupe: hsl(25 12% 66%);
+      --muted: hsl(25 15% 50%);
+      --shadow: 0 14px 40px rgba(48, 36, 29, 0.12);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .page-root {
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+      background: var(--background);
+      min-height: 100vh;
+      box-shadow: 0 0 0 1px rgba(212, 183, 117, 0.06);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .section {
+      padding: 40px 24px;
+    }
+
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--taupe);
+      margin-bottom: 12px;
+    }
+
+    .hero-section {
+      position: relative;
+    }
+
+    #heroPhoto.hero-photo-placeholder {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ede5da 0%, #dccdb8 100%);
+    }
+
+    #heroPhoto .hero-photo-img,
+    .hero-photo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(246, 241, 235, 0.06) 0%,
+        rgba(246, 241, 235, 0.16) 42%,
+        rgba(246, 241, 235, 0.78) 100%
+      );
+      pointer-events: none;
+    }
+
+    .hero-watermark {
+      position: absolute;
+      top: 24px;
+      right: -40px;
+      width: 112px;
+      height: 112px;
+      opacity: 0.15;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 2;
+      margin-top: -128px;
+      padding: 0 24px 32px;
+      text-align: center;
+    }
+
+    .hero-kicker {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      margin-bottom: 8px;
+    }
+
+    #heroName {
+      font-family: 'Great Vibes', cursive;
+      font-size: 48px;
+      line-height: 1.06;
+      color: var(--red);
+      font-weight: 400;
+      margin-bottom: 8px;
+      text-shadow: 0 8px 24px rgba(139, 45, 59, 0.08);
+    }
+
+    #heroDateLine {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      color: var(--foreground);
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    .divider-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 8px 48px 2px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.4;
+    }
+
+    .divider-orn {
+      width: 40px;
+      height: 40px;
+      opacity: 0.5;
+      object-fit: contain;
+    }
+
+    .invitation-section {
+      padding-top: 36px;
+      text-align: center;
+    }
+
+    .invitation-ornament,
+    .rsvp-ornament,
+    .footer-ornament {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 22px;
+      opacity: 0.2;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .invitation-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 30px;
+      line-height: 1;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    #eventText {
+      max-width: 380px;
+      margin: 0 auto;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--foreground);
+      letter-spacing: 0.01em;
+      text-wrap: balance;
+    }
+
+    .invitation-note {
+      margin-top: 16px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--taupe);
+      font-style: italic;
+    }
+
+    .date-section {
+      padding-top: 20px;
+      padding-bottom: 36px;
+    }
+
+    .date-card {
+      position: relative;
+      overflow: hidden;
+      padding: 32px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid var(--gold-soft);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .date-corner {
+      position: absolute;
+      width: 84px;
+      height: 84px;
+      opacity: 0.25;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .date-corner.tl {
+      top: -8px;
+      left: -8px;
+    }
+
+    .date-corner.tr {
+      top: -8px;
+      right: -8px;
+      transform: scaleX(-1);
+    }
+
+    .date-corner.bl {
+      bottom: -8px;
+      left: -8px;
+      transform: rotate(180deg) scaleX(-1);
+    }
+
+    .date-corner.br {
+      bottom: -8px;
+      right: -8px;
+      transform: rotate(180deg);
+    }
+
+    .date-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      margin-bottom: 10px;
+    }
+
+    .date-day {
+      font-family: 'Great Vibes', cursive;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .date-month {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--foreground);
+    }
+
+    .date-meta {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--taupe);
+    }
+
+    .date-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .owners-section {
+      padding-top: 20px;
+      text-align: center;
+    }
+
+    #ownersBigName {
+      font-family: 'Great Vibes', cursive;
+      font-size: 24px;
+      line-height: 1.05;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+
+    .owners-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--foreground);
+      opacity: 0.78;
+    }
+
+    .owners-divider,
+    .footer-meta {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .owners-divider .line,
+    .footer-meta .line {
+      width: 52px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    .owners-divider .dot,
+    .footer-meta .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+      opacity: 0.45;
+    }
+
+    .photo-strip {
+      padding-top: 8px;
+    }
+
+    .photo-strip-frame {
+      width: 100%;
+      height: 240px;
+      overflow: hidden;
+      clip-path: polygon(0 8%, 5% 0, 12% 6%, 20% 2%, 30% 7%, 38% 1%, 48% 5%, 55% 0, 65% 6%, 72% 2%, 82% 7%, 90% 1%, 95% 5%, 100% 2%, 100% 92%, 95% 100%, 88% 94%, 80% 98%, 70% 93%, 62% 99%, 52% 95%, 45% 100%, 35% 94%, 28% 98%, 18% 93%, 10% 99%, 5% 95%, 0 98%);
+    }
+
+    .photo-strip-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .location-section {
+      text-align: center;
+      padding-top: 40px;
+      padding-bottom: 38px;
+    }
+
+    #locationName {
+      font-family: 'Great Vibes', cursive;
+      font-size: 30px;
+      line-height: 1.08;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .location-sub {
+      min-height: 22px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--foreground);
+      opacity: 0.82;
+      margin-bottom: 22px;
+    }
+
+    #mapBtnWrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    #mapBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      background: var(--red);
+      color: #fff8f6;
+      border: 1px solid transparent;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 24px rgba(139, 45, 59, 0.2);
+      transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    #mapBtn:hover {
+      background: var(--red-soft);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(139, 45, 59, 0.24);
+    }
+
+    .map-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .gallery-section {
+      padding: 12px 0 40px;
+    }
+
+    .gallery-title {
+      margin-bottom: 20px;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--taupe);
+    }
+
+    #gallerySlides {
+      padding: 0 24px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 24px rgba(48, 36, 29, 0.12);
+      background: var(--card);
+    }
+
+    .gallery-item img,
+    .gallery-wide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-wide {
+      margin-top: 24px;
+      height: 192px;
+      overflow: hidden;
+      clip-path: polygon(0 6%, 4% 0, 10% 5%, 18% 1%, 28% 6%, 36% 0, 46% 5%, 54% 1%, 64% 6%, 72% 0, 82% 5%, 90% 1%, 96% 5%, 100% 0, 100% 94%, 96% 100%, 90% 95%, 82% 99%, 72% 94%, 64% 100%, 54% 95%, 46% 99%, 36% 94%, 28% 100%, 18% 95%, 10% 99%, 4% 94%, 0 100%);
+      box-shadow: 0 16px 28px rgba(48, 36, 29, 0.12);
+      background: var(--card);
+    }
+
+    .rsvp-section {
+      text-align: center;
+      padding-top: 32px;
+      padding-bottom: 40px;
+    }
+
+    .rsvp-ornament {
+      width: 56px;
+      height: 56px;
+      opacity: 0.16;
+      margin-bottom: 16px;
+    }
+
+    .rsvp-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 30px;
+      line-height: 1;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .rsvp-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--taupe);
+      margin-bottom: 28px;
+    }
+
+    #rsvpForm {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--taupe);
+    }
+
+    .wedding-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(185, 158, 129, 0.4);
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--foreground);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+    }
+
+    .wedding-input:focus {
+      outline: none;
+      border-color: rgba(139, 45, 59, 0.55);
+      box-shadow: 0 0 0 4px rgba(139, 45, 59, 0.08);
+    }
+
+    #rNote {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .attendance-row {
+      display: flex;
+      gap: 12px;
+      padding-top: 4px;
+    }
+
+    .attendance-chip {
+      flex: 1;
+      border-radius: 16px;
+      border: 1px solid rgba(185, 158, 129, 0.34);
+      background: rgba(255, 255, 255, 0.82);
+      text-align: center;
+      padding: 14px 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--foreground);
+    }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 6px;
+      border: none;
+      border-radius: 999px;
+      padding: 16px 24px;
+      background: var(--red);
+      color: #fff8f6;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 16px 28px rgba(139, 45, 59, 0.22);
+      transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--red-soft);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 32px rgba(139, 45, 59, 0.26);
+    }
+
+    #successMsg {
+      display: none;
+      margin-top: 18px;
+      padding: 20px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(212, 183, 117, 0.3);
+      background: rgba(255, 255, 255, 0.85);
+      text-align: center;
+    }
+
+    .success-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 24px;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .success-sub {
+      margin-top: 6px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--taupe);
+    }
+
+    .footer-section {
+      padding: 48px 32px;
+      text-align: center;
+      background: rgba(242, 230, 215, 0.55);
+    }
+
+    .footer-ornament {
+      width: 76px;
+      height: 76px;
+      opacity: 0.12;
+      margin-bottom: 18px;
+    }
+
+    #footerName {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      margin-bottom: 12px;
+    }
+
+    #footLine {
+      font-family: 'Great Vibes', cursive;
+      font-size: 30px;
+      line-height: 1.08;
+      color: var(--red);
+    }
+
+    #footerDate {
+      margin-top: 18px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      color: var(--taupe);
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes ornament-spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes gold-shimmer {
+      0%,
+      100% {
+        opacity: 0.75;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes soft-pulse {
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(139, 45, 59, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(139, 45, 59, 0);
+      }
+    }
+
+    .ornament-rotate {
+      animation: ornament-spin 60s linear infinite;
+    }
+
+    .gold-shimmer {
+      animation: gold-shimmer 3s ease-in-out infinite;
+    }
+
+    .cta-pulse {
+      animation: soft-pulse 2.5s ease-in-out infinite;
+    }
+
+    @media (max-width: 420px) {
+      .section {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hero-text {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      #heroName {
+        font-size: 44px;
+      }
+
+      #eventText {
+        font-size: 15px;
+      }
+
+      .date-card {
+        padding: 28px 20px;
+      }
+
+      #locationName,
+      #ownersBigName,
+      #footLine {
+        font-size: 28px;
+      }
+
+      .attendance-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG = {
+      childName: "Айгерім",
+      day: "25-04-2026",
+      hour: "18:00",
+      location: "«Алтын Орда» мейрамханасы",
+      locationUrl: "https://2gis.kz",
+      gallery: [],
+      description: "Құрметті қонақтар! Сіздерді қызымыздың ұзату тойының қуанышын бірге бөлісуге шын жүректен шақырамыз.",
+      toiOwners: "Серік & Мадина",
+      music: { title: "", artist: "", url: "" },
+      lang: "kk"
+    };
+  </script>
+
+  <div class="page-root">
+    <section class="hero-section">
+      <div class="hero-photo-placeholder" id="heroPhoto">
+        <img
+          id="heroPhotoImg"
+          class="hero-photo-img"
+          src="/template-assets/uzatu-template6/hero-couple.jpg"
+          alt="Hero"
+        >
+        <div class="hero-gradient"></div>
+        <img
+          class="hero-watermark ornament-rotate"
+          src="/template-assets/uzatu-template6/ornament-red.png"
+          alt=""
+          aria-hidden="true"
+        >
+      </div>
+
+      <div class="hero-text">
+        <p class="hero-kicker">Той шақыру</p>
+        <h1 id="heroName">Айгерім</h1>
+        <p id="heroNamesLine" class="sr-only">Айгерім</p>
+        <p id="heroDateLine">25 сәуір, 2026</p>
+      </div>
+    </section>
+
+    <div class="divider-row">
+      <div class="divider-line"></div>
+      <img class="divider-orn gold-shimmer" src="/template-assets/uzatu-template6/corner-ornament.png" alt="" aria-hidden="true">
+      <div class="divider-line"></div>
+    </div>
+
+    <section class="section invitation-section">
+      <img class="invitation-ornament ornament-rotate" src="/template-assets/uzatu-template6/ornament-red.png" alt="" aria-hidden="true">
+      <h2 class="invitation-title" id="inviteTitle">Құрметті қонақ!</h2>
+      <p id="eventText">Құрметті қонақтар! Сіздерді қызымыздың ұзату тойының қуанышын бірге бөлісуге шын жүректен шақырамыз.</p>
+      <p class="invitation-note" id="inviteNote">Сіздің қатысуыңыз біз үшін ең қымбат сый</p>
+    </section>
+
+    <section class="section date-section">
+      <div class="date-card">
+        <img class="date-corner tl" src="/template-assets/uzatu-template6/corner-ornament.png" alt="" aria-hidden="true">
+        <img class="date-corner tr" src="/template-assets/uzatu-template6/corner-ornament.png" alt="" aria-hidden="true">
+        <img class="date-corner bl" src="/template-assets/uzatu-template6/corner-ornament.png" alt="" aria-hidden="true">
+        <img class="date-corner br" src="/template-assets/uzatu-template6/corner-ornament.png" alt="" aria-hidden="true">
+
+        <p class="date-label" id="dateSectionLabel">Тойдың күні</p>
+        <p class="date-day" id="dateCardDay">25</p>
+        <p class="date-month" id="dateCardMonth">Сәуір, 2026</p>
+
+        <div class="date-meta">
+          <span id="dateCardWeekday">Сенбі</span>
+          <span class="date-dot"></span>
+          <span id="dateCardTime">18:00</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section owners-section" id="ownersSection">
+      <p class="section-label" id="ownersSectionLabel">Той иелері</p>
+      <h3 id="ownersBigName">Серік &amp; Мадина</h3>
+      <p class="owners-sub" id="ownersSub">Сіздерді зор құрметпен күтеміз</p>
+
+      <div class="owners-divider">
+        <div class="line"></div>
+        <div class="dot"></div>
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <div class="photo-strip">
+      <div class="photo-strip-frame">
+        <img id="photoStripImg" src="/template-assets/uzatu-template6/gallery-1.jpg" alt="Photo strip">
+      </div>
+    </div>
+
+    <section class="section location-section">
+      <p class="section-label" id="locationSectionLabel">Тойхана</p>
+      <h3 id="locationName">«Алтын Орда» мейрамханасы</h3>
+      <p class="location-sub" id="locationSubline">Алматы қ., Абай даңғылы, 52</p>
+
+      <div id="mapBtnWrap">
+        <a id="mapBtn" class="cta-pulse" href="#" target="_blank" rel="noreferrer noopener">
+          <svg class="map-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span id="mapBtnText">Картадан көру</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="gallery-section">
+      <p class="gallery-title" id="gallerySectionLabel">Біздің суреттер</p>
+      <div id="gallerySlides"></div>
+    </section>
+
+    <section class="section rsvp-section">
+      <img class="rsvp-ornament ornament-rotate" src="/template-assets/uzatu-template6/ornament-red.png" alt="" aria-hidden="true">
+      <h3 class="rsvp-title" id="rsvpTitle">Қатысуыңызды растаңыз</h3>
+      <p class="rsvp-sub" id="rsvpSub">Қатысу мүмкіндігіңіз туралы хабарлаңыз</p>
+
+      <div id="rsvpForm">
+        <div class="field">
+          <label class="field-label" id="labelName" for="rName">Аты-жөніңіз</label>
+          <input id="rName" class="wedding-input" type="text" placeholder="Есіміңіз">
+        </div>
+
+        <div class="field">
+          <label class="field-label" id="labelPhone" for="rPhone">Телефон</label>
+          <input id="rPhone" class="wedding-input" type="tel" placeholder="+7 (___) ___-__-__">
+        </div>
+
+        <div class="field">
+          <label class="field-label" id="labelGuests" for="rGuests">Қонақ саны</label>
+          <input id="rGuests" class="wedding-input" type="number" min="1" max="20" value="1" placeholder="1">
+        </div>
+
+        <div class="field">
+          <label class="field-label" id="labelNote" for="rNote">Тілек</label>
+          <textarea id="rNote" class="wedding-input" placeholder="Тілектеріңізді жазыңыз..."></textarea>
+        </div>
+
+        <div class="attendance-row" aria-hidden="true">
+          <div class="attendance-chip" id="attendanceYes">✓ Қатысамын</div>
+          <div class="attendance-chip" id="attendanceNo">✕ Қатыса алмаймын</div>
+        </div>
+
+        <button type="button" class="submit-btn cta-pulse" onclick="submitRSVP && submitRSVP()">
+          <span id="submitLabel">Жіберу</span>
+        </button>
+      </div>
+
+      <div id="successMsg">
+        <div class="success-title" id="successTitle">Рақмет!</div>
+        <div class="success-sub" id="successSub">Сіздің жауабыңыз қабылданды</div>
+      </div>
+    </section>
+
+    <section class="footer-section">
+      <img class="footer-ornament ornament-rotate" src="/template-assets/uzatu-template6/ornament-red.png" alt="" aria-hidden="true">
+      <p id="footerName">Ұзату тойы</p>
+      <p id="footLine">Айгерім</p>
+
+      <div class="footer-meta">
+        <div class="line"></div>
+        <div class="dot"></div>
+        <div class="line"></div>
+      </div>
+
+      <p id="footerDate">25.04.2026 • Алматы</p>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const DEFAULT_ASSETS = {
+        hero: "/template-assets/uzatu-template6/hero-couple.jpg",
+        gallery1: "/template-assets/uzatu-template6/gallery-1.jpg",
+        gallery2: "/template-assets/uzatu-template6/gallery-2.jpg",
+        gallery3: "/template-assets/uzatu-template6/gallery-3.jpg"
+      };
+
+      const MONTHS = {
+        kk: ["қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым", "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан"],
+        ru: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+      };
+
+      const MONTHS_CAPS = {
+        kk: ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"],
+        ru: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+      };
+
+      const WEEKDAYS = {
+        kk: ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"],
+        ru: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+      };
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function getLang(conf) {
+        return (conf && conf.lang === "ru") ? "ru" : "kk";
+      }
+
+      function parseDate(day) {
+        const bits = String(day || "").split("-").map(Number);
+        if (bits.length !== 3 || bits.some(Number.isNaN)) {
+          return { dd: 1, mm: 1, yy: 2027 };
+        }
+
+        return { dd: bits[0], mm: bits[1], yy: bits[2] };
+      }
+
+      function pad2(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function primaryName(conf) {
+        return conf.childName
+          || (conf.names && (conf.names.child || conf.names.bride || conf.names.groom))
+          || conf.title
+          || "Қонақ";
+      }
+
+      function renderText(el, value) {
+        if (el) el.textContent = value || "";
+      }
+
+      function renderHtml(el, value) {
+        if (el) el.innerHTML = String(value || "").replace(/\n/g, "<br>");
+      }
+
+      function formatLongDate(conf, withYearUppercase) {
+        const lang = getLang(conf);
+        const parts = parseDate(conf.day);
+        const monthList = withYearUppercase ? MONTHS_CAPS[lang] : MONTHS[lang];
+        return parts.dd + " " + monthList[parts.mm - 1] + ", " + parts.yy;
+      }
+
+      function formatFooterDate(conf) {
+        const parts = parseDate(conf.day);
+        return pad2(parts.dd) + "." + pad2(parts.mm) + "." + parts.yy;
+      }
+
+      function getWeekday(conf) {
+        const lang = getLang(conf);
+        const parts = parseDate(conf.day);
+        const date = new Date(parts.yy, parts.mm - 1, parts.dd);
+        return WEEKDAYS[lang][date.getDay()];
+      }
+
+      function inferLocationSubline(location) {
+        if (!location) return "";
+        const value = String(location).trim();
+        if (value.includes(" — ")) {
+          return value.split(" — ").slice(1).join(" — ");
+        }
+        if (value.includes("|")) {
+          return value.split("|").slice(1).join("|").trim();
+        }
+        if (value.includes(",")) {
+          return value.split(",").slice(1).join(",").trim();
+        }
+        return "";
+      }
+
+      function inferFooterPlace(location) {
+        if (!location) return "";
+        const value = String(location).trim();
+        if (value.includes(",")) {
+          return value.split(",")[0].trim();
+        }
+        if (value.includes(" — ")) {
+          return value.split(" — ")[0].trim();
+        }
+        return value;
+      }
+
+      function getGallery(conf) {
+        const dynamic = Array.isArray(conf.gallery) ? conf.gallery.filter(Boolean) : [];
+        if (dynamic.length) {
+          return dynamic;
+        }
+
+        return [DEFAULT_ASSETS.gallery2, DEFAULT_ASSETS.gallery3, DEFAULT_ASSETS.gallery1];
+      }
+
+      function renderGallery(conf) {
+        const wrap = byId("gallerySlides");
+        if (!wrap) return;
+
+        const gallery = getGallery(conf);
+        const first = gallery[0] || DEFAULT_ASSETS.gallery2;
+        const second = gallery[1] || first;
+        const third = gallery[2] || first;
+
+        wrap.innerHTML = [
+          '<div class="gallery-grid">',
+          '  <div class="gallery-item"><img src="' + first + '" alt="Gallery photo 1"></div>',
+          '  <div class="gallery-item"><img src="' + second + '" alt="Gallery photo 2"></div>',
+          '</div>',
+          '<div class="gallery-wide"><img src="' + third + '" alt="Gallery photo 3"></div>'
+        ].join("");
+
+        const stripImg = byId("photoStripImg");
+        if (stripImg) {
+          stripImg.src = third;
+        }
+      }
+
+      function renderHero(conf) {
+        const hero = byId("heroPhoto");
+        const heroImg = hero ? (hero.querySelector("img") || byId("heroPhotoImg")) : null;
+        const heroSrc = conf.heroPhotoUrl || conf.previewPhotoUrl || conf.heroPhoto || getGallery(conf)[2] || DEFAULT_ASSETS.hero;
+
+        if (heroImg) {
+          heroImg.src = heroSrc;
+        } else if (hero) {
+          hero.innerHTML = '<img id="heroPhotoImg" class="hero-photo-img" src="' + heroSrc + '" alt="Hero">';
+        }
+      }
+
+      function renderLabels(conf) {
+        const lang = getLang(conf);
+        const labels = lang === "ru"
+          ? {
+              inviteTitle: "Дорогие гости!",
+              inviteNote: "Ваше присутствие для нас особенно ценно",
+              dateSectionLabel: "День торжества",
+              ownersSectionLabel: "Хозяева тойя",
+              ownersSub: "Будем рады разделить этот день вместе",
+              locationSectionLabel: "Место проведения",
+              gallerySectionLabel: "Наши фотографии",
+              rsvpTitle: "Подтвердите участие",
+              rsvpSub: "Сообщите, сможете ли вы присутствовать",
+              labelName: "Ваше имя",
+              labelPhone: "Телефон",
+              labelGuests: "Количество гостей",
+              labelNote: "Пожелание",
+              attendanceYes: "✓ Приду",
+              attendanceNo: "✕ Не смогу",
+              submitLabel: "Отправить",
+              successTitle: "Спасибо!",
+              successSub: "Ваш ответ получен",
+              mapBtnText: "Открыть карту"
+            }
+          : {
+              inviteTitle: "Құрметті қонақ!",
+              inviteNote: "Сіздің қатысуыңыз біз үшін ең қымбат сый",
+              dateSectionLabel: "Тойдың күні",
+              ownersSectionLabel: "Той иелері",
+              ownersSub: "Сіздерді зор құрметпен күтеміз",
+              locationSectionLabel: "Тойхана",
+              gallerySectionLabel: "Біздің суреттер",
+              rsvpTitle: "Қатысуыңызды растаңыз",
+              rsvpSub: "Қатысу мүмкіндігіңіз туралы хабарлаңыз",
+              labelName: "Аты-жөніңіз",
+              labelPhone: "Телефон",
+              labelGuests: "Қонақ саны",
+              labelNote: "Тілек",
+              attendanceYes: "✓ Қатысамын",
+              attendanceNo: "✕ Қатыса алмаймын",
+              submitLabel: "Жіберу",
+              successTitle: "Рақмет!",
+              successSub: "Сіздің жауабыңыз қабылданды",
+              mapBtnText: "Картадан көру"
+            };
+
+        Object.keys(labels).forEach(function (key) {
+          renderText(byId(key), labels[key]);
+        });
+      }
+
+      function applyVisualConfig(conf) {
+        const config = conf || window.CONFIG || CONFIG || {};
+        const lang = getLang(config);
+        const name = primaryName(config);
+        const owners = config.toiOwners || "";
+        const location = config.location || "";
+        const subline = config.locationDetail || config.address || inferLocationSubline(location);
+        const footerPlace = config.city || inferFooterPlace(location);
+        const parts = parseDate(config.day);
+
+        renderLabels(config);
+
+        document.title = name + " • " + (config.eventLabel || (lang === "ru" ? "Проводы невесты" : "Ұзату тойы"));
+
+        renderText(byId("heroName"), name);
+        renderText(byId("heroNamesLine"), name);
+        renderText(byId("heroDateLine"), formatLongDate(config, false));
+        renderHtml(byId("eventText"), config.description || "");
+
+        const ownersSection = byId("ownersSection");
+        renderText(byId("ownersBigName"), owners);
+        if (ownersSection) {
+          ownersSection.style.display = owners ? "block" : "none";
+        }
+
+        renderText(byId("dateCardDay"), pad2(parts.dd));
+        renderText(byId("dateCardMonth"), MONTHS_CAPS[lang][parts.mm - 1] + ", " + parts.yy);
+        renderText(byId("dateCardWeekday"), getWeekday(config));
+        renderText(byId("dateCardTime"), config.hour || "18:00");
+
+        renderText(byId("locationName"), location);
+        const locationSub = byId("locationSubline");
+        if (locationSub) {
+          locationSub.textContent = subline;
+          locationSub.style.display = subline ? "block" : "none";
+        }
+
+        const mapBtnWrap = byId("mapBtnWrap");
+        const mapBtn = byId("mapBtn");
+        if (mapBtnWrap && mapBtn) {
+          if (config.locationUrl) {
+            mapBtn.href = config.locationUrl;
+            mapBtn.style.pointerEvents = "auto";
+            mapBtn.style.opacity = "1";
+            mapBtnWrap.style.display = "flex";
+          } else {
+            mapBtn.href = "#";
+            mapBtn.style.pointerEvents = "none";
+            mapBtn.style.opacity = "0.55";
+            mapBtnWrap.style.display = location ? "flex" : "none";
+          }
+        }
+
+        renderHero(config);
+        renderGallery(config);
+
+        renderText(byId("footerName"), config.eventLabel || (lang === "ru" ? "Проводы невесты" : "Ұзату тойы"));
+        renderText(byId("footLine"), name);
+        renderText(
+          byId("footerDate"),
+          footerPlace ? (formatFooterDate(config) + " • " + footerPlace) : formatFooterDate(config)
+        );
+      }
+
+      function queueInitialRender() {
+        setTimeout(function () {
+          setTimeout(function () {
+            applyVisualConfig(window.CONFIG || CONFIG || {});
+          }, 0);
+        }, 0);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", queueInitialRender, { once: true });
+      } else {
+        queueInitialRender();
+      }
+
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "UPDATE_CONFIG") {
+          setTimeout(function () {
+            applyVisualConfig(event.data.config || window.CONFIG || CONFIG || {});
+          }, 0);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

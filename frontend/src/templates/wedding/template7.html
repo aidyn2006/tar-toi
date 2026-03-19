@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wine: #6b1f2e;
+            --wine-dark: #4a1020;
+            --wine-light: #8a2a3e;
+            --gold: #c9a96e;
+            --gold-light: #e8d5b7;
+            --cream: #faf6ef;
+            --text: #2a1015;
+            --muted: rgba(42,16,21,0.65);
+            --line: rgba(201,169,110,0.28);
+            --surface: rgba(255,255,255,0.78);
+            --shadow: 0 18px 48px rgba(42,16,21,0.16);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(233,213,183,0.55), transparent 40%),
+                linear-gradient(180deg, #f4eee5 0%, #efe7da 100%);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .page-root {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background: var(--cream);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(201,169,110,0.16), 0 24px 60px rgba(42,16,21,0.16);
+        }
+
+        .page-root::before,
+        .page-root::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,169,110,0.18), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-root::before {
+            top: -60px;
+            left: -60px;
+        }
+
+        .page-root::after {
+            right: -60px;
+            bottom: 120px;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 640px;
+            display: flex;
+            align-items: flex-end;
+            background: linear-gradient(180deg, rgba(74,16,32,0.08), rgba(74,16,32,0.35));
+        }
+
+        .hero-photo-placeholder,
+        .hero-photo-img,
+        #heroPhoto {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            background:
+                linear-gradient(160deg, var(--wine-dark) 0%, var(--wine-light) 50%, var(--wine) 100%);
+        }
+
+        .hero-photo-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: rgba(255,255,255,0.35);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to bottom, rgba(42,16,21,0.1) 0%, rgba(42,16,21,0.08) 35%, rgba(42,16,21,0.45) 72%, rgba(42,16,21,0.86) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 34px 24px 28px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.76);
+            margin-bottom: 14px;
+        }
+
+        .hero-title-line {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(38px, 10vw, 64px);
+            font-weight: 600;
+            line-height: 1;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-amp {
+            font-size: 24px;
+            color: var(--gold-light);
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .hero-date {
+            margin-top: 18px;
+            color: rgba(255,255,255,0.84);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .hero-subline {
+            margin-top: 14px;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .section {
+            padding: 28px 22px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--wine);
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        #eventText {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 25px;
+            line-height: 1.55;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .owners-section {
+            text-align: center;
+            display: none;
+        }
+
+        #ownersBigName {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 34px;
+            font-weight: 600;
+            color: var(--wine);
+            line-height: 1.2;
+        }
+
+        .location-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        #locationName {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 30px;
+            line-height: 1.3;
+            color: var(--text);
+            text-align: center;
+        }
+
+        #mapBtnWrap {
+            display: none;
+        }
+
+        #mapBtn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 50px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--wine);
+            background: var(--wine);
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.2s ease;
+        }
+
+        #mapBtn:hover {
+            background: var(--wine-dark);
+        }
+
+        .gallery-shell {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        #gallerySlides {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: thin;
+        }
+
+        #gallerySlides img {
+            width: 210px;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            border-radius: 18px;
+            flex: 0 0 auto;
+            border: 1px solid rgba(201,169,110,0.24);
+            box-shadow: 0 10px 28px rgba(42,16,21,0.12);
+        }
+
+        .rsvp-card {
+            padding: 26px 22px;
+        }
+
+        .rsvp-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 34px;
+            color: var(--wine);
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        #rsvpForm {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .field-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--wine);
+            margin-bottom: 6px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #rName,
+        #rPhone,
+        #rGuests,
+        #rNote {
+            width: 100%;
+            border: 1px solid rgba(201,169,110,0.35);
+            background: rgba(255,255,255,0.92);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 15px;
+            color: var(--text);
+            outline: none;
+        }
+
+        #rNote {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            min-height: 52px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        #successMsg {
+            display: none;
+            text-align: center;
+            padding: 18px 10px 4px;
+        }
+
+        #successMsg p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            color: var(--wine);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 18px 16px 28px;
+            color: var(--muted);
+        }
+
+        #footerName {
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--wine);
+            font-weight: 800;
+        }
+
+        #footLine {
+            margin-top: 8px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const CONFIG = {
+            names: { bride: "Аружан", groom: "Данияр" },
+            day: "21-03-2027",
+            hour: "19:00",
+            location: "Astana, Farhi Hall",
+            locationUrl: "",
+            gallery: [],
+            description: "Дорогие родные и близкие, приглашаем вас на наше торжество...",
+            toiOwners: "Семья",
+            music: { title: "", artist: "", url: "" }
+        };
+    </script>
+
+    <div class="page-root">
+        <div class="page">
+            <section class="card hero">
+                <div class="hero-photo-placeholder">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="22" r="12" stroke="white" stroke-width="1.3" />
+                        <path d="M10 54 Q32 38 54 54" stroke="white" stroke-width="1.3" fill="none" />
+                    </svg>
+                    <span>Фото шаблона</span>
+                </div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="eyebrow">Шақыру</div>
+                    <div class="hero-title-line">
+                        <span id="hBride">Аружан</span>
+                        <span class="hero-amp">&</span>
+                        <span id="hGroom">Данияр</span>
+                    </div>
+                    <div id="heroDateLine" class="hero-date">21.03.2027 · 19:00</div>
+                    <div id="heroNamesLine" class="hero-subline">Данияр & Аружан</div>
+                </div>
+            </section>
+
+            <section class="card section">
+                <div class="section-title">Мәтін</div>
+                <div id="eventText">
+                    Құрметті ағайын-туыс, құда-жекжат, дос-жаран! Сіздерді қуанышымыздың қадірлі қонағы болуға шақырамыз.
+                </div>
+            </section>
+
+            <section id="ownersSection" class="card section owners-section">
+                <div class="section-title">Той иелері</div>
+                <div id="ownersBigName">Сейітовтар әулеті</div>
+            </section>
+
+            <section class="card section">
+                <div class="section-title">Мекенжай</div>
+                <div class="location-grid">
+                    <div id="locationName">Astana, Farhi Hall</div>
+                    <div id="mapBtnWrap">
+                        <a id="mapBtn" href="#" target="_blank" rel="noreferrer noopener">Картадан ашу</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card section">
+                <div class="section-title">Фотолар</div>
+                <div class="gallery-shell">
+                    <div id="gallerySlides"></div>
+                </div>
+            </section>
+
+            <section class="card rsvp-card">
+                <div class="rsvp-title">Жауабыңыз</div>
+
+                <div id="rsvpForm">
+                    <div class="field">
+                        <label class="field-label" for="rName">Есіміңіз</label>
+                        <input id="rName" type="text" placeholder="Аты-жөніңіз">
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="rPhone">Телефон</label>
+                        <input id="rPhone" type="tel" placeholder="+7 (___) ___-__-__">
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="rGuests">Қонақ саны</label>
+                        <input id="rGuests" type="number" min="1" value="1">
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="rNote">Ескерту</label>
+                        <textarea id="rNote" placeholder="Тілегіңіз немесе ескерту..."></textarea>
+                    </div>
+
+                    <button class="submit-btn" onclick="submitRSVP && submitRSVP()">Растау</button>
+                </div>
+
+                <div id="successMsg">
+                    <p>Рақмет! Күтеміз.</p>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div id="footerName">Үйлену тойы</div>
+                <div id="footLine">Аружан & Данияр</div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
