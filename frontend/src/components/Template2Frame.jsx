@@ -8,6 +8,8 @@ import {
 import {
     buildConfig,
     buildTemplate2Html,
+    mountFrame,
+    syncFrameConfig,
     trByLang,
 } from './template-frame/runtime';
 
@@ -84,27 +86,12 @@ const Template2Frame = ({
 
     useEffect(() => {
         const iframe = iframeRef.current;
-        if (!iframe?.contentWindow) return;
-
-        const hash = JSON.stringify(liveConfig);
-        if (hash === prevHashRef.current) return;
-
-        prevHashRef.current = hash;
-        iframe.contentWindow.postMessage(
-            { type: 'UPDATE_CONFIG', config: liveConfig },
-            '*'
-        );
+        syncFrameConfig(iframe, liveConfig, prevHashRef);
     }, [liveConfig]);
 
     const handleIframeLoad = () => {
         const iframe = iframeRef.current;
-        if (!iframe?.contentWindow) return;
-
-        prevHashRef.current = '';
-        iframe.contentWindow.postMessage(
-            { type: 'UPDATE_CONFIG', config: liveConfig },
-            '*'
-        );
+        mountFrame(iframe, liveConfig, prevHashRef);
     };
 
     if (!html) {
