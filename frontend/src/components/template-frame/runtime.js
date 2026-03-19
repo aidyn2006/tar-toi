@@ -1,6 +1,8 @@
 import { resolveMusicTrack } from '../../constants/systemMusic';
 import {
     getCategoryFromTemplateId,
+    getTemplateEventLabel,
+    getTemplateMeta,
     resolveTemplateId,
 } from '../../config/templates/templateRegistry';
 
@@ -58,29 +60,37 @@ export function getNormalizedTemplate(invite) {
     );
 }
 
-export function parseNames(invite) {
-    const groomRaw = (invite?.topic1 || '').trim();
-    const brideRaw = (invite?.topic2 || '').trim();
-    const tpl = getNormalizedTemplate(invite);
-    const isWeddingPair = tpl.startsWith('wedding/');
+export function getTemplateMetaForInvite(invite) {
+    return getTemplateMeta(getNormalizedTemplate(invite)) || null;
+}
 
-    if (!isWeddingPair) {
-        const single = groomRaw || brideRaw || (invite?.title || '').trim();
+export function isPairTemplate(invite) {
+    return !!getTemplateMetaForInvite(invite)?.features?.pairNames;
+}
+
+export function parseNames(invite) {
+    const firstRaw = (invite?.topic1 || '').trim();
+    const secondRaw = (invite?.topic2 || '').trim();
+    const hasPairNames = isPairTemplate(invite);
+
+    if (!hasPairNames) {
+        const single = firstRaw || secondRaw || (invite?.title || '').trim();
         return { groom: '', bride: single || 'Қонақ' };
     }
 
     const title = (invite?.title || '').trim();
-    const m = title.match(/(.+?)\s*&\s*(.+)/);
-    if (m) {
+    const pairFromTitle = title.match(/(.+?)\s*&\s*(.+)/);
+
+    if (pairFromTitle) {
         return {
-            groom: m[1].trim() || 'Жігіт',
-            bride: m[2].trim() || 'Қалыңдық',
+            groom: pairFromTitle[1].trim() || 'Жігіт',
+            bride: pairFromTitle[2].trim() || 'Қалыңдық',
         };
     }
 
     return {
-        groom: groomRaw || 'Жігіт',
-        bride: brideRaw || 'Қалыңдық',
+        groom: firstRaw || 'Жігіт',
+        bride: secondRaw || 'Қалыңдық',
     };
 }
 
@@ -109,10 +119,16 @@ export function buildConfig(invite, lang = 'kk') {
     const eventDate = invite?.eventDate ? new Date(invite.eventDate) : null;
     const { groom, bride } = parseNames(invite);
     const templateKey = getNormalizedTemplate(invite);
-    const isWedding = templateKey.startsWith('wedding/');
+    const templateMeta = getTemplateMetaForInvite(invite);
+
+    const hasPairNames = !!templateMeta?.features?.pairNames;
+    const supportsGallery = templateMeta?.features?.gallery ?? true;
+    const supportsMusic = templateMeta?.features?.music ?? true;
+    const supportsMap = templateMeta?.features?.map ?? true;
+
     const musicResolved = resolveMusicTrack(invite);
 
-    const gallery = Array.isArray(invite?.gallery)
+    const gallery = supportsGallery && Array.isArray(invite?.gallery)
         ? invite.gallery.filter(Boolean).map(normalizeUrl)
         : [];
 
@@ -133,13 +149,17 @@ export function buildConfig(invite, lang = 'kk') {
         day,
         hour,
         location: (invite?.locationName || 'Astana, Farhi Hall').trim(),
-        locationUrl: (invite?.locationUrl || '').trim(),
+        locationUrl: supportsMap ? (invite?.locationUrl || '').trim() : '',
         music: {
-            title: (musicResolved.title || invite?.title || trByLang(lang, 'Біздің ән', 'Наша песня')).trim(),
-            artist: (musicResolved.artist || trByLang(lang, '— аудио файлын жүктеңіз —', '— загрузите аудио файл —')).trim(),
-            url: normalizeUrl(musicResolved.url || ''),
-            key: musicResolved.key || null,
-            source: musicResolved.source || null,
+            title: supportsMusic
+                ? (musicResolved.title || invite?.title || trByLang(lang, 'Біздің ән', 'Наша песня')).trim()
+                : '',
+            artist: supportsMusic
+                ? (musicResolved.artist || trByLang(lang, '— аудио файлын жүктеңіз —', '— загрузите аудио файл —')).trim()
+                : '',
+            url: supportsMusic ? normalizeUrl(musicResolved.url || '') : '',
+            key: supportsMusic ? (musicResolved.key || null) : null,
+            source: supportsMusic ? (musicResolved.source || null) : null,
         },
         autoplay: false,
         gallery,
@@ -151,9 +171,17 @@ export function buildConfig(invite, lang = 'kk') {
         toiOwners: invite?.toiOwners || '',
         heroPhotoUrl,
         maxGuests: numericLimit,
-        isWedding,
+        isWedding: hasPairNames,
+        isPairInvite: hasPairNames,
+        eventLabel: getTemplateEventLabel(templateKey, lang),
         template: templateKey,
         lang,
+        features: {
+            pairNames: hasPairNames,
+            gallery: supportsGallery,
+            music: supportsMusic,
+            map: supportsMap,
+        },
     };
 }
 
@@ -349,15 +377,14 @@ export function injectLiveBridge(html) {
         const dd = dayParts[0] || '';
         const mm = dayParts[1] || '';
         const yy = dayParts[2] || '';
-        const tplKey = (cfg.template || '').toString();
         const lang = (cfg.lang || 'kk').toString();
-        const isWeddingPair = tplKey.startsWith('wedding/');
+        const isPairInvite = !!cfg.isPairInvite;
 
         const primary = cfg.childName || cfg.names?.child || cfg.names?.groom || cfg.names?.bride || cfg.title || '';
         const pair = cfg.names?.bride || '';
         const photoUrl = cfg.heroPhotoUrl || cfg.previewPhotoUrl || cfg.heroPhoto || (cfg.gallery && cfg.gallery[0]) || '';
 
-        const namesLine = (isWeddingPair && pair)
+        const namesLine = (isPairInvite && pair)
             ? (pair + ' & ' + (cfg.names?.groom || '')).trim()
             : primary;
 
@@ -366,31 +393,18 @@ export function injectLiveBridge(html) {
 
         setText('heroName', primary);
         setText('heroNames', namesLine);
-        setText('heroNamesLine', (isWeddingPair && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
-        setText('heroNamesInline', (isWeddingPair && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
-        setText('hBride', isWeddingPair ? pair : primary);
-        setText('hGroom', isWeddingPair ? primary : '');
+        setText('heroNamesLine', (isPairInvite && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
+        setText('heroNamesInline', (isPairInvite && pair) ? (cfg.names?.groom + ' & ' + pair) : primary);
+        setText('hBride', isPairInvite ? pair : primary);
+        setText('hGroom', isPairInvite ? primary : '');
         setText('heroDateLine', dateLine);
         setText('hDate', dateLine);
         setText('evDate', [dd, mm, yy].filter(Boolean).join('.'));
         setText('evTime', cfg.hour || '');
         setText('eventText', cfg.description || '');
         setText('locationName', cfg.location || '');
-        setText('footLine', (isWeddingPair && pair) ? (pair + ' & ' + primary + '  ·  ' + yy) : (primary + ' · ' + yy));
-        setText(
-            'footerName',
-            isWeddingPair
-                ? (lang === 'ru' ? 'Свадьба' : 'Үйлену тойы')
-                : (tplKey.includes('tusau')
-                    ? (lang === 'ru' ? 'Тусау кесер' : 'Тұсаукесер тойы')
-                    : (tplKey.includes('uzatu')
-                        ? (lang === 'ru' ? 'Проводы невесты' : 'Ұзату тойы')
-                        : (tplKey.includes('besik')
-                            ? (lang === 'ru' ? 'Бесік той' : 'Бесік тойы')
-                            : (tplKey.includes('merei')
-                                ? (lang === 'ru' ? 'Юбилей' : 'Мерейтой')
-                                : (lang === 'ru' ? 'Той' : 'Той')))))
-        );
+        setText('footLine', (isPairInvite && pair) ? (pair + ' & ' + primary + '  ·  ' + yy) : (primary + ' · ' + yy));
+        setText('footerName', cfg.eventLabel || (lang === 'ru' ? 'Той' : 'Той'));
 
         const ownersBlock = byId('ownersBlock');
         const ownersText = byId('ownersText');

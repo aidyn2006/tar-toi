@@ -11,21 +11,6 @@ import {
     trByLang,
 } from './template-frame/runtime';
 
-function isInviteEmpty(invite) {
-    if (!invite) return true;
-
-    const hasMain =
-        (invite.title && invite.title.trim()) ||
-        (invite.topic1 && invite.topic1.trim()) ||
-        (invite.topic2 && invite.topic2.trim()) ||
-        (invite.description && invite.description.trim()) ||
-        invite.eventDate ||
-        (invite.previewPhotoUrl && invite.previewPhotoUrl.trim()) ||
-        (Array.isArray(invite.gallery) && invite.gallery.length > 0);
-
-    return !hasMain;
-}
-
 const Template2Frame = ({
     invite,
     inviteId = null,
@@ -95,7 +80,6 @@ const Template2Frame = ({
         invite?.musicSource,
     ]);
 
-    const emptyInvite = useMemo(() => isInviteEmpty(invite), [invite]);
     const liveConfig = useMemo(() => buildConfig(invite || {}, lang), [invite, lang]);
 
     useEffect(() => {
@@ -123,49 +107,13 @@ const Template2Frame = ({
         );
     };
 
-    if (mode === 'edit' && emptyInvite) {
+    if (!html) {
         return (
             <div
-                className={className}
                 style={{
                     width: '100%',
                     height: '100%',
                     minHeight: mobileZoom ? '70vh' : '100%',
-                    borderRadius: '16px',
-                    border: '1px dashed #d7e9df',
-                    background: '#f7fff9',
-                    color: '#173f33',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    padding: '28px',
-                    boxSizing: 'border-box',
-                    ...style,
-                }}
-            >
-                <div style={{ maxWidth: '360px', lineHeight: 1.4, fontFamily: 'Manrope, sans-serif' }}>
-                    <div style={{ fontWeight: 800, marginBottom: '6px' }}>
-                        {trByLang(lang, 'Алдын ала қарау', 'Предпросмотр')}
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#5f7f73' }}>
-                        {trByLang(
-                            lang,
-                            'Шаблон осы жерде көрсетіледі. Фото, атаулар немесе күнді қосыңыз — превью бірден жаңартылады.',
-                            'Шаблон появится здесь. Добавьте фото, имена или дату — предпросмотр обновится сразу.'
-                        )}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (!html && !emptyInvite) {
-        return (
-            <div
-                style={{
-                    width: '100%',
-                    height: '100%',
                     background: '#F8FFFE',
                     display: 'flex',
                     alignItems: 'center',

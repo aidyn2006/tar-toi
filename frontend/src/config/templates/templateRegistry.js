@@ -5,6 +5,33 @@ const CATEGORY_ALIASES = {
     tusau: 'tusaukeser',
 };
 
+const CATEGORY_EVENT_LABELS = {
+    wedding: {
+        kk: 'Үйлену тойы',
+        ru: 'Свадьба',
+    },
+    uzatu: {
+        kk: 'Ұзату тойы',
+        ru: 'Проводы невесты',
+    },
+    tusaukeser: {
+        kk: 'Тұсаукесер тойы',
+        ru: 'Тусау кесер',
+    },
+    besik: {
+        kk: 'Бесік тойы',
+        ru: 'Бесік той',
+    },
+    merei: {
+        kk: 'Мерейтой',
+        ru: 'Юбилей',
+    },
+    sundet: {
+        kk: 'Сүндет тойы',
+        ru: 'Сүндет той',
+    },
+};
+
 export function getTemplateCountByCategory(category) {
     return getTemplatesByCategory(category).length;
 }
@@ -42,6 +69,7 @@ const TEMPLATE_LABELS = {
   'merei/template2.html': 'Merei Rose Blossom',
   'merei/template3.html': 'Merei Grand Black Gold',
   'merei/template4.html': 'Merei Soft Peach Jubilee',
+  'merei/template5.html': 'Merei Midnight Gold V2',
 
   'besik/template1.html': 'Besik Classic Gold',
   'besik/template2.html': 'Besik Mint Family',
@@ -201,6 +229,13 @@ const TEMPLATE_META = {
     isPremium: false,
     preview: '/previews/merei/template4.jpg',
   },
+  'merei/template5.html': {
+    tags: ['premium', 'dark', 'gold', 'jubilee', 'v2'],
+    features: { pairNames: false, gallery: true, music: false, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/merei/template5.jpg',
+  },
 
   'besik/template1.html': {
     tags: ['classic', 'gold', 'family'],
@@ -292,6 +327,10 @@ function buildTemplateRecord(fullPath) {
         preview: meta.preview || '',
         isActive: meta.isActive ?? true,
         isPremium: meta.isPremium ?? false,
+        eventLabel: meta.eventLabel || CATEGORY_EVENT_LABELS[category] || {
+            kk: 'Той',
+            ru: 'Той',
+        },
         features: {
             ...DEFAULT_TEMPLATE_FEATURES,
             ...(meta.features || {}),
@@ -324,6 +363,11 @@ export function getTemplateById(templateId) {
 
 export function getTemplateMeta(templateId) {
     return getTemplateById(templateId);
+}
+
+export function getTemplateEventLabel(templateId, lang = 'kk') {
+    const tpl = getTemplateById(templateId);
+    return tpl?.eventLabel?.[lang] || (lang === 'ru' ? 'Той' : 'Той');
 }
 
 export function getTemplateLoader(templateId) {
