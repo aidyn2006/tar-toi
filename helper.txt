@@ -1,0 +1,2 @@
+##-------------Запуск скрипта для создания нового шаблона------------------------##
+ npm run make-template -- --category=wedding --name=template10 --type=pair --label="Wedding Minimalizm" --premium --palette=royal
