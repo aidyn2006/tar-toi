@@ -19,6 +19,7 @@ import MediaSection from '../components/invite-editor/MediaSection';
 import TextSection from '../components/invite-editor/TextSection';
 import EditorTopBar from '../components/invite-editor/EditorTopBar';
 import DateLocationSection from '../components/invite-editor/DateLocationSection';
+import ProgramSection from '../components/invite-editor/ProgramSection';
 
 import { useLang } from '../context/LanguageContext';
 /* ─── Design tokens ──────────────────────────────────────── */
@@ -65,6 +66,7 @@ const EMPTY_INVITE_DATA = {
     eventDate: '',
     previewPhotoUrl: '',
     gallery: [],
+    program: [],
     topic1: '',
     topic2: '',
     locationName: '',
@@ -77,6 +79,62 @@ const EMPTY_INVITE_DATA = {
     musicSource: MUSIC_SOURCE.NONE,
     maxGuests: 0,
 };
+
+function createDefaultProgram(templateId, lang = 'kk') {
+    if (templateId === 'wedding/template10.html') {
+        return lang === 'ru'
+            ? [
+                { time: '16:00', title: 'Церемония' },
+                { time: '17:00', title: 'Коктейльный час' },
+                { time: '18:30', title: 'Торжественный ужин' },
+                { time: '21:00', title: 'Вечерняя вечеринка' },
+            ]
+            : [
+                { time: '16:00', title: 'Неке қию рәсімі' },
+                { time: '17:00', title: 'Коктейль уақыты' },
+                { time: '18:30', title: 'Той дастарханы' },
+                { time: '21:00', title: 'Кешкі би кеші' },
+            ];
+    }
+
+    const labels = lang === 'ru'
+        ? [
+            'Сбор гостей',
+            'Церемония бракосочетания',
+            'Начало торжества',
+            'Первый танец',
+            'Теплые пожелания',
+        ]
+        : [
+            'Қонақтарды қарсы алу',
+            'Неке қию рәсімі',
+            'Той басталуы',
+            'Бірінші би',
+            'Ақ тілек',
+        ];
+
+    return labels.map((title, index) => ({
+        time: `${String(16 + index).padStart(2, '0')}:00`,
+        title,
+    }));
+}
+
+function normalizeProgram(program) {
+    if (!Array.isArray(program)) return [];
+
+    return program
+        .map((item) => {
+            if (!item || typeof item !== 'object') return null;
+
+            const time = String(item.time || '').trim();
+            const title = String(item.title || item.label || item.name || '').trim();
+
+            if (!time && !title) return null;
+
+            return { time, title };
+        })
+        .filter(Boolean);
+}
 
 function getNewInviteDefaults(search) {
     const params = new URLSearchParams(search);
@@ -218,6 +276,7 @@ const EditInvitePage = () => {
                     eventDate: inv.eventDate ? inv.eventDate.slice(0, 16) : '',
                     previewPhotoUrl: inv.previewPhotoUrl || '',
                     gallery: inv.gallery || [],
+                    program: normalizeProgram(inv.program),
                     topic1: inv.topic1 || '',
                     topic2: inv.topic2 || '',
                     locationName: inv.locationName || '',
@@ -253,6 +312,7 @@ const supportsPairNames = !!selectedTemplateMeta?.features?.pairNames;
 const supportsGallery = selectedTemplateMeta?.features?.gallery ?? true;
 const supportsMusic = selectedTemplateMeta?.features?.music ?? true;
 const supportsMap = selectedTemplateMeta?.features?.map ?? true;
+const supportsProgram = selectedTemplateMeta?.features?.program ?? false;
 const selectableTemplates = getTemplatesByCategory(currentCategory);
 
 useEffect(() => {
@@ -267,12 +327,50 @@ useEffect(() => {
   }
 }, [currentCategory, templateValue, selectableTemplates]);
 
+useEffect(() => {
+    if (!supportsProgram) return;
+
+    setData((prev) => {
+        if (normalizeProgram(prev.program).length) return prev;
+        return { ...prev, program: createDefaultProgram(templateValue, lang) };
+    });
+}, [supportsProgram, templateValue, lang]);
+
 const previewData = {
     ...data,
     template: templateValue,
     eventDate: data.eventDate ? new Date(data.eventDate) : null,
 };
     const set = useCallback((k) => (e) => setData(prev => ({ ...prev, [k]: e.target.value })), []);
+    const addProgramItem = useCallback(() => {
+        setData((prev) => ({
+            ...prev,
+            program: [...(Array.isArray(prev.program) ? prev.program : []), { time: '', title: '' }],
+        }));
+    }, []);
+
+    const removeProgramItem = useCallback((index) => {
+        setData((prev) => ({
+            ...prev,
+            program: (Array.isArray(prev.program) ? prev.program : []).filter((_, itemIndex) => itemIndex !== index),
+        }));
+    }, []);
+
+    const changeProgramItem = useCallback((index, key, value) => {
+        setData((prev) => {
+            const next = Array.isArray(prev.program)
+                ? prev.program.map((item) => ({ ...(item || {}) }))
+                : [];
+            if (!next[index]) return prev;
+
+            next[index] = {
+                ...next[index],
+                [key]: value,
+            };
+
+            return { ...prev, program: next };
+        });
+    }, []);
 
     const handleMainPhotoUpload = async (file) => {
         if (!file) return;
@@ -419,6 +517,7 @@ const previewData = {
                 eventDate: data.eventDate ? new Date(data.eventDate).toISOString().slice(0, 19) : null,
                 previewPhotoUrl: data.previewPhotoUrl || null,
                 gallery: data.gallery || [],
+                program: normalizeProgram(data.program),
                 topic1: data.topic1 || null,
                 topic2: data.topic2 || null,
                 locationName: data.locationName || null,
@@ -613,7 +712,22 @@ const previewData = {
                                 data={data}
                                 onChangeField={set}
                                 onChangeEventDate={handleEventDateChange}
+                                supportsMap={supportsMap}
                             />
+
+                        {supportsProgram && (
+                            <ProgramSection
+                                Section={Section}
+                                Field={Field}
+                                isMobile={isMobile}
+                                inputStyle={inputStyle}
+                                colors={C}
+                                program={Array.isArray(data.program) ? data.program : []}
+                                onAddItem={addProgramItem}
+                                onRemoveItem={removeProgramItem}
+                                onChangeItem={changeProgramItem}
+                            />
+                        )}
                     </div>
 
                     {/* ── Right: Full preview panel ── */}

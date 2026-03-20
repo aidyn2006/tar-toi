@@ -60,7 +60,7 @@ const DateLocationSection = ({
             </Field>
 
             <Field label={tr('Той өтетін орын', 'Место проведения')}>
-                <div style={{ position: 'relative', marginBottom: '0.6rem' }}>
+                <div style={{ position: 'relative', marginBottom: supportsMap ? '0.6rem' : 0 }}>
                     <MapPin
                         size={14}
                         style={{
@@ -79,12 +79,14 @@ const DateLocationSection = ({
                     />
                 </div>
 
-                <input
-                    value={data.locationUrl}
-                    onChange={onChangeField('locationUrl')}
-                    placeholder={tr('2GIS немесе Google Maps сілтемесі', 'Ссылка на 2GIS или Google Maps')}
-                    style={inputStyle}
-                />
+                {supportsMap && (
+                    <input
+                        value={data.locationUrl}
+                        onChange={onChangeField('locationUrl')}
+                        placeholder={tr('2GIS немесе Google Maps сілтемесі', 'Ссылка на 2GIS или Google Maps')}
+                        style={inputStyle}
+                    />
+                )}
             </Field>
         </Section>
     );

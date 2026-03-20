@@ -119,6 +119,23 @@ export function normalizeUrl(url) {
     return window.location.origin + url;
 }
 
+export function normalizeProgramEntries(program) {
+    if (!Array.isArray(program)) return [];
+
+    return program
+        .map((item) => {
+            if (!item || typeof item !== 'object') return null;
+
+            const time = String(item.time || '').trim();
+            const title = String(item.title || item.label || item.name || '').trim();
+
+            if (!time && !title) return null;
+
+            return { time, title };
+        })
+        .filter(Boolean);
+}
+
 export function buildConfig(invite, lang = 'kk') {
     const eventDate = invite?.eventDate ? new Date(invite.eventDate) : null;
     const { groom, bride } = parseNames(invite);
@@ -129,6 +146,7 @@ export function buildConfig(invite, lang = 'kk') {
     const supportsGallery = templateMeta?.features?.gallery ?? true;
     const supportsMusic = templateMeta?.features?.music ?? true;
     const supportsMap = templateMeta?.features?.map ?? true;
+    const supportsProgram = templateMeta?.features?.program ?? false;
 
     const musicResolved = resolveMusicTrack(invite);
 
@@ -138,6 +156,7 @@ export function buildConfig(invite, lang = 'kk') {
 
     const heroPhotoUrl = normalizeUrl(invite?.previewPhotoUrl || gallery[0] || '');
     const numericLimit = Number(invite?.maxGuests) || 0;
+    const program = supportsProgram ? normalizeProgramEntries(invite?.program) : [];
 
     return {
         names: { bride, groom },
@@ -179,6 +198,7 @@ export function buildConfig(invite, lang = 'kk') {
             'Дорогие родные и близкие, приглашаем вас на наше торжество...'
         ),
         toiOwners: invite?.toiOwners || '',
+        program,
         heroPhotoUrl,
         maxGuests: numericLimit,
         isWedding: hasPairNames,
@@ -191,6 +211,7 @@ export function buildConfig(invite, lang = 'kk') {
             gallery: supportsGallery,
             music: supportsMusic,
             map: supportsMap,
+            program: supportsProgram,
         },
     };
 }

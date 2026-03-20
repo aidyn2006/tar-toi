@@ -10,6 +10,9 @@ export function injectRsvp(html, { inviteId = null, maxGuests = 0, lang = 'kk' }
 <script>
 (function () {
     var MAX_GUESTS = ${limit};
+    var isAttendingValue = function(value) {
+        return String(value) !== 'false';
+    };
 
     window.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.guest-opt').forEach(function(button) {
@@ -17,6 +20,7 @@ export function injectRsvp(html, { inviteId = null, maxGuests = 0, lang = 'kk' }
         });
 
         var guestsInput = document.getElementById('rGuests');
+        var guestsField = document.getElementById('rGuestsField');
         if (guestsInput) {
             guestsInput.removeAttribute('readonly');
             guestsInput.type = 'number';
@@ -29,10 +33,12 @@ export function injectRsvp(html, { inviteId = null, maxGuests = 0, lang = 'kk' }
             }
 
             guestsInput.value = '1';
-            guestsInput.style.width = '80px';
-            guestsInput.style.textAlign = 'center';
-            guestsInput.style.display = 'block';
-            guestsInput.style.margin = '8px auto';
+            if (!guestsField) {
+                guestsInput.style.width = '80px';
+                guestsInput.style.textAlign = 'center';
+                guestsInput.style.display = 'block';
+                guestsInput.style.margin = '8px auto';
+            }
 
             var clampGuests = function() {
                 var value = parseInt(guestsInput.value, 10) || 1;
@@ -91,7 +97,8 @@ export function injectRsvp(html, { inviteId = null, maxGuests = 0, lang = 'kk' }
 
             var submitTarget = formEl.querySelector('.submit-btn, .btn-submit, .submit');
             if (submitTarget) {
-                formEl.insertBefore(err, submitTarget);
+                var submitContainer = submitTarget.parentNode === formEl ? submitTarget : submitTarget.parentNode;
+                formEl.insertBefore(err, submitContainer || submitTarget);
             } else {
                 formEl.appendChild(err);
             }
@@ -99,10 +106,14 @@ export function injectRsvp(html, { inviteId = null, maxGuests = 0, lang = 'kk' }
 
         err.textContent = '';
 
+        var attendingInput = document.getElementById('rAttending');
+        var attending = attendingInput ? isAttendingValue(attendingInput.value) : true;
         var guestsInput = document.getElementById('rGuests');
-        var guestsCount = Math.max(1, parseInt(guestsInput ? guestsInput.value : '1', 10) || 1);
+        var guestsCount = attending
+            ? Math.max(1, parseInt(guestsInput ? guestsInput.value : '1', 10) || 1)
+            : 0;
 
-        if (MAX_GUESTS > 0 && guestsCount > MAX_GUESTS) {
+        if (attending && MAX_GUESTS > 0 && guestsCount > MAX_GUESTS) {
             err.textContent = '${limitText}' + MAX_GUESTS;
             if (guestsInput) guestsInput.value = String(MAX_GUESTS);
             return;
@@ -116,7 +127,7 @@ export function injectRsvp(html, { inviteId = null, maxGuests = 0, lang = 'kk' }
                     guestName: name,
                     phone: phone || null,
                     guestsCount: guestsCount,
-                    attending: true,
+                    attending: attending,
                     note: (noteEl ? noteEl.value : '').trim() || null
                 })
             });

@@ -1,0 +1,1457 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Wedding Invitation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --background: #f8f2ed;
+      --foreground: #4f3c35;
+      --card: #f3ece6;
+      --muted: #ece1d8;
+      --muted-foreground: #8e7d77;
+      --primary: #7b2033;
+      --primary-foreground: #f8f2ed;
+      --border: rgba(150, 126, 116, 0.18);
+      --blush: #ead7cf;
+      --taupe: rgba(79, 60, 53, 0.62);
+      --gold: #b2872d;
+
+      --font-display: 'Great Vibes', cursive;
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'Montserrat', sans-serif;
+
+      --shadow-card: 0 18px 42px rgba(79, 60, 53, 0.08);
+      --shadow-soft: 0 14px 34px rgba(79, 60, 53, 0.12);
+      --shadow-photo: 0 18px 32px rgba(79, 60, 53, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: radial-gradient(circle at top, rgba(234, 215, 207, 0.46), transparent 34%), var(--background);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    .page-root {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: var(--background);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .section-kicker {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+    }
+
+    .heart-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 16px 0 0;
+    }
+
+    .heart-divider::before,
+    .heart-divider::after {
+      content: "";
+      width: 60px;
+      max-width: 100%;
+      height: 1px;
+      background: rgba(142, 125, 119, 0.4);
+      flex-shrink: 0;
+    }
+
+    .heart-divider svg {
+      width: 18px;
+      height: 16px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .hero {
+      position: relative;
+      padding: 24px 24px 40px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-top-floral {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 320px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.96;
+      animation: floral-in 1.2s ease-out both;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding-top: 94px;
+    }
+
+    .hero-photo-wrap {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--blush);
+      box-shadow: var(--shadow-photo);
+      background: linear-gradient(160deg, #e8ddd5 0%, #f3ece6 100%);
+      animation: photo-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both 0.25s;
+    }
+
+    .hero-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .hero-meta {
+      margin-top: 24px;
+      animation: rise-in 0.85s ease-out both 0.55s;
+    }
+
+    .hero-names {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 11vw, 58px);
+      line-height: 0.98;
+      color: var(--primary);
+      font-weight: 400;
+    }
+
+    .hero-amp-visible {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      line-height: 1;
+      font-style: italic;
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .hero-date {
+      margin-top: 12px;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      color: var(--muted-foreground);
+    }
+
+    .invite-section {
+      padding: 0 32px 40px;
+      text-align: center;
+    }
+
+    #eventText {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      line-height: 1.72;
+      color: rgba(79, 60, 53, 0.92);
+    }
+
+    .invite-corner {
+      width: 120px;
+      display: block;
+      margin: 24px auto 0;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .date-section,
+    .timeline-section,
+    .location-section,
+    .owners-section,
+    .gallery-section,
+    .rsvp-section,
+    .footer-section {
+      padding: 0 24px 48px;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .date-card {
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 32px 40px;
+      border-radius: 24px;
+      text-align: center;
+    }
+
+    .date-month {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    .date-day {
+      margin-top: 4px;
+      font-family: var(--font-display);
+      font-size: 64px;
+      line-height: 0.95;
+      color: var(--primary);
+    }
+
+    .date-weekday {
+      margin-top: 6px;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      letter-spacing: 0.05em;
+      color: var(--muted-foreground);
+    }
+
+    .date-time {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(79, 60, 53, 0.78);
+    }
+
+    .date-time svg {
+      width: 14px;
+      height: 14px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .timeline-wrap {
+      position: relative;
+      width: min(100%, 320px);
+      margin: 0 auto;
+      padding-left: 0;
+      min-height: 600px;
+    }
+
+    .timeline-svg {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 600px;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .timeline-trace-base {
+      stroke: rgba(150, 126, 116, 0.28);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .timeline-trace-active {
+      stroke: var(--primary);
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 660;
+      stroke-dashoffset: 660;
+      transition: stroke-dashoffset 1.8s ease;
+    }
+
+    .timeline-wrap.is-visible .timeline-trace-active {
+      stroke-dashoffset: 0;
+    }
+
+    .timeline-items {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .timeline-item {
+      position: relative;
+      min-height: 58px;
+      padding-left: calc(50% + 28px);
+    }
+
+    .timeline-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      box-shadow: var(--shadow-soft);
+      font-size: 18px;
+      flex-shrink: 0;
+      position: absolute;
+      left: calc(50% - 20px);
+      top: 0;
+    }
+
+    .timeline-copy {
+      padding-top: 2px;
+      text-align: left;
+    }
+
+    .timeline-time {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--foreground);
+    }
+
+    .timeline-label {
+      margin-top: 4px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted-foreground);
+    }
+
+    .location-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .location-card img {
+      width: 100%;
+      height: 180px;
+      display: block;
+      object-fit: cover;
+      opacity: 0.4;
+    }
+
+    .location-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(123, 32, 51, 0.38), rgba(123, 32, 51, 0.92));
+    }
+
+    .location-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 24px 32px;
+      margin-top: -24px;
+      text-align: center;
+    }
+
+    .location-card .section-kicker {
+      color: rgba(248, 242, 237, 0.72);
+    }
+
+    #locationName {
+      margin-top: 8px;
+      font-family: var(--font-display);
+      font-size: 42px;
+      line-height: 1;
+      color: var(--primary-foreground);
+      font-weight: 400;
+    }
+
+    #locationDetails {
+      margin-top: 8px;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(248, 242, 237, 0.82);
+    }
+
+    #mapBtnWrap {
+      margin-top: 20px;
+    }
+
+    #mapBtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 242, 237, 0.3);
+      background: rgba(248, 242, 237, 0.15);
+      color: var(--primary-foreground);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      transition: background-color 0.25s ease, transform 0.25s ease;
+    }
+
+    #mapBtn:hover {
+      background: rgba(248, 242, 237, 0.22);
+      transform: translateY(-1px);
+    }
+    .owners-section {
+      text-align: center;
+    }
+
+    #ownersGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    #ownersGrid.single {
+      grid-template-columns: 1fr;
+    }
+
+    .owner-card {
+      padding: 20px 16px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .owner-role {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    .owner-name {
+      margin-top: 10px;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--foreground);
+    }
+
+    .owner-family {
+      margin-top: 6px;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--muted-foreground);
+    }
+
+    #gallerySlides {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    #gallerySlides::-webkit-scrollbar {
+      display: none;
+    }
+
+    #gallerySlides img,
+    .gallery-placeholder {
+      width: 200px;
+      height: 260px;
+      flex: 0 0 auto;
+      border-radius: 16px;
+      scroll-snap-align: start;
+      box-shadow: var(--shadow-card);
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-placeholder {
+      border: 1px solid var(--border);
+      background: rgba(234, 215, 207, 0.48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .gallery-placeholder span {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-style: italic;
+      color: var(--muted-foreground);
+    }
+
+    .rsvp-card {
+      padding: 24px;
+      border-radius: 24px;
+    }
+
+    .rsvp-title {
+      margin-top: 6px;
+      font-family: var(--font-display);
+      font-size: 44px;
+      line-height: 1;
+      color: var(--primary);
+      text-align: center;
+      font-weight: 400;
+    }
+
+    #rsvpForm {
+      margin-top: 24px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted-foreground);
+    }
+
+    #rName,
+    #rPhone,
+    #rGuests,
+    #rNote {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    #rName:focus,
+    #rPhone:focus,
+    #rGuests:focus,
+    #rNote:focus {
+      border-color: rgba(123, 32, 51, 0.35);
+      box-shadow: 0 0 0 4px rgba(123, 32, 51, 0.08);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #rNote {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      width: 100%;
+      min-height: 50px;
+      border: none;
+      border-radius: 999px;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.25s ease, background-color 0.25s ease;
+    }
+
+    .submit-btn:hover {
+      background: #6f1b2d;
+      transform: translateY(-1px);
+    }
+
+    #successMsg {
+      display: none;
+      margin-top: 18px;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    #successTitle {
+      font-family: var(--font-display);
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    #successText {
+      margin-top: 6px;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--muted-foreground);
+    }
+
+    .footer-section {
+      padding-bottom: 64px;
+      text-align: center;
+    }
+
+    .footer-corner {
+      width: 100px;
+      display: block;
+      margin: 0 auto 16px;
+      opacity: 0.5;
+      transform: rotate(180deg);
+      pointer-events: none;
+    }
+
+    #footerName {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    #footLine {
+      margin-top: 8px;
+      font-family: var(--font-display);
+      font-size: 46px;
+      line-height: 1;
+      color: var(--primary);
+      font-weight: 400;
+    }
+
+    #footerNote {
+      margin-top: 12px;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: var(--muted-foreground);
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition-delay: var(--reveal-delay, 0s);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes floral-in {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 0.96;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes photo-in {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero {
+        padding: 20px 18px 36px;
+      }
+
+      .hero-content {
+        padding-top: 82px;
+      }
+
+      .hero-top-floral {
+        width: 280px;
+      }
+
+      .hero-photo-wrap {
+        width: 206px;
+        height: 206px;
+      }
+
+      .hero-name {
+        font-size: 42px;
+      }
+
+      .invite-section {
+        padding: 0 24px 36px;
+      }
+
+      .date-card {
+        padding: 28px 28px;
+      }
+
+      .date-day {
+        font-size: 58px;
+      }
+
+      #ownersGrid {
+        gap: 12px;
+      }
+
+      .owner-card {
+        padding: 18px 12px;
+      }
+
+      #gallerySlides img,
+      .gallery-placeholder {
+        width: 184px;
+        height: 244px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .timeline-trace-active {
+        stroke-dashoffset: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG = {
+      names: { groom: "Ерлан", bride: "Айгерім" },
+      day: "15-07-2026",
+      hour: "16:00",
+      location: "Rixos Almaty",
+      locationDetail: "Алматы қ., Сейфуллин даңғылы, 506",
+      locationUrl: "",
+      gallery: [],
+      description: "Құрметті қонағымыз! Біздің бақытты күнімізге куә болып, той мерекемізге қатысуыңызды сүйіспеншілікпен шақырамыз. Сіздің қатысуыңыз біздің қуанышымызды еселей түседі.",
+      toiOwners: "Серік & Гүлнар|Ахметовтер||Болат & Сара|Қасымовтар",
+      music: { title: "", artist: "", url: "" },
+      lang: "kk"
+    };
+  </script>
+
+  <div class="page-root">
+    <div class="page">
+      <section class="hero">
+        <img class="hero-top-floral" src="/template-assets/wedding-template9/floral-top.png" alt="">
+
+        <div class="hero-content">
+          <p id="heroKicker" class="section-kicker">Той шақыруы</p>
+
+          <div class="hero-photo-wrap">
+            <img id="heroPhoto" src="/template-assets/wedding-template9/couple-hero.jpg" alt="Жас жұп">
+          </div>
+
+          <div class="hero-meta">
+            <div class="hero-names">
+              <span id="hGroom" class="hero-name">Ерлан</span>
+              <span class="hero-amp-visible" aria-hidden="true">&amp;</span>
+              <span id="hBride" class="hero-name">Айгерім</span>
+            </div>
+            <p id="heroDateLine" class="hero-date">15 шілде 2026 жыл</p>
+            <p id="heroNamesLine" class="sr-only">Ерлан &amp; Айгерім</p>
+            <p id="heroName" class="sr-only">Ерлан &amp; Айгерім</p>
+          </div>
+        </div>
+
+        <div class="heart-divider" aria-hidden="true">
+          <svg viewBox="0 0 18 16" fill="none">
+            <path d="M9 15.3L7.7 14.1C3.1 9.9 0 7.1 0 3.7C0 1.1 2 -0.3 4.5 0.1C5.9 0.3 7.2 1.2 8 2.4L9 3.9L10 2.4C10.8 1.2 12.1 0.3 13.5 0.1C16 -0.3 18 1.1 18 3.7C18 7.1 14.9 9.9 10.3 14.1L9 15.3Z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </section>
+
+      <section class="invite-section">
+        <div data-reveal>
+          <p id="eventText">Құрметті қонағымыз! Біздің бақытты күнімізге куә болып, той мерекемізге қатысуыңызды сүйіспеншілікпен шақырамыз. Сіздің қатысуыңыз біздің қуанышымызды еселей түседі.</p>
+        </div>
+        <img class="invite-corner" data-reveal style="--reveal-delay:.15s" src="/template-assets/wedding-template9/floral-corner.png" alt="">
+      </section>
+
+      <section class="date-section">
+        <div class="section-heading" data-reveal>
+          <p id="dateSectionLabel" class="section-kicker">Күні</p>
+        </div>
+
+        <div class="date-card card" data-reveal style="--reveal-delay:.08s">
+          <p id="dateMonth" class="date-month">Шілде</p>
+          <p id="dateDay" class="date-day">15</p>
+          <p id="dateWeekday" class="date-weekday">Сәрсенбі, 2026</p>
+          <div class="date-time">
+            <svg viewBox="0 0 14 14" fill="none">
+              <path d="M7 13L5.95 12.05C2.7 9.1 0.5 7.1 0.5 4.6C0.5 2.6 2.1 1 4.1 1C5.2 1 6.3 1.5 7 2.3C7.7 1.5 8.8 1 9.9 1C11.9 1 13.5 2.6 13.5 4.6C13.5 7.1 11.3 9.1 8.05 12.05L7 13Z" fill="currentColor"></path>
+            </svg>
+            <span id="dateTime">16:00 — Бастау</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="timeline-section">
+        <div class="section-heading" data-reveal>
+          <p id="timelineSectionLabel" class="section-kicker">Бағдарлама</p>
+        </div>
+
+        <div id="timelineWrap" class="timeline-wrap" data-reveal style="--reveal-delay:.05s">
+          <svg class="timeline-svg" viewBox="0 0 80 600" preserveAspectRatio="none">
+            <path class="timeline-trace-base" d="M40 0 C40 56, 34 108, 38 160 C42 210, 48 250, 40 292 C28 360, 8 430, 22 504 C30 546, 40 576, 40 600"></path>
+            <path class="timeline-trace-active" d="M40 0 C40 56, 34 108, 38 160 C42 210, 48 250, 40 292 C28 360, 8 430, 22 504 C30 546, 40 576, 40 600"></path>
+          </svg>
+
+          <div id="timelineItems" class="timeline-items"></div>
+        </div>
+      </section>
+
+      <section class="location-section">
+        <div class="location-card" data-reveal>
+          <img id="locationPhoto" src="/template-assets/wedding-template9/venue.jpg" alt="Venue">
+          <div class="location-overlay"></div>
+          <div class="location-content">
+            <p id="locationSectionLabel" class="section-kicker">Мекен-жай</p>
+            <h3 id="locationName">Rixos Almaty</h3>
+            <p id="locationDetails">Алматы қ., Сейфуллин даңғылы, 506</p>
+            <div id="mapBtnWrap">
+              <a id="mapBtn" href="#" target="_blank" rel="noreferrer noopener">📍 Картадан көру</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="ownersSection" class="owners-section">
+        <div data-reveal>
+          <p id="ownersSectionLabel" class="section-kicker">Құдалар</p>
+          <div class="heart-divider" aria-hidden="true">
+            <svg viewBox="0 0 18 16" fill="none">
+              <path d="M9 15.3L7.7 14.1C3.1 9.9 0 7.1 0 3.7C0 1.1 2 -0.3 4.5 0.1C5.9 0.3 7.2 1.2 8 2.4L9 3.9L10 2.4C10.8 1.2 12.1 0.3 13.5 0.1C16 -0.3 18 1.1 18 3.7C18 7.1 14.9 9.9 10.3 14.1L9 15.3Z" fill="currentColor"></path>
+            </svg>
+          </div>
+        </div>
+
+        <p id="ownersBigName" class="sr-only">Серік &amp; Гүлнар</p>
+        <div id="ownersGrid"></div>
+      </section>
+
+      <section class="gallery-section">
+        <div class="section-heading" data-reveal>
+          <p id="gallerySectionLabel" class="section-kicker">Біздің сәттер</p>
+        </div>
+        <div id="gallerySlides" data-reveal style="--reveal-delay:.05s"></div>
+      </section>
+
+      <section class="rsvp-section">
+        <div class="rsvp-card card" data-reveal>
+          <p id="rsvpSectionLabel" class="section-kicker" style="text-align:center;">Қатысу</p>
+          <h3 id="rsvpTitle" class="rsvp-title">Сізді күтеміз</h3>
+
+          <div id="rsvpForm">
+            <input id="rAttending" type="hidden" value="true">
+
+            <div class="field">
+              <label id="rNameLabel" for="rName">Аты-жөніңіз</label>
+              <input id="rName" type="text" placeholder="Толық аты-жөніңіз">
+            </div>
+
+            <div class="field">
+              <label id="rPhoneLabel" for="rPhone">Телефон</label>
+              <input id="rPhone" type="tel" placeholder="+7 ___ ___ __ __">
+            </div>
+
+            <div id="rGuestsField" class="field">
+              <label id="rGuestsLabel" for="rGuests">Қонақ саны</label>
+              <input id="rGuests" type="number" min="1" value="1">
+            </div>
+
+            <div class="field">
+              <label id="rNoteLabel" for="rNote">Тілек немесе ескерту</label>
+              <textarea id="rNote" placeholder="Қосымша тілек..."></textarea>
+            </div>
+
+            <button class="submit-btn" type="button" onclick="submitRSVP && submitRSVP()">
+              <span id="rsvpSubmitText">Жауап жіберу</span>
+            </button>
+          </div>
+
+          <div id="successMsg">
+            <p id="successTitle">Рақмет!</p>
+            <p id="successText">Сізді күтеміз</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="footer-section">
+        <div data-reveal>
+          <img class="footer-corner" src="/template-assets/wedding-template9/floral-corner.png" alt="">
+          <p id="footerName">Той тойлау</p>
+          <p id="footLine">Ерлан &amp; Айгерім</p>
+          <p id="footerNote">Махаббатпен • 2026</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const DEFAULT_ASSETS = {
+        hero: "/template-assets/wedding-template9/couple-hero.jpg",
+        venue: "/template-assets/wedding-template9/venue.jpg"
+      };
+
+      const COPY = {
+        kk: {
+          pageTitle: "Той шақыруы",
+          coupleAlt: "Жас жұп",
+          venueAlt: "Мейрамхана",
+          galleryAlt: "Фото",
+          heroKicker: "Той шақыруы",
+          dateSectionLabel: "Күні",
+          timelineSectionLabel: "Бағдарлама",
+          locationLabel: "Мекен-жай",
+          ownersLabel: "Құдалар",
+          galleryLabel: "Біздің сәттер",
+          rsvpLabel: "Қатысу",
+          rsvpTitle: "Сізді күтеміз",
+          nameLabel: "Аты-жөніңіз",
+          namePlaceholder: "Толық аты-жөніңіз",
+          phoneLabel: "Телефон",
+          phonePlaceholder: "+7 ___ ___ __ __",
+          guestsLabel: "Қонақ саны",
+          noteLabel: "Тілек немесе ескерту",
+          notePlaceholder: "Қосымша тілек...",
+          submitText: "Жауап жіберу",
+          successTitle: "Рақмет!",
+          successText: "Сізді күтеміз",
+          mapButton: "📍 Картадан көру",
+          footerLabel: "Той тойлау",
+          footerNote: "Махаббатпен",
+          timeLabel: "Бастау",
+          monthsNom: ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"],
+          monthsGen: ["қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым", "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан"],
+          weekdays: ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"],
+          timelineTitles: ["Қонақтарды қарсы алу", "Неке қию рәсімі", "Той басталуы", "Бірінші би", "Ақ тілек"],
+          timelineIcons: ["🏛", "💍", "🥂", "💃", "✨"],
+          ownerRoles: ["Күйеу жігіт тарапынан", "Қалыңдық тарапынан"],
+          galleryPlaceholders: ["Фото 1", "Фото 2", "Фото 3"],
+          defaultDescription: "Құрметті қонағымыз! Біздің бақытты күнімізге куә болып, той мерекемізге қатысуыңызды сүйіспеншілікпен шақырамыз. Сіздің қатысуыңыз біздің қуанышымызды еселей түседі."
+        },
+        ru: {
+          pageTitle: "Свадебное приглашение",
+          coupleAlt: "Молодожены",
+          venueAlt: "Локация торжества",
+          galleryAlt: "Фото",
+          heroKicker: "Свадебное приглашение",
+          dateSectionLabel: "Дата",
+          timelineSectionLabel: "Программа",
+          locationLabel: "Локация",
+          ownersLabel: "Родители",
+          galleryLabel: "Наши моменты",
+          rsvpLabel: "Ответ",
+          rsvpTitle: "Будем ждать вас",
+          nameLabel: "Имя и фамилия",
+          namePlaceholder: "Введите имя и фамилию",
+          phoneLabel: "Телефон",
+          phonePlaceholder: "+7 ___ ___ __ __",
+          guestsLabel: "Количество гостей",
+          noteLabel: "Пожелание или комментарий",
+          notePlaceholder: "Оставьте комментарий...",
+          submitText: "Отправить ответ",
+          successTitle: "Спасибо!",
+          successText: "Будем рады видеть вас",
+          mapButton: "📍 Открыть карту",
+          footerLabel: "Свадебное торжество",
+          footerNote: "С любовью",
+          timeLabel: "Начало",
+          monthsNom: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+          monthsGen: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+          weekdays: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+          timelineTitles: ["Сбор гостей", "Церемония бракосочетания", "Начало торжества", "Первый танец", "Теплые пожелания"],
+          timelineIcons: ["🏛", "💍", "🥂", "💃", "✨"],
+          ownerRoles: ["Со стороны жениха", "Со стороны невесты"],
+          galleryPlaceholders: ["Фото 1", "Фото 2", "Фото 3"],
+          defaultDescription: "Дорогие гости! С большой радостью приглашаем вас разделить с нами один из самых важных дней нашей жизни и стать частью нашего свадебного торжества."
+        }
+      };
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function parseDate(value) {
+        const parts = String(value || "").split("-").map(Number);
+        if (parts.length !== 3 || parts.some(Number.isNaN)) {
+          return { dd: 15, mm: 7, yy: 2026 };
+        }
+        return { dd: parts[0], mm: parts[1], yy: parts[2] };
+      }
+
+      function pad(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function getLang(conf) {
+        return conf && conf.lang === "ru" ? "ru" : "kk";
+      }
+
+      function getCopy(conf) {
+        return COPY[getLang(conf)];
+      }
+
+      function getNames(conf) {
+        const names = conf && conf.names ? conf.names : {};
+        return {
+          groom: names.groom || conf.childName || "Ерлан",
+          bride: names.bride || "Айгерім"
+        };
+      }
+
+      function joinNames(names) {
+        return [names.groom, names.bride].filter(Boolean).join(" & ");
+      }
+
+      function renderText(id, value) {
+        const node = byId(id);
+        if (node) node.textContent = value || "";
+      }
+
+      function renderHtml(id, value) {
+        const node = byId(id);
+        if (node) node.innerHTML = String(value || "").replace(/\n/g, "<br>");
+      }
+
+      function inferLocationDetails(location) {
+        if (!location) return "";
+        const value = String(location).trim();
+        if (value.includes("\n")) return value.split("\n").slice(1).join("\n");
+        if (value.includes(" | ")) return value.split(" | ").slice(1).join(" | ");
+        if (value.includes(",")) return value.split(",").slice(1).join(", ").trim();
+        return "";
+      }
+
+      function formatHeroDate(conf, copy) {
+        const date = parseDate(conf.day);
+        if (getLang(conf) === "ru") {
+          return date.dd + " " + copy.monthsGen[date.mm - 1] + " " + date.yy + " года";
+        }
+        return date.dd + " " + copy.monthsGen[date.mm - 1] + " " + date.yy + " жыл";
+      }
+
+      function formatDateMonth(conf, copy) {
+        return copy.monthsNom[parseDate(conf.day).mm - 1];
+      }
+
+      function formatDateWeekday(conf, copy) {
+        const date = parseDate(conf.day);
+        const realDate = new Date(date.yy, date.mm - 1, date.dd);
+        return copy.weekdays[realDate.getDay()] + ", " + date.yy;
+      }
+
+      function formatDateTime(conf, copy) {
+        return (conf.hour || "16:00") + " — " + copy.timeLabel;
+      }
+
+      function parseTime(value) {
+        const bits = String(value || "16:00").split(":").map(Number);
+        return {
+          hh: Number.isFinite(bits[0]) ? bits[0] : 16,
+          mm: Number.isFinite(bits[1]) ? bits[1] : 0
+        };
+      }
+
+      function plusHours(base, delta) {
+        const hours = (base.hh + delta) % 24;
+        return pad(hours) + ":" + pad(base.mm);
+      }
+
+      function getProgramEntries(conf, copy) {
+        if (Array.isArray(conf.program) && conf.program.length) {
+          return conf.program
+            .map(function (item, index) {
+              if (!item || typeof item !== "object") return null;
+
+              const time = String(item.time || "").trim() || plusHours(parseTime(conf.hour || "16:00"), index);
+              const title = String(item.title || item.label || item.name || "").trim();
+
+              if (!time && !title) return null;
+
+              return {
+                time: time,
+                title: title || (copy.timelineTitles[index] || "")
+              };
+            })
+            .filter(Boolean);
+        }
+
+        const base = parseTime(conf.hour || "16:00");
+        return copy.timelineTitles.map(function (title, index) {
+          return {
+            time: plusHours(base, index),
+            title: title
+          };
+        });
+      }
+
+      function renderTimeline(conf, copy) {
+        const wrap = byId("timelineItems");
+        if (!wrap) return;
+
+        const entries = getProgramEntries(conf, copy);
+        wrap.innerHTML = "";
+
+        entries.forEach(function (entry, index) {
+          const item = document.createElement("div");
+          item.className = "timeline-item";
+
+          const icon = document.createElement("div");
+          icon.className = "timeline-icon";
+          icon.textContent = copy.timelineIcons[index] || "•";
+
+          const text = document.createElement("div");
+          text.className = "timeline-copy";
+
+          const time = document.createElement("p");
+          time.className = "timeline-time";
+          time.textContent = entry.time;
+
+          const title = document.createElement("p");
+          title.className = "timeline-label";
+          title.textContent = entry.title;
+
+          text.appendChild(time);
+          text.appendChild(title);
+          item.appendChild(icon);
+          item.appendChild(text);
+          wrap.appendChild(item);
+        });
+      }
+
+      function parseOwners(value, copy) {
+        if (!value) return [];
+
+        if (String(value).includes("||")) {
+          return String(value).split("||").filter(Boolean).map(function (item, index) {
+            const parts = item.split("|");
+            return {
+              role: copy.ownerRoles[index] || "",
+              name: (parts[0] || "").trim(),
+              family: (parts[1] || "").trim()
+            };
+          });
+        }
+
+        return [{
+          role: copy.ownerRoles[0] || "",
+          name: String(value).trim(),
+          family: ""
+        }];
+      }
+
+      function renderOwners(conf, copy) {
+        const section = byId("ownersSection");
+        const grid = byId("ownersGrid");
+        const hidden = byId("ownersBigName");
+        if (!section || !grid || !hidden) return;
+
+        const owners = parseOwners(conf.toiOwners, copy);
+        if (!owners.length) {
+          section.style.display = "none";
+          return;
+        }
+
+        section.style.display = "block";
+        hidden.textContent = owners.map(function (owner) { return owner.name; }).join(" / ");
+        grid.className = owners.length === 1 ? "single" : "";
+        grid.id = "ownersGrid";
+        grid.innerHTML = "";
+
+        owners.forEach(function (owner) {
+          const card = document.createElement("div");
+          card.className = "owner-card card";
+
+          const role = document.createElement("p");
+          role.className = "owner-role";
+          role.textContent = owner.role || "";
+
+          const name = document.createElement("p");
+          name.className = "owner-name";
+          name.textContent = owner.name || "";
+
+          const family = document.createElement("p");
+          family.className = "owner-family";
+          family.textContent = owner.family || "";
+
+          card.appendChild(role);
+          card.appendChild(name);
+          if (owner.family) card.appendChild(family);
+          grid.appendChild(card);
+        });
+      }
+
+      function renderGallery(conf, copy) {
+        const wrap = byId("gallerySlides");
+        if (!wrap) return;
+
+        wrap.innerHTML = "";
+        const images = Array.isArray(conf.gallery) ? conf.gallery.filter(Boolean) : [];
+
+        if (!images.length) {
+          copy.galleryPlaceholders.forEach(function (label) {
+            const card = document.createElement("div");
+            card.className = "gallery-placeholder";
+            const text = document.createElement("span");
+            text.textContent = label;
+            card.appendChild(text);
+            wrap.appendChild(card);
+          });
+          return;
+        }
+
+        images.forEach(function (src, index) {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = copy.galleryAlt + " " + (index + 1);
+          wrap.appendChild(img);
+        });
+      }
+
+      function renderLocation(conf, copy) {
+        const locationName = byId("locationName");
+        const locationDetails = byId("locationDetails");
+        const mapBtnWrap = byId("mapBtnWrap");
+        const mapBtn = byId("mapBtn");
+        const locationPhoto = byId("locationPhoto");
+
+        if (locationName) locationName.textContent = conf.location || "";
+        if (locationDetails) {
+          const detail = conf.locationDetail || conf.address || inferLocationDetails(conf.location);
+          if (detail) {
+            locationDetails.style.display = "block";
+            locationDetails.innerHTML = String(detail).replace(/\n/g, "<br>");
+          } else {
+            locationDetails.style.display = "none";
+          }
+        }
+
+        if (locationPhoto) {
+          locationPhoto.src = conf.locationPhotoUrl || conf.placePhotoUrl || DEFAULT_ASSETS.venue;
+          locationPhoto.alt = copy.venueAlt;
+        }
+
+        if (mapBtn && mapBtnWrap) {
+          mapBtn.textContent = copy.mapButton;
+          mapBtn.href = conf.locationUrl || "#";
+          mapBtnWrap.style.display = conf.location || conf.locationUrl ? "block" : "none";
+          mapBtn.style.pointerEvents = conf.locationUrl ? "auto" : "none";
+          mapBtn.style.opacity = conf.locationUrl ? "1" : "0.55";
+        }
+      }
+
+      function renderHero(conf, copy, names) {
+        const heroPhoto = byId("heroPhoto");
+        const source = conf.heroPhotoUrl || conf.previewPhotoUrl || conf.heroPhoto || (Array.isArray(conf.gallery) && conf.gallery[0]) || DEFAULT_ASSETS.hero;
+        if (heroPhoto) {
+          heroPhoto.src = source;
+          heroPhoto.alt = copy.coupleAlt;
+        }
+
+        renderText("hGroom", names.groom);
+        renderText("hBride", names.bride);
+        renderText("heroNamesLine", joinNames(names));
+        renderText("heroName", joinNames(names));
+        renderText("heroDateLine", formatHeroDate(conf, copy));
+      }
+
+      function applyCopy(conf, copy) {
+        document.documentElement.lang = getLang(conf);
+        renderText("heroKicker", copy.heroKicker);
+        renderText("dateSectionLabel", copy.dateSectionLabel);
+        renderText("timelineSectionLabel", copy.timelineSectionLabel);
+        renderText("locationSectionLabel", copy.locationLabel);
+        renderText("ownersSectionLabel", copy.ownersLabel);
+        renderText("gallerySectionLabel", copy.galleryLabel);
+        renderText("rsvpSectionLabel", copy.rsvpLabel);
+        renderText("rsvpTitle", copy.rsvpTitle);
+        renderText("rNameLabel", copy.nameLabel);
+        renderText("rPhoneLabel", copy.phoneLabel);
+        renderText("rGuestsLabel", copy.guestsLabel);
+        renderText("rNoteLabel", copy.noteLabel);
+        renderText("rsvpSubmitText", copy.submitText);
+        renderText("successTitle", copy.successTitle);
+        renderText("successText", copy.successText);
+        renderText("footerName", copy.footerLabel);
+
+        const footerNote = byId("footerNote");
+        if (footerNote) footerNote.textContent = copy.footerNote + " • " + parseDate(conf.day).yy;
+
+        const name = byId("rName");
+        const phone = byId("rPhone");
+        const note = byId("rNote");
+        if (name) name.placeholder = copy.namePlaceholder;
+        if (phone) phone.placeholder = copy.phonePlaceholder;
+        if (note) note.placeholder = copy.notePlaceholder;
+      }
+
+      function renderDate(conf, copy) {
+        const date = parseDate(conf.day);
+        renderText("dateMonth", formatDateMonth(conf, copy));
+        renderText("dateDay", String(date.dd));
+        renderText("dateWeekday", formatDateWeekday(conf, copy));
+        renderText("dateTime", formatDateTime(conf, copy));
+      }
+
+      function renderDescription(conf, copy) {
+        renderHtml("eventText", conf.description || copy.defaultDescription);
+      }
+
+      function applyReveal() {
+        const nodes = document.querySelectorAll("[data-reveal]");
+        if (!nodes.length) return;
+
+        if (!("IntersectionObserver" in window)) {
+          nodes.forEach(function (node) { node.classList.add("is-visible"); });
+          const timelineWrap = byId("timelineWrap");
+          if (timelineWrap) timelineWrap.classList.add("is-visible");
+          return;
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        nodes.forEach(function (node) { observer.observe(node); });
+      }
+      function applyVisualConfig(conf) {
+        const config = conf || window.CONFIG || CONFIG || {};
+        const copy = getCopy(config);
+        const names = getNames(config);
+
+        renderHero(config, copy, names);
+        renderDescription(config, copy);
+        renderDate(config, copy);
+        renderTimeline(config, copy);
+        renderLocation(config, copy);
+        renderOwners(config, copy);
+        renderGallery(config, copy);
+        applyCopy(config, copy);
+        renderText("footLine", joinNames(names));
+        document.title = joinNames(names) || copy.pageTitle;
+      }
+
+      function queueInitialRender() {
+        setTimeout(function () {
+          setTimeout(function () {
+            applyVisualConfig(window.CONFIG || CONFIG || {});
+            applyReveal();
+          }, 0);
+        }, 0);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", queueInitialRender, { once: true });
+      } else {
+        queueInitialRender();
+      }
+
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "UPDATE_CONFIG") {
+          setTimeout(function () {
+            applyVisualConfig(event.data.config || window.CONFIG || CONFIG || {});
+            applyReveal();
+          }, 0);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -53,6 +53,8 @@ const TEMPLATE_LABELS = {
   'wedding/template6.html': 'Wedding Modern Ivory',
   'wedding/template7.html': 'Wedding Modern Ivory',
   'wedding/template8.html': 'Wedding Modern Ivory',
+  'wedding/template9.html': 'Wedding Minimalizm',
+  'wedding/template10.html': 'Wedding Minimalizm',
 
   'uzatu/template1.html': 'Uzatu Classic Gold',
   'uzatu/template2.html': 'Uzatu Royal Blue',
@@ -89,6 +91,7 @@ const DEFAULT_TEMPLATE_FEATURES = {
     gallery: true,
     music: true,
     map: true,
+    program: false,
 };
 
 const TEMPLATE_META = {
@@ -155,6 +158,22 @@ const TEMPLATE_META = {
     isActive: true,
     isPremium: true,
     preview: '/previews/wedding/template8.jpg',
+  },
+  'wedding/template9.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true, program: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template9.jpg',
+  },
+  'wedding/template10.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true, program: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template10.jpg',
   },
 
   'uzatu/template1.html': {

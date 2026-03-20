@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -272,12 +273,14 @@ public class InviteServiceImpl implements InviteService {
         Map<String, Object> copy = copyPayload(payload);
         normalizeMusicPayload(copy, true);
         cleanMediaPayload(copy, true);
+        normalizeProgramPayload(copy);
         return copy;
     }
 
     private void sanitizePayloadBeforePersist(Map<String, Object> payload) {
         normalizeMusicPayload(payload, true);
         cleanMediaPayload(payload, true);
+        normalizeProgramPayload(payload);
     }
 
     private void normalizeMusicPayload(Map<String, Object> payload, boolean enforceUploadsExistence) {
@@ -340,6 +343,63 @@ public class InviteServiceImpl implements InviteService {
                     .collect(Collectors.toCollection(ArrayList::new));
             payload.put("gallery", filtered);
         }
+    }
+
+    private void normalizeProgramPayload(Map<String, Object> payload) {
+        Object programObj = payload.get("program");
+        if (programObj == null) {
+            return;
+        }
+
+        if (!(programObj instanceof List<?> programList)) {
+            payload.remove("program");
+            return;
+        }
+
+        List<Map<String, String>> normalized = programList.stream()
+                .map(this::normalizeProgramEntry)
+                .filter(Objects::nonNull)
+                .limit(12)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (normalized.isEmpty()) {
+            payload.remove("program");
+        } else {
+            payload.put("program", normalized);
+        }
+    }
+
+    private Map<String, String> normalizeProgramEntry(Object item) {
+        if (!(item instanceof Map<?, ?> map)) {
+            return null;
+        }
+
+        String time = asString(map.get("time"));
+        String title = asString(map.get("title"));
+
+        if (title == null || title.isBlank()) {
+            title = asString(map.get("label"));
+        }
+        if (title == null || title.isBlank()) {
+            title = asString(map.get("name"));
+        }
+
+        time = time == null ? "" : time.trim();
+        title = title == null ? "" : title.trim();
+
+        if (time.isBlank() && title.isBlank()) {
+            return null;
+        }
+
+        Map<String, String> normalized = new LinkedHashMap<>();
+        if (!time.isBlank()) {
+            normalized.put("time", time);
+        }
+        if (!title.isBlank()) {
+            normalized.put("title", title);
+        }
+
+        return normalized.isEmpty() ? null : normalized;
     }
 
     private String asString(Object value) {
