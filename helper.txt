@@ -1,2 +1,2 @@
-##-------------Запуск скрипта для создания нового шаблона------------------------##
+##-------------Запуск скрипта для создания нового шаблона (template{id} должен быть уникальным и так же тип задается pair либо single)------------------------##
  npm run make-template -- --category=wedding --name=template10 --type=pair --label="Wedding Minimalizm" --premium --palette=royal
