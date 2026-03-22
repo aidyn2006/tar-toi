@@ -1,7 +1,7 @@
-import React from 'react';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import { useLang } from '../context/LanguageContext';
+import { PUBLIC_ROUTE_KEYS, getPublicSeoConfig } from '../seo/publicRoutes';
 
 const faqItems = [
     {
@@ -31,43 +31,91 @@ const faqItems = [
 ];
 
 const FaqItem = ({ question, answer }) => {
-    const [open, setOpen] = React.useState(false);
     return (
-        <div onClick={() => setOpen(!open)} style={{
-            padding: '1.5rem 1.75rem', borderRadius: '1.25rem', cursor: 'pointer',
-            background: open ? '#ecfdf5' : 'white',
-            border: `1.5px solid ${open ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.1)'}`,
-            transition: 'all 0.25s ease', marginBottom: '0.75rem'
+        <details style={{
+            padding: '1.5rem 1.75rem',
+            borderRadius: '1.25rem',
+            background: 'white',
+            border: '1.5px solid rgba(16,185,129,0.1)',
+            transition: 'all 0.25s ease',
+            marginBottom: '0.75rem'
         }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ fontWeight: 700, fontSize: '1.0625rem', color: '#064e3b', lineHeight: 1.5 }}>{question}</div>
-                <div style={{
-                    width: '2rem', height: '2rem', borderRadius: '50%', flexShrink: 0,
-                    background: open ? '#10b981' : '#f1f5f9', color: open ? 'white' : '#64748b',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '1.25rem', fontWeight: 700, transition: 'all 0.25s ease',
-                    transform: open ? 'rotate(45deg)' : 'none'
-                }}>+</div>
+            <summary style={{
+                listStyle: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '1rem'
+            }}>
+                <span style={{ fontWeight: 700, fontSize: '1.0625rem', color: '#064e3b', lineHeight: 1.5 }}>{question}</span>
+                <span style={{
+                    width: '2rem',
+                    height: '2rem',
+                    borderRadius: '50%',
+                    flexShrink: 0,
+                    background: '#f1f5f9',
+                    color: '#64748b',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.25rem',
+                    fontWeight: 700
+                }}>+</span>
+            </summary>
+            <div style={{ marginTop: '1rem', color: '#64748b', fontSize: '0.95rem', lineHeight: 1.7 }}>
+                {answer}
             </div>
-            {open && (
-                <div style={{ marginTop: '1rem', color: '#64748b', fontSize: '0.95rem', lineHeight: 1.7 }}>
-                    {answer}
-                </div>
-            )}
-        </div>
+        </details>
     );
 };
 
 const FAQPage = () => {
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+    const seo = getPublicSeoConfig(lang, PUBLIC_ROUTE_KEYS.faq);
+    const jsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Toiga Shaqyru',
+                    item: 'https://toi.com.kz',
+                },
+                {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'FAQ',
+                    item: `https://toi.com.kz${seo.canonical}`,
+                },
+            ],
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqItems.map((item) => ({
+                '@type': 'Question',
+                name: tr(item.q.kk, item.q.ru),
+                acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: tr(item.a.kk, item.a.ru),
+                },
+            })),
+        },
+    ];
 
     return (
         <Layout>
             <SEO
                 title="FAQ"
                 description={tr('Тойға онлайн шақырту жасау туралы жиі қойылатын сұрақтар мен жауаптар.', 'Частые вопросы и ответы о создании онлайн-приглашений на той.')}
-                canonical="/faq"
+                canonical={seo.canonical}
+                locale={seo.locale}
+                alternates={seo.alternates}
+                jsonLd={jsonLd}
             />
 
             <section style={{ paddingTop: '8rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '48rem', margin: '0 auto' }}>
@@ -89,6 +137,16 @@ const FAQPage = () => {
                     ))}
                 </div>
             </section>
+            <style>{`
+                details[open] {
+                    background: #ecfdf5 !important;
+                    border-color: rgba(16,185,129,0.3) !important;
+                }
+
+                details summary::-webkit-details-marker {
+                    display: none;
+                }
+            `}</style>
         </Layout>
     );
 };

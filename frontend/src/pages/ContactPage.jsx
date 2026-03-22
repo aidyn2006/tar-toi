@@ -1,19 +1,52 @@
-import React from 'react';
+import { MessageCircle, Instagram, Phone } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import { useLang } from '../context/LanguageContext';
-import { MessageCircle, Instagram, Phone } from 'lucide-react';
+import { PUBLIC_ROUTE_KEYS, getPublicSeoConfig } from '../seo/publicRoutes';
 
 const ContactPage = () => {
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+    const seo = getPublicSeoConfig(lang, PUBLIC_ROUTE_KEYS.contact);
+    const jsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Toiga Shaqyru',
+                    item: 'https://toi.com.kz',
+                },
+                {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: tr('Байланыс', 'Контакты'),
+                    item: `https://toi.com.kz${seo.canonical}`,
+                },
+            ],
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: lang === 'ru' ? 'Контакты Toiga Shaqyru' : 'Toiga Shaqyru байланыс беті',
+            url: `https://toi.com.kz${seo.canonical}`,
+        },
+    ];
 
     return (
         <Layout>
             <SEO
                 title={tr('Байланыс', 'Контакты')}
-                description={tr('Сұрақтарыңыз болса, бізбен байланысыңыз. Көмектесуге әрқашан дайынбыз.', 'Свяжитесь с нами, если у вас есть вопросы. Мы всегда готовы помочь.')}
-                canonical="/contact"
+                description={tr(
+                    'Сұрақтарыңыз болса, бізбен байланысыңыз. WhatsApp, Instagram және телефон арқылы жауап береміз.',
+                    'Свяжитесь с нами через WhatsApp, Instagram или по телефону, если у вас есть вопросы по сервису.'
+                )}
+                canonical={seo.canonical}
+                locale={seo.locale}
+                alternates={seo.alternates}
+                jsonLd={jsonLd}
             />
 
             <section style={{ paddingTop: '8rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '72rem', margin: '0 auto' }}>
@@ -23,14 +56,13 @@ const ContactPage = () => {
                     </h1>
                     <p style={{ color: '#64748b', fontSize: '1.125rem', maxWidth: '40rem', margin: '0 auto', lineHeight: 1.7 }}>
                         {tr(
-                            'Сұрақтарыңыз немесе ұсыныстарыңыз болса, төмендегі байланыс түрлерінің бірін таңдаңыз.',
-                            'Если у вас есть вопросы или предложения, выберите один из способов связи ниже.'
+                            'Онлайн шақырту сервисі туралы сұрағыңыз болса немесе коммерциялық ұсыныс талқылағыңыз келсе, төмендегі байланыс арналарының бірін пайдаланыңыз.',
+                            'Если у вас есть вопросы по сервису онлайн-приглашений или вы хотите обсудить сотрудничество, используйте один из каналов связи ниже.'
                         )}
                     </p>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-                    {/* WhatsApp */}
                     <a href="https://wa.me/77056842747" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                         <div style={{ padding: '3rem', borderRadius: '2rem', background: '#f0fdf4', border: '1px solid rgba(16,185,129,0.15)', textAlign: 'center', transition: 'all 0.3s ease' }}>
                             <MessageCircle size={48} color="#25D366" style={{ marginBottom: '1.5rem' }} />
@@ -39,7 +71,6 @@ const ContactPage = () => {
                         </div>
                     </a>
 
-                    {/* Instagram */}
                     <a href="https://instagram.com/codejaz.kz" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                         <div style={{ padding: '3rem', borderRadius: '2rem', background: '#fffbeb', border: '1px solid rgba(251,191,36,0.2)', textAlign: 'center', transition: 'all 0.3s ease' }}>
                             <Instagram size={48} color="#e1306c" style={{ marginBottom: '1.5rem' }} />
@@ -48,7 +79,6 @@ const ContactPage = () => {
                         </div>
                     </a>
 
-                    {/* Phone */}
                     <a href="tel:+77056842747" style={{ textDecoration: 'none' }}>
                         <div style={{ padding: '3rem', borderRadius: '2rem', background: '#f0fdf4', border: '1px solid rgba(16,185,129,0.15)', textAlign: 'center', transition: 'all 0.3s ease' }}>
                             <Phone size={48} color="#10b981" style={{ marginBottom: '1.5rem' }} />

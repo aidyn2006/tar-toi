@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 const apiProxyTarget = process.env.VITE_API_PROXY_TARGET || 'http://localhost:9191';
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
@@ -24,7 +24,7 @@ export default defineConfig({
     }
   },
   build: {
-    rollupOptions: {
+    rollupOptions: isSsrBuild ? undefined : {
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
@@ -33,5 +33,5 @@ export default defineConfig({
       },
     },
   },
-});
+}));
 

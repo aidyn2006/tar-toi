@@ -5,7 +5,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 7171 --strictPort",
-    "build": "vite build && node scripts/generate-sitemap.cjs",
+    "build:client": "vite build",
+    "build:ssr": "vite build --ssr src/entry-server.jsx --outDir dist-ssr",
+    "prerender": "node scripts/prerender.mjs",
+    "build": "npm run build:client && npm run build:ssr && npm run prerender && node scripts/generate-sitemap.cjs",
     "preview": "vite preview",
     "make-template": "node scripts/make-template.js"
   },

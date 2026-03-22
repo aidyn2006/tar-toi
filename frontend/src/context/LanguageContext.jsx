@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 
 const LanguageContext = createContext({
     lang: 'kk',
@@ -8,11 +8,31 @@ const LanguageContext = createContext({
 
 const STORAGE_KEY = 'shaqyrtu_lang';
 
-export const LanguageProvider = ({ children }) => {
-    const [lang, setLang] = useState(() => localStorage.getItem(STORAGE_KEY) || 'kk');
+const getStoredLanguage = () => {
+    if (typeof window === 'undefined') {
+        return null;
+    }
+
+    try {
+        return window.localStorage.getItem(STORAGE_KEY);
+    } catch (_) {
+        return null;
+    }
+};
+
+export const LanguageProvider = ({ children, initialLang }) => {
+    const [lang, setLang] = useState(() => initialLang || getStoredLanguage() || 'kk');
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, lang);
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem(STORAGE_KEY, lang);
+        }
+    }, [lang]);
+
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            document.documentElement.lang = lang;
+        }
     }, [lang]);
 
     const setLanguage = useCallback((value) => {

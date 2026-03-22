@@ -1,10 +1,11 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { useLang } from '../context/LanguageContext';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import { categories } from '../config/categories';
+import { PUBLIC_ROUTE_KEYS, buildLocalizedPath, getPublicSeoConfig } from '../seo/publicRoutes';
+import { getCategoryLandingById } from '../content/categoryLandingContent';
 
 const features = [
     {
@@ -45,29 +46,90 @@ const Home = () => {
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
     const navigate = useNavigate();
+    const seo = getPublicSeoConfig(lang, PUBLIC_ROUTE_KEYS.home, {}, { xDefault: '/' });
+    const categoriesPath = buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.categories);
+    const mereiPath = buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.category, { slug: 'meretoi-shakyru' });
+    const registerPath = `${buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.home)}#register`;
+    const categoryLandingLinks = categories
+        .map((category) => {
+            const landing = getCategoryLandingById(category.id);
 
-const handleSelectCategory = (categoryId) => {
-    const params = new URLSearchParams({
-        category: categoryId,
-    });
+            if (!landing) {
+                return null;
+            }
 
-    navigate(`/invite/new?${params.toString()}`);
-};
-const handleOpenRegister = () => {
-    navigate('/#register');
-};
+            return {
+                id: category.id,
+                title: tr(category.title.kk, category.title.ru),
+                path: buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.category, { slug: landing.slug }),
+            };
+        })
+        .filter(Boolean);
+    const homeJsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Toiga Shaqyru',
+            url: `https://toi.com.kz${seo.canonical}`,
+            logo: 'https://toi.com.kz/logo.png',
+            sameAs: ['https://instagram.com/codejaz.kz'],
+            contactPoint: [
+                {
+                    '@type': 'ContactPoint',
+                    telephone: '+77056842747',
+                    contactType: 'customer support',
+                    areaServed: 'KZ',
+                    availableLanguage: ['kk', 'ru'],
+                },
+            ],
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'Toiga Shaqyru',
+            url: `https://toi.com.kz${seo.canonical}`,
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: tr('Тойға онлайн шақырту жасау', 'Онлайн-приглашения на той'),
+            serviceType: tr('Онлайн шақырту сервисі', 'Сервис онлайн-приглашений'),
+            areaServed: 'KZ',
+            provider: {
+                '@type': 'Organization',
+                name: 'Toiga Shaqyru',
+                url: 'https://toi.com.kz',
+            },
+            url: `https://toi.com.kz${seo.canonical}`,
+            description: tr(
+                'Тойға, ұзатуға, мерейтойға арналған онлайн шақырту сервисі.',
+                'Сервис онлайн-приглашений для свадьбы, узату и юбилея.'
+            ),
+        },
+    ];
 
-const handleOpenCategories = () => {
-    navigate('/categories');
-};
+    const handleSelectCategory = (categoryId) => {
+        const params = new URLSearchParams({
+            category: categoryId,
+        });
+
+        navigate(`/invite/new?${params.toString()}`);
+    };
     return (
         <Layout>
             <SEO
-                description={tr(
-                    'Онлайн шақырту жасау сервисі — электронные приглашения на той',
-                    'Онлайн сервис создания пригласительных — электронные приглашения на той'
+                title={tr(
+                    'Тойға онлайн шақырту жасау',
+                    'Онлайн приглашения на той'
                 )}
-                canonical="/"
+                description={tr(
+                    'Тойға, ұзатуға, мерейтойға онлайн шақырту жасаңыз. Дайын шаблондар, WhatsApp арқылы жіберу және RSVP бақылау бір жерде.',
+                    'Создавайте онлайн-приглашения на той, узату и юбилей. Готовые шаблоны, отправка через WhatsApp и сбор RSVP в одном сервисе.'
+                )}
+                canonical={seo.canonical}
+                locale={seo.locale}
+                alternates={seo.alternates}
+                jsonLd={homeJsonLd}
             />
 
             <div className="home-page" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -145,9 +207,7 @@ const handleOpenCategories = () => {
                             }}
                         >
                             <Button
-                                onClick={() => {
-                                    handleOpenRegister();
-                                }}
+                                href={registerPath}
                                 style={{ padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}
                             >
                                 {tr('Тегін бастау', 'Начать бесплатно')}
@@ -386,13 +446,48 @@ const handleOpenCategories = () => {
 
                         <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
                             <Button
-                                onClick={() => {
-                                    handleOpenCategories();
-                                }}
+                                to={categoriesPath}
                                 style={{ padding: '1rem 2.5rem', height: '3.25rem', fontSize: '1rem' }}
                             >
                                 {tr('Барлық үлгілерді қарау', 'Посмотреть все шаблоны')}
                             </Button>
+                        </div>
+                        <div
+                            style={{
+                                marginTop: '1rem',
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '0.75rem',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {categoryLandingLinks.map((category) => (
+                                <a
+                                    key={category.id}
+                                    href={category.path}
+                                    style={{
+                                        color: '#10b981',
+                                        fontWeight: 700,
+                                        textDecoration: 'none',
+                                        fontSize: '0.92rem',
+                                    }}
+                                >
+                                    {category.title}
+                                </a>
+                            ))}
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                            <a
+                                href={mereiPath}
+                                style={{
+                                    color: '#10b981',
+                                    fontWeight: 700,
+                                    textDecoration: 'none',
+                                    fontSize: '0.95rem',
+                                }}
+                            >
+                                {tr('Мерейтойға арналған арнайы бет', 'Спецстраница для юбилейных приглашений')}
+                            </a>
                         </div>
                     </div>
                 </section>
@@ -477,7 +572,7 @@ const handleOpenCategories = () => {
 
                        <Button
     variant="secondary"
-    onClick={handleOpenRegister}
+    href={registerPath}
                             style={{ marginTop: '3.5rem', padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.0625rem' }}
                         >
                             {tr('Қазір бастау', 'Начать сейчас')}
