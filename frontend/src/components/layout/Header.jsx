@@ -1,22 +1,23 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../Button';
 import LanguageSwitch from '../LanguageSwitch';
 import { useLang } from '../../context/LanguageContext';
+import { PUBLIC_ROUTE_KEYS, buildLocalizedPath, isLocalizedHomePath } from '../../seo/publicRoutes';
 
 const Header = ({ onAuthClick }) => {
     const { lang } = useLang();
     const location = useLocation();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
-
-    const isHome = location.pathname === '/';
+    const homePath = buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.home);
+    const isHome = isLocalizedHomePath(location.pathname);
 
     const navLinks = [
-        { name: tr('Мүмкіндіктер', 'Возможности'), path: isHome ? '#features' : '/#features' },
-        { name: tr('Үлгілер', 'Шаблоны'), path: '/categories' },
-        { name: tr('Блог', 'Блог'), path: '/blog' },
-        { name: 'FAQ', path: '/faq' },
-        { name: tr('Байланыс', 'Контакты'), path: '/contact' },
+        { name: tr('Мүмкіндіктер', 'Возможности'), path: isHome ? '#features' : `${homePath}#features` },
+        { name: tr('Үлгілер', 'Шаблоны'), path: buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.categories) },
+        { name: tr('Мерейтой', 'Юбилей'), path: buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.category, { slug: 'meretoi-shakyru' }) },
+        { name: tr('Блог', 'Блог'), path: buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.blogIndex) },
+        { name: 'FAQ', path: buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.faq) },
+        { name: tr('Байланыс', 'Контакты'), path: buildLocalizedPath(lang, PUBLIC_ROUTE_KEYS.contact) },
     ];
 
     return (
@@ -26,14 +27,14 @@ const Header = ({ onAuthClick }) => {
             background: 'rgba(248,255,254,0.9)', backdropFilter: 'blur(12px)',
             borderBottom: '1px solid rgba(16,185,129,0.1)'
         }}>
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }}>
-                <img src="/logo.png" alt="Logo" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.5rem', objectFit: 'cover' }} />
+            <Link to={homePath} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }}>
+                <img src="/logo.png" alt="Toiga Shaqyru logo" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.5rem', objectFit: 'cover' }} />
                 <span className="home-logo-text" style={{ fontFamily: 'Unbounded, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#064e3b' }}>Toiga Shaqyru</span>
             </Link>
 
             <nav className="home-nav" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                 {navLinks.map((link, i) => (
-                    link.path.startsWith('#') || (link.path.startsWith('/#')) ? (
+                    link.path.includes('#') ? (
                         <a key={i} className="home-nav-link" href={link.path} style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none', padding: '0.5rem 0.75rem' }}>
                             {link.name}
                         </a>

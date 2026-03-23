@@ -1,6 +1,18 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Button = ({ children, onClick, type = "button", variant = "primary", disabled, style: extraStyle = {}, className = '' }) => {
+const Button = ({
+    children,
+    onClick,
+    type = "button",
+    variant = "primary",
+    disabled,
+    style: extraStyle = {},
+    className = '',
+    href,
+    to,
+    target,
+    rel,
+}) => {
     const baseStyle = {
         display: 'inline-flex',
         alignItems: 'center',
@@ -12,6 +24,7 @@ const Button = ({ children, onClick, type = "button", variant = "primary", disab
         fontSize: '0.9375rem',
         cursor: disabled ? 'not-allowed' : 'pointer',
         border: 'none',
+        textDecoration: 'none',
         transition: 'all 0.2s ease',
         fontFamily: "'Manrope', sans-serif",
         opacity: disabled ? 0.6 : 1,
@@ -36,13 +49,33 @@ const Button = ({ children, onClick, type = "button", variant = "primary", disab
         }
     };
 
+    const sharedProps = {
+        className: `btn ${className}`.trim(),
+        style: { ...baseStyle, ...variants[variant] },
+    };
+
+    if (to) {
+        return (
+            <Link to={to} {...sharedProps}>
+                {children}
+            </Link>
+        );
+    }
+
+    if (href) {
+        return (
+            <a href={href} target={target} rel={rel} {...sharedProps}>
+                {children}
+            </a>
+        );
+    }
+
     return (
         <button
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`btn ${className}`.trim()}
-            style={{ ...baseStyle, ...variants[variant] }}
+            {...sharedProps}
         >
             {children}
         </button>

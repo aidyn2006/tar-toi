@@ -3,6 +3,7 @@ package org.example.toi.entity;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
+import org.example.toi.entity.enums.Role;
 
 @Converter(autoApply = false)
 public class RoleAttributeConverter implements AttributeConverter<Role, String> {
@@ -23,4 +24,3 @@ public class RoleAttributeConverter implements AttributeConverter<Role, String> 
         return Role.valueOf(normalized.toUpperCase(Locale.ROOT));
     }
 }
-

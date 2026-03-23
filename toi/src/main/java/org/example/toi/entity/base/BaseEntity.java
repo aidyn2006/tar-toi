@@ -1,4 +1,4 @@
-package org.example.toi.entity;
+package org.example.toi.entity.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

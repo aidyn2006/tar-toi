@@ -1,0 +1,1211 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Свадебное приглашение</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --background: #f7f2eb;
+      --foreground: #4b3d34;
+      --card: #efe5d8;
+      --muted: #d8cbb8;
+      --muted-foreground: #8d7d6f;
+      --gold: #9e7a18;
+      --gold-soft: rgba(158, 122, 24, 0.12);
+      --ivory: #f7f2eb;
+      --beige: #efe5d8;
+      --champagne: #d8cbb8;
+      --taupe: #a18f7f;
+      --warm-gray: #4b3d34;
+      --radius: 14px;
+
+      --font-script: 'Pinyon Script', cursive;
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'Montserrat', sans-serif;
+
+      --shadow-soft: 0 8px 32px -8px rgba(216, 203, 184, 0.55);
+      --shadow-card: 0 8px 28px -10px rgba(75, 61, 52, 0.18);
+      --shadow-gold: 0 8px 22px -10px rgba(158, 122, 24, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top right, rgba(158, 122, 24, 0.10), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(216, 203, 184, 0.38), transparent 34%),
+        var(--background);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .page-root {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.75), transparent 20%),
+        radial-gradient(circle at 88% 22%, rgba(158, 122, 24, 0.10), transparent 20%),
+        linear-gradient(180deg, #faf6f0 0%, #f7f2eb 48%, #f2eadf 100%);
+    }
+
+    .page-root::before,
+    .page-root::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .page-root::before {
+      top: -96px;
+      right: -54px;
+      width: 220px;
+      height: 220px;
+      border: 1px solid rgba(158, 122, 24, 0.12);
+    }
+
+    .page-root::after {
+      bottom: 120px;
+      left: -78px;
+      width: 180px;
+      height: 180px;
+      border: 1px solid rgba(158, 122, 24, 0.10);
+    }
+
+    .font-script {
+      font-family: var(--font-script);
+    }
+
+    .font-serif {
+      font-family: var(--font-serif);
+    }
+
+    .font-sans-wedding {
+      font-family: var(--font-sans);
+    }
+
+    .gold-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 0 auto;
+    }
+
+    .gold-divider-wide {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto;
+    }
+
+    .section-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 20px;
+      width: min(170px, 100%);
+    }
+
+    .section-ornament .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(158, 122, 24, 0.55), transparent);
+    }
+
+    .section-ornament .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 5px rgba(158, 122, 24, 0.10);
+    }
+
+    .arch-frame {
+      position: relative;
+      border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .arch-frame::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      pointer-events: none;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      width: 340px;
+      height: 340px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(158, 122, 24, 0.12) 0%, rgba(158, 122, 24, 0.04) 38%, transparent 72%);
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    .hero-orbit {
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 1px solid rgba(158, 122, 24, 0.18);
+      pointer-events: none;
+    }
+
+    .hero-orbit-left {
+      top: 48px;
+      left: 12px;
+    }
+
+    .hero-orbit-right {
+      top: 104px;
+      right: 6px;
+      width: 54px;
+      height: 54px;
+    }
+
+    .frosted-card {
+      background: rgba(247, 242, 235, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(158, 122, 24, 0.25);
+    }
+
+    .wedding-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.08)), var(--beige);
+      border: 1px solid rgba(216, 203, 184, 0.92);
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-lead {
+      font-size: 12px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin-top: 12px;
+    }
+
+    .wedding-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--foreground);
+      text-align: left;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted-foreground);
+      text-align: left;
+    }
+
+    .wedding-input {
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(216, 203, 184, 0.95);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      font-family: var(--font-sans);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--warm-gray);
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      width: 100%;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .wedding-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(158, 122, 24, 0.09);
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .wedding-input::placeholder {
+      color: var(--taupe);
+    }
+
+    .wedding-btn,
+    .submit-btn {
+      background: linear-gradient(135deg, #b28922 0%, #9e7a18 100%);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: var(--shadow-gold);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .wedding-btn:hover,
+    .submit-btn:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .music-float-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(247, 242, 235, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(158, 122, 24, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-soft);
+      z-index: 50;
+      color: var(--gold);
+      pointer-events: none;
+    }
+
+    .rsvp-panel {
+      padding: 28px 22px 26px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.10)), rgba(239, 229, 216, 0.92);
+      border: 1px solid rgba(216, 203, 184, 0.95);
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rsvp-panel::before {
+      content: "";
+      position: absolute;
+      top: -34px;
+      right: -34px;
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(158, 122, 24, 0.12), transparent 68%);
+      pointer-events: none;
+    }
+
+    .rsvp-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .rsvp-choice-card {
+      appearance: none;
+      background: rgba(247, 242, 235, 0.88);
+      border: 1.5px solid rgba(216, 203, 184, 0.95);
+      border-radius: 18px;
+      padding: 18px 14px 16px;
+      text-align: center;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      cursor: pointer;
+      width: 100%;
+      color: inherit;
+    }
+
+    .rsvp-choice-card:hover {
+      border-color: rgba(158, 122, 24, 0.65);
+      transform: translateY(-1px);
+    }
+
+    .rsvp-choice-card.selected {
+      border-color: rgba(158, 122, 24, 0.8);
+      box-shadow: 0 10px 24px -14px rgba(158, 122, 24, 0.58);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 248, 235, 0.9));
+      transform: translateY(-2px);
+    }
+
+    .choice-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      border: 1px solid rgba(158, 122, 24, 0.22);
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--gold);
+    }
+
+    .rsvp-choice-card.selected .choice-icon {
+      background: rgba(158, 122, 24, 0.12);
+      border-color: rgba(158, 122, 24, 0.45);
+    }
+
+    .choice-title {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.25;
+      color: var(--foreground);
+    }
+
+    .choice-sub {
+      display: block;
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.55;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+    }
+
+    .rsvp-choice-hint {
+      min-height: 22px;
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--warm-gray);
+      justify-items: center;
+    }
+
+    .calendar-grid .day-header {
+      width: 100%;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--taupe);
+      padding: 4px 0 6px;
+    }
+
+    .calendar-grid .day-cell,
+    .calendar-empty {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      line-height: 1;
+      margin: 0 auto;
+    }
+
+    .calendar-grid .day-cell.highlighted {
+      background: var(--gold);
+      color: var(--ivory);
+      font-weight: 500;
+      box-shadow: 0 0 0 6px rgba(158, 122, 24, 0.12);
+    }
+
+    .gallery-shell {
+      position: relative;
+      padding: 0 0 8px;
+    }
+
+    .gallery-shell::before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 58px;
+      height: 220px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.06));
+      pointer-events: none;
+    }
+
+    #gallerySlides.gallery-strip {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 0 24px 10px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    #gallerySlides.gallery-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    #gallerySlides.gallery-strip img {
+      width: 200px;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 22px;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    #gallerySlides.gallery-strip img:nth-child(odd) {
+      transform: translateY(8px);
+    }
+
+    .hero-photo-placeholder,
+    .hero-photo-img,
+    #heroPhoto {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(160deg, #d8cbb8 0%, #efe5d8 100%);
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .section-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .calendar-empty {
+      visibility: hidden;
+    }
+
+    @media (max-width: 420px) {
+      .rsvp-choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rsvp-panel {
+        padding: 24px 18px 22px;
+      }
+
+      #gallerySlides.gallery-strip img {
+        width: 178px;
+        height: 236px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG = {
+      names: { bride: "Аружан", groom: "Данияр" },
+      day: "20-12-2025",
+      hour: "16:00",
+      location: "Салтанат сарайы",
+      locationDetail: "Проспект Мәңгілік Ел, 45\nАстана",
+      locationUrl: "",
+      gallery: [],
+      description: "Дорогие родные и близкие,\nприглашаем вас разделить с нами радость нашего свадебного дня",
+      toiOwners: "Семьи жениха и невесты",
+      music: { title: "", artist: "", url: "" },
+      lang: "ru"
+    };
+  </script>
+
+  <div class="page-root">
+    <div class="section-shell">
+      <section style="position: relative; padding: 44px 24px 34px;">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-orbit hero-orbit-left" aria-hidden="true"></div>
+        <div class="hero-orbit hero-orbit-right" aria-hidden="true"></div>
+
+        <div class="arch-frame" style="position: relative; max-width: 360px; aspect-ratio: 3 / 4; margin: 0 auto;">
+          <img
+            id="heroPhoto"
+            class="hero-photo-placeholder"
+            src="/template-assets/wedding-template5/hero-couple.jpg"
+            alt="Пара молодожёнов"
+          >
+          <div class="frosted-card" style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px;text-align:center;">
+            <p id="heroKicker" class="font-sans-wedding" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:4px;">
+              Сохраните дату
+            </p>
+            <p id="heroDateLine" class="font-serif" style="font-size:18px;letter-spacing:0.03em;color:var(--foreground);">
+              Суббота, 20 декабря 2025
+            </p>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:32px;position:relative;">
+          <p id="heroNamesLine" class="sr-only">Аружан &amp; Данияр</p>
+          <p id="heroName" class="sr-only">Аружан &amp; Данияр</p>
+          <h1 class="font-script" style="font-size:48px;color:var(--foreground);line-height:1.1;">
+            <span id="hBride">Аружан</span>
+            <span id="heroAmp" class="font-serif" style="color:var(--gold);margin:0 8px;font-size:30px;font-style:italic;">&amp;</span>
+            <span id="hGroom">Данияр</span>
+          </h1>
+          <p id="heroSubline" class="section-lead">На торжество нашей любви</p>
+        </div>
+
+        <div class="gold-divider-wide" style="margin-top:24px;"></div>
+      </section>
+
+      <section style="padding: 40px 32px; text-align: center;">
+        <div class="section-ornament" aria-hidden="true">
+          <span class="line"></span>
+          <span class="dot"></span>
+          <span class="line"></span>
+        </div>
+        <p id="familiesLabel" class="font-serif" style="font-size:14px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">
+          Вместе со своими семьями
+        </p>
+        <p id="eventText" class="font-serif" style="font-size:18px;line-height:1.6;color:var(--foreground);">
+          Дорогие родные и близкие,<br>
+          приглашаем вас разделить с нами радость нашего свадебного дня
+        </p>
+        <div class="gold-divider" style="margin-top:32px;"></div>
+      </section>
+
+      <section id="ownersSection" style="padding: 28px 32px 16px; text-align: center;">
+        <p id="ownersSectionLabel" class="font-sans-wedding" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:12px;">
+          Хозяева торжества
+        </p>
+        <p id="ownersBigName" class="font-serif" style="font-size:20px;color:var(--foreground);">
+          Семьи жениха и невесты
+        </p>
+        <div class="section-ornament" style="margin-top:24px;margin-bottom:0;" aria-hidden="true">
+          <span class="line"></span>
+          <span class="dot"></span>
+          <span class="line"></span>
+        </div>
+      </section>
+
+      <section style="padding: 40px 24px;">
+        <div class="wedding-card" style="border-radius: 20px; padding: 26px 22px;">
+          <p id="calendarTitle" class="font-serif" style="text-align:center;font-size:14px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">
+            Декабрь 2025
+          </p>
+
+          <div class="section-ornament" style="margin-bottom:18px;" aria-hidden="true">
+            <span class="line"></span>
+            <span class="dot"></span>
+            <span class="line"></span>
+          </div>
+
+          <div id="calendarGrid" class="calendar-grid"></div>
+
+          <div style="text-align:center;margin-top:22px;">
+            <p id="calendarSubtitle" class="font-serif" style="color:var(--foreground);font-size:16px;">Суббота, 20 декабря</p>
+            <p id="calendarTimeLine" class="font-sans-wedding" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted-foreground);margin-top:4px;">
+              Начало в 16:00
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: 40px 24px;">
+        <div class="wedding-card" style="border-radius: 20px; padding: 28px 26px; text-align: center;">
+          <div class="section-ornament" aria-hidden="true">
+            <span class="line"></span>
+            <span class="dot"></span>
+            <span class="line"></span>
+          </div>
+
+          <p id="locationSectionLabel" class="font-sans-wedding" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">
+            Церемония и банкет
+          </p>
+
+          <p id="locationName" class="font-serif" style="font-size:20px;color:var(--foreground);margin-bottom:8px;">
+            Салтанат сарайы
+          </p>
+
+          <p id="locationDetails" class="font-sans-wedding" style="font-size:14px;color:var(--muted-foreground);line-height:1.7;">
+            Проспект Мәңгілік Ел, 45<br>
+            Астана
+          </p>
+
+          <div id="mapBtnWrap" style="margin-top:24px;">
+            <a id="mapBtn" href="#" target="_blank" rel="noreferrer noopener" class="wedding-btn" style="font-size:12px;">
+              Открыть карту
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: 38px 0 18px;">
+        <div class="gallery-shell">
+          <p id="gallerySectionLabel" class="font-serif" style="text-align:center;font-size:14px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;padding:0 32px;">
+            Наши моменты
+          </p>
+          <div class="section-ornament" style="margin-bottom:22px;" aria-hidden="true">
+            <span class="line"></span>
+            <span class="dot"></span>
+            <span class="line"></span>
+          </div>
+          <div id="gallerySlides" class="gallery-strip">
+            <img src="/template-assets/wedding-template5/gallery-1.jpg" alt="Фото 1">
+            <img src="/template-assets/wedding-template5/gallery-2.jpg" alt="Фото 2">
+            <img src="/template-assets/wedding-template5/gallery-3.jpg" alt="Фото 3">
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: 40px 24px 24px;">
+        <div class="rsvp-panel">
+          <div class="section-ornament" aria-hidden="true">
+            <span class="line"></span>
+            <span class="dot"></span>
+            <span class="line"></span>
+          </div>
+          <p id="rsvpTitle" class="font-serif" style="text-align:center;font-size:14px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">
+            Просим ответить
+          </p>
+          <p id="rsvpSubtitle" class="font-sans-wedding" style="text-align:center;font-size:12px;color:var(--muted-foreground);margin-bottom:24px;line-height:1.7;">
+            Пожалуйста, выберите подходящий вариант ответа и заполните форму ниже
+          </p>
+
+          <div class="rsvp-choice-grid" role="radiogroup" aria-labelledby="rsvpTitle">
+            <button type="button" class="rsvp-choice-card selected" data-rsvp-attending="true" role="radio" aria-checked="true">
+              <span class="choice-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              </span>
+              <span id="acceptTitle" class="choice-title">С радостью приду</span>
+              <span id="acceptSub" class="choice-sub">Подтверждаю присутствие</span>
+            </button>
+            <button type="button" class="rsvp-choice-card" data-rsvp-attending="false" role="radio" aria-checked="false">
+              <span class="choice-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
+              </span>
+              <span id="declineTitle" class="choice-title">К сожалению, не смогу</span>
+              <span id="declineSub" class="choice-sub">Отправлю ответ об отсутствии</span>
+            </button>
+          </div>
+
+          <p id="rsvpChoiceHint" class="rsvp-choice-hint">Выбрано: буду присутствовать</p>
+
+          <form id="rsvpForm" style="display:flex;flex-direction:column;gap:16px;" onsubmit="return false;">
+            <input id="rAttending" type="hidden" value="true">
+
+            <div class="wedding-field">
+              <label id="rNameLabel" class="field-label" for="rName">Имя и фамилия</label>
+              <input id="rName" class="wedding-input" type="text" placeholder="Введите имя и фамилию" autocomplete="name">
+            </div>
+
+            <div class="wedding-field">
+              <label id="rPhoneLabel" class="field-label" for="rPhone">Номер телефона</label>
+              <input id="rPhone" class="wedding-input" type="tel" placeholder="+7 (___) ___ __ __" autocomplete="tel">
+            </div>
+
+            <div id="rGuestsField" class="wedding-field">
+              <label id="rGuestsLabel" class="field-label" for="rGuests">Количество гостей</label>
+              <input id="rGuests" class="wedding-input" type="number" placeholder="1" min="1" inputmode="numeric">
+              <p id="rGuestsHint" class="field-hint">Укажите общее количество гостей вместе с вами.</p>
+            </div>
+
+            <div class="wedding-field">
+              <label id="rNoteLabel" class="field-label" for="rNote">Пожелание или комментарий</label>
+              <textarea id="rNote" class="wedding-input" placeholder="Оставьте тёплые слова для молодожёнов..." rows="3" style="resize:none;"></textarea>
+            </div>
+
+            <div style="text-align:center;padding-top:8px;">
+              <button type="button" class="submit-btn" onclick="submitRSVP && submitRSVP()">
+                <span id="rsvpSubmitText">Отправить ответ</span>
+              </button>
+            </div>
+          </form>
+
+          <div id="successMsg" style="display:none;text-align:center;padding:24px 0 8px;">
+            <p id="successTitle" class="font-serif" style="font-size:18px;color:var(--foreground);">Спасибо!</p>
+            <p id="successText" class="font-sans-wedding" style="font-size:12px;color:var(--muted-foreground);margin-top:6px;line-height:1.6;">
+              Ваш ответ сохранён
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: 44px 32px 56px; text-align: center;">
+        <div class="section-ornament" style="margin-bottom:22px;" aria-hidden="true">
+          <span class="line"></span>
+          <span class="dot"></span>
+          <span class="line"></span>
+        </div>
+        <p id="footerName" class="font-sans-wedding" style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:12px;">
+          Свадебное торжество
+        </p>
+        <p id="footLine" class="font-script" style="font-size:30px;color:var(--foreground);line-height:1.1;">
+          Аружан &amp; Данияр
+        </p>
+        <p id="footerQuote" class="font-sans-wedding" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted-foreground);margin-top:16px;">
+          С любовью, навсегда вместе
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <div class="music-float-btn" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+  </div>
+
+  <script>
+    (function () {
+      const DEFAULT_ASSETS = {
+        hero: "/template-assets/wedding-template5/hero-couple.jpg",
+        gallery: [
+          "/template-assets/wedding-template5/gallery-1.jpg",
+          "/template-assets/wedding-template5/gallery-2.jpg",
+          "/template-assets/wedding-template5/gallery-3.jpg"
+        ]
+      };
+
+      const COPY = {
+        kk: {
+          pageTitle: "Үйлену тойына шақыру",
+          coupleAlt: "Жас жұбайлар",
+          galleryAlt: "Фото",
+          heroKicker: "Күнді белгілеңіз",
+          heroSubline: "Махаббат мерекесіне шақырамыз",
+          familiesLabel: "Ата-аналарымен бірге",
+          ownersLabel: "Той иелері",
+          locationLabel: "Неке қию және той",
+          mapButton: "Картаны ашу",
+          galleryLabel: "Біздің сәттер",
+          rsvpTitle: "Жауап беруіңізді сұраймыз",
+          rsvpSubtitle: "Төменде қатысатыныңызды немесе келе алмайтыныңызды белгілеңіз",
+          acceptTitle: "Қуана қатысамын",
+          acceptSub: "Қатысатынымды растаймын",
+          declineTitle: "Өкінішке орай, келе алмаймын",
+          declineSub: "Жауабымды жіберемін",
+          choiceHintAttend: "Таңдауыңыз: қатысамын",
+          choiceHintDecline: "Таңдауыңыз: келе алмаймын",
+          nameLabel: "Аты-жөніңіз",
+          namePlaceholder: "Аты-жөніңізді жазыңыз",
+          phoneLabel: "Телефон нөмірі",
+          phonePlaceholder: "+7 (___) ___ __ __",
+          guestsLabel: "Қонақ саны",
+          guestsPlaceholder: "1",
+          guestsHint: "Өзіңізбен бірге келетін қонақтардың жалпы санын көрсетіңіз.",
+          noteLabelAttend: "Тілек немесе ескерту",
+          noteLabelDecline: "Тілегіңіз немесе түсініктеме",
+          notePlaceholderAttend: "Жылы тілегіңізді қалдырыңыз...",
+          notePlaceholderDecline: "Хабарламаңызды немесе тілегіңізді жазыңыз...",
+          submitText: "Жауапты жіберу",
+          successTitleAttend: "Рақмет!",
+          successTextAttend: "Қатысатыныңыз тіркелді",
+          successTitleDecline: "Жауабыңыз қабылданды",
+          successTextDecline: "Хабарыңыз үшін рақмет",
+          footerLabel: "Үйлену тойы",
+          footerQuote: "Махаббатпен, мәңгі бірге",
+          defaultDescription: "Құрметті ағайын-туыс,\nсіздерді қуанышымызға ортақ болуға шақырамыз",
+          monthsNom: ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"],
+          monthsGen: ["қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым", "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан"],
+          weekdays: ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"],
+          weekdaysShort: ["Жс", "Дс", "Сс", "Ср", "Бс", "Жм", "Сб"],
+          timePrefix: "Басталуы",
+          timeSuffix: "-де"
+        },
+        ru: {
+          pageTitle: "Свадебное приглашение",
+          coupleAlt: "Пара молодожёнов",
+          galleryAlt: "Фото",
+          heroKicker: "Сохраните дату",
+          heroSubline: "На торжество нашей любви",
+          familiesLabel: "Вместе со своими семьями",
+          ownersLabel: "Хозяева торжества",
+          locationLabel: "Церемония и банкет",
+          mapButton: "Открыть карту",
+          galleryLabel: "Наши моменты",
+          rsvpTitle: "Просим ответить",
+          rsvpSubtitle: "Пожалуйста, отметьте ниже, сможете ли вы присутствовать",
+          acceptTitle: "С радостью приду",
+          acceptSub: "Подтверждаю присутствие",
+          declineTitle: "К сожалению, не смогу",
+          declineSub: "Отправлю ответ об отсутствии",
+          choiceHintAttend: "Выбрано: буду присутствовать",
+          choiceHintDecline: "Выбрано: не смогу присутствовать",
+          nameLabel: "Имя и фамилия",
+          namePlaceholder: "Введите имя и фамилию",
+          phoneLabel: "Номер телефона",
+          phonePlaceholder: "+7 (___) ___ __ __",
+          guestsLabel: "Количество гостей",
+          guestsPlaceholder: "1",
+          guestsHint: "Укажите общее количество гостей вместе с вами.",
+          noteLabelAttend: "Пожелание или комментарий",
+          noteLabelDecline: "Комментарий или пожелание",
+          notePlaceholderAttend: "Оставьте тёплые слова для молодожёнов...",
+          notePlaceholderDecline: "При желании оставьте комментарий...",
+          submitText: "Отправить ответ",
+          successTitleAttend: "Спасибо!",
+          successTextAttend: "Ваше присутствие подтверждено",
+          successTitleDecline: "Ответ принят",
+          successTextDecline: "Спасибо, что сообщили нам",
+          footerLabel: "Свадебное торжество",
+          footerQuote: "С любовью, навсегда вместе",
+          defaultDescription: "Дорогие родные и близкие,\nприглашаем вас разделить с нами радость нашего свадебного дня",
+          monthsNom: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+          monthsGen: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+          weekdays: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+          weekdaysShort: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+          timePrefix: "Начало в",
+          timeSuffix: ""
+        }
+      };
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function parseDate(day) {
+        const bits = String(day || "").split("-").map(Number);
+        if (bits.length !== 3 || bits.some(Number.isNaN)) {
+          return { dd: 20, mm: 12, yy: 2025 };
+        }
+        return { dd: bits[0], mm: bits[1], yy: bits[2] };
+      }
+
+      function getLang(conf) {
+        return conf && conf.lang === "ru" ? "ru" : "kk";
+      }
+
+      function getCopy(conf) {
+        return COPY[getLang(conf)];
+      }
+
+      function getNames(conf) {
+        const bride = conf.names && conf.names.bride ? conf.names.bride : "Аружан";
+        const groom = conf.names && conf.names.groom ? conf.names.groom : (conf.childName || "Данияр");
+        return { bride: bride, groom: groom };
+      }
+
+      function joinNames(names) {
+        return [names.bride, names.groom].filter(Boolean).join(" & ");
+      }
+
+      function renderText(el, value) {
+        if (el) el.textContent = value || "";
+      }
+
+      function renderHtml(el, value) {
+        if (el) el.innerHTML = String(value || "").replace(/\n/g, "<br>");
+      }
+
+      function longDate(conf, copy) {
+        const parts = parseDate(conf.day);
+        const date = new Date(parts.yy, parts.mm - 1, parts.dd);
+        return copy.weekdays[date.getDay()] + ", " + parts.dd + " " + copy.monthsGen[parts.mm - 1] + " " + parts.yy;
+      }
+
+      function calendarSubtitle(conf, copy) {
+        const parts = parseDate(conf.day);
+        const date = new Date(parts.yy, parts.mm - 1, parts.dd);
+        return copy.weekdays[date.getDay()] + ", " + parts.dd + " " + copy.monthsGen[parts.mm - 1];
+      }
+
+      function timeLine(conf, copy) {
+        const raw = String(conf.hour || "16:00");
+        return copy.timePrefix + " " + raw + copy.timeSuffix;
+      }
+
+      function inferLocationDetails(location) {
+        if (!location) return "";
+        const value = String(location).trim();
+        if (value.includes("\n")) {
+          return value.split("\n").slice(1).join("<br>");
+        }
+        if (value.includes(" | ")) {
+          return value.split(" | ").slice(1).join(" | ");
+        }
+        if (value.includes(",")) {
+          return value.split(",").slice(1).join(", ").trim();
+        }
+        return "";
+      }
+
+      function renderCalendar(conf, copy) {
+        const wrap = byId("calendarGrid");
+        if (!wrap) return;
+
+        const parts = parseDate(conf.day);
+        const firstDay = new Date(parts.yy, parts.mm - 1, 1).getDay();
+        const total = new Date(parts.yy, parts.mm, 0).getDate();
+        let html = "";
+
+        copy.weekdaysShort.forEach(function (label) {
+          html += '<div class="day-header">' + label + "</div>";
+        });
+
+        for (let i = 0; i < firstDay; i += 1) {
+          html += '<div class="calendar-empty"></div>';
+        }
+
+        for (let day = 1; day <= total; day += 1) {
+          const cls = day === parts.dd ? "day-cell highlighted" : "day-cell";
+          html += '<div class="' + cls + '">' + day + "</div>";
+        }
+
+        wrap.innerHTML = html;
+      }
+
+      function renderGallery(conf, copy) {
+        const wrap = byId("gallerySlides");
+        if (!wrap) return;
+
+        const list = Array.isArray(conf.gallery) && conf.gallery.length
+          ? conf.gallery.filter(Boolean)
+          : DEFAULT_ASSETS.gallery;
+
+        wrap.innerHTML = "";
+        list.forEach(function (src, index) {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = copy.galleryAlt + " " + (index + 1);
+          wrap.appendChild(img);
+        });
+      }
+
+      function renderHero(conf, copy) {
+        const hero = byId("heroPhoto");
+        if (!hero) return;
+        const src = conf.heroPhotoUrl || conf.previewPhotoUrl || conf.heroPhoto || (Array.isArray(conf.gallery) && conf.gallery[0]) || DEFAULT_ASSETS.hero;
+        hero.src = src;
+        hero.alt = copy.coupleAlt;
+      }
+
+      function setRsvpChoiceState(attending, copy) {
+        const choiceValue = attending ? "true" : "false";
+        const hidden = byId("rAttending");
+        const note = byId("rNote");
+        const guestsInput = byId("rGuests");
+        const guestsField = byId("rGuestsField");
+
+        if (hidden) hidden.value = choiceValue;
+
+        document.querySelectorAll("[data-rsvp-attending]").forEach(function (button) {
+          const isActive = button.getAttribute("data-rsvp-attending") === choiceValue;
+          button.classList.toggle("selected", isActive);
+          button.setAttribute("aria-checked", isActive ? "true" : "false");
+        });
+
+        renderText(byId("rsvpChoiceHint"), attending ? copy.choiceHintAttend : copy.choiceHintDecline);
+        renderText(byId("rNoteLabel"), attending ? copy.noteLabelAttend : copy.noteLabelDecline);
+        renderText(byId("rsvpSubmitText"), copy.submitText);
+        renderText(byId("successTitle"), attending ? copy.successTitleAttend : copy.successTitleDecline);
+        renderText(byId("successText"), attending ? copy.successTextAttend : copy.successTextDecline);
+
+        if (guestsField) {
+          guestsField.style.display = attending ? "flex" : "none";
+        }
+
+        if (guestsInput) {
+          guestsInput.disabled = !attending;
+          if (attending) {
+            const current = parseInt(guestsInput.value, 10);
+            guestsInput.value = current >= 1 ? String(current) : "1";
+          } else {
+            guestsInput.value = "0";
+          }
+        }
+
+        if (note) {
+          note.placeholder = attending ? copy.notePlaceholderAttend : copy.notePlaceholderDecline;
+        }
+      }
+
+      function bindRsvpChoices(conf) {
+        const copy = getCopy(conf);
+        const buttons = document.querySelectorAll("[data-rsvp-attending]");
+        if (!buttons.length) return;
+
+        buttons.forEach(function (button) {
+          if (button.dataset.bound === "true") return;
+          button.dataset.bound = "true";
+          button.addEventListener("click", function () {
+            const attending = button.getAttribute("data-rsvp-attending") !== "false";
+            setRsvpChoiceState(attending, copy);
+          });
+        });
+      }
+
+      function applyVisualConfig(conf) {
+        const config = conf || window.CONFIG || CONFIG || {};
+        const copy = getCopy(config);
+        const names = getNames(config);
+        const parts = parseDate(config.day);
+        const detailHtml = config.locationDetail || config.address || inferLocationDetails(config.location);
+        const joinedNames = joinNames(names);
+        const amp = byId("heroAmp");
+        const note = byId("rNote");
+
+        document.documentElement.lang = getLang(config);
+
+        renderText(byId("heroKicker"), copy.heroKicker);
+        renderText(byId("heroSubline"), copy.heroSubline);
+        renderText(byId("familiesLabel"), copy.familiesLabel);
+        renderText(byId("ownersSectionLabel"), copy.ownersLabel);
+        renderText(byId("locationSectionLabel"), copy.locationLabel);
+        renderText(byId("gallerySectionLabel"), copy.galleryLabel);
+        renderText(byId("rsvpTitle"), copy.rsvpTitle);
+        renderText(byId("rsvpSubtitle"), copy.rsvpSubtitle);
+        renderText(byId("acceptTitle"), copy.acceptTitle);
+        renderText(byId("acceptSub"), copy.acceptSub);
+        renderText(byId("declineTitle"), copy.declineTitle);
+        renderText(byId("declineSub"), copy.declineSub);
+        renderText(byId("rNameLabel"), copy.nameLabel);
+        renderText(byId("rPhoneLabel"), copy.phoneLabel);
+        renderText(byId("rGuestsLabel"), copy.guestsLabel);
+        renderText(byId("rGuestsHint"), copy.guestsHint);
+        renderText(byId("footerName"), config.eventLabel || copy.footerLabel);
+        renderText(byId("footerQuote"), copy.footerQuote);
+        renderText(byId("mapBtn"), copy.mapButton);
+
+        const nameInput = byId("rName");
+        const phoneInput = byId("rPhone");
+        const guestsInput = byId("rGuests");
+
+        if (nameInput) nameInput.placeholder = copy.namePlaceholder;
+        if (phoneInput) phoneInput.placeholder = copy.phonePlaceholder;
+        if (guestsInput) guestsInput.placeholder = copy.guestsPlaceholder;
+        if (note) note.placeholder = copy.notePlaceholderAttend;
+
+        renderText(byId("hBride"), names.bride);
+        renderText(byId("hGroom"), names.groom);
+        renderText(byId("heroNamesLine"), joinedNames);
+        renderText(byId("heroName"), joinedNames);
+        renderText(byId("heroDateLine"), longDate(config, copy));
+        renderHtml(byId("eventText"), config.description || copy.defaultDescription);
+        renderText(byId("ownersBigName"), config.toiOwners || "");
+        renderText(byId("calendarTitle"), copy.monthsNom[parts.mm - 1] + " " + parts.yy);
+        renderText(byId("calendarSubtitle"), calendarSubtitle(config, copy));
+        renderText(byId("calendarTimeLine"), timeLine(config, copy));
+        renderText(byId("locationName"), config.location || "");
+        renderText(byId("footLine"), joinedNames);
+
+        if (amp) {
+          amp.style.display = names.bride && names.groom ? "inline" : "none";
+        }
+
+        const ownersSection = byId("ownersSection");
+        if (ownersSection) {
+          ownersSection.style.display = config.toiOwners ? "block" : "none";
+        }
+
+        renderCalendar(config, copy);
+
+        const details = byId("locationDetails");
+        if (details) {
+          if (detailHtml) {
+            details.innerHTML = String(detailHtml).replace(/\n/g, "<br>");
+            details.style.display = "block";
+          } else {
+            details.style.display = "none";
+          }
+        }
+
+        const mapBtnWrap = byId("mapBtnWrap");
+        const mapBtn = byId("mapBtn");
+        if (mapBtnWrap && mapBtn) {
+          if (config.locationUrl || config.location) {
+            mapBtnWrap.style.display = "block";
+            mapBtn.href = config.locationUrl || "#";
+            mapBtn.style.pointerEvents = config.locationUrl ? "auto" : "none";
+            mapBtn.style.opacity = config.locationUrl ? "1" : "0.55";
+          } else {
+            mapBtnWrap.style.display = "none";
+          }
+        }
+
+        renderGallery(config, copy);
+        renderHero(config, copy);
+        bindRsvpChoices(config);
+
+        const hidden = byId("rAttending");
+        setRsvpChoiceState(!hidden || hidden.value !== "false", copy);
+
+        document.title = joinedNames || copy.pageTitle;
+      }
+
+      function queueInitialRender() {
+        setTimeout(function () {
+          setTimeout(function () {
+            applyVisualConfig(window.CONFIG || CONFIG || {});
+          }, 0);
+        }, 0);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", queueInitialRender, { once: true });
+      } else {
+        queueInitialRender();
+      }
+
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "UPDATE_CONFIG") {
+          setTimeout(function () {
+            applyVisualConfig(event.data.config || window.CONFIG || CONFIG || {});
+          }, 0);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

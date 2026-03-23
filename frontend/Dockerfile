@@ -20,7 +20,6 @@ RUN rm -rf ./*
 # Copy built assets from Stage 1
 COPY --from=build /app/dist .
 
-# Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

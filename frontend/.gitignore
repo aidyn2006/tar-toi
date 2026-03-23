@@ -6,6 +6,7 @@ yarn-error.log*
 
 # Build output
 dist/
+dist-ssr/
 build/
 
 # Vite cache
@@ -20,3 +21,7 @@ build/
 .DS_Store
 *.swp
 *.swo
+
+*.png
+*.jpg
+uploads/

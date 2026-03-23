@@ -1,0 +1,1207 @@
+<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Wedding Invitation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Josefin+Sans:wght@300;400&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #ffffff;
+      --warm: #f6f6f6;
+      --charcoal: #171717;
+      --gray: #6d6d6d;
+      --taupe: #d8d8d8;
+      --ink: #0f0f0f;
+      --line: rgba(17, 17, 17, 0.14);
+
+      --font-script: 'Great Vibes', cursive;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Josefin Sans', sans-serif;
+
+      --shadow-soft: 0 12px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: var(--paper);
+      color: var(--charcoal);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .page-root {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--paper);
+      overflow: hidden;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .font-script {
+      font-family: var(--font-script);
+    }
+
+    .font-serif {
+      font-family: var(--font-serif);
+    }
+
+    .font-sans-wedding {
+      font-family: var(--font-sans);
+    }
+
+    .section-paper {
+      background: var(--paper);
+    }
+
+    .section-warm {
+      background: var(--warm);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-photo {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.16));
+    }
+
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .hero-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 56%, rgba(255, 255, 255, 0.94) 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0 32px 40px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .hero-names {
+      color: var(--charcoal);
+      line-height: 1.05;
+    }
+
+    .hero-name {
+      display: block;
+      font-family: var(--font-script);
+      font-size: 48px;
+      font-weight: 400;
+    }
+
+    .hero-amp {
+      display: block;
+      margin: 6px 0;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-style: italic;
+      letter-spacing: 0.24em;
+      color: var(--gray);
+    }
+
+    .hero-date {
+      margin-top: 18px;
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .section {
+      padding: 56px 32px;
+      text-align: center;
+      position: relative;
+    }
+
+    .ornament-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .ornament-line::before,
+    .ornament-line::after {
+      content: "";
+      width: 60px;
+      height: 1px;
+      background: var(--taupe);
+      opacity: 0.92;
+    }
+
+    .ornament-line span {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--taupe);
+      line-height: 1;
+    }
+
+    .family-intro {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.6;
+      letter-spacing: 0.05em;
+      color: var(--gray);
+    }
+
+    #ownersBigName {
+      margin-top: 10px;
+      margin-bottom: 18px;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      line-height: 1.3;
+      font-style: italic;
+      color: var(--charcoal);
+    }
+
+    #eventText {
+      max-width: 340px;
+      margin: 0 auto;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.95;
+      letter-spacing: 0.04em;
+      color: var(--charcoal);
+    }
+
+    .invite-script {
+      margin-top: 34px;
+      font-family: var(--font-script);
+      font-size: 36px;
+      color: var(--charcoal);
+      line-height: 1.05;
+    }
+    .torn-divider {
+      position: relative;
+      height: 20px;
+      overflow: hidden;
+    }
+
+    .torn-divider svg {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 20px;
+      display: block;
+    }
+
+    .torn-divider-paper {
+      background: var(--paper);
+    }
+
+    .torn-divider-paper path {
+      fill: var(--warm);
+    }
+
+    .torn-divider-warm {
+      background: var(--warm);
+    }
+
+    .torn-divider-warm path {
+      fill: var(--paper);
+    }
+
+    .date-card {
+      display: inline-block;
+      padding: 32px 40px;
+      border: 1px solid var(--line);
+      background: transparent;
+    }
+
+    .date-card-weekday,
+    .date-card-month {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .date-card-day {
+      margin: 8px 0;
+      font-family: var(--font-serif);
+      font-size: 60px;
+      line-height: 0.9;
+      font-weight: 300;
+      color: var(--charcoal);
+    }
+
+    .date-card-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--taupe);
+      margin: 18px auto;
+    }
+
+    .date-card-time {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.7;
+      font-style: italic;
+      color: var(--gray);
+    }
+
+    .photo-panel {
+      width: 100%;
+      height: 280px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .section-kicker {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    .section-script-title {
+      font-family: var(--font-script);
+      font-size: 36px;
+      line-height: 1;
+      color: var(--charcoal);
+      font-weight: 400;
+    }
+
+    #timelineItems {
+      margin-top: 40px;
+      display: grid;
+      gap: 32px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 30px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 1px;
+      height: 24px;
+      background: rgba(17, 17, 17, 0.12);
+      transform: translateX(-50%);
+    }
+
+    .timeline-time {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--taupe);
+    }
+
+    .timeline-title {
+      margin-top: 8px;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.15;
+      color: var(--charcoal);
+    }
+
+    .timeline-desc {
+      margin-top: 6px;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.55;
+      font-style: italic;
+      color: var(--gray);
+    }
+
+    .timeline-desc:empty {
+      display: none;
+    }
+
+    .location-name {
+      margin-top: 8px;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.2;
+      color: var(--charcoal);
+    }
+
+    #locationDetails {
+      margin-top: 8px;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.75;
+      font-style: italic;
+      color: var(--gray);
+    }
+
+    #mapBtnWrap {
+      margin-top: 32px;
+    }
+
+    #mapBtn {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    #mapBtn:hover {
+      background: var(--charcoal);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      background: rgba(244, 244, 244, 0.88);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .gallery-item.wide {
+      grid-column: 1 / -1;
+      height: 200px;
+    }
+
+    .gallery-item.tall {
+      height: 180px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 0.7s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-style: italic;
+      color: var(--gray);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .countdown-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 36px;
+    }
+
+    .countdown-item {
+      min-width: 66px;
+      text-align: center;
+    }
+
+    .countdown-value {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 300;
+      color: var(--charcoal);
+    }
+
+    .countdown-label {
+      margin-top: 8px;
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .rsvp-form {
+      max-width: 340px;
+      margin: 34px auto 0;
+      display: grid;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .field-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.18);
+      padding: 8px 0;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color 0.25s ease;
+      border-radius: 0;
+      appearance: none;
+    }
+
+    .field-input::placeholder {
+      color: rgba(17, 17, 17, 0.32);
+    }
+
+    .field-input:focus {
+      border-bottom-color: var(--charcoal);
+    }
+
+    #rNote {
+      min-height: 92px;
+      resize: none;
+    }
+
+    .submit-wrap {
+      padding-top: 12px;
+      text-align: center;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      min-width: 240px;
+      padding: 16px 36px;
+      border: none;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--font-sans);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--charcoal);
+    }
+
+    #successMsg {
+      display: none;
+      margin-top: 32px;
+      text-align: center;
+    }
+
+    #successMsg p {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.5;
+      font-style: italic;
+      color: var(--charcoal);
+    }
+
+    .footer-date {
+      width: 32px;
+      height: 1px;
+      background: var(--taupe);
+      margin: 32px auto 0;
+    }
+
+    .footer-small {
+      margin-top: 16px;
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--taupe);
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition-delay: var(--reveal-delay, 0s);
+      will-change: opacity, transform;
+    }
+
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 420px) {
+      .hero-photo {
+        height: 560px;
+      }
+
+      .hero-content,
+      .section {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .hero-name {
+        font-size: 44px;
+      }
+
+      .invite-script,
+      .section-script-title {
+        font-size: 34px;
+      }
+
+      .date-card {
+        width: 100%;
+        padding: 28px 20px;
+      }
+
+      .countdown-grid {
+        gap: 18px;
+      }
+
+      .countdown-item {
+        min-width: 56px;
+      }
+
+      .countdown-value {
+        font-size: 34px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG = {
+      names: { bride: "Olivia", groom: "Alexander" },
+      day: "12-10-2026",
+      hour: "16:00",
+      location: "The Garden Estate",
+      locationDetail: "142 Rosewood Lane\nNapa Valley, California",
+      locationUrl: "",
+      gallery: [],
+      description: "Request the honour of your presence at the marriage of their children",
+      toiOwners: "Mr. & Mrs. Bennett & Mr. & Mrs. Hayes",
+      program: [
+        { time: "4:00 PM", title: "Ceremony", desc: "Exchange of vows in the garden" },
+        { time: "5:00 PM", title: "Cocktail Hour", desc: "Drinks and canapes on the terrace" },
+        { time: "6:30 PM", title: "Reception", desc: "Dinner, toasts and first dance" },
+        { time: "9:00 PM", title: "Evening Party", desc: "Dancing under the stars" }
+      ],
+      music: { title: "", artist: "", url: "" },
+      lang: "en"
+    };
+  </script>
+
+  <div class="page-root">
+    <section class="hero section-paper">
+      <div class="hero-photo">
+        <img id="heroPhoto" src="/template-assets/wedding-template10/wedding-hero.jpg" alt="Wedding couple">
+      </div>
+
+      <div class="hero-content">
+        <div data-reveal>
+          <p id="heroKicker" class="eyebrow">We're getting married</p>
+        </div>
+
+        <div data-reveal style="--reveal-delay:.12s" class="hero-names">
+          <span id="hBride" class="hero-name">Olivia</span>
+          <span class="hero-amp" aria-hidden="true">&amp;</span>
+          <span id="hGroom" class="hero-name">Alexander</span>
+          <p id="heroNamesLine" class="sr-only">Olivia &amp; Alexander</p>
+          <p id="heroName" class="sr-only">Olivia &amp; Alexander</p>
+        </div>
+
+        <div data-reveal style="--reveal-delay:.22s">
+          <p id="heroDateLine" class="hero-date">October 12, 2026</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-paper">
+      <div data-reveal>
+        <div class="ornament-line"><span>✦</span></div>
+      </div>
+
+      <div id="ownersSection" data-reveal style="--reveal-delay:.08s">
+        <p id="ownersLead" class="family-intro">Together with their families</p>
+        <p id="ownersBigName">Mr. &amp; Mrs. Bennett &amp; Mr. &amp; Mrs. Hayes</p>
+      </div>
+
+      <div data-reveal style="--reveal-delay:.16s">
+        <p id="eventText">Request the honour of your presence at the marriage of their children</p>
+      </div>
+
+      <div data-reveal style="--reveal-delay:.24s">
+        <p id="inviteNamesLine" class="invite-script">Olivia &amp; Alexander</p>
+      </div>
+    </section>
+
+    <div class="torn-divider torn-divider-paper" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-warm">
+      <div data-reveal>
+        <p id="saveDateLabel" class="section-kicker">Save the Date</p>
+      </div>
+
+      <div data-reveal style="--reveal-delay:.08s" class="date-card">
+        <p id="dateWeekday" class="date-card-weekday">Monday</p>
+        <p id="dateDay" class="date-card-day">12</p>
+        <p id="dateMonthYear" class="date-card-month">October 2026</p>
+        <div class="date-card-divider"></div>
+        <p id="dateTimeLine" class="date-card-time">at four o'clock in the afternoon</p>
+      </div>
+    </section>
+
+    <div class="torn-divider torn-divider-warm" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section-paper">
+      <img id="detailPhoto" class="photo-panel" src="/template-assets/wedding-template10/wedding-detail.jpg" alt="Wedding details">
+    </section>
+
+    <div class="torn-divider torn-divider-paper" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-warm">
+      <div data-reveal>
+        <p id="programOverline" class="section-kicker">Order of</p>
+        <h2 id="programTitle" class="section-script-title">Celebration</h2>
+      </div>
+
+      <div id="timelineItems"></div>
+    </section>
+
+    <div class="torn-divider torn-divider-warm" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section-paper">
+      <img id="ceremonyPhoto" class="photo-panel" src="/template-assets/wedding-template10/wedding-ceremony.jpg" alt="Wedding ceremony">
+    </section>
+
+    <div class="torn-divider torn-divider-paper" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-warm">
+      <div data-reveal>
+        <p id="venueLabel" class="section-kicker">The Venue</p>
+        <h2 id="locationTitle" class="section-script-title">Location</h2>
+      </div>
+
+      <div data-reveal style="--reveal-delay:.1s">
+        <p id="locationName" class="location-name">The Garden Estate</p>
+        <p id="locationDetails">142 Rosewood Lane<br>Napa Valley, California</p>
+      </div>
+
+      <div id="mapBtnWrap" data-reveal style="--reveal-delay:.18s">
+        <a id="mapBtn" href="#" target="_blank" rel="noreferrer noopener">View on Map</a>
+      </div>
+    </section>
+
+    <div class="torn-divider torn-divider-warm" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-paper" style="padding-left:24px;padding-right:24px;">
+      <div data-reveal>
+        <p id="galleryLabel" class="section-kicker">Our Moments</p>
+        <h2 id="galleryTitle" class="section-script-title">Gallery</h2>
+      </div>
+      <div id="gallerySlides" class="gallery-grid"></div>
+    </section>
+
+    <div class="torn-divider torn-divider-paper" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-warm">
+      <div data-reveal>
+        <p id="countdownLabel" class="section-kicker">Counting Down</p>
+        <h2 id="countdownTitle" class="section-script-title">Until We Say I Do</h2>
+      </div>
+
+      <div class="countdown-grid" data-reveal style="--reveal-delay:.1s">
+        <div class="countdown-item">
+          <p id="countDays" class="countdown-value">208</p>
+          <p id="countDaysLabel" class="countdown-label">Days</p>
+        </div>
+        <div class="countdown-item">
+          <p id="countHours" class="countdown-value">12</p>
+          <p id="countHoursLabel" class="countdown-label">Hours</p>
+        </div>
+        <div class="countdown-item">
+          <p id="countMinutes" class="countdown-value">34</p>
+          <p id="countMinutesLabel" class="countdown-label">Minutes</p>
+        </div>
+        <div class="countdown-item">
+          <p id="countSeconds" class="countdown-value">56</p>
+          <p id="countSecondsLabel" class="countdown-label">Seconds</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="torn-divider torn-divider-warm" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section-paper">
+      <img id="bouquetPhoto" class="photo-panel" src="/template-assets/wedding-template10/wedding-bouquet.jpg" alt="Wedding bouquet">
+    </section>
+
+    <div class="torn-divider torn-divider-paper" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-warm">
+      <div data-reveal>
+        <p id="rsvpKicker" class="section-kicker">Will You Join Us?</p>
+        <h2 id="rsvpTitle" class="section-script-title">RSVP</h2>
+      </div>
+
+      <div id="rsvpForm" class="rsvp-form" data-reveal style="--reveal-delay:.1s">
+        <input id="rAttending" type="hidden" value="true">
+
+        <div class="field">
+          <label id="rNameLabel" class="field-label" for="rName">Full Name</label>
+          <input id="rName" class="field-input" type="text" placeholder="Your name">
+        </div>
+
+        <div class="field">
+          <label id="rPhoneLabel" class="field-label" for="rPhone">Phone Number</label>
+          <input id="rPhone" class="field-input" type="tel" placeholder="Your phone">
+        </div>
+
+        <div id="rGuestsField" class="field">
+          <label id="rGuestsLabel" class="field-label" for="rGuests">Number of Guests</label>
+          <input id="rGuests" class="field-input" type="number" min="1" value="1" placeholder="1">
+        </div>
+
+        <div class="field">
+          <label id="rNoteLabel" class="field-label" for="rNote">Note to the Couple</label>
+          <textarea id="rNote" class="field-input" placeholder="Your wishes..."></textarea>
+        </div>
+
+        <div class="submit-wrap">
+          <button class="submit-btn" type="button" onclick="submitRSVP && submitRSVP()">
+            <span id="rsvpSubmitText">Send RSVP</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="successMsg">
+        <p id="successText">Thank you for your response!</p>
+      </div>
+    </section>
+
+    <div class="torn-divider torn-divider-warm" aria-hidden="true">
+      <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path d="M0,10 Q30,2 60,8 T120,12 T180,5 T240,14 T300,7 T360,11 T420,4 T480,13 T540,6 T600,14 T660,8 T720,11 T780,3 T840,13 T900,7 T960,14 T1020,8 T1080,11 T1140,5 T1200,10 L1200,20 L0,20 Z"></path>
+      </svg>
+    </div>
+
+    <section class="section section-paper" style="padding-bottom:80px;">
+      <div data-reveal>
+        <div class="ornament-line" style="margin-bottom:24px;"><span>✦</span></div>
+        <p id="footerName" class="section-kicker" style="margin-bottom:18px;">Wedding Celebration</p>
+        <p id="footerCouple" class="invite-script" style="margin-top:0;font-size:48px;">Olivia &amp; Alexander</p>
+        <p id="footLine" class="sr-only">Olivia &amp; Alexander</p>
+        <p id="footerQuote" class="family-intro" style="max-width:280px;margin:18px auto 0;">
+          Two hearts, one beautiful beginning - forever starts with us.
+        </p>
+        <div class="footer-date"></div>
+        <p id="footerDateSmall" class="footer-small">October 12, 2026</p>
+      </div>
+    </section>
+  </div>
+  <script>
+    (function () {
+      const DEFAULT_ASSETS = {
+        hero: "/template-assets/wedding-template10/wedding-hero.jpg",
+        detail: "/template-assets/wedding-template10/wedding-detail.jpg",
+        ceremony: "/template-assets/wedding-template10/wedding-ceremony.jpg",
+        reception: "/template-assets/wedding-template10/wedding-reception.jpg",
+        bouquet: "/template-assets/wedding-template10/wedding-bouquet.jpg"
+      };
+      const COPY = {
+        en: {
+          pageTitle: "Wedding Invitation",
+          heroKicker: "We're getting married",
+          ownersLead: "Together with their families",
+          saveDateLabel: "Save the Date",
+          programOverline: "Order of",
+          programTitle: "Celebration",
+          venueLabel: "The Venue",
+          locationTitle: "Location",
+          galleryLabel: "Our Moments",
+          galleryTitle: "Gallery",
+          countdownLabel: "Counting Down",
+          countdownTitle: "Until We Say I Do",
+          rsvpKicker: "Will You Join Us?",
+          rsvpTitle: "RSVP",
+          nameLabel: "Full Name",
+          namePlaceholder: "Your name",
+          phoneLabel: "Phone Number",
+          phonePlaceholder: "Your phone",
+          guestsLabel: "Number of Guests",
+          guestsPlaceholder: "1",
+          noteLabel: "Note to the Couple",
+          notePlaceholder: "Your wishes...",
+          submitText: "Send RSVP",
+          successText: "Thank you for your response!",
+          mapButton: "View on Map",
+          footerLabel: "Wedding Celebration",
+          footerQuote: "Two hearts, one beautiful beginning - forever starts with us.",
+          heroAlt: "Wedding couple",
+          detailAlt: "Wedding details",
+          ceremonyAlt: "Wedding ceremony",
+          bouquetAlt: "Wedding bouquet",
+          galleryAltPrefix: "Gallery",
+          countDays: "Days",
+          countHours: "Hours",
+          countMinutes: "Minutes",
+          countSeconds: "Seconds",
+          monthsNom: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          monthsGen: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          weekdays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          defaultDescription: "Request the honour of your presence at the marriage of their children",
+          defaultProgram: [
+            { time: "4:00 PM", title: "Ceremony", desc: "Exchange of vows in the garden" },
+            { time: "5:00 PM", title: "Cocktail Hour", desc: "Drinks & canapes on the terrace" },
+            { time: "6:30 PM", title: "Reception", desc: "Dinner, toasts & first dance" },
+            { time: "9:00 PM", title: "Evening Party", desc: "Dancing under the stars" }
+          ]
+        },
+        kk: {
+          pageTitle: "Үйлену тойына шақыру",
+          heroKicker: "Үйлену тойымызға шақырамыз",
+          ownersLead: "Ата-аналарымызбен бірге",
+          saveDateLabel: "Күнін есте сақтаңыз",
+          programOverline: "Той",
+          programTitle: "Бағдарламасы",
+          venueLabel: "Өтетін орны",
+          locationTitle: "Мекенжай",
+          galleryLabel: "Біздің сәттер",
+          galleryTitle: "Галерея",
+          countdownLabel: "Санаулы сәт қалды",
+          countdownTitle: "Үлкен күнге дейін",
+          rsvpKicker: "Бізбен бірге боласыз ба?",
+          rsvpTitle: "Жауап",
+          nameLabel: "Аты-жөніңіз",
+          namePlaceholder: "Аты-жөніңізді жазыңыз",
+          phoneLabel: "Телефон нөмірі",
+          phonePlaceholder: "Телефон нөміріңіз",
+          guestsLabel: "Қонақ саны",
+          guestsPlaceholder: "1",
+          noteLabel: "Тілек немесе ескертпе",
+          notePlaceholder: "Ізгі тілегіңіз...",
+          submitText: "Жауап жіберу",
+          successText: "Жауабыңыз үшін рақмет!",
+          mapButton: "Картадан көру",
+          footerLabel: "Үйлену тойы",
+          footerQuote: "Екі жүрек, бір әсем бастау - бақытымыз бірге жалғасады.",
+          heroAlt: "Жас жұп",
+          detailAlt: "Той бөлшектері",
+          ceremonyAlt: "Неке қию сәті",
+          bouquetAlt: "Гүл шоғы",
+          galleryAltPrefix: "Фото",
+          countDays: "Күн",
+          countHours: "Сағат",
+          countMinutes: "Минут",
+          countSeconds: "Секунд",
+          monthsNom: ["Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр", "Маусым", "Шілде", "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан"],
+          monthsGen: ["қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым", "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан"],
+          weekdays: ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"],
+          defaultDescription: "Сіздерді өміріміздегі ең қымбат күнімізге куә болып, қуанышымызды бірге бөлісуге шын жүректен шақырамыз.",
+          defaultProgram: [
+            { time: "16:00", title: "Неке қию рәсімі", desc: "Бақ ішінде ақ некеміз қиылады" },
+            { time: "17:00", title: "Коктейль уақыты", desc: "Террасада жеңіл дәм мен сусындар" },
+            { time: "18:30", title: "Той дастарханы", desc: "Кешкі ас, тілек пен алғашқы би" },
+            { time: "21:00", title: "Кешкі би кеші", desc: "Жұлдызды аспан астындағы би" }
+          ]
+        },
+        ru: {
+          pageTitle: "Свадебное приглашение",
+          heroKicker: "Мы женимся",
+          ownersLead: "Вместе с нашими семьями",
+          saveDateLabel: "Сохраните дату",
+          programOverline: "Программа",
+          programTitle: "Праздника",
+          venueLabel: "Место проведения",
+          locationTitle: "Локация",
+          galleryLabel: "Наши моменты",
+          galleryTitle: "Галерея",
+          countdownLabel: "Обратный отсчет",
+          countdownTitle: "До нашего дня",
+          rsvpKicker: "Вы будете с нами?",
+          rsvpTitle: "RSVP",
+          nameLabel: "Имя и фамилия",
+          namePlaceholder: "Ваше имя",
+          phoneLabel: "Номер телефона",
+          phonePlaceholder: "Ваш телефон",
+          guestsLabel: "Количество гостей",
+          guestsPlaceholder: "1",
+          noteLabel: "Пожелание для пары",
+          notePlaceholder: "Ваши пожелания...",
+          submitText: "Отправить ответ",
+          successText: "Спасибо за ваш ответ!",
+          mapButton: "Открыть карту",
+          footerLabel: "Свадебное торжество",
+          footerQuote: "Два сердца, одно прекрасное начало - наша вечность начинается вместе.",
+          heroAlt: "Молодожены",
+          detailAlt: "Свадебные детали",
+          ceremonyAlt: "Свадебная церемония",
+          bouquetAlt: "Свадебный букет",
+          galleryAltPrefix: "Фото",
+          countDays: "Дней",
+          countHours: "Часов",
+          countMinutes: "Минут",
+          countSeconds: "Секунд",
+          monthsNom: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+          monthsGen: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+          weekdays: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+          defaultDescription: "С радостью приглашаем вас разделить с нами один из самых важных дней нашей жизни.",
+          defaultProgram: [
+            { time: "16:00", title: "Церемония", desc: "Обмен клятвами в саду" },
+            { time: "17:00", title: "Коктейльный час", desc: "Напитки и легкие закуски на террасе" },
+            { time: "18:30", title: "Торжественный ужин", desc: "Ужин, тосты и первый танец" },
+            { time: "21:00", title: "Вечерняя вечеринка", desc: "Танцы под звездами" }
+          ]
+        }
+      };
+      let countdownTimer = null;
+      let revealObserver = null;
+      const byId = function (id) { return document.getElementById(id); };
+      const setText = function (id, value) { const node = typeof id === "string" ? byId(id) : id; if (node) node.textContent = value || ""; };
+      const esc = function (value) { return String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#39;"); };
+      const setHtml = function (id, value) { const node = typeof id === "string" ? byId(id) : id; if (node) node.innerHTML = esc(value).replace(/\n/g, "<br>"); };
+      const pad = function (v) { return String(v).padStart(2, "0"); };
+      const parseDate = function (v) { const p = String(v || "").split("-").map(function (x) { return parseInt(x, 10); }); return p.length === 3 && p.every(Number.isFinite) ? { dd: p[0], mm: p[1], yy: p[2] } : { dd: 12, mm: 10, yy: 2026 }; };
+      const parseTime = function (v) { const m = String(v || "16:00").trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i); if (!m) return { hh: 16, mm: 0 }; let hh = parseInt(m[1], 10); const mm = parseInt(m[2] || "0", 10); const suffix = (m[3] || "").toUpperCase(); if (suffix === "PM" && hh < 12) hh += 12; if (suffix === "AM" && hh === 12) hh = 0; return { hh: Number.isFinite(hh) ? hh : 16, mm: Number.isFinite(mm) ? mm : 0 }; };
+      const time24 = function (t) { return pad(t.hh) + ":" + pad(t.mm); };
+      const time12 = function (t) { const suffix = t.hh >= 12 ? "PM" : "AM"; const hour = t.hh % 12 || 12; return hour + ":" + pad(t.mm) + " " + suffix; };
+      const getLang = function (conf) { const l = String((conf && conf.lang) || "").toLowerCase(); return l === "kk" || l === "ru" ? l : "en"; };
+      const getCopy = function (conf) { return COPY[getLang(conf)] || COPY.en; };
+      const getNames = function (conf) { const n = (conf && conf.names) || {}; return { bride: String(n.bride || conf.topic2 || "Olivia").trim() || "Olivia", groom: String(n.groom || conf.topic1 || conf.childName || "Alexander").trim() || "Alexander" }; };
+      const joinNames = function (n) { return [n.bride, n.groom].filter(Boolean).join(" & "); };
+      const heroDate = function (conf, c) { const d = parseDate(conf.day); if (getLang(conf) === "ru") return d.dd + " " + c.monthsGen[d.mm - 1] + " " + d.yy; if (getLang(conf) === "kk") return d.yy + " жылғы " + d.dd + " " + c.monthsGen[d.mm - 1]; return c.monthsNom[d.mm - 1] + " " + d.dd + ", " + d.yy; };
+      const monthYear = function (conf, c) { const d = parseDate(conf.day); return c.monthsNom[d.mm - 1] + " " + d.yy; };
+      const weekday = function (conf, c) { const d = parseDate(conf.day); return c.weekdays[new Date(d.yy, d.mm - 1, d.dd).getDay()]; };
+      const timeLine = function (conf) { const t = parseTime(conf.hour); if (getLang(conf) === "ru") return "начало в " + time24(t); if (getLang(conf) === "kk") return "басталуы " + time24(t); if (t.hh === 16 && t.mm === 0) return "at four o'clock in the afternoon"; return "at " + time12(t).toLowerCase(); };
+      const programTime = function (value, currentLang) { const raw = String(value || "").trim(); if (!raw) return ""; if (currentLang === "en" && /AM|PM/i.test(raw)) return raw.toUpperCase(); return currentLang === "en" ? time12(parseTime(raw)) : time24(parseTime(raw)); };
+      const inferDetail = function (location) { const text = String(location || "").trim(); if (!text) return ""; if (text.indexOf("\n") !== -1) return text.split("\n").slice(1).join("\n").trim(); if (text.indexOf(" | ") !== -1) return text.split(" | ").slice(1).join("\n").trim(); if (text.indexOf(",") !== -1) return text.split(",").slice(1).join(",").trim(); return ""; };
+      const eventDate = function (conf) { const d = parseDate(conf.day); const t = parseTime(conf.hour); return new Date(d.yy, d.mm - 1, d.dd, t.hh, t.mm, 0, 0); };
+      const placeParts = function (conf) { const raw = String((conf && conf.location) || "").trim(); const explicit = String((conf && (conf.locationDetail || conf.locationDetails || conf.address)) || "").trim(); let name = raw; let detail = explicit; if (name && !detail) { if (name.indexOf("\n") !== -1) { const lines = name.split("\n").map(function (x) { return x.trim(); }).filter(Boolean); name = lines[0] || name; detail = lines.slice(1).join("\n"); } else if (name.indexOf(" | ") !== -1) { const parts = name.split(" | ").map(function (x) { return x.trim(); }).filter(Boolean); name = parts[0] || name; detail = parts.slice(1).join("\n"); } else { detail = inferDetail(name); if (detail && name.indexOf(",") !== -1) name = name.split(",")[0].trim(); } } return { name: name, detail: detail }; };
+      const imageSources = function (conf) { const g = Array.isArray(conf.gallery) ? conf.gallery.filter(Boolean) : []; const hero = conf.heroPhotoUrl || conf.previewPhotoUrl || conf.heroPhoto || g[0] || DEFAULT_ASSETS.hero; const detail = g[1] || DEFAULT_ASSETS.detail; const ceremony = g[2] || DEFAULT_ASSETS.ceremony; const reception = g[3] || DEFAULT_ASSETS.reception; const bouquet = g[4] || DEFAULT_ASSETS.bouquet; return { hero: hero, detail: detail, ceremony: ceremony, bouquet: bouquet, gallery: [hero, detail, ceremony, reception, bouquet, g[5] || hero] }; };
+      const programEntries = function (conf, c) { const defaults = c.defaultProgram || []; const source = Array.isArray(conf.program) ? conf.program : defaults; const l = getLang(conf); return source.map(function (item, index) { const fb = defaults[index] || {}; const time = String((item && item.time) || fb.time || "").trim(); const title = String((item && (item.title || item.label || item.name)) || fb.title || "").trim(); const desc = String((item && (item.desc || item.description || item.subtitle)) || fb.desc || "").trim(); if (!time && !title && !desc) return null; return { time: programTime(time || fb.time || "", l), title: title || fb.title || "", desc: desc || fb.desc || "" }; }).filter(Boolean); };
+      const renderTimeline = function (conf, c) { const wrap = byId("timelineItems"); if (!wrap) return; wrap.innerHTML = ""; programEntries(conf, c).forEach(function (item, index) { const node = document.createElement("div"); node.className = "timeline-item"; node.setAttribute("data-reveal", ""); node.style.setProperty("--reveal-delay", Math.min(index * 0.08, 0.32).toFixed(2) + "s"); const time = document.createElement("p"); time.className = "timeline-time"; time.textContent = item.time; const title = document.createElement("p"); title.className = "timeline-title"; title.textContent = item.title; const desc = document.createElement("p"); desc.className = "timeline-desc"; desc.textContent = item.desc; node.appendChild(time); node.appendChild(title); node.appendChild(desc); wrap.appendChild(node); }); };
+      const renderGallery = function (conf, c, sources) { const wrap = byId("gallerySlides"); if (!wrap) return; wrap.innerHTML = ""; sources.gallery.forEach(function (src, index) { const item = document.createElement("div"); item.className = "gallery-item " + (index === 0 || index === 5 ? "wide" : "tall"); item.setAttribute("data-reveal", ""); item.style.setProperty("--reveal-delay", Math.min(index * 0.06, 0.3).toFixed(2) + "s"); if (src) { const img = document.createElement("img"); img.src = src; img.alt = c.galleryAltPrefix + " " + (index + 1); item.appendChild(img); } else { const ph = document.createElement("div"); ph.className = "gallery-placeholder"; ph.textContent = c.galleryAltPrefix + " " + (index + 1); item.appendChild(ph); } wrap.appendChild(item); }); };
+      const renderCountdown = function (conf, c) { const target = eventDate(conf); if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } const tick = function () { const diff = Math.max(0, target.getTime() - Date.now()); const s = Math.floor(diff / 1000); setText("countDays", String(Math.floor(s / 86400))); setText("countHours", pad(Math.floor((s % 86400) / 3600))); setText("countMinutes", pad(Math.floor((s % 3600) / 60))); setText("countSeconds", pad(s % 60)); }; setText("countDaysLabel", c.countDays); setText("countHoursLabel", c.countHours); setText("countMinutesLabel", c.countMinutes); setText("countSecondsLabel", c.countSeconds); tick(); countdownTimer = window.setInterval(tick, 1000); };
+      const applyReveal = function () { const nodes = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]")); if (!nodes.length) return; if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { nodes.forEach(function (n) { n.classList.add("is-visible"); }); return; } if (!revealObserver) { revealObserver = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); revealObserver.unobserve(entry.target); } }); }, { threshold: 0.12 }); } nodes.forEach(function (n) { if (n.dataset.revealBound === "true") return; n.dataset.revealBound = "true"; revealObserver.observe(n); }); };
+      const applyVisualConfig = function (conf) {
+        const config = Object.assign({}, typeof CONFIG !== "undefined" ? CONFIG : {}, window.CONFIG || {}, conf || {});
+        const c = getCopy(config);
+        const n = getNames(config);
+        const assets = imageSources(config);
+        const place = placeParts(config);
+        const owners = String(config.toiOwners || "").trim();
+        window.CONFIG = config;
+        document.documentElement.lang = getLang(config);
+        setText("heroKicker", c.heroKicker);
+        setText("saveDateLabel", c.saveDateLabel);
+        setText("programOverline", c.programOverline);
+        setText("programTitle", c.programTitle);
+        setText("venueLabel", c.venueLabel);
+        setText("locationTitle", c.locationTitle);
+        setText("galleryLabel", c.galleryLabel);
+        setText("galleryTitle", c.galleryTitle);
+        setText("countdownLabel", c.countdownLabel);
+        setText("countdownTitle", c.countdownTitle);
+        setText("rsvpKicker", c.rsvpKicker);
+        setText("rsvpTitle", c.rsvpTitle);
+        setText("rNameLabel", c.nameLabel);
+        setText("rPhoneLabel", c.phoneLabel);
+        setText("rGuestsLabel", c.guestsLabel);
+        setText("rNoteLabel", c.noteLabel);
+        setText("rsvpSubmitText", c.submitText);
+        setText("successText", c.successText);
+        setText("mapBtn", c.mapButton);
+        setText("footerName", config.eventLabel || c.footerLabel);
+        setText("footerQuote", c.footerQuote);
+        setText("ownersLead", c.ownersLead);
+        setText("hBride", n.bride);
+        setText("hGroom", n.groom);
+        setText("heroNamesLine", joinNames(n));
+        setText("heroName", joinNames(n));
+        setText("heroDateLine", heroDate(config, c));
+        setText("ownersBigName", owners);
+        setHtml("eventText", config.description || c.defaultDescription);
+        setText("inviteNamesLine", joinNames(n));
+        setText("dateWeekday", weekday(config, c));
+        setText("dateDay", String(parseDate(config.day).dd));
+        setText("dateMonthYear", monthYear(config, c));
+        setText("dateTimeLine", timeLine(config));
+        setText("locationName", place.name || "");
+        setText("footerCouple", joinNames(n));
+        setText("footLine", joinNames(n));
+        setText("footerDateSmall", heroDate(config, c));
+        if (byId("locationDetails")) {
+          byId("locationDetails").style.display = place.detail ? "block" : "none";
+          byId("locationDetails").innerHTML = place.detail ? esc(place.detail).replace(/\n/g, "<br>") : "";
+        }
+        if (byId("ownersSection")) byId("ownersSection").style.display = owners ? "block" : "none";
+        if (byId("mapBtnWrap") && byId("mapBtn")) {
+          if (config.location || config.locationUrl) {
+            byId("mapBtnWrap").style.display = "block";
+            byId("mapBtn").href = config.locationUrl || "#";
+            byId("mapBtn").style.pointerEvents = config.locationUrl ? "auto" : "none";
+            byId("mapBtn").style.opacity = config.locationUrl ? "1" : "0.55";
+          } else {
+            byId("mapBtnWrap").style.display = "none";
+          }
+        }
+        if (byId("heroPhoto")) { byId("heroPhoto").src = assets.hero; byId("heroPhoto").alt = c.heroAlt; }
+        if (byId("detailPhoto")) { byId("detailPhoto").src = assets.detail; byId("detailPhoto").alt = c.detailAlt; }
+        if (byId("ceremonyPhoto")) { byId("ceremonyPhoto").src = assets.ceremony; byId("ceremonyPhoto").alt = c.ceremonyAlt; }
+        if (byId("bouquetPhoto")) { byId("bouquetPhoto").src = assets.bouquet; byId("bouquetPhoto").alt = c.bouquetAlt; }
+        if (byId("rName")) byId("rName").placeholder = c.namePlaceholder;
+        if (byId("rPhone")) byId("rPhone").placeholder = c.phonePlaceholder;
+        if (byId("rGuests")) byId("rGuests").placeholder = c.guestsPlaceholder;
+        if (byId("rNote")) byId("rNote").placeholder = c.notePlaceholder;
+        renderTimeline(config, c);
+        renderGallery(config, c, assets);
+        renderCountdown(config, c);
+        document.title = joinNames(n) || c.pageTitle;
+        applyReveal();
+      };
+      const queueInitialRender = function () { setTimeout(function () { setTimeout(function () { applyVisualConfig(window.CONFIG || CONFIG || {}); }, 0); }, 0); };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", queueInitialRender, { once: true });
+      } else {
+        queueInitialRender();
+      }
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "UPDATE_CONFIG") {
+          setTimeout(function () { applyVisualConfig(event.data.config || window.CONFIG || CONFIG || {}); }, 0);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

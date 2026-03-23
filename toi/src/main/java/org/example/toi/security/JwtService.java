@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secret-key:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
+    @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${application.security.jwt.expiration:86400000}") // 1 day
+    @Value("${application.security.jwt.expiration:900000}") // 15 minutes by default
     private long jwtExpiration;
 
     @Value("${application.security.jwt.refresh-token.expiration:604800000}") // 7 days
@@ -78,7 +79,16 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        if (secretKey == null || secretKey.isBlank()) {
+            throw new IllegalStateException("JWT secret not configured");
+        }
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(secretKey);
+        } catch (IllegalArgumentException e) {
+            // allow plain text secrets (non-base64) for local/dev setups
+            keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        }
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

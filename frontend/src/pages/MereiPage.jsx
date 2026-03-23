@@ -1,4 +1,3 @@
-import React from 'react';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import { useLang } from '../context/LanguageContext';
@@ -7,6 +6,39 @@ import Button from '../components/Button';
 const MereiPage = () => {
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+    const locale = lang === 'ru' ? 'ru_RU' : 'kk_KZ';
+    const jsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: lang === 'ru' ? 'Онлайн приглашения на юбилей' : 'Мерейтойға онлайн шақырту',
+            provider: {
+                '@type': 'Organization',
+                name: 'Toiga Shaqyru',
+                url: 'https://toi.com.kz',
+            },
+            areaServed: 'KZ',
+            url: 'https://toi.com.kz/meretoi-shakyru',
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Toiga Shaqyru',
+                    item: 'https://toi.com.kz/',
+                },
+                {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: lang === 'ru' ? 'Приглашение на юбилей' : 'Мерейтойға шақырту',
+                    item: 'https://toi.com.kz/meretoi-shakyru',
+                },
+            ],
+        },
+    ];
 
     return (
         <Layout>
@@ -14,6 +46,8 @@ const MereiPage = () => {
                 title={tr('Мерейтойға онлайн шақырту жасау', 'Создать онлайн приглашение на юбилей')}
                 description={tr('Мерейтойға (50, 60, 70 жас) әдемі электронды шақыртулар жасаңыз. Тегін шаблондар мен WhatsApp арқылы жіберу.', 'Создайте красивые электронные приглашения на юбилей (50, 60, 70 лет). Бесплатные шаблоны и отправка через WhatsApp.')}
                 canonical="/meretoi-shakyru"
+                locale={locale}
+                jsonLd={jsonLd}
             />
 
             <section style={{ paddingTop: '8rem', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '64rem', margin: '0 auto' }}>
@@ -38,7 +72,7 @@ const MereiPage = () => {
                             </ul>
                         </div>
 
-                        <Button onClick={() => window.location.href = '/#register'} style={{ padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.1rem' }}>
+                        <Button href="/#register" style={{ padding: '1rem 2.5rem', height: '3.5rem', fontSize: '1.1rem' }}>
                             {tr('Тегін шақырту жасау', 'Создать бесплатно')}
                         </Button>
                     </div>

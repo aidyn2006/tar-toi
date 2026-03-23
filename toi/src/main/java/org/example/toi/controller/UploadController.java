@@ -1,144 +1,47 @@
 package org.example.toi.controller;
 
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.example.toi.service.MediaStorageService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.example.toi.dto.response.UploadFileResponse;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.example.toi.repository.UserRepository;
-import org.example.toi.entity.User;
 
 @RestController
 @RequestMapping("/api/v1/uploads")
 @RequiredArgsConstructor
 public class UploadController {
 
-    @Value("${uploads.dir:uploads}")
-    private String uploadDir;
-    @Value("${uploads.public-url:}")
-    private String publicUrl;
-
-    private final UserRepository userRepository;
-
-    private Path ensureDir(String userId, String sub) throws IOException {
-        Path dir = Paths.get(uploadDir, userId, sub).toAbsolutePath().normalize();
-        Files.createDirectories(dir);
-        return dir;
-    }
+    private final MediaStorageService mediaStorageService;
 
     @PostMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> uploadImage(
+    public ResponseEntity<UploadFileResponse> uploadImage(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "category", required = false) String category
     ) throws IOException {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Файл бос"));
-        }
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Тек сурет файлы қажет"));
-        }
-        return ResponseEntity.ok(storeFile(file, "images", category));
+        return ResponseEntity.ok(mediaStorageService.uploadImage(file, category));
     }
 
     @PostMapping(path = "/audio", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> uploadAudio(
+    public ResponseEntity<UploadFileResponse> uploadAudio(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "category", required = false) String category
     ) throws IOException {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Файл бос"));
-        }
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("audio/")) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Тек аудио файлды жүктеңіз"));
-        }
-        return ResponseEntity.ok(storeFile(file, "audio", category));
+        return ResponseEntity.ok(mediaStorageService.uploadAudio(file, category));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Map<String, String>>> listUploads(
+    public ResponseEntity<List<UploadFileResponse>> listUploads(
             @RequestParam("type") String type,
             @RequestParam(value = "category", required = false) String category
     ) throws IOException {
-        String userId = currentUser().getId().toString();
-        String subfolder;
-        if ("audio".equalsIgnoreCase(type)) {
-            subfolder = "audio";
-        } else if ("image".equalsIgnoreCase(type) || "images".equalsIgnoreCase(type)) {
-            subfolder = "images";
-        } else {
-            return ResponseEntity.badRequest().body(List.of(Map.of("error", "type must be image|audio")));
-        }
-
-        String categorySafe = (category == null || category.isBlank()) ? null : category.replaceAll("[^a-zA-Z0-9_-]", "");
-        Path dir = categorySafe == null ? ensureDir(userId, subfolder) : ensureDir(userId, categorySafe + "/" + subfolder);
-
-        try (Stream<Path> stream = Files.list(dir)) {
-            List<Map<String, String>> files = stream
-                    .filter(Files::isRegularFile)
-                    .sorted((a, b) -> b.getFileName().toString().compareToIgnoreCase(a.getFileName().toString()))
-                    .map(p -> {
-                        String relative = "/uploads/" + userId + "/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + p.getFileName();
-                        return Map.of(
-                                "url", buildPublicUrl(relative),
-                                "path", relative
-                        );
-                    })
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(files);
-        }
-    }
-
-    private Map<String, String> storeFile(MultipartFile file, String subfolder, String category) throws IOException {
-        String userId = currentUser().getId().toString();
-        String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "" : file.getOriginalFilename());
-        String ext = "";
-        int dot = original.lastIndexOf('.');
-        if (dot >= 0 && dot < original.length() - 1) {
-            ext = original.substring(dot);
-        }
-        String filename = Instant.now().getEpochSecond() + "-" + UUID.randomUUID() + ext;
-        String categorySafe = (category == null || category.isBlank()) ? null : category.replaceAll("[^a-zA-Z0-9_-]", "");
-        Path dir = categorySafe == null ? ensureDir(userId, subfolder) : ensureDir(userId, categorySafe + "/" + subfolder);
-        Path target = dir.resolve(filename);
-        file.transferTo(target);
-        String relative = "/uploads/" + userId + "/" + (categorySafe == null ? "" : categorySafe + "/") + subfolder + "/" + filename;
-        return Map.of(
-                "url", buildPublicUrl(relative),
-                "path", relative
-        );
-    }
-
-    private String buildPublicUrl(String relative) {
-        String base = publicUrl != null && !publicUrl.isBlank()
-                ? publicUrl.replaceAll("/+$", "")
-                : ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        if (base.endsWith("/")) base = base.substring(0, base.length() - 1);
-        return base + relative;
-    }
-
-    private User currentUser() {
-        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByPhone(phone).orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseEntity.ok(mediaStorageService.listUploads(type, category));
     }
 }
