@@ -84,8 +84,8 @@ public class JwtService {
         }
         byte[] keyBytes;
         try {
-            keyBytes = Decoders.BASE64.decode(secretKey);
-        } catch (IllegalArgumentException e) {
+            keyBytes = Decoders.BASE64URL.decode(secretKey);
+        } catch (Exception e) {
             // allow plain text secrets (non-base64) for local/dev setups
             keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         }
