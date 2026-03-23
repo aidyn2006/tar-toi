@@ -64,9 +64,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Телефон немесе құпиясөз дұрыс емес");
         }
 
-        if (!user.isApproved()) {
-            throw new ForbiddenException("Пайдаланушы аккаунты әлі мақұлданбаған");
-        }
 
         return buildResponse(user);
     }
