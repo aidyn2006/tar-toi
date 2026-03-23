@@ -90,8 +90,21 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+    
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: toi-jenkins
+    user: root
+    ports:
+      - "8888:8080"
+    volumes:
+      - toi_jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
 
 volumes:
   toi_pg_data_fresh:
   toi_frontend_node_modules:
   toi_minio_data:
+  toi_jenkins_home:
