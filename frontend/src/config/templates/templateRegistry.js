@@ -55,17 +55,24 @@ const TEMPLATE_LABELS = {
   'wedding/template8.html': 'Wedding Modern Ivory',
   'wedding/template9.html': 'Wedding Minimalizm',
   'wedding/template10.html': 'Wedding Minimalizm',
+  'wedding/template11.html': 'Dark Cinematic',
+  'wedding/template12.html': 'Editorial Black & White',
+  'wedding/template13.html': 'Editorial Black & Whita',
 
   'uzatu/template1.html': 'Uzatu Classic Gold',
   'uzatu/template2.html': 'Uzatu Royal Blue',
   'uzatu/template3.html': 'Uzatu Romantic Rose',
   'uzatu/template4.html': 'Uzatu Burgundy Classic',
   'uzatu/template6.html': 'Modern Modern Ivory',
+  'uzatu/template10.html': 'Uzatu Traditional',
+  'uzatu/template5.html': 'Emerald Elegance',
+  'uzatu/template7.html': 'Dusty Rose',
 
   'sundet/template1.html': 'Sundet Heritage Sage',
   'sundet/template2.html': 'Sundet Classic Navy',
   'sundet/template3.html': 'Sundet Modern Terra',
   'sundet/template4.html': 'Sundet Elegant Sage',
+  'sundet/template5.html': 'Heritage Navy',
 
   'tusaukeser/template1.html': 'Tusaukeser Traditional Gold',
   'tusaukeser/template2.html': 'Tusaukeser Royal Night',
@@ -78,12 +85,14 @@ const TEMPLATE_LABELS = {
   'merei/template4.html': 'Merei Soft Peach Jubilee',
   'merei/template5.html': 'Merei Midnight Gold V2',
   'merei/template6.html': 'Merei Royal Emerald',
+  'merei/template7.html': 'Grand Black Gold',
 
   'besik/template1.html': 'Besik Classic Gold',
   'besik/template2.html': 'Besik Mint Family',
   'besik/template3.html': 'Besik Editorial Gold',
   'besik/template4.html': 'Besik Sky Blue',
   'besik/template5.html': 'Besik Modern Style',
+  'besik/template6.html': 'Soft Sky',
 };
 
 const DEFAULT_TEMPLATE_FEATURES = {
@@ -175,6 +184,30 @@ const TEMPLATE_META = {
     isPremium: true,
     preview: '/previews/wedding/template10.jpg',
   },
+  'wedding/template11.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template11.jpg',
+  },
+  'wedding/template12.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/wedding/template12.jpg',
+  },
+  'wedding/template13.html': {
+    palette: 'classic',
+    tags: ['generated'],
+    features: { pairNames: true, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: false,
+    preview: '/previews/wedding/template13.jpg',
+  },
 
   'uzatu/template1.html': {
     palette: 'classic',
@@ -215,6 +248,30 @@ const TEMPLATE_META = {
     isActive: true,
     isPremium: true,
     preview: '/previews/uzatu/template6.jpg',
+  },
+  'uzatu/template10.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true, program: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/uzatu/template10.jpg',
+  },
+  'uzatu/template5.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/uzatu/template5.jpg',
+  },
+  'uzatu/template7.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/uzatu/template7.jpg',
   },
 
   'tusaukeser/template1.html': {
@@ -282,6 +339,14 @@ const TEMPLATE_META = {
     isPremium: false,
     preview: '/previews/sundet/template4.jpg',
   },
+  'sundet/template5.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/sundet/template5.jpg',
+  },
 
   'merei/template1.html': {
     palette: 'classic',
@@ -331,6 +396,14 @@ const TEMPLATE_META = {
     isPremium: false,
     preview: '/previews/merei/template6.jpg',
   },
+  'merei/template7.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/merei/template7.jpg',
+  },
 
   'besik/template1.html': {
     palette: 'classic',
@@ -371,6 +444,14 @@ const TEMPLATE_META = {
     isActive: true,
     isPremium: true,
     preview: '/previews/besik/template5.jpg',
+  },
+  'besik/template6.html': {
+    palette: 'royal',
+    tags: ['generated'],
+    features: { pairNames: false, gallery: true, music: true, map: true },
+    isActive: true,
+    isPremium: true,
+    preview: '/previews/besik/template6.jpg',
   },
 };
 

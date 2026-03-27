@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Uzatu Traditional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --ivory:#F8F4EE;
+  --beige:#EDE3D5;
+  --parchment:#F3ECE1;
+  --gold:#B89255;
+  --gold-light:#D8C19A;
+  --taupe:#8C6F5A;
+  --brown-deep:#5B4639;
+  --text:#3E3128;
+  --gold-glow:rgba(184,146,85,.15);
+  --font-script:'Great Vibes',cursive;
+  --font-serif:'Cormorant Garamond',serif;
+  --font-body:'Lora',serif;
+}
+
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{
+  background:var(--ivory);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.7;
+  max-width:480px;
+  margin:0 auto;
+  overflow-x:hidden;
+}
+
+.section{padding:56px 28px;position:relative}
+.text-center{text-align:center}
+.gold-rule{
+  width:64px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:20px auto;
+  border:none;
+}
+.gold-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  margin:0 auto;
+  display:block;
+}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding:0 28px 48px;
+  overflow:hidden;
+  background:var(--parchment);
+}
+.hero__photo-wrap{
+  position:absolute;inset:0;
+  z-index:0;
+}
+.hero__photo-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(248,244,238,0) 30%,
+    rgba(248,244,238,.6) 60%,
+    rgba(243,236,225,1) 90%
+  );
+}
+.hero-photo-placeholder,
+#heroPhoto{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:center 20%;
+  display:block;
+}
+.hero__content{
+  position:relative;z-index:1;
+  text-align:center;
+}
+.hero__label{
+  font-family:var(--font-serif);
+  font-size:11px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--taupe);
+  margin-bottom:8px;
+}
+#heroName{
+  font-family:var(--font-script);
+  font-size:42px;
+  color:var(--gold);
+  line-height:1.2;
+  margin-bottom:4px;
+}
+#heroNamesLine{
+  font-family:var(--font-serif);
+  font-size:13px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--taupe);
+  margin-bottom:12px;
+}
+#heroDateLine{
+  font-family:var(--font-serif);
+  font-size:12px;
+  letter-spacing:.22em;
+  color:var(--gold-light);
+}
+
+#eventText{
+  font-family:var(--font-serif);
+  font-size:16px;
+  font-weight:300;
+  line-height:1.9;
+  color:var(--brown-deep);
+  text-align:center;
+}
+
+.date-block{
+  padding:64px 28px;
+  text-align:center;
+  background:var(--parchment);
+}
+.date-block__day{
+  font-family:var(--font-serif);
+  font-size:96px;
+  font-weight:300;
+  color:var(--gold);
+  line-height:1;
+  letter-spacing:-.02em;
+}
+.date-block__month{
+  font-family:var(--font-serif);
+  font-size:18px;
+  font-weight:400;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--taupe);
+  margin:8px 0 4px;
+}
+.date-block__year{
+  font-family:var(--font-serif);
+  font-size:14px;
+  letter-spacing:.35em;
+  color:var(--gold-light);
+}
+.date-block__weekday{
+  font-family:var(--font-body);
+  font-size:12px;
+  color:var(--taupe);
+  margin-top:12px;
+  letter-spacing:.15em;
+}
+
+.timeline{
+  padding:56px 28px;
+  background:var(--ivory);
+}
+.timeline__heading{
+  font-family:var(--font-script);
+  font-size:32px;
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:40px;
+}
+.timeline__track{
+  position:relative;
+  padding-left:36px;
+}
+.timeline__line{
+  position:absolute;
+  left:9px;top:8px;bottom:8px;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,var(--gold-light) 10%,var(--gold-light) 90%,transparent);
+}
+.timeline__item{
+  position:relative;
+  margin-bottom:36px;
+}
+.timeline__item:last-child{margin-bottom:0}
+.timeline__dot{
+  position:absolute;
+  left:-32px;top:6px;
+  width:12px;height:12px;
+  border-radius:50%;
+  border:1.5px solid var(--gold);
+  background:var(--ivory);
+}
+.timeline__dot::after{
+  content:'';
+  position:absolute;
+  left:3px;top:3px;
+  width:4px;height:4px;
+  border-radius:50%;
+  background:var(--gold);
+}
+.timeline__time{
+  font-family:var(--font-serif);
+  font-size:13px;
+  letter-spacing:.2em;
+  color:var(--gold);
+  margin-bottom:2px;
+}
+.timeline__title{
+  font-family:var(--font-serif);
+  font-size:16px;
+  font-weight:500;
+  color:var(--brown-deep);
+  margin-bottom:2px;
+}
+.timeline__desc{
+  font-size:13px;
+  color:var(--taupe);
+  line-height:1.6;
+}
+.timeline__desc:empty{display:none}
+
+.countdown{
+  padding:48px 28px;
+  text-align:center;
+  background:var(--parchment);
+}
+.countdown__heading{
+  font-family:var(--font-script);
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:24px;
+}
+.countdown__grid{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+.countdown__unit{
+  display:flex;flex-direction:column;align-items:center;
+}
+.countdown__num{
+  font-family:var(--font-serif);
+  font-size:36px;
+  font-weight:300;
+  color:var(--brown-deep);
+  line-height:1;
+}
+.countdown__label{
+  font-family:var(--font-serif);
+  font-size:10px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--taupe);
+  margin-top:6px;
+}
+
+.location{
+  padding:56px 28px;
+  text-align:center;
+  background:var(--ivory);
+}
+.location__heading{
+  font-family:var(--font-script);
+  font-size:30px;
+  color:var(--gold);
+  margin-bottom:16px;
+}
+#locationName{
+  font-family:var(--font-serif);
+  font-size:18px;
+  font-weight:500;
+  color:var(--brown-deep);
+  margin-bottom:4px;
+}
+.location__address{
+  font-size:13px;
+  color:var(--taupe);
+  margin-bottom:24px;
+  line-height:1.6;
+}
+.location__address:empty{display:none}
+#mapBtnWrap{margin-top:8px}
+#mapBtn{
+  display:inline-block;
+  padding:14px 40px;
+  font-family:var(--font-serif);
+  font-size:13px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ivory);
+  background:var(--brown-deep);
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:background .3s ease;
+}
+#mapBtn:hover{background:var(--taupe)}
+
+.gallery{
+  padding:56px 20px;
+  background:var(--parchment);
+}
+.gallery__heading{
+  font-family:var(--font-script);
+  font-size:30px;
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:24px;
+}
+#gallerySlides{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+#gallerySlides img,
+#gallerySlides .gallery__img{
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+  border-radius:12px;
+  display:block;
+}
+#gallerySlides img:first-child,
+#gallerySlides .gallery__img:first-child{
+  grid-column:1/-1;
+  aspect-ratio:4/3;
+  border-radius:16px;
+}
+
+#ownersSection{
+  padding:56px 28px;
+  text-align:center;
+  background:var(--ivory);
+}
+.owners__label{
+  font-family:var(--font-serif);
+  font-size:11px;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--taupe);
+  margin-bottom:10px;
+}
+#ownersBigName{
+  font-family:var(--font-script);
+  font-size:28px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.owners__detail{
+  font-family:var(--font-serif);
+  font-size:14px;
+  color:var(--brown-deep);
+  line-height:1.8;
+}
+
+.rsvp{
+  padding:56px 28px;
+  background:var(--parchment);
+}
+.rsvp__heading{
+  font-family:var(--font-script);
+  font-size:30px;
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:8px;
+}
+.rsvp__sub{
+  font-family:var(--font-serif);
+  font-size:13px;
+  color:var(--taupe);
+  text-align:center;
+  margin-bottom:28px;
+  letter-spacing:.08em;
+}
+#rsvpForm{display:flex;flex-direction:column;gap:16px}
+#rsvpForm input,
+#rsvpForm textarea{
+  width:100%;
+  padding:14px 18px;
+  font-family:var(--font-body);
+  font-size:14px;
+  color:var(--text);
+  background:var(--ivory);
+  border:1px solid var(--beige);
+  border-radius:10px;
+  outline:none;
+  transition:border-color .3s ease;
+}
+#rsvpForm input:focus,
+#rsvpForm textarea:focus{border-color:var(--gold-light)}
+#rsvpForm textarea{resize:vertical;min-height:80px}
+#rsvpForm input::placeholder,
+#rsvpForm textarea::placeholder{color:var(--gold-light);font-size:13px}
+.rsvp__submit{
+  padding:15px 0;
+  font-family:var(--font-serif);
+  font-size:13px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ivory);
+  background:var(--gold);
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  transition:background .3s ease;
+}
+.rsvp__submit:hover{background:var(--taupe)}
+#successMsg{
+  display:none;
+  text-align:center;
+  font-family:var(--font-serif);
+  font-size:15px;
+  color:var(--gold);
+  padding:20px 0;
+}
+
+.footer{
+  padding:48px 28px 64px;
+  text-align:center;
+  background:var(--ivory);
+}
+.footer__ornament{
+  width:48px;
+  margin:0 auto 20px;
+  opacity:.5;
+}
+#footerName{
+  font-family:var(--font-script);
+  font-size:26px;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+#footLine{
+  font-family:var(--font-serif);
+  font-size:12px;
+  letter-spacing:.18em;
+  color:var(--taupe);
+}
+</style>
+</head>
+<body>
+
+<script>
+  const CONFIG = {
+    childName: "Айым",
+    day: "25-07-2026",
+    hour: "16:00",
+    location: "Шаңырақ мейрамханасы, Алматы қ., Абай даңғылы 52",
+    locationUrl: "https://2gis.kz/almaty",
+    gallery: [],
+    description: "Құрметті қонақтар! Сіздерді қызымыздың ұзату тойының қуанышын бірге бөлісуге шын жүректен шақырамыз.",
+    toiOwners: "Болат пен Гүлнар",
+    program: [
+      { time: "16:00", title: "Қонақтарды қарсы алу", desc: "Тіркелу және сәлемдесу" },
+      { time: "17:00", title: "Салтанатты бөлім", desc: "Ата-ана бата, сөз сөйлеу" },
+      { time: "18:00", title: "Дастарқан", desc: "Той дастарқаны" },
+      { time: "19:30", title: "Ойын-сауық бағдарламасы", desc: "Ән, би, көңіл көтеру" },
+      { time: "21:00", title: "Қыз ұзату рәсімі", desc: "Бата, ақ жол тілеу" }
+    ],
+    music: { title: "", artist: "", url: "" },
+    lang: "kk"
+  };
+</script>
+
+<section class="hero">
+  <div class="hero__photo-wrap">
+    <img class="hero-photo-placeholder hero-photo-img" id="heroPhoto" src="/template-assets/uzatu-template6/hero-couple.jpg" alt="Hero"/>
+  </div>
+  <div class="hero__content">
+    <p class="hero__label" id="heroLabel">Қыз ұзату</p>
+    <h1 id="heroName">Айым</h1>
+    <p id="heroNamesLine">Қыз ұзату тойына шақырамыз</p>
+    <hr class="gold-rule"/>
+    <p id="heroDateLine">25 · 07 · 2026</p>
+  </div>
+</section>
+
+<section class="section text-center reveal">
+  <span class="gold-dot"></span>
+  <hr class="gold-rule"/>
+  <p id="eventText">Құрметті қонақтар! Сіздерді қызымыздың ұзату тойының қуанышын бірге бөлісуге шын жүректен шақырамыз.</p>
+  <hr class="gold-rule"/>
+</section>
+
+<section class="date-block reveal">
+  <div class="date-block__day" id="dateDay">25</div>
+  <div class="date-block__month" id="dateMonth">ШІЛДЕ</div>
+  <div class="date-block__year" id="dateYear">2 0 2 6</div>
+  <div class="date-block__weekday" id="dateWeekday">Сенбі</div>
+</section>
+
+<section class="timeline reveal">
+  <h2 class="timeline__heading" id="timelineHeading">Бағдарлама</h2>
+  <div class="timeline__track">
+    <div class="timeline__line"></div>
+    <div id="timelineItems">
+      <div class="timeline__item">
+        <div class="timeline__dot"></div>
+        <div class="timeline__time">16:00</div>
+        <div class="timeline__title">Қонақтарды қарсы алу</div>
+        <div class="timeline__desc">Тіркелу және сәлемдесу</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="countdown reveal">
+  <h2 class="countdown__heading" id="countdownHeading">Кері санау</h2>
+  <div class="countdown__grid">
+    <div class="countdown__unit"><span class="countdown__num" id="cDays">--</span><span class="countdown__label" id="countDaysLabel">КҮН</span></div>
+    <div class="countdown__unit"><span class="countdown__num" id="cHours">--</span><span class="countdown__label" id="countHoursLabel">САҒАТ</span></div>
+    <div class="countdown__unit"><span class="countdown__num" id="cMins">--</span><span class="countdown__label" id="countMinsLabel">МИНУТ</span></div>
+    <div class="countdown__unit"><span class="countdown__num" id="cSecs">--</span><span class="countdown__label" id="countSecsLabel">СЕКУНД</span></div>
+  </div>
+</section>
+
+<section class="location reveal">
+  <h2 class="location__heading" id="locationHeading">Мекенжай</h2>
+  <p id="locationName">Шаңырақ мейрамханасы</p>
+  <p class="location__address" id="locationAddress">Алматы қ., Абай даңғылы 52</p>
+  <div id="mapBtnWrap">
+    <a id="mapBtn" href="#" target="_blank" rel="noopener"><span id="mapBtnText">Картадан қарау</span></a>
+  </div>
+</section>
+
+<section class="gallery reveal">
+  <h2 class="gallery__heading" id="galleryHeading">Естелік суреттер</h2>
+  <div id="gallerySlides">
+    <img class="gallery__img" src="/template-assets/uzatu-template6/gallery-1.jpg" alt="Gallery photo 1"/>
+    <img class="gallery__img" src="/template-assets/uzatu-template6/gallery-2.jpg" alt="Gallery photo 2"/>
+    <img class="gallery__img" src="/template-assets/uzatu-template6/gallery-3.jpg" alt="Gallery photo 3"/>
+  </div>
+</section>
+
+<section id="ownersSection" class="reveal">
+  <p class="owners__label" id="ownersLabel">Шақырушылар</p>
+  <p id="ownersBigName">Болат пен Гүлнар</p>
+  <hr class="gold-rule"/>
+  <p class="owners__detail" id="ownersDetail">
+    Қызымыздың бақыт жолына аттанар<br/>
+    сәтіне куә болыңыздар
+  </p>
+</section>
+
+<section class="rsvp reveal">
+  <h2 class="rsvp__heading" id="rsvpHeading">Қатысу</h2>
+  <p class="rsvp__sub" id="rsvpSub">Келетініңізді хабарлаңыз</p>
+  <form id="rsvpForm" autocomplete="off">
+    <input type="text" id="rName" name="name" placeholder="Аты-жөніңіз"/>
+    <input type="tel" id="rPhone" name="phone" placeholder="Телефон нөмірі"/>
+    <input type="number" id="rGuests" name="guests" placeholder="Қонақ саны" min="1" max="10"/>
+    <textarea id="rNote" name="note" placeholder="Тілек немесе ескертпе"></textarea>
+    <button type="submit" class="rsvp__submit" id="rsvpSubmit">Жіберу</button>
+  </form>
+  <div id="successMsg">Рақмет! Сіздің жауабыңыз қабылданды ✦</div>
+</section>
+
+<footer class="footer reveal">
+  <svg class="footer__ornament" viewBox="0 0 48 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 6h18c2 0 3-3 6-3s4 3 6 3h18" stroke="#B89255" stroke-width=".7"/>
+  </svg>
+  <p id="footerName">Қыз ұзату</p>
+  <p id="footLine">Бақыт жолыңыз ақ болсын</p>
+</footer>
+
+<script>
+(function(){
+  var DEFAULT_ASSETS={
+    hero:'/template-assets/uzatu-template6/hero-couple.jpg',
+    gallery:[
+      '/template-assets/uzatu-template6/gallery-1.jpg',
+      '/template-assets/uzatu-template6/gallery-2.jpg',
+      '/template-assets/uzatu-template6/gallery-3.jpg'
+    ]
+  };
+
+  var COPY={
+    kk:{
+      eventLabel:'Қыз ұзату',
+      heroSubline:'Қыз ұзату тойына шақырамыз',
+      timelineHeading:'Бағдарлама',
+      countdownHeading:'Кері санау',
+      countDays:'КҮН',
+      countHours:'САҒАТ',
+      countMins:'МИНУТ',
+      countSecs:'СЕКУНД',
+      locationHeading:'Мекенжай',
+      mapBtnText:'Картадан қарау',
+      galleryHeading:'Естелік суреттер',
+      ownersLabel:'Шақырушылар',
+      ownersDetail:'Қызымыздың бақыт жолына аттанар\nсәтіне куә болыңыздар',
+      rsvpHeading:'Қатысу',
+      rsvpSub:'Келетініңізді хабарлаңыз',
+      rsvpSubmit:'Жіберу',
+      successMsg:'Рақмет! Сіздің жауабыңыз қабылданды ✦',
+      placeholders:{
+        name:'Аты-жөніңіз',
+        phone:'Телефон нөмірі',
+        guests:'Қонақ саны',
+        note:'Тілек немесе ескертпе'
+      },
+      footerLine:'Бақыт жолыңыз ақ болсын',
+      defaultDescription:'Құрметті қонақтар! Сіздерді қызымыздың ұзату тойының қуанышын бірге бөлісуге шын жүректен шақырамыз.',
+      months:['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'],
+      weekdays:['Жексенбі','Дүйсенбі','Сейсенбі','Сәрсенбі','Бейсенбі','Жұма','Сенбі'],
+      defaultProgram:[
+        { time:'16:00', title:'Қонақтарды қарсы алу', desc:'Тіркелу және сәлемдесу' },
+        { time:'17:00', title:'Салтанатты бөлім', desc:'Ата-ана бата, сөз сөйлеу' },
+        { time:'18:00', title:'Дастарқан', desc:'Той дастарқаны' },
+        { time:'19:30', title:'Ойын-сауық бағдарламасы', desc:'Ән, би, көңіл көтеру' },
+        { time:'21:00', title:'Қыз ұзату рәсімі', desc:'Бата, ақ жол тілеу' }
+      ]
+    },
+    ru:{
+      eventLabel:'Проводы невесты',
+      heroSubline:'Приглашаем на проводы невесты',
+      timelineHeading:'Программа',
+      countdownHeading:'Обратный отсчет',
+      countDays:'ДНИ',
+      countHours:'ЧАСЫ',
+      countMins:'МИНУТЫ',
+      countSecs:'СЕКУНДЫ',
+      locationHeading:'Место проведения',
+      mapBtnText:'Открыть карту',
+      galleryHeading:'Памятные фотографии',
+      ownersLabel:'Приглашают',
+      ownersDetail:'Будем рады разделить\nэтот особенный вечер вместе с вами',
+      rsvpHeading:'Подтверждение участия',
+      rsvpSub:'Сообщите, сможете ли вы присутствовать',
+      rsvpSubmit:'Отправить',
+      successMsg:'Спасибо! Ваш ответ получен ✦',
+      placeholders:{
+        name:'Ваше имя',
+        phone:'Номер телефона',
+        guests:'Количество гостей',
+        note:'Пожелание или комментарий'
+      },
+      footerLine:'Пусть дорога в новую жизнь будет светлой',
+      defaultDescription:'Дорогие гости! Приглашаем вас разделить с нами радость проводов нашей дочери и провести этот теплый вечер вместе.',
+      months:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+      weekdays:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
+      defaultProgram:[
+        { time:'16:00', title:'Сбор гостей', desc:'Регистрация и приветствие' },
+        { time:'17:00', title:'Торжественная часть', desc:'Благословение родителей и поздравления' },
+        { time:'18:00', title:'Праздничный дастархан', desc:'Угощение и теплые встречи' },
+        { time:'19:30', title:'Развлекательная программа', desc:'Музыка, танцы и хорошее настроение' },
+        { time:'21:00', title:'Обряд ұзату', desc:'Бата и добрые напутствия' }
+      ]
+    }
+  };
+
+  var countdownTimer=null;
+
+  function byId(id){return document.getElementById(id);}
+  function pad2(value){return String(value).padStart(2,'0');}
+  function renderText(id,value){
+    var node=typeof id==='string'?byId(id):id;
+    if(node) node.textContent=value||'';
+  }
+  function esc(value){
+    return String(value||'')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+  function renderHtml(id,value){
+    var node=typeof id==='string'?byId(id):id;
+    if(node) node.innerHTML=esc(value).replace(/\n/g,'<br>');
+  }
+  function getLang(conf){
+    return conf&&String(conf.lang).toLowerCase()==='ru'?'ru':'kk';
+  }
+  function getCopy(conf){
+    return COPY[getLang(conf)];
+  }
+  function parseDate(day){
+    var bits=String(day||'').split('-').map(Number);
+    if(bits.length!==3||bits.some(Number.isNaN)) return {dd:1,mm:1,yy:2027};
+    return {dd:bits[0],mm:bits[1],yy:bits[2]};
+  }
+  function parseTime(value){
+    var match=String(value||'16:00').trim().match(/^(\d{1,2})(?::(\d{2}))?$/);
+    if(!match) return {hh:16,mm:0};
+    return {hh:parseInt(match[1],10)||16,mm:parseInt(match[2]||'0',10)||0};
+  }
+  function formatHeroDate(conf){
+    var d=parseDate(conf.day);
+    return pad2(d.dd)+' · '+pad2(d.mm)+' · '+d.yy;
+  }
+  function spacedYear(year){
+    return String(year).split('').join(' ');
+  }
+  function primaryName(conf){
+    return String(
+      conf.childName ||
+      (conf.names && (conf.names.child || conf.names.bride || conf.names.groom)) ||
+      conf.title ||
+      'Қонақ'
+    ).trim();
+  }
+  function placeParts(conf){
+    var raw=String((conf&&conf.location)||'').trim();
+    var explicit=String((conf&&(conf.locationDetail||conf.locationDetails||conf.address))||'').trim();
+    if(!raw) return {name:'',detail:explicit};
+    if(explicit) return {name:raw,detail:explicit};
+    if(raw.indexOf('\n')!==-1){
+      var lines=raw.split('\n').map(function(item){return item.trim();}).filter(Boolean);
+      return {name:lines[0]||raw,detail:lines.slice(1).join('\n')};
+    }
+    if(raw.indexOf(' | ')!==-1){
+      var parts=raw.split(' | ').map(function(item){return item.trim();}).filter(Boolean);
+      return {name:parts[0]||raw,detail:parts.slice(1).join('\n')};
+    }
+    if(raw.indexOf(',')!==-1){
+      var comma=raw.split(',');
+      return {name:(comma.shift()||'').trim(),detail:comma.join(',').trim()};
+    }
+    return {name:raw,detail:''};
+  }
+  function eventDate(conf){
+    var d=parseDate(conf.day);
+    var t=parseTime(conf.hour);
+    return new Date(d.yy,d.mm-1,d.dd,t.hh,t.mm,0,0);
+  }
+  function defaultProgram(conf,copy){
+    return Array.isArray(conf.program)&&conf.program.length ? conf.program : copy.defaultProgram;
+  }
+  function normalizeProgram(conf,copy){
+    return defaultProgram(conf,copy).map(function(item,index){
+      var fallback=(copy.defaultProgram||[])[index]||{};
+      var time=String((item&&(item.time||item.hour))||fallback.time||'').trim();
+      var title=String((item&&(item.title||item.label||item.name))||fallback.title||'').trim();
+      var desc=String((item&&(item.desc||item.description||item.subtitle))||fallback.desc||'').trim();
+      if(!time&&!title&&!desc) return null;
+      return {time:time,title:title,desc:desc};
+    }).filter(Boolean);
+  }
+  function imageSources(conf){
+    var gallery=Array.isArray(conf.gallery)?conf.gallery.filter(Boolean):[];
+    return {
+      hero:conf.heroPhotoUrl||conf.previewPhotoUrl||conf.heroPhoto||gallery[0]||DEFAULT_ASSETS.hero,
+      gallery:gallery.length?gallery:DEFAULT_ASSETS.gallery
+    };
+  }
+  function renderGallery(conf){
+    var wrap=byId('gallerySlides');
+    if(!wrap) return;
+    var sources=imageSources(conf).gallery;
+    wrap.innerHTML='';
+    sources.slice(0,Math.max(3,sources.length)).forEach(function(src,index){
+      var img=document.createElement('img');
+      img.className='gallery__img';
+      img.src=src;
+      img.alt='Gallery photo '+(index+1);
+      wrap.appendChild(img);
+    });
+  }
+  function renderHero(conf){
+    var hero=byId('heroPhoto');
+    if(hero) hero.src=imageSources(conf).hero;
+  }
+  function renderTimeline(conf,copy){
+    var wrap=byId('timelineItems');
+    if(!wrap) return;
+    wrap.innerHTML='';
+    normalizeProgram(conf,copy).forEach(function(item){
+      var block=document.createElement('div');
+      block.className='timeline__item';
+
+      var dot=document.createElement('div');
+      dot.className='timeline__dot';
+
+      var time=document.createElement('div');
+      time.className='timeline__time';
+      time.textContent=item.time;
+
+      var title=document.createElement('div');
+      title.className='timeline__title';
+      title.textContent=item.title;
+
+      var desc=document.createElement('div');
+      desc.className='timeline__desc';
+      desc.textContent=item.desc;
+
+      block.appendChild(dot);
+      block.appendChild(time);
+      block.appendChild(title);
+      block.appendChild(desc);
+      wrap.appendChild(block);
+    });
+  }
+  function renderCountdown(conf,copy){
+    var target=eventDate(conf).getTime();
+    if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
+    renderText('countDaysLabel',copy.countDays);
+    renderText('countHoursLabel',copy.countHours);
+    renderText('countMinsLabel',copy.countMins);
+    renderText('countSecsLabel',copy.countSecs);
+    function tick(){
+      var diff=Math.max(0,target-Date.now());
+      renderText('cDays',Math.floor(diff/86400000));
+      renderText('cHours',pad2(Math.floor((diff%86400000)/3600000)));
+      renderText('cMins',pad2(Math.floor((diff%3600000)/60000)));
+      renderText('cSecs',pad2(Math.floor((diff%60000)/1000)));
+    }
+    tick();
+    countdownTimer=window.setInterval(tick,1000);
+  }
+  function applyReveal(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      els.forEach(function(el){el.classList.add('visible');});
+      return;
+    }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    },{threshold:.15});
+    els.forEach(function(el){
+      if(!el.dataset.revealBound){
+        el.dataset.revealBound='true';
+        io.observe(el);
+      }
+    });
+  }
+  function applyVisualConfig(conf){
+    var config=Object.assign({},typeof CONFIG!=='undefined'?CONFIG:{},window.CONFIG||{},conf||{});
+    var copy=getCopy(config);
+    var lang=getLang(config);
+    var d=parseDate(config.day);
+    var dateObj=new Date(d.yy,d.mm-1,d.dd);
+    var place=placeParts(config);
+    var owners=String(config.toiOwners||'').trim();
+    var name=primaryName(config);
+
+    window.CONFIG=config;
+    document.documentElement.lang=lang;
+    document.title=name+' • '+(config.eventLabel||copy.eventLabel);
+
+    renderText('heroLabel',config.eventLabel||copy.eventLabel);
+    renderText('heroName',name);
+    renderText('heroNamesLine',copy.heroSubline);
+    renderText('heroDateLine',formatHeroDate(config));
+    renderHtml('eventText',config.description||copy.defaultDescription);
+
+    renderText('dateDay',pad2(d.dd));
+    renderText('dateMonth',copy.months[d.mm-1]||'');
+    renderText('dateYear',spacedYear(d.yy));
+    renderText('dateWeekday',copy.weekdays[dateObj.getDay()]||'');
+
+    renderText('timelineHeading',copy.timelineHeading);
+    renderTimeline(config,copy);
+
+    renderText('countdownHeading',copy.countdownHeading);
+    renderCountdown(config,copy);
+
+    renderText('locationHeading',copy.locationHeading);
+    renderText('locationName',place.name||String(config.location||'').trim());
+    renderText('locationAddress',place.detail);
+
+    var mapBtnWrap=byId('mapBtnWrap');
+    var mapBtn=byId('mapBtn');
+    renderText('mapBtnText',copy.mapBtnText);
+    if(mapBtnWrap&&mapBtn){
+      if(config.locationUrl){
+        mapBtnWrap.style.display='block';
+        mapBtn.href=config.locationUrl;
+        mapBtn.style.pointerEvents='auto';
+        mapBtn.style.opacity='1';
+      }else if(config.location){
+        mapBtnWrap.style.display='block';
+        mapBtn.href='#';
+        mapBtn.style.pointerEvents='none';
+        mapBtn.style.opacity='0.55';
+      }else{
+        mapBtnWrap.style.display='none';
+      }
+    }
+
+    renderText('galleryHeading',copy.galleryHeading);
+    renderGallery(config);
+    renderHero(config);
+
+    renderText('ownersLabel',copy.ownersLabel);
+    renderText('ownersBigName',owners);
+    renderHtml('ownersDetail',copy.ownersDetail);
+    var ownersSection=byId('ownersSection');
+    if(ownersSection) ownersSection.style.display=owners?'block':'none';
+
+    renderText('rsvpHeading',copy.rsvpHeading);
+    renderText('rsvpSub',copy.rsvpSub);
+    renderText('rsvpSubmit',copy.rsvpSubmit);
+    renderText('successMsg',copy.successMsg);
+    if(byId('rName')) byId('rName').placeholder=copy.placeholders.name;
+    if(byId('rPhone')) byId('rPhone').placeholder=copy.placeholders.phone;
+    if(byId('rGuests')) byId('rGuests').placeholder=copy.placeholders.guests;
+    if(byId('rNote')) byId('rNote').placeholder=copy.placeholders.note;
+
+    renderText('footerName',config.eventLabel||copy.eventLabel);
+    renderText('footLine',copy.footerLine);
+  }
+  function queueInitialRender(){
+    setTimeout(function(){
+      setTimeout(function(){
+        applyVisualConfig(window.CONFIG||CONFIG||{});
+      },0);
+    },0);
+  }
+
+  applyReveal();
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',queueInitialRender,{once:true});
+  }else{
+    queueInitialRender();
+  }
+
+  window.addEventListener('message',function(event){
+    if(event.data&&event.data.type==='UPDATE_CONFIG'){
+      setTimeout(function(){
+        applyVisualConfig(event.data.config||window.CONFIG||CONFIG||{});
+      },0);
+    }
+  });
+})();
+</script>
+</body>
+</html>

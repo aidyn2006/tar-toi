@@ -1,0 +1,196 @@
+﻿<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sage Romance Wedding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Josefin+Sans:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+:root{
+  --sage:#c8d3c7;
+  --sage-deep:#b3c1b0;
+  --sage-olive:#8d9b8b;
+  --ivory:#faf8f3;
+  --stone:#f1f0ec;
+  --champagne:#d8c8a6;
+  --text:#3c3834;
+  --muted:#7e7972;
+  --line:rgba(200,211,199,.42);
+  --font-script:"Great Vibes",cursive;
+  --font-serif:"Cormorant Garamond",Georgia,serif;
+  --font-sans:"Josefin Sans",Arial,sans-serif;
+}    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  background:linear-gradient(180deg,#f7f6f2 0%,#faf8f3 100%);
+  color:var(--text);
+  font-family:var(--font-sans);
+  font-weight:300;
+  letter-spacing:.02em;
+}img{display:block;max-width:100%}
+    .page-root{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  background:var(--ivory);
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.75),
+    0 24px 60px rgba(60,56,52,.10);
+}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .85s ease,transform .85s ease;transition-delay:var(--reveal-delay,0s)}.reveal.visible{opacity:1;transform:translateY(0)}
+    .hero{position:relative;overflow:hidden}.hero-media{position:relative;height:560px}.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(251,248,241,0) 40%,rgba(251,248,241,.86) 85%,rgba(251,248,241,1) 100%)}#heroPhoto{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:linear-gradient(135deg,#d8e0d7,#eef1ec);
+}
+    .botanical{position:absolute;width:112px;opacity:.38;pointer-events:none}.botanical.left{top:0;left:0;animation:drift 6s ease-in-out infinite}.botanical.right{top:0;right:0;transform:scaleX(-1);animation:drift 6s ease-in-out infinite reverse}
+    .hero-content{position:absolute;left:0;right:0;bottom:34px;z-index:2;padding:0 24px;text-align:center}.kicker{font-family:var(--font-sans);font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted)}.script-title{margin-top:12px;font-family:var(--font-script);font-size:58px;line-height:1;color:var(--text)}.script-title .amp{margin:0 10px;color:var(--sage-olive)}#heroNamesLine{display:none}#heroDateLine{margin-top:18px;font-family:var(--font-serif);font-size:22px;letter-spacing:.12em;color:var(--muted)}
+    .section{padding:46px 24px;text-align:center}.wedding-separator{width:60px;height:1px;background:var(--champagne);margin:28px auto}.card{
+  background:#fcfbf8;
+  border:1px solid rgba(200,211,199,.38);
+  border-radius:20px;
+  box-shadow:0 4px 24px rgba(60,56,52,.06);
+  padding:26px 24px;
+}.label{font-family:var(--font-sans);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--sage-olive)}.heading{font-family:var(--font-serif);font-size:32px;line-height:1.2;font-weight:400;color:var(--text)}.body{font-family:var(--font-serif);font-size:23px;line-height:1.62;color:var(--text)}.body-sm{font-family:var(--font-serif);font-size:19px;line-height:1.8;color:var(--muted)}
+   .section-navy{
+  background:#f4f5f1;
+}.date-card{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:20px}.date-col{min-width:72px}.date-center{padding:0 22px;border-left:1px solid var(--champagne);border-right:1px solid var(--champagne)}#dateWeekday{font-family:var(--font-serif);font-size:18px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}#dateDay{font-family:var(--font-serif);font-size:54px;line-height:1;color:var(--text)}#dateMonthYear{font-family:var(--font-serif);font-size:18px;line-height:1.4;color:var(--muted)}#dateTime{margin-top:18px;font-family:var(--font-serif);font-size:18px;color:var(--muted)}
+    #locationName{margin-top:10px}#locationDetails{margin-top:8px}.btn-champagne{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:13px 30px;background:var(--champagne);color:var(--text);border:1px solid rgba(210,192,159,.65);font-family:var(--font-sans);font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none}.btn-sage{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:14px 30px;background:var(--sage);color:var(--text);border:1px solid var(--sage-deep);font-family:var(--font-sans);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+    #mapBtnWrap{display:none;margin-top:22px}.gallery-section{padding:38px 0 30px}.gallery-label{padding:0 24px}#gallerySlides{display:flex;gap:12px;overflow-x:auto;padding:18px 24px 8px;scrollbar-width:none;-ms-overflow-style:none}#gallerySlides::-webkit-scrollbar{display:none}.gallery-slide{flex:0 0 70%;border-radius:14px;overflow:hidden}.gallery-media{width:100%;height:256px}.gallery-media img{width:100%;height:100%;object-fit:cover}.gallery-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f0eee8;color:var(--muted);font-family:var(--font-sans);font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:16px;text-align:center}
+    .owners-copy{margin-top:16px}.form{margin-top:22px;display:flex;flex-direction:column;gap:16px;text-align:left}.field-label{display:block;margin-bottom:6px;font-family:var(--font-sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}.inv-input{width:100%;padding:14px 16px;border:1px solid rgba(198,207,192,.55);background:var(--ivory);border-radius:10px;color:var(--text);font-family:var(--font-serif);font-size:16px;outline:none}.inv-input::placeholder{color:var(--muted)}textarea.inv-input{resize:none;min-height:92px}.submit-btn{width:100%;min-height:50px;border:none;border-radius:10px;background:var(--sage);color:var(--text);font-family:var(--font-sans);font-size:12px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}#successMsg{display:none;text-align:center;padding-top:24px}.success-title{font-family:var(--font-script);font-size:38px;color:var(--text)}.success-copy{margin-top:8px;font-family:var(--font-serif);font-size:18px;color:var(--muted)}
+    .footer{padding:42px 24px 64px;text-align:center}.footer-small{margin-top:16px;font-family:var(--font-serif);font-size:15px;color:var(--muted)}
+    @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@media (max-width:420px){.hero-media{height:520px}.script-title{font-size:50px}.heading{font-size:29px}.body{font-size:21px}.gallery-slide{flex-basis:76%}}
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG={lang:"kk",names:{bride:"Аружан",groom:"Данияр"},day:"15-06-2026",hour:"16:00",location:"The Garden Estate\n123 Blossom Lane, Meadowbrook\nCalifornia, United States",locationUrl:"",gallery:[],description:"Құрметті ағайын-туыс, құда-жекжат, дос-жаран! Сіздерді өміріміздегі ең маңызды күндердің біріне ортақ болып, қуанышымызды бірге бөлісуге шын жүректен шақырамыз.",toiOwners:"Mitchell || Anderson отбасылары\nБұл қуанышты күнді сіздермен бірге қарсы алуға қуаныштымыз.",music:{title:"",artist:"",url:""}};
+  </script>
+  <div class="page-root">
+    <section class="hero">
+      <div class="hero-media">
+        <img id="heroPhoto" src="/template-assets/wedding-template13/template13-wedding-hero-sage-romance.jpg" alt="Wedding couple">
+        <img class="botanical left" src="/template-assets/wedding-template13/template13-wedding-botanical-ornament.png" alt="">
+        <img class="botanical right" src="/template-assets/wedding-template13/template13-wedding-botanical-ornament.png" alt="">
+      </div>
+      <div class="hero-content">
+        <p class="kicker" id="heroLabel">The Wedding of</p>
+        <h1 class="script-title"><span id="hBride">Olivia</span><span class="amp">&amp;</span><span id="hGroom">James</span></h1>
+        <p id="heroNamesLine"></p>
+        <div class="wedding-separator"></div>
+        <p id="heroDateLine">June 15, 2026</p>
+      </div>
+    </section>
+
+    <section class="section reveal" data-reveal>
+      <p class="label" id="inviteLabel">Together with their families</p>
+      <p id="eventText" class="body" style="max-width:330px;margin:16px auto 0;">Request the honor of your presence at the celebration of their marriage</p>
+      <div class="wedding-separator"></div>
+      <img src="/template-assets/wedding-template13/template13-wedding-botanical-ornament.png" alt="" style="width:84px;opacity:.28;margin:0 auto;transform:rotate(180deg)">
+    </section>
+
+    <section class="section section-navy reveal" data-reveal style="--reveal-delay:.08s;">
+      <div class="card">
+        <p class="label" id="dateLabel">Save the Date</p>
+        <div class="date-card">
+          <div class="date-col"><p id="dateWeekday">Monday</p></div>
+          <div class="date-center"><p id="dateDay">15</p></div>
+          <div class="date-col"><p id="dateMonthYear">June 2026</p></div>
+        </div>
+        <p id="dateTime">Ceremony at 4:00 PM</p>
+      </div>
+    </section>
+
+    <section class="section reveal" data-reveal style="--reveal-delay:.14s;">
+      <p class="label" id="locationLabel">Venue</p>
+      <h2 id="locationName" class="heading">The Garden Estate</h2>
+      <p id="locationDetails" class="body-sm">123 Blossom Lane, Meadowbrook<br>California, United States</p>
+      <div id="mapBtnWrap"><a id="mapBtn" class="btn-champagne" href="#" target="_blank" rel="noopener noreferrer"><span id="mapBtnText">View Map</span></a></div>
+    </section>
+
+    <section class="gallery-section reveal" data-reveal style="--reveal-delay:.2s;">
+      <p class="label gallery-label" id="galleryLabel">Our Moments</p>
+      <div id="gallerySlides"></div>
+    </section>
+
+    <section id="ownersSection" class="section reveal" data-reveal style="--reveal-delay:.26s;">
+      <p class="label" id="ownersLabel">With Love From</p>
+      <p id="ownersBigName" class="heading" style="margin-top:18px;">The Mitchell &amp; Anderson Families</p>
+      <div class="wedding-separator"></div>
+      <div id="ownersText" class="body-sm owners-copy">We joyfully invite you to share in this blessed celebration as our beloved children begin their journey together.</div>
+    </section>
+
+    <section class="section reveal" data-reveal style="--reveal-delay:.32s;">
+      <div class="card">
+        <p class="label" id="rsvpLabel">Kindly Respond</p>
+        <h2 id="rsvpTitle" class="heading" style="font-family:var(--font-script);font-size:46px;margin-top:10px;">RSVP</h2>
+        <p id="rsvpSubtitle" class="body-sm" style="max-width:320px;margin:8px auto 0;">Будем признательны за ваш ответ заранее</p>
+        <form id="rsvpForm" class="form" onsubmit="return false;">
+          <div><label class="field-label" id="rNameLabel" for="rName">Full Name</label><input id="rName" class="inv-input" type="text" placeholder="Your name"></div>
+          <div><label class="field-label" id="rPhoneLabel" for="rPhone">Phone</label><input id="rPhone" class="inv-input" type="tel" placeholder="Your phone number"></div>
+          <div><label class="field-label" id="rGuestsLabel" for="rGuests">Number of Guests</label><input id="rGuests" class="inv-input" type="number" min="1" placeholder="1"></div>
+          <div><label class="field-label" id="rNoteLabel" for="rNote">Message</label><textarea id="rNote" class="inv-input" placeholder="Your wishes..."></textarea></div>
+          <div style="padding-top:4px;"><button type="button" class="submit-btn" id="rsvpSubmitText" onclick="submitRSVP && submitRSVP()">Send RSVP</button></div>
+        </form>
+        <div id="successMsg">
+          <p class="success-title" id="successTitle">Thank You!</p>
+          <p class="success-copy" id="successText">We look forward to celebrating with you.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer reveal" data-reveal style="--reveal-delay:.38s;">
+      <img src="/template-assets/wedding-template13/template13-wedding-botanical-ornament.png" alt="" style="width:66px;opacity:.25;margin:0 auto 16px;">
+      <p id="footerName" class="label">Wedding Celebration</p>
+      <p id="footLine" class="heading" style="font-family:var(--font-script);font-size:44px;margin-top:10px;">Olivia &amp; James</p>
+      <div class="wedding-separator"></div>
+      <p class="footer-small" id="footerSubline">With love, forever and always</p>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var DEFAULT_ASSETS={hero:'/template-assets/wedding-template13/template13-wedding-hero-sage-romance.jpg',gallery:['/template-assets/wedding-template13/template13-wedding-gallery-1.jpg','/template-assets/wedding-template13/template13-wedding-gallery-2.jpg','/template-assets/wedding-template13/template13-wedding-gallery-3.jpg']};
+      var COPY={
+        kk:{pageTitle:'Үйлену тойына шақыру',heroLabel:'Үйлену тойы',inviteLabel:'Ата-аналарымен бірге',dateLabel:'Сақтап қойыңыз',locationLabel:'Мекен-жай',ownersLabel:'Той иелері',galleryLabel:'Біздің сәттер',galleryPlaceholder:'Фотосурет осы жерде көрсетіледі',rsvpLabel:'Жауап',rsvpTitle:'RSVP',rsvpSubtitle:'Жауабыңызды алдын ала жіберсеңіздер қуанышты боламыз',nameLabel:'Аты-жөніңіз',namePlaceholder:'Атыңызды жазыңыз',phoneLabel:'Телефон',phonePlaceholder:'+7 (___) ___-__-__',guestsLabel:'Қонақ саны',guestsPlaceholder:'1',noteLabel:'Тілек',notePlaceholder:'Тілегіңізді қалдырыңыз',submitText:'Жауап жіберу',successTitle:'Рақмет!',successText:'Сіздермен бірге мерекелеуді асыға күтеміз.',mapText:'Картадан көру',footerName:'Үйлену тойы',footerSubline:'Мәңгілік махаббатпен',defaultDescription:'Құрметті ағайын-туыс, құда-жекжат, дос-жаран! Сіздерді өміріміздегі ең маңызды күндердің біріне ортақ болып, қуанышымызды бірге бөлісуге шын жүректен шақырамыз.',monthsNom:['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'],monthsGen:['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан'],weekdays:['Жексенбі','Дүйсенбі','Сейсенбі','Сәрсенбі','Бейсенбі','Жұма','Сенбі'],heroAlt:'Жас жұп'},
+        ru:{pageTitle:'Свадебное приглашение',heroLabel:'The Wedding of',inviteLabel:'Вместе со своими семьями',dateLabel:'Сохраните дату',locationLabel:'Локация',ownersLabel:'С любовью от',galleryLabel:'Наши моменты',galleryPlaceholder:'Фотография появится здесь',rsvpLabel:'Подтверждение',rsvpTitle:'RSVP',rsvpSubtitle:'Будем признательны за ваш ответ заранее',nameLabel:'Имя и фамилия',namePlaceholder:'Ваше имя',phoneLabel:'Телефон',phonePlaceholder:'Ваш номер телефона',guestsLabel:'Количество гостей',guestsPlaceholder:'1',noteLabel:'Пожелание',notePlaceholder:'Ваши пожелания...',submitText:'Отправить ответ',successTitle:'Спасибо!',successText:'Будем рады разделить этот день вместе с вами.',mapText:'Открыть карту',footerName:'Свадебное торжество',footerSubline:'С любовью, навсегда и всегда',defaultDescription:'Дорогие родные и близкие! С радостью приглашаем вас разделить с нами один из самых важных дней нашей жизни.',monthsNom:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],monthsGen:['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],weekdays:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],heroAlt:'Свадебная пара'},
+        en:{pageTitle:'Wedding Invitation',heroLabel:'The Wedding of',inviteLabel:'Together with their families',dateLabel:'Save the Date',locationLabel:'Venue',ownersLabel:'With Love From',galleryLabel:'Our Moments',galleryPlaceholder:'Photo will appear here',rsvpLabel:'Kindly Respond',rsvpTitle:'RSVP',rsvpSubtitle:'We would appreciate your reply in advance',nameLabel:'Full Name',namePlaceholder:'Your name',phoneLabel:'Phone',phonePlaceholder:'Your phone number',guestsLabel:'Number of Guests',guestsPlaceholder:'1',noteLabel:'Message',notePlaceholder:'Your wishes...',submitText:'Send RSVP',successTitle:'Thank You!',successText:'We look forward to celebrating with you.',mapText:'View Map',footerName:'Wedding Celebration',footerSubline:'With love, forever and always',defaultDescription:'Request the honor of your presence at the celebration of their marriage.',monthsNom:['January','February','March','April','May','June','July','August','September','October','November','December'],monthsGen:['January','February','March','April','May','June','July','August','September','October','November','December'],weekdays:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],heroAlt:'Wedding couple'}};
+      function byId(id){return document.getElementById(id)}
+      function setText(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.textContent=value||''}
+      function esc(value){return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+      function setBreakText(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.innerHTML=esc(value).replace(/\n/g,'<br>')}
+      function pad(v){return String(v).padStart(2,'0')}
+      function parseEventDate(value){if(!value)return null;var date=value instanceof Date?new Date(value.getTime()):new Date(value);return Number.isNaN(date.getTime())?null:date}
+      function parseDate(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{dd:eventDate.getDate(),mm:eventDate.getMonth()+1,yy:eventDate.getFullYear()}}var parts=String((config&&config.day)||'').split('-').map(function(item){return parseInt(item,10)});return parts.length===3&&parts.every(Number.isFinite)?{dd:parts[0],mm:parts[1],yy:parts[2]}:{dd:15,mm:6,yy:2026}}
+      function parseTime(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{hh:eventDate.getHours(),mm:eventDate.getMinutes()}}var match=String((config&&config.hour)||'16:00').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);if(!match)return{hh:16,mm:0};var hh=parseInt(match[1],10),mm=parseInt(match[2]||'0',10),suffix=String(match[3]||'').toUpperCase();if(suffix==='PM'&&hh<12)hh+=12;if(suffix==='AM'&&hh===12)hh=0;return{hh:Number.isFinite(hh)?hh:16,mm:Number.isFinite(mm)?mm:0}}
+      function formatTime(time,lang){if(lang==='en'){var suffix=time.hh>=12?'PM':'AM';var hour=time.hh%12||12;return hour+':'+pad(time.mm)+' '+suffix}return pad(time.hh)+':'+pad(time.mm)}
+      function getLang(config){var lang=String((config&&config.lang)||'kk').toLowerCase();return COPY[lang]?lang:'kk'}
+      function getCopy(config){return COPY[getLang(config)]||COPY.kk}
+      function getNames(config){var names=(config&&config.names)||{};return{bride:String(names.bride||config.topic2||'Olivia').trim()||'Olivia',groom:String(names.groom||config.topic1||config.childName||'James').trim()||'James'}}
+      function joinNames(names){return[names.bride,names.groom].filter(Boolean).join(' & ')}
+      function splitOwners(value){var text=String(value||'').trim();if(!text)return{title:'',detail:''};var chunks=text.indexOf('||')>=0?text.split('||'):text.split(/\r?\n/);chunks=chunks.map(function(item){return item.trim()}).filter(Boolean);return{title:chunks[0]||'',detail:chunks.slice(1).join('\n')}}
+      function getPlaceParts(config){var raw=String((config&&config.location)||'').trim();var explicit=String((config&&(config.locationDetail||config.locationDetails||config.address))||'').trim();if(!raw)return{name:'',detail:explicit};if(explicit)return{name:raw,detail:explicit};if(raw.indexOf('\n')>=0){var lines=raw.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return{name:lines[0]||raw,detail:lines.slice(1).join('\n')}}if(raw.indexOf(' | ')>=0){var parts=raw.split(' | ').map(function(item){return item.trim()}).filter(Boolean);return{name:parts[0]||raw,detail:parts.slice(1).join('\n')}}if(raw.indexOf(',')>=0){var comma=raw.split(',').map(function(item){return item.trim()}).filter(Boolean);return{name:comma[0]||raw,detail:comma.slice(1).join(', ')}}return{name:raw,detail:''}}
+      function heroDateLine(config,copy){var date=parseDate(config),time=parseTime(config),lang=getLang(config);if(lang==='ru')return date.dd+' '+copy.monthsGen[date.mm-1]+' '+date.yy+' • '+formatTime(time,lang);if(lang==='en')return copy.monthsNom[date.mm-1]+' '+date.dd+', '+date.yy+' • '+formatTime(time,lang);return date.dd+' '+copy.monthsGen[date.mm-1]+' '+date.yy+' • '+formatTime(time,lang)}
+      function getGallery(config){var gallery=Array.isArray(config.gallery)?config.gallery.filter(Boolean):[];return gallery.length?gallery:DEFAULT_ASSETS.gallery.slice()}
+      function formatDateCard(config,copy){var date=parseDate(config),weekday=copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]||'',lang=getLang(config),time=parseTime(config),prefix=lang==='en'?'Ceremony at ':(lang==='ru'?'Церемония в ':'Салтанат ');setText('dateLabel',copy.dateLabel);setText('dateWeekday',weekday);setText('dateDay',String(date.dd));setText('dateMonthYear',(copy.monthsNom[date.mm-1]||'')+' '+date.yy);setText('dateTime',prefix+formatTime(time,lang))}
+      function renderGallery(config,copy){var wrap=byId('gallerySlides');if(!wrap)return;wrap.innerHTML='';getGallery(config).slice(0,6).forEach(function(src,index){var slide=document.createElement('div');slide.className='gallery-slide';var media=document.createElement('div');media.className='gallery-media';if(src){var img=document.createElement('img');img.src=src;img.alt=copy.heroAlt+' '+(index+1);img.loading='lazy';media.appendChild(img)}else{var ph=document.createElement('div');ph.className='gallery-placeholder';ph.textContent=copy.galleryPlaceholder;media.appendChild(ph)}slide.appendChild(media);wrap.appendChild(slide)})}
+      function applyReveal(){var nodes=Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));if(!nodes.length)return;if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){nodes.forEach(function(node){node.classList.add('visible')});return}if(!window.__weddingTemplate13RevealObserver){window.__weddingTemplate13RevealObserver=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');window.__weddingTemplate13RevealObserver.unobserve(entry.target)}})},{threshold:.14,rootMargin:'0px 0px -36px 0px'})}nodes.forEach(function(node){if(node.dataset.revealBound==='true')return;node.dataset.revealBound='true';window.__weddingTemplate13RevealObserver.observe(node)})}
+      function applyCopy(config,copy){document.documentElement.lang=getLang(config)==='kk'?'kk':getLang(config);setText('heroLabel',config.heroLabel||copy.heroLabel);setText('inviteLabel',copy.inviteLabel);setText('locationLabel',copy.locationLabel);setText('ownersLabel',copy.ownersLabel);setText('galleryLabel',copy.galleryLabel);setText('rsvpLabel',copy.rsvpLabel);setText('rsvpTitle',copy.rsvpTitle);setText('rsvpSubtitle',copy.rsvpSubtitle);setText('rNameLabel',copy.nameLabel);setText('rPhoneLabel',copy.phoneLabel);setText('rGuestsLabel',copy.guestsLabel);setText('rNoteLabel',copy.noteLabel);setText('rsvpSubmitText',copy.submitText);setText('successTitle',copy.successTitle);setText('successText',copy.successText);setText('footerName',config.eventLabel||copy.footerName);setText('mapBtnText',copy.mapText);setText('footerSubline',config.footerSubline||copy.footerSubline);if(byId('rName'))byId('rName').placeholder=copy.namePlaceholder;if(byId('rPhone'))byId('rPhone').placeholder=copy.phonePlaceholder;if(byId('rGuests'))byId('rGuests').placeholder=copy.guestsPlaceholder;if(byId('rNote'))byId('rNote').placeholder=copy.notePlaceholder}
+      function applyVisualConfig(conf){var config=Object.assign({},typeof CONFIG!=='undefined'?CONFIG:{},window.CONFIG||{},conf||{});var copy=getCopy(config),names=getNames(config),owners=splitOwners(config.toiOwners),place=getPlaceParts(config),heroSource=config.heroPhotoUrl||config.previewPhotoUrl||config.heroPhoto||(getGallery(config)[0]||DEFAULT_ASSETS.hero);window.CONFIG=config;applyCopy(config,copy);setText('hBride',names.bride);setText('hGroom',names.groom);setText('heroNamesLine',joinNames(names));setText('heroDateLine',heroDateLine(config,copy));setBreakText('eventText',config.description||copy.defaultDescription);formatDateCard(config,copy);setText('locationName',place.name||'');var locationDetails=byId('locationDetails');if(locationDetails){locationDetails.style.display=place.detail?'block':'none';locationDetails.innerHTML=place.detail?esc(place.detail).replace(/\n/g,'<br>'):''}var ownersSection=byId('ownersSection'),ownersBigName=byId('ownersBigName'),ownersText=byId('ownersText');if(ownersSection&&ownersBigName&&ownersText){if(owners.title||config.toiOwners){ownersSection.style.display='block';ownersBigName.textContent=owners.title||String(config.toiOwners||'').trim();ownersText.style.display=owners.detail?'block':'none';ownersText.innerHTML=owners.detail?esc(owners.detail).replace(/\n/g,'<br>'):''}else{ownersSection.style.display='none'}}var mapBtnWrap=byId('mapBtnWrap'),mapBtn=byId('mapBtn');if(mapBtnWrap&&mapBtn){if(config.location||config.locationUrl){mapBtnWrap.style.display='block';mapBtn.href=config.locationUrl||'#';mapBtn.style.pointerEvents=config.locationUrl?'auto':'none';mapBtn.style.opacity=config.locationUrl?'1':'0.55'}else{mapBtnWrap.style.display='none'}}var heroImg=byId('heroPhoto');if(heroImg){heroImg.src=heroSource;heroImg.alt=copy.heroAlt}renderGallery(config,copy);setText('footLine',joinNames(names));document.title=joinNames(names)||copy.pageTitle;applyReveal()}
+      window.submitRSVP=window.submitRSVP||function(){var name=byId('rName'),phone=byId('rPhone'),form=byId('rsvpForm'),success=byId('successMsg');if(!name||!phone||!form||!success)return;if(!String(name.value||'').trim()){name.focus();return}if(!String(phone.value||'').trim()){phone.focus();return}form.style.display='none';success.style.display='block'};
+      function queueInitialRender(){setTimeout(function(){setTimeout(function(){applyVisualConfig(window.CONFIG||CONFIG||{})},0)},0)}
+      if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',queueInitialRender,{once:true})}else{queueInitialRender()}
+      window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig;
+      setTimeout(function(){window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig},0);
+      window.addEventListener('message',function(event){if(event.data&&event.data.type==='UPDATE_CONFIG'){setTimeout(function(){applyVisualConfig(event.data.config||window.CONFIG||CONFIG||{})},0)}})
+    })();
+  </script>
+</body>
+</html>

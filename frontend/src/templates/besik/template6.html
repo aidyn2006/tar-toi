@@ -1,0 +1,269 @@
+﻿<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Besik Soft Sky</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Didact+Gothic&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --sky:#edf4fb;
+      --sky-2:#e7eff7;
+      --mist:#f8fbff;
+      --card:#f8fbffcc;
+      --line:rgba(113,136,161,.18);
+      --text:#425266;
+      --text-soft:#72859a;
+      --title:#30445e;
+      --accent:#b08f56;
+      --accent-soft:#d6c19a;
+      --shadow:0 24px 60px rgba(88,110,140,.14);
+      --font-display:"Playfair Display", Georgia, serif;
+      --font-body:"Cormorant Garamond", Georgia, serif;
+      --font-ui:"Didact Gothic", Arial, sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{min-height:100vh;display:flex;justify-content:center;background:radial-gradient(circle at top right, rgba(191,214,235,.55), transparent 28%),radial-gradient(circle at 0% 35%, rgba(255,255,255,.9), transparent 30%),linear-gradient(180deg, #f4f8fc 0%, #edf3f9 46%, #e9f0f7 100%);color:var(--text);font-family:var(--font-ui);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    img{max-width:100%;display:block}
+    .page-root{width:100%;max-width:480px;min-height:100vh;position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(248,251,255,.94));box-shadow:0 0 0 1px rgba(255,255,255,.5), 0 28px 80px rgba(108,126,153,.18)}
+    .ambient{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .ambient::before,.ambient::after{content:"";position:absolute;border-radius:999px;filter:blur(30px);opacity:.8}
+    .ambient::before{width:220px;height:220px;top:-36px;right:-70px;background:radial-gradient(circle, rgba(194,214,234,.7) 0%, rgba(194,214,234,0) 72%);animation:floatCloud 10s ease-in-out infinite}
+    .ambient::after{width:170px;height:170px;top:30%;left:-80px;background:radial-gradient(circle, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 72%);animation:floatCloud 12s ease-in-out infinite reverse}
+    .page{position:relative;z-index:1;padding-bottom:36px}
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .85s ease, transform .85s ease;transition-delay:var(--reveal-delay,0s)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .divider{display:flex;align-items:center;justify-content:center;gap:12px;margin:28px auto}
+    .divider-line{width:54px;height:1px;background:linear-gradient(90deg, transparent, rgba(176,143,86,.55), transparent)}
+    .divider-dot{width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(176,143,86,.12)}
+    .section{padding:0 24px}
+    .section-card{background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+    .hero{position:relative;overflow:hidden;min-height:640px;padding-bottom:36px}
+    #heroPhoto{width:100%;height:430px;object-fit:cover;object-position:center;background:linear-gradient(135deg, #dbe7f2 0%, #c2d5e6 100%)}
+    .hero-photo-wrap{position:relative;overflow:hidden;border-bottom-left-radius:38px;border-bottom-right-radius:38px}
+    .hero-photo-wrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(250,253,255,0) 34%, rgba(241,246,251,.55) 72%, rgba(240,245,250,1) 100%)}
+    .hero-content{position:relative;margin-top:-86px;padding:0 24px;text-align:center;z-index:1}
+    .hero-copy{padding:0 10px}
+    #heroEyebrow{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px}
+    #heroName{font-family:var(--font-display);font-size:48px;line-height:1.04;font-weight:400;color:var(--title)}
+    #heroNamesLine{margin-top:10px;font-family:var(--font-body);font-size:25px;line-height:1.4;font-style:italic;color:var(--text-soft)}
+    #heroDateLine{margin-top:16px;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 20px;border-radius:999px;background:rgba(176,143,86,.12);font-size:12px;letter-spacing:.12em;color:var(--title)}
+    .label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-soft)}
+    .text-block{padding:30px 26px;text-align:center}
+    #eventText{margin-top:18px;font-family:var(--font-body);font-size:28px;line-height:1.65;color:var(--title)}
+    .date-wrap{padding:0 24px}
+    .date-card{padding:30px 26px;text-align:center;position:relative;overflow:hidden}
+    .date-card::before,.date-card::after{content:"";position:absolute;left:50%;transform:translateX(-50%);width:92px;height:1px;background:linear-gradient(90deg, transparent, rgba(176,143,86,.7), transparent)}
+    .date-card::before{top:0}.date-card::after{bottom:0}
+    #dateDay{margin-top:6px;font-family:var(--font-display);font-size:64px;line-height:1;color:var(--title)}
+    #dateMonthYear{margin-top:8px;font-family:var(--font-body);font-size:24px;color:var(--text-soft)}
+    #dateWeekday{margin-top:16px;font-family:var(--font-body);font-size:26px;color:var(--accent);font-style:italic}
+    #dateTime{margin-top:8px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--title)}
+    .location-card,.owners-card,.rsvp-card{padding:30px 26px;text-align:center}
+    #locationName,#ownersBigName{margin-top:10px;font-family:var(--font-display);font-size:34px;line-height:1.22;color:var(--title)}
+    #locationAddress,#ownersText{margin-top:10px;font-family:var(--font-body);font-size:22px;line-height:1.7;color:var(--text-soft)}
+    #mapBtnWrap{margin-top:22px;display:none}
+    #mapBtn{display:inline-flex;align-items:center;justify-content:center;min-width:190px;min-height:46px;padding:12px 22px;border-radius:999px;border:1px solid rgba(48,68,94,.14);background:linear-gradient(135deg, rgba(176,143,86,.95), rgba(214,193,154,.95));color:#fff;text-decoration:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 14px 30px rgba(176,143,86,.22)}
+    .gallery-section{padding:0 0 0 24px}
+    #gallerySlides{display:flex;gap:12px;overflow-x:auto;padding:18px 24px 6px 0;scrollbar-width:none;-ms-overflow-style:none}
+    #gallerySlides::-webkit-scrollbar{display:none}
+    .gallery-slide{flex:0 0 214px;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.55);border:1px solid var(--line);box-shadow:var(--shadow)}
+    .gallery-media{width:100%;height:286px;background:linear-gradient(135deg, rgba(226,236,245,.92), rgba(242,247,252,.98))}
+    .gallery-media img{width:100%;height:100%;object-fit:cover}
+    .gallery-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:22px;text-align:center;font-size:11px;line-height:1.6;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft)}
+    .rsvp-head{margin-bottom:22px}
+    #rsvpTitle{margin-top:8px;font-family:var(--font-display);font-size:36px;line-height:1.16;color:var(--title)}
+    #rsvpSubtitle{margin-top:10px;font-family:var(--font-body);font-size:22px;color:var(--text-soft)}
+    #rsvpForm{display:flex;flex-direction:column;gap:14px;text-align:left}
+    .field label{display:block;margin-bottom:6px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-soft)}
+    #rsvpForm input,#rsvpForm textarea,#rsvpForm select{width:100%;border:1px solid rgba(113,136,161,.18);background:rgba(255,255,255,.92);color:var(--title);border-radius:18px;padding:14px 16px;font-family:var(--font-ui);font-size:14px;outline:none}
+    #rsvpForm textarea{min-height:88px;resize:none}
+    .submit-btn{width:100%;min-height:50px;border:none;border-radius:999px;background:linear-gradient(135deg, rgba(113,141,171,.95), rgba(85,111,139,.95));color:#fff;font-size:11px;letter-spacing:.24em;text-transform:uppercase;cursor:pointer;box-shadow:0 16px 32px rgba(88,110,140,.2)}
+    #successMsg{display:none;padding-top:12px;text-align:center}
+    #successMsgText{font-family:var(--font-body);font-size:28px;color:var(--title)}
+    .footer{padding:40px 24px 8px;text-align:center}
+    #footerName{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-soft)}
+    #footLine{margin-top:12px;font-family:var(--font-body);font-size:28px;color:var(--title)}
+    @keyframes floatCloud{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+    @media (max-width:420px){.section,.date-wrap{padding-left:18px;padding-right:18px}.gallery-section{padding-left:18px}#gallerySlides{padding-right:18px}#heroName{font-size:42px}#eventText{font-size:25px}#locationName,#ownersBigName,#rsvpTitle{font-size:30px}#locationAddress,#ownersText,#rsvpSubtitle{font-size:20px}.gallery-slide{flex-basis:192px}.gallery-media{height:262px}}
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG={
+      lang:"kk",
+      title:"Бесік той",
+      childName:"Аружан",
+      day:"15-07-2025",
+      hour:"17:00",
+      location:"«Алтын Ғасыр» мейрамханасы\nАлматы қ., Абай даңғылы, 52",
+      locationUrl:"",
+      gallery:[],
+      description:"Біздің отбасымыздың қуанышын ортақтасуға - сәбиіміздің бесік тойына шақырамыз. Сіздің қатысуыңыз мерекемізді одан сайын нұрландырады.",
+      toiOwners:"Айбек || Дана\nОтбасымыздың қуанышын бірге бөлісуге шақырамыз.",
+      music:{title:"",artist:"",url:""}
+    };
+  </script>
+
+  <div class="page-root">
+    <div class="ambient"></div>
+    <div class="page">
+      <section class="hero">
+        <div class="hero-photo-wrap">
+          <img id="heroPhoto" src="/template-assets/besik-template6/template6-besik-hero-soft-sky.jpg" alt="Besik Toy celebration">
+        </div>
+        <div class="hero-content">
+          <div class="hero-copy reveal visible">
+            <div id="heroEyebrow">Бесік той</div>
+            <h1 id="heroName">Аружан</h1>
+            <div id="heroNamesLine" style="display:none;"></div>
+            <div id="heroDateLine">15 шілде 2025 • 17:00</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider reveal" data-reveal>
+        <div class="divider-line"></div>
+        <div class="divider-dot"></div>
+        <div class="divider-line"></div>
+      </div>
+
+      <section class="section reveal" data-reveal>
+        <div class="section-card text-block">
+          <div class="label" id="eventLabel">Құрметті қонақ</div>
+          <div id="eventText">Біздің отбасымыздың қуанышын ортақтасуға - сәбиіміздің бесік тойына шақырамыз. Сіздің қатысуыңыз мерекемізді одан сайын нұрландырады.</div>
+        </div>
+      </section>
+
+      <section class="date-wrap reveal" data-reveal style="--reveal-delay:.06s;">
+        <div class="section-card date-card">
+          <div class="label" id="dateLabel">Күні мен уақыты</div>
+          <div id="dateDay">15</div>
+          <div id="dateMonthYear">Шілде 2025</div>
+          <div id="dateWeekday">Сейсенбі</div>
+          <div id="dateTime">17:00</div>
+        </div>
+      </section>
+
+      <section class="section reveal" data-reveal style="--reveal-delay:.1s;">
+        <div class="section-card location-card">
+          <div class="label" id="locationLabel">Мекен-жай</div>
+          <div id="locationName">«Алтын Ғасыр» мейрамханасы</div>
+          <div id="locationAddress">Алматы қ., Абай даңғылы, 52</div>
+          <div id="mapBtnWrap">
+            <a id="mapBtn" href="#" target="_blank" rel="noopener noreferrer">
+              <span id="mapBtnText">Картадан көру</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="ownersSection" class="section reveal" data-reveal style="--reveal-delay:.14s;">
+        <div class="section-card owners-card">
+          <div class="label" id="ownersLabel">Шақырушылар</div>
+          <div id="ownersBigName">Айбек</div>
+          <div id="ownersText">Дана<br>Отбасымыздың қуанышын бірге бөлісуге шақырамыз.</div>
+        </div>
+      </section>
+
+      <section class="gallery-section reveal" data-reveal style="--reveal-delay:.18s;">
+        <div class="label" id="galleryLabel" style="padding-right:24px;text-align:center;">Естелік сәттер</div>
+        <div id="gallerySlides"></div>
+      </section>
+
+      <section class="section reveal" data-reveal style="--reveal-delay:.22s;">
+        <div class="section-card rsvp-card">
+          <div class="rsvp-head">
+            <div class="label" id="rsvpLabel">Қатысу</div>
+            <div id="rsvpTitle">Жауабыңызды жіберіңіз</div>
+            <div id="rsvpSubtitle">Сізді қуанышпен күтеміз</div>
+          </div>
+
+          <form id="rsvpForm" onsubmit="return false;">
+            <div class="field">
+              <label id="rNameLabel" for="rName">Аты-жөніңіз</label>
+              <input id="rName" type="text" placeholder="Атыңызды жазыңыз">
+            </div>
+            <div class="field">
+              <label id="rPhoneLabel" for="rPhone">Телефон</label>
+              <input id="rPhone" type="tel" placeholder="+7 (___) ___-__-__">
+            </div>
+            <div class="field">
+              <label id="rGuestsLabel" for="rGuests">Қонақ саны</label>
+              <select id="rGuests">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div class="field">
+              <label id="rNoteLabel" for="rNote">Тілек</label>
+              <textarea id="rNote" rows="3" placeholder="Тілегіңізді жазыңыз"></textarea>
+            </div>
+            <button class="submit-btn" id="rsvpSubmitText" type="button" onclick="submitRSVP && submitRSVP()">Жіберу</button>
+          </form>
+
+          <div id="successMsg">
+            <div id="successMsgText">Рақмет! Жауабыңыз қабылданды.</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer reveal" data-reveal style="--reveal-delay:.26s;">
+        <div class="divider" style="margin-top:0;margin-bottom:18px;">
+          <div class="divider-line"></div>
+          <div class="divider-dot"></div>
+          <div class="divider-line"></div>
+        </div>
+        <div id="footerName">Бесік той</div>
+        <div id="footLine">Аружан</div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var DEFAULT_ASSETS={hero:"/template-assets/besik-template6/template6-besik-hero-soft-sky.jpg"};
+      var COPY={
+        kk:{pageTitle:"Бесік тойына шақыру",heroEyebrow:"Бесік той",heroNamesFallback:"Отбасымыздың қуанышы",eventLabel:"Құрметті қонақ",dateLabel:"Күні мен уақыты",locationLabel:"Мекен-жай",ownersLabel:"Шақырушылар",galleryLabel:"Естелік сәттер",galleryPlaceholder:"Фотосурет осында көрсетіледі",rsvpLabel:"Қатысу",rsvpTitle:"Жауабыңызды жіберіңіз",rsvpSubtitle:"Сізді қуанышпен күтеміз",nameLabel:"Аты-жөніңіз",namePlaceholder:"Атыңызды жазыңыз",phoneLabel:"Телефон",phonePlaceholder:"+7 (___) ___-__-__",guestsLabel:"Қонақ саны",noteLabel:"Тілек",notePlaceholder:"Тілегіңізді жазыңыз",submitText:"Жіберу",successText:"Рақмет! Жауабыңыз қабылданды.",mapText:"Картадан көру",footerName:"Бесік той",defaultDescription:"Біздің отбасымыздың қуанышын ортақтасуға - сәбиіміздің бесік тойына шақырамыз. Сіздің қатысуыңыз мерекемізді одан сайын нұрландырады.",monthsNom:["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"],monthsGen:["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"],weekdays:["Жексенбі","Дүйсенбі","Сейсенбі","Сәрсенбі","Бейсенбі","Жұма","Сенбі"],heroAlt:"Бесік той суреті"},
+        ru:{pageTitle:"Приглашение на бесик той",heroEyebrow:"Бесик той",heroNamesFallback:"Семейный праздник",eventLabel:"Дорогой гость",dateLabel:"Дата и время",locationLabel:"Место проведения",ownersLabel:"Приглашают",galleryLabel:"Памятные моменты",galleryPlaceholder:"Фотография появится здесь",rsvpLabel:"Подтверждение",rsvpTitle:"Отправьте ваш ответ",rsvpSubtitle:"Будем рады видеть вас на празднике",nameLabel:"Имя и фамилия",namePlaceholder:"Ваше имя",phoneLabel:"Телефон",phonePlaceholder:"+7 (___) ___-__-__",guestsLabel:"Количество гостей",noteLabel:"Пожелание",notePlaceholder:"Напишите ваше пожелание",submitText:"Отправить",successText:"Спасибо! Ваш ответ получен.",mapText:"Открыть карту",footerName:"Бесик той",defaultDescription:"С радостью приглашаем вас разделить с нашей семьей светлый праздник - бесик той нашего малыша. Ваше присутствие сделает этот день еще теплее.",monthsNom:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],monthsGen:["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"],weekdays:["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],heroAlt:"Праздник бесик той"},
+        en:{pageTitle:"Besik Toy Invitation",heroEyebrow:"Besik Toy",heroNamesFallback:"A family celebration",eventLabel:"Dear Guest",dateLabel:"Date & Time",locationLabel:"Location",ownersLabel:"Hosted by",galleryLabel:"Memorable Moments",galleryPlaceholder:"Photo will appear here",rsvpLabel:"RSVP",rsvpTitle:"Send Your Response",rsvpSubtitle:"We will be happy to celebrate with you",nameLabel:"Full Name",namePlaceholder:"Your name",phoneLabel:"Phone",phonePlaceholder:"Phone number",guestsLabel:"Guest Count",noteLabel:"Message",notePlaceholder:"Write your wishes",submitText:"Send",successText:"Thank you! Your response has been received.",mapText:"View Map",footerName:"Besik Toy",defaultDescription:"We warmly invite you to share our family's joy and celebrate our baby's besik toy with us. Your presence will make this day even more special.",monthsNom:["January","February","March","April","May","June","July","August","September","October","November","December"],monthsGen:["January","February","March","April","May","June","July","August","September","October","November","December"],weekdays:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],heroAlt:"Besik toy celebration"}
+      };
+
+      function byId(id){return document.getElementById(id)}
+      function esc(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;")}
+      function setText(id,value){var node=typeof id==="string"?byId(id):id;if(node)node.textContent=value||""}
+      function setBreakText(id,value){var node=typeof id==="string"?byId(id):id;if(node)node.innerHTML=esc(value).replace(/\n/g,"<br>")}
+      function pad(num){return String(num).padStart(2,"0")}
+      function parseEventDate(value){if(!value)return null;var date=value instanceof Date?new Date(value.getTime()):new Date(value);return Number.isNaN(date.getTime())?null:date}
+      function getLang(config){var lang=String((config&&config.lang)||"kk").toLowerCase();return COPY[lang]?lang:"kk"}
+      function getCopy(config){return COPY[getLang(config)]||COPY.kk}
+      function parseDate(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return {dd:eventDate.getDate(),mm:eventDate.getMonth()+1,yy:eventDate.getFullYear()}}var parts=String((config&&config.day)||"").split("-").map(function(item){return parseInt(item,10)});if(parts.length===3&&parts.every(Number.isFinite)){return {dd:parts[0],mm:parts[1],yy:parts[2]}}return {dd:15,mm:7,yy:2025}}
+      function parseTime(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return {hh:eventDate.getHours(),mm:eventDate.getMinutes()}}var match=String((config&&config.hour)||"17:00").trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);if(!match)return {hh:17,mm:0};var hh=parseInt(match[1],10),mm=parseInt(match[2]||"0",10),suffix=String(match[3]||"").toUpperCase();if(suffix==="PM"&&hh<12)hh+=12;if(suffix==="AM"&&hh===12)hh=0;return {hh:Number.isFinite(hh)?hh:17,mm:Number.isFinite(mm)?mm:0}}
+      function formatTime(time,lang){if(lang==="en"){var suffix=time.hh>=12?"PM":"AM";var hour=time.hh%12||12;return hour+":"+pad(time.mm)+" "+suffix}return pad(time.hh)+":"+pad(time.mm)}
+      function getPrimaryName(config){return String((config&&(config.childName||config.babyName||config.personName||config.title||config.eventTitle||config.topic1||config.topic2||(config.names&&config.names.child)||(config.names&&config.names.groom)||(config.names&&config.names.bride)||(config.names&&config.names.title)))||"??????").trim()||"??????"}
+      function splitOwners(value){var text=String(value||"").trim();if(!text)return {title:"",detail:""};if(text.indexOf("||")>=0){var parts=text.split("||");return {title:String(parts.shift()||"").trim(),detail:parts.join("||").trim()}}var lines=text.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return {title:lines[0]||"",detail:lines.slice(1).join("\n")}}
+      function getLocationParts(config){var raw=String((config&&config.location)||"").trim();var explicit=String((config&&(config.locationDetail||config.locationDetails||config.address))||"").trim();if(!raw)return {name:"",detail:explicit};if(explicit)return {name:raw,detail:explicit};if(raw.indexOf("\n")>=0){var lines=raw.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return {name:lines[0]||raw,detail:lines.slice(1).join("\n")}}if(raw.indexOf(" | ")>=0){var pipe=raw.split(" | ").map(function(item){return item.trim()}).filter(Boolean);return {name:pipe[0]||raw,detail:pipe.slice(1).join("\n")}}if(raw.indexOf(",")>=0){var comma=raw.split(",").map(function(item){return item.trim()}).filter(Boolean);return {name:comma[0]||raw,detail:comma.slice(1).join(", ")}}return {name:raw,detail:""}}
+      function heroDateLine(config,copy){var lang=getLang(config),date=parseDate(config),time=parseTime(config);if(lang==="ru")return date.dd+" "+copy.monthsGen[date.mm-1]+" "+date.yy+" • "+formatTime(time,lang);if(lang==="en")return copy.monthsNom[date.mm-1]+" "+date.dd+", "+date.yy+" • "+formatTime(time,lang);return date.dd+" "+copy.monthsGen[date.mm-1]+" "+date.yy+" • "+formatTime(time,lang)}
+      function getGallery(config){return Array.isArray(config.gallery)?config.gallery.filter(Boolean):[]}
+      function renderGallery(config,copy){var wrap=byId("gallerySlides");if(!wrap)return;wrap.innerHTML="";var gallery=getGallery(config);if(!gallery.length){for(var i=0;i<3;i+=1){var placeholderSlide=document.createElement("div");placeholderSlide.className="gallery-slide";var placeholderMedia=document.createElement("div");placeholderMedia.className="gallery-media";var placeholder=document.createElement("div");placeholder.className="gallery-placeholder";placeholder.textContent=copy.galleryPlaceholder;placeholderMedia.appendChild(placeholder);placeholderSlide.appendChild(placeholderMedia);wrap.appendChild(placeholderSlide)}return}gallery.slice(0,8).forEach(function(src,index){var slide=document.createElement("div");slide.className="gallery-slide";var media=document.createElement("div");media.className="gallery-media";var img=document.createElement("img");img.src=src;img.alt=copy.heroAlt+" "+(index+1);img.loading="lazy";media.appendChild(img);slide.appendChild(media);wrap.appendChild(slide)})}
+      function formatDateCard(config,copy){var lang=getLang(config),date=parseDate(config),time=parseTime(config);var weekday=copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]||"";setText("dateLabel",copy.dateLabel);setText("dateDay",String(date.dd));if(lang==="en"){setText("dateMonthYear",(copy.monthsNom[date.mm-1]||"")+" "+date.yy)}else{setText("dateMonthYear",(copy.monthsNom[date.mm-1]||"")+" "+date.yy)}setText("dateWeekday",weekday);setText("dateTime",formatTime(time,lang))}
+      function applyReveal(){var nodes=Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));if(!nodes.length)return;if(!("IntersectionObserver" in window)||window.matchMedia("(prefers-reduced-motion: reduce)").matches){nodes.forEach(function(node){node.classList.add("visible")});return}if(!window.__besikTemplate6RevealObserver){window.__besikTemplate6RevealObserver=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add("visible");window.__besikTemplate6RevealObserver.unobserve(entry.target)}})},{threshold:.14,rootMargin:"0px 0px -36px 0px"})}nodes.forEach(function(node){if(node.dataset.revealBound==="true")return;node.dataset.revealBound="true";window.__besikTemplate6RevealObserver.observe(node)})}
+      function applyCopy(config,copy){document.documentElement.lang=getLang(config)==="kk"?"kk":getLang(config);setText("heroEyebrow",config.heroEyebrow||config.eventLabel||copy.heroEyebrow);setText("eventLabel",config.eventTextLabel||copy.eventLabel);setText("locationLabel",config.locationLabel||copy.locationLabel);setText("ownersLabel",config.ownersLabel||copy.ownersLabel);setText("galleryLabel",config.galleryLabel||copy.galleryLabel);setText("rsvpLabel",config.rsvpLabel||copy.rsvpLabel);setText("rsvpTitle",config.rsvpTitle||copy.rsvpTitle);setText("rsvpSubtitle",config.rsvpSubtitle||copy.rsvpSubtitle);setText("rNameLabel",config.rsvpNameLabel||copy.nameLabel);setText("rPhoneLabel",config.rsvpPhoneLabel||copy.phoneLabel);setText("rGuestsLabel",config.rsvpGuestsLabel||copy.guestsLabel);setText("rNoteLabel",config.rsvpNoteLabel||copy.noteLabel);setText("rsvpSubmitText",config.rsvpSubmitText||copy.submitText);setText("successMsgText",config.successText||copy.successText);setText("footerName",config.footerName||copy.footerName);setText("mapBtnText",config.mapButtonText||copy.mapText);if(byId("rName"))byId("rName").placeholder=config.rsvpNamePlaceholder||copy.namePlaceholder;if(byId("rPhone"))byId("rPhone").placeholder=config.rsvpPhonePlaceholder||copy.phonePlaceholder;if(byId("rNote"))byId("rNote").placeholder=config.rsvpNotePlaceholder||copy.notePlaceholder}
+      function applyVisualConfig(conf){var config=Object.assign({},typeof CONFIG!=="undefined"?CONFIG:{},window.CONFIG||{},conf||{});var copy=getCopy(config);var owners=splitOwners(config.toiOwners);var place=getLocationParts(config);var primary=getPrimaryName(config);var addressDetail=place.detail||config.locationDetail||config.locationDetails||config.address||config.locationDescription||"";var heroSubline=String(config.heroNamesLine||config.namesLine||config.subtitle||"").trim();var heroSource=config.heroPhotoUrl||config.previewPhotoUrl||config.heroPhoto||(getGallery(config)[0]||DEFAULT_ASSETS.hero);window.CONFIG=config;applyCopy(config,copy);setText("heroName",primary);var heroNamesLine=byId("heroNamesLine");if(heroNamesLine){var shouldShowSubline=heroSubline&&heroSubline!==primary;heroNamesLine.style.display=shouldShowSubline?"block":"none";heroNamesLine.textContent=shouldShowSubline?heroSubline:""}setText("heroDateLine",heroDateLine(config,copy));setBreakText("eventText",config.description||copy.defaultDescription);formatDateCard(config,copy);setText("locationName",place.name||config.locationName||"");var locationAddress=byId("locationAddress");if(locationAddress){locationAddress.style.display=addressDetail?"block":"none";locationAddress.innerHTML=addressDetail?esc(addressDetail).replace(/\n/g,"<br>"):""}var ownersSection=byId("ownersSection"),ownersBigName=byId("ownersBigName"),ownersText=byId("ownersText");if(ownersSection&&ownersBigName&&ownersText){if(owners.title||owners.detail||config.toiOwners){ownersSection.style.display="block";ownersBigName.textContent=owners.title||String(config.toiOwners||"").trim()||primary;ownersText.style.display=owners.detail?"block":"none";ownersText.innerHTML=owners.detail?esc(owners.detail).replace(/\n/g,"<br>"):""}else{ownersSection.style.display="none"}}var mapBtnWrap=byId("mapBtnWrap"),mapBtn=byId("mapBtn");if(mapBtnWrap&&mapBtn){if(config.location||config.locationUrl||config.locationName||addressDetail){mapBtnWrap.style.display="block";mapBtn.href=config.locationUrl||"#";mapBtn.style.pointerEvents=config.locationUrl?"auto":"none";mapBtn.style.opacity=config.locationUrl?"1":"0.72"}else{mapBtnWrap.style.display="none"}}var heroImg=byId("heroPhoto");if(heroImg){heroImg.src=heroSource;heroImg.alt=copy.heroAlt}renderGallery(config,copy);setText("footLine",config.footLine||primary);document.title=(primary||copy.pageTitle)+" - "+copy.footerName;applyReveal()}
+      window.submitRSVP=window.submitRSVP||function(){var name=byId("rName"),phone=byId("rPhone"),form=byId("rsvpForm"),success=byId("successMsg");if(!name||!phone||!form||!success)return;if(!String(name.value||"").trim()){name.focus();return}if(!String(phone.value||"").trim()){phone.focus();return}form.style.display="none";success.style.display="block"};
+      function queueInitialRender(){setTimeout(function(){setTimeout(function(){applyVisualConfig(window.CONFIG||CONFIG||{})},0)},0)}
+      if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",queueInitialRender,{once:true})}else{queueInitialRender()}
+      window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig;
+      setTimeout(function(){window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig},0);
+      window.addEventListener("message",function(event){if(event.data&&event.data.type==="UPDATE_CONFIG"){setTimeout(function(){applyVisualConfig(event.data.config||window.CONFIG||CONFIG||{})},0)}})
+    })();
+  </script>
+</body>
+</html>

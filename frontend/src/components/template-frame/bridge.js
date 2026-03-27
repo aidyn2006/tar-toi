@@ -117,15 +117,32 @@ export function injectLiveBridge(html) {
         }
     }
 
-    window.__APPLY_DYNAMIC_CONFIG = apply;
+    function applyWithTemplateHandler(cfg) {
+        const templateApply =
+            typeof window.__APPLY_DYNAMIC_CONFIG === 'function' &&
+            window.__APPLY_DYNAMIC_CONFIG !== apply
+                ? window.__APPLY_DYNAMIC_CONFIG
+                : null;
+
+        if (templateApply) {
+            templateApply(cfg);
+            return;
+        }
+
+        apply(cfg);
+    }
+
+    if (typeof window.__APPLY_DYNAMIC_CONFIG !== 'function') {
+        window.__APPLY_DYNAMIC_CONFIG = apply;
+    }
 
     setTimeout(function(){
-        if (typeof CONFIG !== 'undefined') apply(CONFIG);
+        if (typeof CONFIG !== 'undefined') applyWithTemplateHandler(CONFIG);
     }, 0);
 
     window.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'UPDATE_CONFIG') {
-            apply(event.data.config);
+            applyWithTemplateHandler(event.data.config);
         }
     });
 })();

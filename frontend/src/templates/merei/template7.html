@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<!-- NO_PALETTE -->
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Merei Grand Black Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Didact+Gothic&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep-black: #0F1012;
+  --graphite: #1A1B1E;
+  --warm-black: #171412;
+  --antique-gold: #B78A3A;
+  --deep-gold: #8E6820;
+  --champagne: #D9C28E;
+  --bronze: #8E7551;
+  --ivory: #F2EEE7;
+  --ivory-muted: rgba(242,238,231,0.72);
+  --ivory-faint: rgba(242,238,231,0.35);
+  --gold-glow: rgba(183,138,58,0.12);
+  --gold-glow-strong: rgba(183,138,58,0.25);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-ui: 'Didact Gothic', 'Helvetica Neue', sans-serif;
+}
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  background: var(--deep-black);
+  color: var(--ivory);
+  font-family: var(--font-body);
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ═══ REVEAL ON SCROLL ═══ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══ DECORATIVE ELEMENTS ═══ */
+.gold-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--antique-gold), transparent);
+  margin: 0 auto;
+}
+.gold-line--wide { width: 120px; }
+.gold-line--short { width: 40px; }
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 0;
+}
+.ornament::before, .ornament::after {
+  content: '';
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--antique-gold));
+}
+.ornament::after {
+  background: linear-gradient(90deg, var(--antique-gold), transparent);
+}
+.ornament-diamond {
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--antique-gold);
+  transform: rotate(45deg);
+}
+
+.section-spacer { height: 56px; }
+
+/* ═══ HERO SECTION ═══ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px 48px;
+  background: var(--deep-black);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(15,16,18,0.2) 40%,
+    rgba(15,16,18,0.85) 75%,
+    var(--deep-black) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-photo-placeholder, #heroPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: brightness(0.7) contrast(1.05);
+}
+.hero-photo-placeholder {
+  background: linear-gradient(160deg, var(--graphite) 0%, var(--warm-black) 50%, var(--deep-black) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-photo-placeholder span {
+  color: var(--ivory-faint);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+#heroPhoto img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  width: 100%;
+}
+
+.hero-top-accent {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--champagne);
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+#heroName, .hero-name {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ivory);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+#heroNamesLine, .hero-names-line {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--champagne);
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+
+#heroDateLine, .hero-date-line {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ivory-muted);
+}
+
+.hero-gold-frame {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid var(--gold-glow-strong);
+  z-index: 2;
+  pointer-events: none;
+}
+.hero-gold-frame::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--antique-gold);
+}
+.hero-gold-frame::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--antique-gold);
+}
+
+/* ═══ INVITATION TEXT ═══ */
+.invitation-section {
+  padding: 48px 28px;
+  text-align: center;
+  background: var(--deep-black);
+}
+
+#eventText, .event-text {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--ivory-muted);
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* ═══ DATE CARD ═══ */
+.date-section {
+  padding: 16px 24px;
+}
+
+.date-card {
+  background: linear-gradient(160deg, var(--graphite) 0%, var(--warm-black) 100%);
+  border: 1px solid var(--gold-glow-strong);
+  border-radius: 4px;
+  padding: 40px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.date-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--antique-gold), transparent);
+}
+.date-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--antique-gold), transparent);
+}
+
+.date-card .label {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  margin-bottom: 16px;
+}
+
+.date-card .day {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--antique-gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.date-card .month-year {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ivory);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.date-card .weekday {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ivory-muted);
+  font-style: italic;
+}
+
+.date-card .time {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  color: var(--champagne);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gold-glow);
+}
+
+/* ═══ LOCATION ═══ */
+.location-section {
+  padding: 48px 28px;
+  text-align: center;
+  background: var(--deep-black);
+}
+
+#locationName, .location-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--ivory);
+  margin-bottom: 8px;
+}
+
+.location-address {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ivory-muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+#mapBtnWrap, .map-btn-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+#mapBtn, .map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--deep-black);
+  background: linear-gradient(135deg, var(--antique-gold) 0%, var(--champagne) 50%, var(--antique-gold) 100%);
+  background-size: 200% 100%;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-position 0.5s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(183,138,58,0.2);
+}
+#mapBtn:hover, .map-btn:hover {
+  background-position: 100% 0;
+  box-shadow: 0 6px 30px rgba(183,138,58,0.35);
+}
+
+/* ═══ OWNERS ═══ */
+#ownersSection, .owners-section {
+  padding: 48px 28px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--deep-black) 0%, var(--warm-black) 50%, var(--deep-black) 100%);
+}
+
+.owners-label {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  margin-bottom: 20px;
+}
+
+#ownersBigName, .owners-big-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--champagne);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.owners-text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ivory-muted);
+  line-height: 1.7;
+}
+
+/* ═══ GALLERY ═══ */
+.gallery-section {
+  padding: 48px 16px;
+  background: var(--deep-black);
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.gallery-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--ivory);
+  letter-spacing: 0.04em;
+}
+
+#gallerySlides, .gallery-slides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.gallery-slide {
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, var(--graphite), var(--warm-black));
+  border: 1px solid var(--gold-glow);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85) contrast(1.05);
+}
+.gallery-slide:nth-child(1) { grid-column: 1 / -1; aspect-ratio: 16/10; }
+
+/* ═══ RSVP ═══ */
+.rsvp-section {
+  padding: 48px 24px;
+  background: linear-gradient(180deg, var(--deep-black), var(--graphite), var(--deep-black));
+}
+
+.rsvp-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.rsvp-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ivory);
+  margin-bottom: 8px;
+}
+.rsvp-header p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ivory-muted);
+  font-style: italic;
+}
+
+#rsvpForm, .rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.rsvp-form .field label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  margin-bottom: 8px;
+}
+
+.rsvp-form input,
+.rsvp-form textarea,
+.rsvp-form select {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ivory);
+  background: var(--warm-black);
+  border: 1px solid var(--gold-glow-strong);
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.rsvp-form input::placeholder,
+.rsvp-form textarea::placeholder {
+  color: var(--ivory-faint);
+}
+.rsvp-form input:focus,
+.rsvp-form textarea:focus {
+  border-color: var(--antique-gold);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+
+.rsvp-form textarea { min-height: 80px; resize: vertical; }
+
+.rsvp-submit {
+  padding: 16px 32px;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--deep-black);
+  background: linear-gradient(135deg, var(--antique-gold), var(--champagne), var(--antique-gold));
+  background-size: 200% 100%;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-position 0.5s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(183,138,58,0.15);
+  margin-top: 8px;
+}
+.rsvp-submit:hover {
+  background-position: 100% 0;
+  box-shadow: 0 6px 30px rgba(183,138,58,0.3);
+}
+
+#successMsg, .success-msg {
+  display: none;
+  text-align: center;
+  padding: 32px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--champagne);
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  padding: 48px 28px 64px;
+  text-align: center;
+  background: var(--deep-black);
+  border-top: 1px solid var(--gold-glow);
+}
+
+#footerName, .footer-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--champagne);
+  margin-bottom: 12px;
+  letter-spacing: 0.06em;
+}
+
+#footLine, .foot-line {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ivory-faint);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.footer-monogram {
+  margin-top: 28px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--antique-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.footer-monogram span {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--antique-gold);
+}
+
+/* ═══ SUBTLE GLOW ACCENTS ═══ */
+.glow-accent {
+  position: relative;
+}
+.glow-accent::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 120px;
+  background: radial-gradient(ellipse, var(--gold-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══ PARALLAX-DRIFT DECO ═══ */
+.parallax-layer {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+.corner-ornament {
+  width: 60px;
+  height: 60px;
+  border-color: var(--gold-glow-strong);
+  position: absolute;
+  pointer-events: none;
+}
+.corner-ornament--tl { top: 20px; left: 20px; border-top: 1px solid; border-left: 1px solid; }
+.corner-ornament--tr { top: 20px; right: 20px; border-top: 1px solid; border-right: 1px solid; }
+.corner-ornament--bl { bottom: 20px; left: 20px; border-bottom: 1px solid; border-left: 1px solid; }
+.corner-ornament--br { bottom: 20px; right: 20px; border-bottom: 1px solid; border-right: 1px solid; }
+
+/* ═══ SCROLL REVEAL SCRIPT-FREE FALLBACK ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+</style>
+</head>
+<body>
+<script>
+const CONFIG={
+  title:"Мерейтой",
+  childName:"Мерейтой",
+  day:"25-07-2025",
+  hour:"18:00",
+  location:"Мекеме атауы\nҚала, көше, үй нөмірі",
+  locationUrl:"",
+  gallery:[],
+  description:"Сіздерді біздің салтанатты мерейтой кешіне шақыруға зор қуаныштымыз. Бұл ерекше күнді бірге атап өтуге шақырамыз.",
+  toiOwners:"Есім Тегі\nОтбасы мүшелері мен жақындары",
+  music:{title:"",artist:"",url:""}
+};
+</script>
+
+<!-- ════════════════ HERO ════════════════ -->
+<section class="hero">
+  <div class="hero-gold-frame"></div>
+  <div class="hero-photo-placeholder" id="heroPhoto">
+    <span>Photo</span>
+  </div>
+  <div class="hero-content">
+    <div class="hero-top-accent">Құрметті шақыру</div>
+    <h1 id="heroName" class="hero-name">Мерейтой</h1>
+    <p id="heroNamesLine" class="hero-names-line">Атауы немесе есімі</p>
+    <div class="ornament">
+      <div class="ornament-diamond"></div>
+    </div>
+    <p id="heroDateLine" class="hero-date-line">00 · Ай · 2025</p>
+  </div>
+</section>
+
+<!-- ════════════════ INVITATION TEXT ════════════════ -->
+<section class="invitation-section reveal">
+  <div class="ornament">
+    <div class="ornament-diamond"></div>
+  </div>
+  <div id="eventText" class="event-text">
+    Сізді біздің салтанатты мерейтой кешіне шақыруға зор қуаныштымыз. Бұл ерекше күнді бірге атап өтуге шақырамыз.
+  </div>
+  <div class="section-spacer"></div>
+  <div class="gold-line gold-line--wide"></div>
+</section>
+
+<!-- ════════════════ DATE ════════════════ -->
+<section class="date-section reveal">
+  <div class="date-card">
+    <div class="label">Күні</div>
+    <div class="day">00</div>
+    <div class="month-year">Ай, 2025</div>
+    <div class="weekday">Күн аты</div>
+    <div class="time">00:00</div>
+  </div>
+</section>
+
+<!-- ════════════════ LOCATION ════════════════ -->
+<section class="location-section reveal glow-accent">
+  <div class="ornament">
+    <div class="ornament-diamond"></div>
+  </div>
+  <div class="location-label" style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--bronze);margin-bottom:20px;">Мекенжай</div>
+  <h3 id="locationName" class="location-name">Мекеме атауы</h3>
+  <p class="location-address">Қала, көше, үй нөмірі</p>
+  <div id="mapBtnWrap" class="map-btn-wrap">
+    <a id="mapBtn" class="map-btn" href="#" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Картадан көру
+    </a>
+  </div>
+</section>
+
+<!-- ════════════════ OWNERS ════════════════ -->
+<section id="ownersSection" class="owners-section reveal">
+  <div class="corner-ornament corner-ornament--tl"></div>
+  <div class="corner-ornament corner-ornament--tr"></div>
+  <div class="corner-ornament corner-ornament--bl"></div>
+  <div class="corner-ornament corner-ornament--br"></div>
+  <div class="owners-label">Тойды ұйымдастырушылар</div>
+  <div id="ownersBigName" class="owners-big-name">Есім Тегі</div>
+  <p class="owners-text">Отбасы мүшелері мен жақындары</p>
+  <div style="height:24px"></div>
+  <div class="ornament">
+    <div class="ornament-diamond"></div>
+  </div>
+</section>
+
+<!-- ════════════════ GALLERY ════════════════ -->
+<section class="gallery-section reveal">
+  <div class="gallery-header">
+    <div class="gold-line gold-line--short" style="margin-bottom:16px"></div>
+    <h3>Фотогалерея</h3>
+  </div>
+  <div id="gallerySlides" class="gallery-slides">
+    <div class="gallery-slide"></div>
+    <div class="gallery-slide"></div>
+    <div class="gallery-slide"></div>
+  </div>
+</section>
+
+<!-- ════════════════ RSVP ════════════════ -->
+<section class="rsvp-section reveal">
+  <div class="rsvp-header">
+    <div class="ornament">
+      <div class="ornament-diamond"></div>
+    </div>
+    <h3>Қатысуыңызды растаңыз</h3>
+    <p>Біз Сіздің жауабыңызды күтеміз</p>
+  </div>
+  <form id="rsvpForm" class="rsvp-form">
+    <div class="field">
+      <label for="rName">Аты-жөніңіз</label>
+      <input type="text" id="rName" name="name" placeholder="Толық аты-жөніңіз" required>
+    </div>
+    <div class="field">
+      <label for="rPhone">Телефон</label>
+      <input type="tel" id="rPhone" name="phone" placeholder="+7 (___) ___-__-__">
+    </div>
+    <div class="field">
+      <label for="rGuests">Қонақ саны</label>
+      <input type="number" id="rGuests" name="guests" placeholder="1" min="1" max="10">
+    </div>
+    <div class="field">
+      <label for="rNote">Тілек / Ескертпе</label>
+      <textarea id="rNote" name="note" placeholder="Қосымша тілектеріңіз..."></textarea>
+    </div>
+    <button type="submit" class="rsvp-submit">Растау</button>
+  </form>
+  <div id="successMsg" class="success-msg">
+    Рахмет! Сіздің жауабыңыз қабылданды.
+  </div>
+</section>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer class="footer">
+  <div class="gold-line gold-line--wide" style="margin-bottom:28px"></div>
+  <div id="footerName" class="footer-name">Мерейтой</div>
+  <div id="footLine" class="foot-line">Сіздің қатысуыңыз — біз үшін ең үлкен құрмет</div>
+  <div class="footer-monogram">
+    <span>M</span>
+  </div>
+</footer>
+
+<!-- ═══ REVEAL ON SCROLL (lightweight) ═══ -->
+<script>
+(function(){
+  var COPY={
+    kk:{
+      heroAccent:"Құрметті шақыру",
+      dateLabel:"Күні",
+      locationLabel:"Мекенжай",
+      mapBtnText:"Картадан көру",
+      ownersLabel:"Тойды ұйымдастырушылар",
+      galleryTitle:"Фотогалерея",
+      rsvpTitle:"Қатысуыңызды растаңыз",
+      rsvpSubtitle:"Біз Сіздің жауабыңызды күтеміз",
+      rsvpSubmit:"Растау",
+      successText:"Рақмет! Сіздің жауабыңыз қабылданды.",
+      rNameLabel:"Аты-жөніңіз",
+      rPhoneLabel:"Телефон",
+      rGuestsLabel:"Қонақ саны",
+      rNoteLabel:"Тілек / Ескертпе",
+      rNamePlaceholder:"Толық аты-жөніңіз",
+      rPhonePlaceholder:"+7 (___) ___-__-__",
+      rGuestsPlaceholder:"1",
+      rNotePlaceholder:"Қосымша тілектеріңіз...",
+      receptionLabel:"",
+      weekdays:["Жексенбі","Дүйсенбі","Сейсенбі","Сәрсенбі","Бейсенбі","Жұма","Сенбі"],
+      months:["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"],
+      footerName:"Мерейтой",
+      footerLine:"Сіздің қатысуыңыз — біз үшін ең үлкен құрмет"
+    },
+    ru:{
+      heroAccent:"Торжественное приглашение",
+      dateLabel:"Дата",
+      locationLabel:"Адрес",
+      mapBtnText:"Открыть карту",
+      ownersLabel:"Организаторы вечера",
+      galleryTitle:"Фотогалерея",
+      rsvpTitle:"Подтвердите участие",
+      rsvpSubtitle:"Будем ждать ваш ответ",
+      rsvpSubmit:"Подтвердить",
+      successText:"Спасибо! Ваш ответ принят.",
+      rNameLabel:"Ваше имя",
+      rPhoneLabel:"Телефон",
+      rGuestsLabel:"Количество гостей",
+      rNoteLabel:"Пожелание / комментарий",
+      rNamePlaceholder:"Ваше полное имя",
+      rPhonePlaceholder:"+7 (___) ___-__-__",
+      rGuestsPlaceholder:"1",
+      rNotePlaceholder:"Дополнительные пожелания...",
+      receptionLabel:"",
+      weekdays:["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
+      months:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+      footerName:"Юбилей",
+      footerLine:"Ваше присутствие — большая честь для нас"
+    },
+    en:{
+      heroAccent:"Special Invitation",
+      dateLabel:"Date",
+      locationLabel:"Location",
+      mapBtnText:"Open Map",
+      ownersLabel:"Hosts",
+      galleryTitle:"Gallery",
+      rsvpTitle:"Please Confirm Your Attendance",
+      rsvpSubtitle:"We are waiting for your reply",
+      rsvpSubmit:"Confirm",
+      successText:"Thank you! Your response has been received.",
+      rNameLabel:"Your name",
+      rPhoneLabel:"Phone",
+      rGuestsLabel:"Guest count",
+      rNoteLabel:"Wish / note",
+      rNamePlaceholder:"Your full name",
+      rPhonePlaceholder:"+7 (___) ___-__-__",
+      rGuestsPlaceholder:"1",
+      rNotePlaceholder:"Additional wishes...",
+      receptionLabel:"",
+      weekdays:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+      months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+      footerName:"Anniversary",
+      footerLine:"Your presence is the greatest honor for us"
+    }
+  };
+  var byId=function(id){return document.getElementById(id)};
+  var setText=function(id,value){var node=typeof id==="string"?byId(id):id;if(node)node.textContent=value||""};
+  var setHtmlBreaks=function(id,value){
+    var node=typeof id==="string"?byId(id):id;
+    if(node) node.innerHTML=String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
+  };
+  var esc=function(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;")};
+  var pad2=function(value){return String(value).padStart(2,"0")};
+  var getLang=function(config){var lang=String((config&&config.lang)||"kk").toLowerCase();return COPY[lang]?lang:"kk"};
+  var getCopy=function(config){return COPY[getLang(config)]};
+  var getPrimaryName=function(config){
+    return String((config&&(
+      config.title||
+      config.childName||
+      config.eventTitle||
+      config.mereiTitle||
+      (config.names&&config.names.title)
+    ))||"Мерейтой").trim()||"Мерейтой";
+  };
+  var parseEventDate=function(config){
+    if(config&&config.eventDate){
+      var eventDate=new Date(config.eventDate);
+      if(!Number.isNaN(eventDate.getTime())) return eventDate;
+    }
+    var raw=String((config&&config.day)||"").trim();
+    var time=String((config&&config.hour)||"18:00").trim();
+    var match=raw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+    var hh=18, mm=0;
+    var t=time.match(/^(\d{1,2})(?::(\d{2}))?/);
+    if(t){ hh=Number(t[1])||18; mm=Number(t[2])||0; }
+    if(match) return new Date(Number(match[3]),Number(match[2])-1,Number(match[1]),hh,mm,0,0);
+    return new Date(2025,6,25,hh,mm,0,0);
+  };
+  var getLocationParts=function(config){
+    var raw=String((config&&config.location)||"").trim();
+    if(!raw) return {title:"",address:""};
+    var lines=raw.split(/\r?\n/).map(function(line){return line.trim()}).filter(Boolean);
+    if(lines.length>1) return {title:lines[0],address:lines.slice(1).join(", ")};
+    if(raw.indexOf(" | ")!==-1){
+      var pipe=raw.split(" | ");
+      return {title:pipe[0].trim(),address:pipe.slice(1).join(", ").trim()};
+    }
+    if(raw.indexOf(",")!==-1){
+      var parts=raw.split(",");
+      return {title:(parts.shift()||"").trim(),address:parts.join(",").trim()};
+    }
+    return {title:raw,address:""};
+  };
+  var getOwnersData=function(config){
+    var raw=String((config&&config.toiOwners)||"").trim();
+    if(!raw) return {title:"",text:""};
+    var lines=raw.split(/\r?\n/);
+    var first=(lines.shift()||"").trim();
+    if(first.indexOf("||")!==-1){
+      var parts=first.split("||");
+      return {title:(parts.shift()||"").trim(),text:[parts.join("||").trim()].concat(lines).filter(Boolean).join("\n")};
+    }
+    return {title:first,text:lines.join("\n").trim()};
+  };
+  var formatHeroDate=function(date,copy){
+    var lang=getLang(window.CONFIG||{});
+    if(lang==="en") return copy.months[date.getMonth()]+" "+date.getDate()+", "+date.getFullYear();
+    if(lang==="ru") return date.getDate()+" · "+copy.months[date.getMonth()]+" · "+date.getFullYear();
+    return date.getDate()+" · "+copy.months[date.getMonth()]+" · "+date.getFullYear();
+  };
+  function patchMarkup(copy){
+    var heroAccent=document.querySelector(".hero-top-accent");
+    if(heroAccent&&!heroAccent.id) heroAccent.id="heroAccent";
+    var dateCard=document.querySelector(".date-card");
+    if(dateCard){
+      var label=dateCard.querySelector(".label");
+      var day=dateCard.querySelector(".day");
+      var monthYear=dateCard.querySelector(".month-year");
+      var weekday=dateCard.querySelector(".weekday");
+      var time=dateCard.querySelector(".time");
+      if(label&&!label.id) label.id="dateLabel";
+      if(day&&!day.id) day.id="dateDay";
+      if(monthYear&&!monthYear.id) monthYear.id="dateMonthYear";
+      if(weekday&&!weekday.id) weekday.id="dateWeekday";
+      if(time&&!time.id) time.id="dateTime";
+    }
+    var locationLabel=document.querySelector(".location-label");
+    if(locationLabel&&!locationLabel.id) locationLabel.id="locationLabel";
+    var locationAddress=document.querySelector(".location-address");
+    if(locationAddress&&!locationAddress.id) locationAddress.id="locationAddress";
+    var mapBtn=byId("mapBtn");
+    if(mapBtn&&!byId("mapBtnText")){
+      var textNode=document.createElement("span");
+      textNode.id="mapBtnText";
+      textNode.textContent=copy.mapBtnText;
+      var svg=mapBtn.querySelector("svg");
+      mapBtn.textContent="";
+      if(svg) mapBtn.appendChild(svg);
+      mapBtn.appendChild(document.createTextNode(" "));
+      mapBtn.appendChild(textNode);
+    }
+    var ownersLabel=document.querySelector(".owners-label");
+    if(ownersLabel&&!ownersLabel.id) ownersLabel.id="ownersLabel";
+    var ownersText=document.querySelector(".owners-text");
+    if(ownersText&&!ownersText.id) ownersText.id="ownersText";
+    var galleryTitle=document.querySelector(".gallery-header h3");
+    if(galleryTitle&&!galleryTitle.id) galleryTitle.id="galleryTitle";
+    var rsvpTitle=document.querySelector(".rsvp-header h3");
+    var rsvpSubtitle=document.querySelector(".rsvp-header p");
+    if(rsvpTitle&&!rsvpTitle.id) rsvpTitle.id="rsvpTitle";
+    if(rsvpSubtitle&&!rsvpSubtitle.id) rsvpSubtitle.id="rsvpSubtitle";
+    var labels=document.querySelectorAll("#rsvpForm label");
+    if(labels[0]&&!labels[0].id) labels[0].id="rNameLabel";
+    if(labels[1]&&!labels[1].id) labels[1].id="rPhoneLabel";
+    if(labels[2]&&!labels[2].id) labels[2].id="rGuestsLabel";
+    if(labels[3]&&!labels[3].id) labels[3].id="rNoteLabel";
+    var submit=document.querySelector("#rsvpForm .rsvp-submit");
+    if(submit&&!submit.id) submit.id="rsvpSubmit";
+  }
+  function renderHero(config){
+    var hero=byId("heroPhoto");
+    var heroSrc=config.heroPhotoUrl||config.previewPhotoUrl||config.heroPhoto;
+    if(hero&&heroSrc){
+      hero.innerHTML='<img src="'+esc(heroSrc)+'" alt="'+esc(getPrimaryName(config))+'">';
+    }
+  }
+  function renderGallery(config){
+    var wrap=byId("gallerySlides");
+    if(!wrap) return;
+    var gallery=Array.isArray(config.gallery)?config.gallery.filter(Boolean):[];
+    if(!gallery.length) return;
+    wrap.innerHTML="";
+    gallery.slice(0,6).forEach(function(src,index){
+      var item=document.createElement("div");
+      item.className="gallery-slide";
+      if(/^https?:|^data:image|^\//.test(src)){
+        item.innerHTML='<img src="'+esc(src)+'" alt="Gallery '+(index+1)+'">';
+      }else{
+        item.style.background=src;
+      }
+      wrap.appendChild(item);
+    });
+  }
+  function applyReveal(){
+    var els=document.querySelectorAll(".reveal");
+    if(!els.length) return;
+    if(!("IntersectionObserver" in window)){
+      els.forEach(function(el){el.classList.add("visible")});
+      return;
+    }
+    if(window.__mereiTemplate7Reveal){
+      els.forEach(function(el){
+        if(!el.dataset.revealBound){
+          window.__mereiTemplate7Reveal.observe(el);
+          el.dataset.revealBound="1";
+        }
+      });
+      return;
+    }
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add("visible"); obs.unobserve(e.target); }
+      });
+    },{threshold:0.15});
+    window.__mereiTemplate7Reveal=obs;
+    els.forEach(function(el){
+      if(!el.dataset.revealBound){
+        obs.observe(el);
+        el.dataset.revealBound="1";
+      }
+    });
+  }
+  function applyVisualConfig(input){
+    var base=(typeof CONFIG!=="undefined"&&CONFIG)||{};
+    var config=Object.assign({},base,window.CONFIG||{},input||{});
+    var copy=getCopy(config);
+    var date=parseEventDate(config);
+    var location=getLocationParts(config);
+    var owners=getOwnersData(config);
+    window.CONFIG=config;
+    document.documentElement.lang=getLang(config);
+    patchMarkup(copy);
+    renderHero(config);
+    setText("heroAccent",config.heroAccent||copy.heroAccent);
+    setText("heroName",getPrimaryName(config));
+    setText("heroNamesLine",config.heroNamesLine||config.namesLine||config.subtitle||"");
+    setText("heroDateLine",formatHeroDate(date,copy));
+    setHtmlBreaks("eventText",config.description||base.description||"");
+    setText("dateLabel",config.dateLabel||copy.dateLabel);
+    setText("dateDay",date.getDate());
+    setText("dateMonthYear",(copy.months[date.getMonth()]||"")+", "+date.getFullYear());
+    setText("dateWeekday",(copy.weekdays[date.getDay()]||""));
+    setText("dateTime",pad2(date.getHours())+":"+pad2(date.getMinutes()));
+    setText("locationLabel",config.locationLabel||copy.locationLabel);
+    setText("locationName",location.title||config.locationName||"");
+    setText("locationAddress",location.address||config.locationAddress||"");
+    setText("mapBtnText",config.mapButtonText||copy.mapBtnText);
+    setText("ownersLabel",config.ownersLabel||copy.ownersLabel);
+    setText("ownersBigName",owners.title||config.ownersBigName||"");
+    setHtmlBreaks("ownersText",owners.text||config.ownersText||"");
+    setText("galleryTitle",config.galleryTitle||copy.galleryTitle);
+    setText("rsvpTitle",config.rsvpTitle||copy.rsvpTitle);
+    setText("rsvpSubtitle",config.rsvpSubtitle||copy.rsvpSubtitle);
+    setText("rNameLabel",config.rsvpNameLabel||copy.rNameLabel);
+    setText("rPhoneLabel",config.rsvpPhoneLabel||copy.rPhoneLabel);
+    setText("rGuestsLabel",config.rsvpGuestsLabel||copy.rGuestsLabel);
+    setText("rNoteLabel",config.rsvpNoteLabel||copy.rNoteLabel);
+    setText("rsvpSubmit",config.rsvpSubmitText||copy.rsvpSubmit);
+    setText("footerName",config.footerName||copy.footerName);
+    setText("footLine",config.footLine||copy.footerLine);
+    if(byId("rName")) byId("rName").placeholder=config.rsvpNamePlaceholder||copy.rNamePlaceholder;
+    if(byId("rPhone")) byId("rPhone").placeholder=config.rsvpPhonePlaceholder||copy.rPhonePlaceholder;
+    if(byId("rGuests")) byId("rGuests").placeholder=config.rsvpGuestsPlaceholder||copy.rGuestsPlaceholder;
+    if(byId("rNote")) byId("rNote").placeholder=config.rsvpNotePlaceholder||copy.rNotePlaceholder;
+    var mapBtn=byId("mapBtn");
+    var mapWrap=byId("mapBtnWrap");
+    if(mapBtn&&mapWrap){
+      if(config.locationUrl){
+        mapBtn.href=config.locationUrl;
+        mapWrap.style.display="";
+      }else{
+        mapBtn.removeAttribute("href");
+        mapWrap.style.display=(location.title||location.address)?"":"none";
+      }
+    }
+    var ownersSection=byId("ownersSection");
+    if(ownersSection){
+      ownersSection.style.display=(owners.title||owners.text||config.ownersBigName||config.ownersText)?"":"none";
+    }
+    renderGallery(config);
+    applyReveal();
+  }
+  window.submitRSVP=window.submitRSVP||function(){
+    var form=byId("rsvpForm");
+    var success=byId("successMsg");
+    if(form) form.style.display="none";
+    if(success){
+      success.style.display="block";
+      success.textContent=(window.CONFIG&&window.CONFIG.successText)||getCopy(window.CONFIG||{}).successText;
+    }
+  };
+  var form=byId("rsvpForm");
+  if(form&&!form.dataset.boundSubmit){
+    form.addEventListener("submit",function(event){
+      event.preventDefault();
+      window.submitRSVP();
+    });
+    form.dataset.boundSubmit="1";
+  }
+  window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig;
+  setTimeout(function(){window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig},0);
+  window.addEventListener("message",function(event){
+    if(event&&event.data&&event.data.type==="UPDATE_CONFIG"){
+      applyVisualConfig(event.data.config||{});
+    }
+  });
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",function(){applyVisualConfig(window.CONFIG||CONFIG||{})},{once:true});
+  }else{
+    applyVisualConfig(window.CONFIG||CONFIG||{});
+  }
+})();
+</script>
+
+<!-- ═══ SUBTLE PARALLAX DRIFT (lightweight) ═══ -->
+<script>
+(function(){
+  var corners = document.querySelectorAll('.corner-ornament');
+  if (!corners.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking) {
+      requestAnimationFrame(function(){
+        var st = window.pageYOffset;
+        corners.forEach(function(c){
+          var drift = (st - c.closest('section').offsetTop) * 0.03;
+          c.style.transform = 'translate(' + (c.classList.contains('corner-ornament--tl') || c.classList.contains('corner-ornament--bl') ? -drift : drift) + 'px,' + drift * 0.5 + 'px)';
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

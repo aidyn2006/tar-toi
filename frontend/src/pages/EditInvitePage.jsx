@@ -81,6 +81,24 @@ const EMPTY_INVITE_DATA = {
 };
 
 function createDefaultProgram(templateId, lang = 'kk') {
+    if (templateId === 'uzatu/template10.html') {
+        return lang === 'ru'
+            ? [
+                { time: '16:00', title: 'Сбор гостей', desc: 'Регистрация и приветствие' },
+                { time: '17:00', title: 'Торжественная часть', desc: 'Благословение родителей и поздравления' },
+                { time: '18:00', title: 'Праздничный дастархан', desc: 'Угощение и теплые встречи' },
+                { time: '19:30', title: 'Развлекательная программа', desc: 'Музыка, танцы и хорошее настроение' },
+                { time: '21:00', title: 'Обряд ұзату', desc: 'Бата и добрые напутствия' },
+            ]
+            : [
+                { time: '16:00', title: 'Қонақтарды қарсы алу', desc: 'Тіркелу және сәлемдесу' },
+                { time: '17:00', title: 'Салтанатты бөлім', desc: 'Ата-ана бата, сөз сөйлеу' },
+                { time: '18:00', title: 'Дастарқан', desc: 'Той дастарқаны' },
+                { time: '19:30', title: 'Ойын-сауық бағдарламасы', desc: 'Ән, би, көңіл көтеру' },
+                { time: '21:00', title: 'Қыз ұзату рәсімі', desc: 'Бата, ақ жол тілеу' },
+            ];
+    }
+
     if (templateId === 'wedding/template10.html') {
         return lang === 'ru'
             ? [
@@ -128,10 +146,11 @@ function normalizeProgram(program) {
 
             const time = String(item.time || '').trim();
             const title = String(item.title || item.label || item.name || '').trim();
+            const desc = String(item.desc || item.description || item.subtitle || '').trim();
 
-            if (!time && !title) return null;
+            if (!time && !title && !desc) return null;
 
-            return { time, title };
+            return { time, title, desc };
         })
         .filter(Boolean);
 }
@@ -345,7 +364,7 @@ const previewData = {
     const addProgramItem = useCallback(() => {
         setData((prev) => ({
             ...prev,
-            program: [...(Array.isArray(prev.program) ? prev.program : []), { time: '', title: '' }],
+            program: [...(Array.isArray(prev.program) ? prev.program : []), { time: '', title: '', desc: '' }],
         }));
     }, []);
 

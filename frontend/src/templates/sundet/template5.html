@@ -1,0 +1,149 @@
+﻿<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sundet Heritage Navy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lora:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ivory:#f2ece1;--parchment:#e8dbc8;--navy:#21374f;--navy-soft:#34516e;--blue-gray:#7d8d9d;--gold:#b69857;--gold-light:#d9c289;--text:#2d241c;--line:rgba(182,152,87,.28);--card:rgba(248,242,232,.82);--shadow:0 20px 48px rgba(33,55,79,.14);--font-display:"Cormorant Garamond",Georgia,serif;--font-body:"Lora",Georgia,serif;--font-ui:"Montserrat",Arial,sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{min-height:100vh;display:flex;justify-content:center;background:linear-gradient(180deg,#ece5da 0%,#f3eee7 100%);color:var(--text);font-family:var(--font-body)}img{display:block;max-width:100%}
+    .page-root{width:100%;max-width:480px;min-height:100vh;background:var(--ivory);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.55),0 28px 70px rgba(33,55,79,.18)}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .85s ease,transform .85s ease;transition-delay:var(--reveal-delay,0s)}.reveal.visible{opacity:1;transform:translateY(0)}
+    .hero{position:relative;min-height:640px;overflow:hidden}.hero-media{position:relative;height:640px}.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,55,79,.18) 0%,rgba(33,55,79,.06) 38%,rgba(33,55,79,.62) 74%,rgba(33,55,79,.88) 100%)}
+    #heroPhoto{width:100%;height:100%;object-fit:cover;background:linear-gradient(135deg,#8aa0b3,#c0cbd5)}.hero-frame,.hero-frame::before,.hero-frame::after{position:absolute;pointer-events:none}.hero-frame{inset:18px;border:1px solid rgba(217,194,137,.3);z-index:2}.hero-frame::before,.hero-frame::after{content:"";width:58px;height:58px;background:url('/template-assets/sundet-template5/template5-sundet-corner-frame.png') center/contain no-repeat;opacity:.72}.hero-frame::before{top:-2px;left:-2px}.hero-frame::after{right:-2px;bottom:-2px;transform:rotate(180deg)}
+    .hero-content{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:0 28px 42px;text-align:center}.hero-kicker{font-family:var(--font-ui);font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-light)}#heroName{margin-top:12px;font-family:var(--font-display);font-size:54px;line-height:1.02;font-weight:400;color:var(--ivory)}#heroNamesLine{display:none;margin-top:12px;font-family:var(--font-ui);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(217,194,137,.95)}.gold-line{width:54px;height:1px;margin:16px auto;background:var(--gold)}#heroDateLine{font-family:var(--font-ui);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,236,225,.78)}
+    .section{padding:34px 26px;text-align:center}.section-navy{background:var(--navy);color:var(--ivory)}.section-parchment{background:var(--parchment)}.label{font-family:var(--font-ui);font-size:10px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}.label-light{color:var(--gold-light)}.heading{font-family:var(--font-display);font-size:34px;line-height:1.18;font-weight:400;color:var(--navy)}.body-copy{font-family:var(--font-body);font-size:15px;line-height:1.9;color:var(--text)}.body-copy-light{color:rgba(242,236,225,.88)}
+    .ornament{display:block;width:168px;max-width:54%;margin:18px auto;opacity:.72}
+    .date-frame{position:relative;margin-top:20px;padding:26px 24px;border:1px solid rgba(217,194,137,.28)}.date-frame::before,.date-frame::after{content:"";position:absolute;width:58px;height:58px;background:url('/template-assets/sundet-template5/template5-sundet-corner-frame.png') center/contain no-repeat;opacity:.62}.date-frame::before{top:-1px;left:-1px}.date-frame::after{right:-1px;bottom:-1px;transform:rotate(180deg)}#dateWeekday{font-family:var(--font-ui);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-light)}#dateDay{margin-top:8px;font-family:var(--font-display);font-size:66px;line-height:1;color:var(--gold-light)}#dateMonthYear{margin-top:6px;font-family:var(--font-body);font-size:26px;color:var(--gold-light)}#dateTime{margin-top:14px;font-family:var(--font-ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ivory)}
+    #locationName,#ownersBigName{margin-top:10px}.info-text{margin-top:8px;font-family:var(--font-body);font-size:17px;line-height:1.8;color:var(--blue-gray)}#mapBtnWrap{margin-top:22px;display:none}#mapBtn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 26px;border:1px solid var(--navy);background:transparent;color:var(--navy);text-decoration:none;font-family:var(--font-ui);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+    .gallery-wrap{padding:32px 0 34px}.gallery-label{padding:0 26px}#gallerySlides{display:flex;gap:12px;overflow-x:auto;padding:18px 18px 8px 18px;scrollbar-width:none;-ms-overflow-style:none}#gallerySlides::-webkit-scrollbar{display:none}.gallery-slide{flex:0 0 72%;scroll-snap-align:center}.gallery-media{width:100%;aspect-ratio:4/5;border:3px solid rgba(242,236,225,.92);box-shadow:0 8px 26px rgba(0,0,0,.18);overflow:hidden}.gallery-media img{width:100%;height:100%;object-fit:cover}.gallery-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(255,255,255,.06);font-family:var(--font-ui);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(242,236,225,.65);text-align:center}
+    .rsvp-form{margin-top:24px;text-align:left;display:flex;flex-direction:column;gap:14px}.field-label{display:block;margin-bottom:6px;font-family:var(--font-ui);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}.inv-input{width:100%;padding:13px 14px;border:1px solid rgba(182,152,87,.22);background:rgba(255,255,255,.54);color:var(--text);font-family:var(--font-body);font-size:15px;outline:none}.inv-input::placeholder{color:var(--blue-gray);font-style:italic}textarea.inv-input{resize:none;min-height:84px}.submit-btn{width:100%;min-height:48px;border:1px solid var(--navy);background:transparent;color:var(--navy);font-family:var(--font-ui);font-size:11px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}#successMsg{display:none;margin-top:16px;font-family:var(--font-body);font-size:18px;line-height:1.7;color:var(--gold)}
+    .footer{background:var(--navy);text-align:center;padding:36px 24px 40px}.footer-note{margin-top:16px;font-family:var(--font-ui);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-gray)}#footerName{color:var(--gold-light)}#footLine{margin-top:12px;color:rgba(242,236,225,.8);font-family:var(--font-body);font-size:14px;line-height:1.8}
+    @media (max-width:420px){.hero-media{height:600px}#heroName{font-size:48px}.heading{font-size:30px}.gallery-slide{flex-basis:76%}}
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG={lang:"kk",title:"Сүндет той",childName:"Әлихан",day:"28-06-2026",hour:"10:00",location:"Gedung Serbaguna Bale Raos\nJl. Merdeka No. 45, Bandung, Jawa Barat",locationUrl:"",gallery:[],description:"Аллаға шүкіршілік ете отырып, ұлымыздың сүндет тойына қуанышымызды бірге бөлісуге шақырамыз. Сіздердің ақ тілектеріңіз бен баталарыңыз біз үшін үлкен мәртебе.",toiOwners:"Саян || Айгүл\nОтбасымызбен бірге қуанышымызға ортақ болуға шақырамыз.",music:{title:"",artist:"",url:""}};
+  </script>
+  <div class="page-root">
+    <section class="hero">
+      <div class="hero-media">
+        <img id="heroPhoto" src="/template-assets/sundet-template5/IMG_5673.PNG-removebg-preview.png" alt="Sundet celebration">
+        <div class="hero-frame"></div>
+      </div>
+      <div class="hero-content">
+        <p class="hero-kicker" id="heroEyebrow">Сүндет той</p>
+        <h1 id="heroName">Әлихан</h1>
+        <div id="heroNamesLine"></div>
+        <div class="gold-line"></div>
+        <p id="heroDateLine">28 маусым 2026 • 10:00</p>
+      </div>
+    </section>
+
+    <section class="section reveal" data-reveal>
+      <img class="ornament" src="/template-assets/sundet-template5/template5-sundet-ornament-gold.png" alt="">
+      <p class="label" id="eventLabel">Бисмилляхир рахманир рахим</p>
+      <p id="eventText" class="body-copy" style="max-width:320px;margin:16px auto 0;">Аллаға шүкіршілік ете отырып, ұлымыздың сүндет тойына қуанышымызды бірге бөлісуге шақырамыз. Сіздердің ақ тілектеріңіз бен баталарыңыз біз үшін үлкен мәртебе.</p>
+      <img class="ornament" src="/template-assets/sundet-template5/template5-sundet-ornament-gold.png" alt="">
+    </section>
+
+    <section class="section section-navy reveal" data-reveal style="--reveal-delay:.06s;">
+      <p class="label label-light" id="dateLabel">Сақтап қойыңыз</p>
+      <div class="date-frame">
+        <p id="dateWeekday">Жексенбі</p>
+        <p id="dateDay">28</p>
+        <p id="dateMonthYear">Маусым 2026</p>
+        <div class="gold-line" style="margin-top:18px;margin-bottom:12px;"></div>
+        <p id="dateTime">10:00</p>
+      </div>
+    </section>
+
+    <section class="section section-parchment reveal" data-reveal style="--reveal-delay:.1s;">
+      <p class="label" id="locationLabel">Мекен-жай</p>
+      <h2 id="locationName" class="heading">Gedung Serbaguna Bale Raos</h2>
+      <p id="locationAddress" class="info-text">Jl. Merdeka No. 45, Bandung, Jawa Barat</p>
+      <div id="mapBtnWrap">
+        <a id="mapBtn" href="#" target="_blank" rel="noopener noreferrer"><span id="mapBtnText">Картадан көру</span></a>
+      </div>
+    </section>
+
+    <section id="ownersSection" class="section reveal" data-reveal style="--reveal-delay:.14s;">
+      <p class="label" id="ownersLabel">Той иелері</p>
+      <img class="ornament" src="/template-assets/sundet-template5/template5-sundet-ornament-gold.png" alt="" style="width:40%;max-width:132px;">
+      <h2 id="ownersBigName" class="heading">Саян</h2>
+      <p id="ownersText" class="info-text" style="max-width:320px;margin-left:auto;margin-right:auto;">Айгүл<br>Отбасымызбен бірге қуанышымызға ортақ болуға шақырамыз.</p>
+      <img class="ornament" src="/template-assets/sundet-template5/template5-sundet-ornament-gold.png" alt="" style="width:40%;max-width:132px;">
+    </section>
+
+    <section class="section section-navy gallery-wrap reveal" data-reveal style="--reveal-delay:.18s;">
+      <p class="label label-light gallery-label" id="galleryLabel">Галерея</p>
+      <div id="gallerySlides"></div>
+    </section>
+
+    <section class="section reveal" data-reveal style="--reveal-delay:.22s;">
+      <p class="label" id="rsvpLabel">Қатысу</p>
+      <h2 class="heading" id="rsvpTitle" style="margin-top:8px;">RSVP</h2>
+      <p id="rsvpSubtitle" class="body-copy" style="max-width:300px;margin:10px auto 0;color:var(--blue-gray);">Қатысатыныңызды алдын ала хабарласаңыз қуанышты боламыз</p>
+      <form id="rsvpForm" class="rsvp-form" onsubmit="return false;">
+        <div><label class="field-label" id="rNameLabel" for="rName">Аты-жөніңіз</label><input id="rName" class="inv-input" type="text" placeholder="Атыңыз"></div>
+        <div><label class="field-label" id="rPhoneLabel" for="rPhone">Телефон</label><input id="rPhone" class="inv-input" type="tel" placeholder="+7 (___) ___-__-__"></div>
+        <div><label class="field-label" id="rGuestsLabel" for="rGuests">Қонақ саны</label><input id="rGuests" class="inv-input" type="number" min="1" placeholder="1"></div>
+        <div><label class="field-label" id="rNoteLabel" for="rNote">Тілек / Ескерту</label><textarea id="rNote" class="inv-input" placeholder="Тілегіңіз..."></textarea></div>
+        <div style="padding-top:4px;"><button class="submit-btn" id="rsvpSubmitText" type="button" onclick="submitRSVP && submitRSVP()">Жіберу</button></div>
+      </form>
+      <p id="successMsg">Рақмет! Жауабыңыз қабылданды.</p>
+    </section>
+
+    <footer class="footer reveal" data-reveal style="--reveal-delay:.26s;">
+      <div class="gold-line" style="margin-top:0;margin-bottom:14px;"></div>
+      <p id="footerName" class="label">Сүндет той</p>
+      <p id="footLine">Осы берекелі күнді сіздермен бірге атап өтуді асыға күтеміз</p>
+      <div class="gold-line" style="margin-top:14px;"></div>
+      <p class="footer-note">SUNDET HERITAGE NAVY</p>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var DEFAULT_ASSETS={hero:'/template-assets/sundet-template5/IMG_5673.PNG-removebg-preview.png',ornament:'/template-assets/sundet-template5/template5-sundet-ornament-gold.png',gallery:['/template-assets/sundet-template5/IMG_5673.PNG-removebg-preview.png','/template-assets/sundet-template5/IMG_5673.PNG-removebg-preview.png','/template-assets/sundet-template5/IMG_5673.PNG-removebg-preview.png']};
+      var COPY={
+        kk:{pageTitle:'Сүндет тойына шақыру',heroEyebrow:'Сүндет той',eventLabel:'Бисмилляхир рахманир рахим',dateLabel:'Сақтап қойыңыз',locationLabel:'Мекен-жай',ownersLabel:'Той иелері',galleryLabel:'Галерея',galleryPlaceholder:'Фотосурет осында көрсетіледі',rsvpLabel:'Қатысу',rsvpTitle:'RSVP',rsvpSubtitle:'Қатысатыныңызды алдын ала хабарласаңыз қуанышты боламыз',nameLabel:'Аты-жөніңіз',namePlaceholder:'Атыңыз',phoneLabel:'Телефон',phonePlaceholder:'+7 (___) ___-__-__',guestsLabel:'Қонақ саны',guestsPlaceholder:'1',noteLabel:'Тілек / Ескерту',notePlaceholder:'Тілегіңіз...',submitText:'Жіберу',successText:'Рақмет! Жауабыңыз қабылданды.',mapText:'Картадан көру',footerName:'Сүндет той',footerLine:'Осы берекелі күнді сіздермен бірге атап өтуді асыға күтеміз',defaultDescription:'Аллаға шүкіршілік ете отырып, ұлымыздың сүндет тойына қуанышымызды бірге бөлісуге шақырамыз. Сіздердің ақ тілектеріңіз бен баталарыңыз біз үшін үлкен мәртебе.',monthsNom:['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'],monthsGen:['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан'],weekdays:['Жексенбі','Дүйсенбі','Сейсенбі','Сәрсенбі','Бейсенбі','Жұма','Сенбі'],heroAlt:'Сүндет той суреті'},
+        ru:{pageTitle:'Приглашение на сундет той',heroEyebrow:'Сундет той',eventLabel:'Во имя Аллаха Милостивого',dateLabel:'Сохраните дату',locationLabel:'Место проведения',ownersLabel:'Хозяева торжества',galleryLabel:'Галерея',galleryPlaceholder:'Фотография появится здесь',rsvpLabel:'Подтверждение',rsvpTitle:'RSVP',rsvpSubtitle:'Будем рады вашему ответу заранее',nameLabel:'Имя и фамилия',namePlaceholder:'Ваше имя',phoneLabel:'Телефон',phonePlaceholder:'+7 (___) ___-__-__',guestsLabel:'Количество гостей',guestsPlaceholder:'1',noteLabel:'Пожелание / Комментарий',notePlaceholder:'Ваши пожелания...',submitText:'Отправить',successText:'Спасибо! Ваш ответ получен.',mapText:'Открыть карту',footerName:'Сундет той',footerLine:'Будем рады разделить этот благословенный день вместе с вами',defaultDescription:'С благодарностью Всевышнему приглашаем вас разделить радость нашей семьи на празднике сундет той. Ваше присутствие и добрые пожелания станут для нас большой честью.',monthsNom:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],monthsGen:['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],weekdays:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],heroAlt:'Праздник сундет той'},
+        en:{pageTitle:'Sundet Celebration Invitation',heroEyebrow:'Sundet Celebration',eventLabel:'Bismillahirrahmanirrahim',dateLabel:'Save the Date',locationLabel:'Venue',ownersLabel:'Hosted By',galleryLabel:'Gallery',galleryPlaceholder:'Photo will appear here',rsvpLabel:'Confirm Attendance',rsvpTitle:'RSVP',rsvpSubtitle:'We would be delighted to receive your response in advance',nameLabel:'Full Name',namePlaceholder:'Your name',phoneLabel:'Phone',phonePlaceholder:'Phone number',guestsLabel:'Number of Guests',guestsPlaceholder:'1',noteLabel:'Message / Note',notePlaceholder:'Your wishes...',submitText:'Send RSVP',successText:'Thank you for your response!',mapText:'Open Maps',footerName:'Sundet Celebration',footerLine:'We look forward to celebrating this blessed occasion with you',defaultDescription:'With gratitude to Allah SWT, we cordially invite you to share in the joy of our family\'s Sundet celebration. Your presence and prayers would be a cherished blessing.',monthsNom:['January','February','March','April','May','June','July','August','September','October','November','December'],monthsGen:['January','February','March','April','May','June','July','August','September','October','November','December'],weekdays:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],heroAlt:'Sundet celebration'}
+      };
+      function byId(id){return document.getElementById(id)}
+      function esc(value){return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+      function setText(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.textContent=value||''}
+      function setBreakText(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.innerHTML=esc(value).replace(/\n/g,'<br>')}
+      function pad(n){return String(n).padStart(2,'0')}
+      function parseEventDate(value){if(!value)return null;var date=value instanceof Date?new Date(value.getTime()):new Date(value);return Number.isNaN(date.getTime())?null:date}
+      function getLang(config){var lang=String((config&&config.lang)||'kk').toLowerCase();return COPY[lang]?lang:'kk'}
+      function getCopy(config){return COPY[getLang(config)]||COPY.kk}
+      function parseDate(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{dd:eventDate.getDate(),mm:eventDate.getMonth()+1,yy:eventDate.getFullYear()}}var parts=String((config&&config.day)||'').split('-').map(function(item){return parseInt(item,10)});return parts.length===3&&parts.every(Number.isFinite)?{dd:parts[0],mm:parts[1],yy:parts[2]}:{dd:28,mm:6,yy:2026}}
+      function parseTime(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{hh:eventDate.getHours(),mm:eventDate.getMinutes()}}var match=String((config&&config.hour)||'10:00').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);if(!match)return{hh:10,mm:0};var hh=parseInt(match[1],10),mm=parseInt(match[2]||'0',10),suffix=String(match[3]||'').toUpperCase();if(suffix==='PM'&&hh<12)hh+=12;if(suffix==='AM'&&hh===12)hh=0;return{hh:Number.isFinite(hh)?hh:10,mm:Number.isFinite(mm)?mm:0}}
+      function formatTime(time,lang){if(lang==='en'){var suffix=time.hh>=12?'PM':'AM';var hour=time.hh%12||12;return hour+':'+pad(time.mm)+' '+suffix}return pad(time.hh)+':'+pad(time.mm)}
+      function getPrimaryName(config){return String((config&&(config.childName||config.personName||config.babyName||config.title||config.eventTitle||config.topic1||config.topic2||(config.names&&config.names.child)||(config.names&&config.names.groom)||(config.names&&config.names.bride)))||'Әлихан').trim()||'Әлихан'}
+      function splitOwners(value){var text=String(value||'').trim();if(!text)return{title:'',detail:''};if(text.indexOf('||')>=0){var parts=text.split('||');return{title:String(parts.shift()||'').trim(),detail:parts.join('||').trim()}}var lines=text.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return{title:lines[0]||'',detail:lines.slice(1).join('\n')}}
+      function getLocationParts(config){var raw=String((config&&config.location)||'').trim();var explicit=String((config&&(config.locationDetail||config.locationDetails||config.address||config.locationDescription))||'').trim();if(!raw)return{name:'',detail:explicit};if(explicit)return{name:raw,detail:explicit};if(raw.indexOf('\n')>=0){var lines=raw.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return{name:lines[0]||raw,detail:lines.slice(1).join('\n')}}if(raw.indexOf(' | ')>=0){var pipe=raw.split(' | ').map(function(item){return item.trim()}).filter(Boolean);return{name:pipe[0]||raw,detail:pipe.slice(1).join('\n')}}if(raw.indexOf(',')>=0){var comma=raw.split(',').map(function(item){return item.trim()}).filter(Boolean);return{name:comma[0]||raw,detail:comma.slice(1).join(', ')}}return{name:raw,detail:''}}
+      function heroDateLine(config,copy){var lang=getLang(config),date=parseDate(config),time=parseTime(config);if(lang==='ru')return copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]+' • '+date.dd+' '+copy.monthsGen[date.mm-1]+' '+date.yy;if(lang==='en')return copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]+' • '+date.dd+' '+copy.monthsNom[date.mm-1]+' '+date.yy;return copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]+' • '+date.dd+' '+copy.monthsGen[date.mm-1]+' '+date.yy}
+      function getGallery(config){var gallery=Array.isArray(config.gallery)?config.gallery.filter(Boolean):[];return gallery.length?gallery:DEFAULT_ASSETS.gallery.slice()}
+      function renderGallery(config,copy){var wrap=byId('gallerySlides');if(!wrap)return;wrap.innerHTML='';getGallery(config).slice(0,6).forEach(function(src,index){var slide=document.createElement('div');slide.className='gallery-slide';var media=document.createElement('div');media.className='gallery-media';if(src){var img=document.createElement('img');img.src=src;img.alt=copy.heroAlt+' '+(index+1);img.loading='lazy';media.appendChild(img)}else{var ph=document.createElement('div');ph.className='gallery-placeholder';ph.textContent=copy.galleryPlaceholder;media.appendChild(ph)}slide.appendChild(media);wrap.appendChild(slide)})}
+      function formatDateCard(config,copy){var date=parseDate(config),time=parseTime(config),lang=getLang(config),weekday=copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]||'';setText('dateLabel',copy.dateLabel);setText('dateWeekday',weekday);setText('dateDay',String(date.dd));if(lang==='en'){setText('dateMonthYear',(copy.monthsNom[date.mm-1]||'')+' '+date.yy)}else{setText('dateMonthYear',(copy.monthsNom[date.mm-1]||'')+' '+date.yy)}setText('dateTime',formatTime(time,lang))}
+      function applyReveal(){var nodes=Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));if(!nodes.length)return;if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){nodes.forEach(function(node){node.classList.add('visible')});return}if(!window.__sundetTemplate5RevealObserver){window.__sundetTemplate5RevealObserver=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');window.__sundetTemplate5RevealObserver.unobserve(entry.target)}})},{threshold:.14,rootMargin:'0px 0px -36px 0px'})}nodes.forEach(function(node){if(node.dataset.revealBound==='true')return;node.dataset.revealBound='true';window.__sundetTemplate5RevealObserver.observe(node)})}
+      function applyCopy(config,copy){document.documentElement.lang=getLang(config)==='kk'?'kk':getLang(config);setText('heroEyebrow',config.heroEyebrow||config.eventLabel||copy.heroEyebrow);setText('eventLabel',config.eventTextLabel||copy.eventLabel);setText('locationLabel',config.locationLabel||copy.locationLabel);setText('ownersLabel',config.ownersLabel||copy.ownersLabel);setText('galleryLabel',config.galleryLabel||copy.galleryLabel);setText('rsvpLabel',config.rsvpLabel||copy.rsvpLabel);setText('rsvpTitle',config.rsvpTitle||copy.rsvpTitle);setText('rsvpSubtitle',config.rsvpSubtitle||copy.rsvpSubtitle);setText('rNameLabel',config.rsvpNameLabel||copy.nameLabel);setText('rPhoneLabel',config.rsvpPhoneLabel||copy.phoneLabel);setText('rGuestsLabel',config.rsvpGuestsLabel||copy.guestsLabel);setText('rNoteLabel',config.rsvpNoteLabel||copy.noteLabel);setText('rsvpSubmitText',config.rsvpSubmitText||copy.submitText);setText('successMsg',config.successText||copy.successText);setText('footerName',config.footerName||copy.footerName);setText('mapBtnText',config.mapButtonText||copy.mapText);setText('footLine',config.footLine||copy.footerLine);if(byId('rName'))byId('rName').placeholder=config.rsvpNamePlaceholder||copy.namePlaceholder;if(byId('rPhone'))byId('rPhone').placeholder=config.rsvpPhonePlaceholder||copy.phonePlaceholder;if(byId('rGuests'))byId('rGuests').placeholder=config.rsvpGuestsPlaceholder||copy.guestsPlaceholder;if(byId('rNote'))byId('rNote').placeholder=config.rsvpNotePlaceholder||copy.notePlaceholder}
+      function applyVisualConfig(conf){var config=Object.assign({},typeof CONFIG!=='undefined'?CONFIG:{},window.CONFIG||{},conf||{});var copy=getCopy(config);var owners=splitOwners(config.toiOwners);var place=getLocationParts(config);var primary=getPrimaryName(config);var heroSubline=String(config.heroNamesLine||config.namesLine||config.subtitle||'').trim();var heroSource=config.heroPhotoUrl||config.previewPhotoUrl||config.heroPhoto||(getGallery(config)[0]||DEFAULT_ASSETS.hero);window.CONFIG=config;applyCopy(config,copy);setText('heroName',primary);var heroNamesLine=byId('heroNamesLine');if(heroNamesLine){var shouldShowSubline=heroSubline&&heroSubline!==primary;heroNamesLine.style.display=shouldShowSubline?'block':'none';heroNamesLine.textContent=shouldShowSubline?heroSubline:''}setText('heroDateLine',heroDateLine(config,copy));setBreakText('eventText',config.description||copy.defaultDescription);formatDateCard(config,copy);setText('locationName',place.name||config.locationName||'');var locationAddress=byId('locationAddress');if(locationAddress){locationAddress.style.display=place.detail?'block':'none';locationAddress.innerHTML=place.detail?esc(place.detail).replace(/\n/g,'<br>'):''}var ownersSection=byId('ownersSection'),ownersBigName=byId('ownersBigName'),ownersText=byId('ownersText');if(ownersSection&&ownersBigName&&ownersText){if(owners.title||owners.detail||config.toiOwners){ownersSection.style.display='block';ownersBigName.textContent=owners.title||String(config.toiOwners||'').trim()||primary;ownersText.style.display=owners.detail?'block':'none';ownersText.innerHTML=owners.detail?esc(owners.detail).replace(/\n/g,'<br>'):''}else{ownersSection.style.display='none'}}var mapBtnWrap=byId('mapBtnWrap'),mapBtn=byId('mapBtn');if(mapBtnWrap&&mapBtn){if(config.location||config.locationUrl||config.locationName||place.detail){mapBtnWrap.style.display='block';mapBtn.href=config.locationUrl||'#';mapBtn.style.pointerEvents=config.locationUrl?'auto':'none';mapBtn.style.opacity=config.locationUrl?'1':'0.55'}else{mapBtnWrap.style.display='none'}}var heroImg=byId('heroPhoto');if(heroImg){heroImg.src=heroSource;heroImg.alt=copy.heroAlt}renderGallery(config,copy);document.title=(primary||copy.pageTitle)+' - '+copy.footerName;applyReveal()}
+      window.submitRSVP=window.submitRSVP||function(){var name=byId('rName'),phone=byId('rPhone'),form=byId('rsvpForm'),success=byId('successMsg');if(!name||!phone||!form||!success)return;if(!String(name.value||'').trim()){name.focus();return}if(!String(phone.value||'').trim()){phone.focus();return}form.style.display='none';success.style.display='block'};
+      function queueInitialRender(){setTimeout(function(){setTimeout(function(){applyVisualConfig(window.CONFIG||CONFIG||{})},0)},0)}
+      if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',queueInitialRender,{once:true})}else{queueInitialRender()}
+      window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig;
+      setTimeout(function(){window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig},0);
+      window.addEventListener('message',function(event){if(event.data&&event.data.type==='UPDATE_CONFIG'){setTimeout(function(){applyVisualConfig(event.data.config||window.CONFIG||CONFIG||{})},0)}})
+    })();
+  </script>
+</body>
+</html>

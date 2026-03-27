@@ -1,0 +1,187 @@
+﻿<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Uzatu Emerald Elegance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--ivory:#f6f1e8;--parchment:#ede3d1;--emerald:#1f6b55;--emerald-deep:#144d3d;--sage:#8ba194;--gold:#caa34a;--gold-light:#dcc287;--text:#403127;--line:rgba(31,107,85,.16);--font-display:"Cormorant Garamond",Georgia,serif;--font-body:"Montserrat",Arial,sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0} html{scroll-behavior:smooth}
+    body{min-height:100vh;display:flex;justify-content:center;background:radial-gradient(circle at top,rgba(31,107,85,.12),transparent 32%),linear-gradient(180deg,#f8f4ec 0%,#efe5d8 100%);color:var(--text);font-family:var(--font-body)}
+    .page-root{width:100%;max-width:480px;min-height:100vh;background:var(--ivory);overflow:hidden;box-shadow:0 0 0 1px rgba(31,107,85,.08),0 24px 64px rgba(40,28,20,.12)}
+    .uzatu-page{width:100%;background:var(--ivory);min-height:100vh;overflow-x:hidden}
+    .uzatu-heading{font-family:var(--font-display);color:var(--emerald);font-weight:500;letter-spacing:.02em;line-height:1.2}.uzatu-subheading{font-family:var(--font-display);color:var(--gold);font-weight:400;font-style:italic;letter-spacing:.04em}.uzatu-body{font-family:var(--font-body);color:var(--text);font-weight:300;line-height:1.72;font-size:.92rem}.uzatu-section{padding:2.5rem 1.5rem;position:relative}.uzatu-divider{width:60%;max-width:200px;margin:0 auto;opacity:.72}.uzatu-gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:60%;margin:1.5rem auto}.uzatu-card{background:rgba(237,227,209,.52);border:1px solid rgba(202,163,74,.26);border-radius:.85rem;padding:1.5rem;backdrop-filter:blur(1px)}
+    .uzatu-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.92rem 2rem;background:linear-gradient(135deg,var(--emerald),var(--emerald-deep));color:var(--ivory);font-family:var(--font-body);font-weight:500;font-size:.84rem;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:.6rem;cursor:pointer;transition:all .28s ease;box-shadow:0 4px 20px rgba(31,107,85,.25);text-decoration:none}.uzatu-btn:hover{box-shadow:0 6px 28px rgba(31,107,85,.35);transform:translateY(-1px)}
+    .uzatu-input{width:100%;padding:.82rem 1rem;background:rgba(255,255,255,.78);border:1px solid rgba(202,163,74,.3);border-radius:.6rem;font-family:var(--font-body);font-size:.86rem;font-weight:300;color:var(--text);transition:border-color .3s ease;outline:none}.uzatu-input:focus{border-color:rgba(31,107,85,.5)}.uzatu-input::placeholder{color:var(--sage)}
+    .uzatu-float{animation:uzatuFloat 4s ease-in-out infinite}.reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease;transition-delay:var(--reveal-delay,0s)}.reveal.visible{opacity:1;transform:translateY(0)}@keyframes uzatuFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    .uzatu-corner{position:absolute;width:40px;height:40px;border-color:rgba(202,163,74,.4)}.uzatu-corner-tl{top:.75rem;left:.75rem;border-top:2px solid;border-left:2px solid}.uzatu-corner-tr{top:.75rem;right:.75rem;border-top:2px solid;border-right:2px solid}.uzatu-corner-bl{bottom:.75rem;left:.75rem;border-bottom:2px solid;border-left:2px solid}.uzatu-corner-br{bottom:.75rem;right:.75rem;border-bottom:2px solid;border-right:2px solid}
+    .hero{position:relative;overflow:hidden}.hero-photo-placeholder,#heroPhoto{position:relative;display:block;width:100%}.hero-photo-placeholder img,#heroPhoto img,#heroPhotoImg{width:100%;aspect-ratio:3/4;display:block;object-fit:cover;object-position:top}.hero-fade{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(246,241,232,.86) 85%,var(--ivory) 100%)}.hero-copy{position:absolute;left:0;right:0;bottom:0;padding:0 1.5rem 2rem;text-align:center}.hero-copy #heroName{font-size:clamp(44px,11vw,68px);line-height:1.02;color:var(--emerald);text-shadow:0 2px 10px rgba(255,255,255,.45)}#heroDateLine{margin-top:.8rem;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(64,49,39,.8)}.hero-subline{margin-top:.25rem}
+    .date-card{text-align:center;max-width:290px;margin:0 auto}.date-month{font-size:1.08rem;margin-bottom:.1rem}.date-day{font-size:4.2rem;line-height:1;margin:.1rem 0;color:var(--emerald)}.date-weekday{font-size:.95rem}.date-time{font-size:.92rem}.location-subline,.owners-detail,.footer-date{font-size:.84rem;color:rgba(64,49,39,.68)}
+    #ownersSection{display:none}#ownersBigName{font-size:1.8rem;margin-bottom:.4rem}#locationName{font-family:var(--font-display);font-size:1.5rem;color:var(--emerald);font-weight:500}#mapBtnWrap{margin-top:1.35rem;display:none;justify-content:center}
+    #gallerySlides{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}#gallerySlides .gallery-item{position:relative;border-radius:.6rem;overflow:hidden;background:rgba(237,227,209,.52);border:1px solid rgba(202,163,74,.2);aspect-ratio:1}#gallerySlides .gallery-item img{width:100%;height:100%;object-fit:cover;display:block}#gallerySlides .gallery-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:1rem;text-align:center;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(64,49,39,.44)}
+    .rsvp-grid{display:flex;flex-direction:column;gap:.75rem}.field-label{display:block;margin-bottom:.35rem;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--emerald);font-weight:600}#successMsg{display:none;margin-top:1rem}.success-title{font-size:1.4rem;color:var(--emerald)}
+    #footerName{font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.35rem}#footLine{font-size:1.55rem;color:var(--emerald);margin-bottom:.55rem}
+    @media (max-width:420px){.uzatu-section{padding:2.2rem 1.2rem}.hero-copy{padding:0 1.2rem 1.8rem}.hero-copy #heroName{font-size:42px}}
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG={childName:"Айгерім",day:"25-07-2026",hour:"17:00",location:"«Алтын Ғасыр» мейрамханасы\nАлматы қ., Абай даңғылы 52",locationUrl:"",gallery:[],description:"Сіздерді қызымыздың ұзату тойына арнайы шақырамыз. Біздің отбасымыз үшін бұл ерекше күнді сіздермен бірге бөлісу үлкен бақыт.",toiOwners:"Нұрлан || Гүлнар\nАйгерімнің ата-анасы",music:{title:"",artist:"",url:""}};
+  </script>
+  <div class="page-root">
+    <div class="uzatu-page">
+      <section class="hero">
+        <div class="hero-photo-placeholder" id="heroPhoto">
+          <img id="heroPhotoImg" src="/template-assets/uzatu-template5/hero-uzatu.jpg" alt="Hero">
+          <div class="hero-fade"></div>
+        </div>
+        <div class="hero-copy">
+          <p class="uzatu-subheading reveal visible">Құрметті қонақтар</p>
+          <h1 id="heroName" class="uzatu-heading reveal visible" style="--reveal-delay:.12s;">Айгерім</h1>
+          <div class="hero-subline uzatu-subheading reveal visible" style="--reveal-delay:.22s;" id="heroSublineText">Ұзату тойына шақырамыз</div>
+          <span id="heroNamesLine" style="display:none;"></span>
+          <div id="heroDateLine" class="uzatu-body reveal visible" style="--reveal-delay:.32s;">25 шілде 2026</div>
+        </div>
+      </section>
+
+      <div class="py-4" style="display:flex;justify-content:center;">
+        <img src="/template-assets/uzatu-template5/ornament-gold.png" alt="" class="uzatu-divider uzatu-float" loading="lazy">
+      </div>
+
+      <section class="uzatu-section text-center" id="eventSection">
+        <div class="uzatu-card reveal" data-reveal>
+          <div class="uzatu-corner uzatu-corner-tl"></div>
+          <div class="uzatu-corner uzatu-corner-tr"></div>
+          <div class="uzatu-corner uzatu-corner-bl"></div>
+          <div class="uzatu-corner uzatu-corner-br"></div>
+          <p class="uzatu-subheading" id="inviteGreeting">Ассалаумағалейкум!</p>
+          <div id="eventText" class="uzatu-body" style="max-width:320px;margin:1rem auto 0;">Сіздерді қызымыздың ұзату тойына арнайы шақырамыз.</div>
+          <div class="uzatu-gold-line"></div>
+          <p class="uzatu-body" id="inviteNote" style="font-size:.72rem;opacity:.6;letter-spacing:.18em;text-transform:uppercase;">Қош келдіңіздер</p>
+        </div>
+      </section>
+
+      <section class="uzatu-section text-center">
+        <h2 class="uzatu-heading reveal" data-reveal id="dateSectionTitle" style="font-size:2rem;margin-bottom:1.5rem;">Той күні</h2>
+        <div class="uzatu-card date-card reveal" data-reveal style="--reveal-delay:.08s;">
+          <p id="dateCardMonth" class="uzatu-subheading date-month">Шілде</p>
+          <p id="dateCardDay" class="uzatu-heading date-day">25</p>
+          <p id="dateCardWeekday" class="uzatu-body date-weekday">Сенбі, 2026 жыл</p>
+          <div class="uzatu-gold-line" style="width:40%;"></div>
+          <p class="uzatu-body date-time"><span id="dateTimeLabel">Бастау:</span> <span id="dateCardTime">17:00</span></p>
+        </div>
+      </section>
+
+      <div class="py-2" style="display:flex;justify-content:center;">
+        <img src="/template-assets/uzatu-template5/ornament-gold.png" alt="" class="uzatu-divider uzatu-float" style="width:40%;animation-delay:1s;" loading="lazy">
+      </div>
+
+      <section class="uzatu-section text-center">
+        <h2 class="uzatu-heading reveal" data-reveal id="locationSectionTitle" style="font-size:2rem;margin-bottom:.5rem;">Мекен-жайы</h2>
+        <p id="locationName" class="uzatu-body reveal" data-reveal style="--reveal-delay:.06s;margin-bottom:.2rem;font-weight:500;">«Алтын Ғасыр» мейрамханасы</p>
+        <p id="locationSubline" class="uzatu-body location-subline reveal" data-reveal style="--reveal-delay:.12s;margin-bottom:1.4rem;">Алматы қ., Абай даңғылы 52</p>
+        <div id="mapBtnWrap" class="reveal" data-reveal style="--reveal-delay:.18s;">
+          <a id="mapBtn" class="uzatu-btn" href="#" target="_blank" rel="noopener noreferrer"><span id="mapBtnText">Картадан көру</span></a>
+        </div>
+      </section>
+
+      <section class="uzatu-section text-center" id="ownersSection">
+        <h2 class="uzatu-heading reveal" data-reveal id="ownersSectionTitle" style="font-size:2rem;margin-bottom:1rem;">Шақырушылар</h2>
+        <div class="uzatu-card reveal" data-reveal style="--reveal-delay:.08s;max-width:320px;margin:0 auto;">
+          <p id="ownersBigName" class="uzatu-heading" style="font-size:1.5rem;color:var(--emerald);">Нұрлан &amp; Гүлнар</p>
+          <p id="ownersDetail" class="owners-detail" style="margin-top:.45rem;">Айгерімнің ата-анасы</p>
+          <div class="uzatu-gold-line" style="width:30%;"></div>
+          <p id="ownersNote" class="uzatu-body" style="font-size:.76rem;opacity:.6;">Отбасымыздың мерекесіне қош келдіңіздер</p>
+        </div>
+      </section>
+
+      <section class="uzatu-section">
+        <h2 class="uzatu-heading reveal" data-reveal id="gallerySectionTitle" style="font-size:2rem;margin-bottom:1.25rem;text-align:center;">Фотогалерея</h2>
+        <div id="gallerySlides"></div>
+      </section>
+
+      <div class="py-2" style="display:flex;justify-content:center;">
+        <img src="/template-assets/uzatu-template5/ornament-gold.png" alt="" class="uzatu-divider uzatu-float" style="width:35%;animation-delay:2s;" loading="lazy">
+      </div>
+
+      <section class="uzatu-section text-center">
+        <h2 class="uzatu-heading reveal" data-reveal id="rsvpTitle" style="font-size:2rem;margin-bottom:.45rem;">Қатысуыңызды растаңыз</h2>
+        <p class="uzatu-body reveal" data-reveal id="rsvpSub" style="font-size:.88rem;margin-bottom:1.4rem;opacity:.7;">Сіздің қатысуыңыз бізге өте маңызды</p>
+        <div id="rsvpForm" class="uzatu-card reveal" data-reveal style="--reveal-delay:.08s;max-width:340px;margin:0 auto;text-align:left;">
+          <div class="rsvp-grid">
+            <div>
+              <label class="field-label" id="rNameLabel" for="rName">Аты-жөніңіз</label>
+              <input id="rName" class="uzatu-input" placeholder="Аты-жөніңіз">
+            </div>
+            <div>
+              <label class="field-label" id="rPhoneLabel" for="rPhone">Телефон</label>
+              <input id="rPhone" class="uzatu-input" placeholder="Телефон нөміріңіз">
+            </div>
+            <div>
+              <label class="field-label" id="rGuestsLabel" for="rGuests">Қонақ саны</label>
+              <input id="rGuests" class="uzatu-input" placeholder="Қонақ саны" type="number" min="1" value="1">
+            </div>
+            <div>
+              <label class="field-label" id="rNoteLabel" for="rNote">Тілек</label>
+              <textarea id="rNote" class="uzatu-input" placeholder="Тілектеріңіз..." rows="3" style="resize:none;"></textarea>
+            </div>
+            <div style="padding-top:.35rem;text-align:center;">
+              <button type="button" class="uzatu-btn" id="rsvpSubmit" style="width:100%;" onclick="submitRSVP && submitRSVP()">Жіберу</button>
+            </div>
+          </div>
+        </div>
+        <div id="successMsg" class="uzatu-card" style="max-width:320px;margin:1rem auto 0;">
+          <p class="uzatu-heading success-title" id="successTitle">Рақмет!</p>
+          <p class="uzatu-body" id="successText" style="font-size:.88rem;">Сіздің жауабыңыз қабылданды</p>
+        </div>
+      </section>
+
+      <footer class="uzatu-section text-center" style="padding-bottom:2.5rem;background:linear-gradient(to bottom,transparent,rgba(31,107,85,.06));">
+        <div class="uzatu-gold-line"></div>
+        <p id="footerName" class="uzatu-subheading">Ұзату тойы</p>
+        <p id="footLine" class="uzatu-heading">Айгерім</p>
+        <p id="footerDate" class="footer-date">25.07.2026 • Алматы</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var DEFAULT_ASSETS={hero:'/template-assets/uzatu-template5/hero-uzatu.jpg',ornament:'/template-assets/uzatu-template5/ornament-gold.png'};
+      var COPY={kk:{eventLabel:'Ұзату тойы',heroSubline:'Ұзату тойына шақырамыз',inviteGreeting:'Ассалаумағалейкум!',inviteNote:'Қош келдіңіздер',dateSectionTitle:'Той күні',dateTimeLabel:'Бастау:',locationSectionTitle:'Мекен-жайы',mapBtnText:'Картадан көру',ownersSectionTitle:'Шақырушылар',ownersNote:'Отбасымыздың мерекесіне қош келдіңіздер',gallerySectionTitle:'Фотогалерея',galleryPlaceholder:'Фотосурет',rsvpTitle:'Қатысуыңызды растаңыз',rsvpSub:'Сіздің қатысуыңыз бізге өте маңызды',rsvpSubmit:'Жіберу',successTitle:'Рақмет!',successText:'Сіздің жауабыңыз қабылданды',labelName:'Аты-жөніңіз',labelPhone:'Телефон',labelGuests:'Қонақ саны',labelNote:'Тілек',placeholders:{name:'Аты-жөніңіз',phone:'Телефон нөміріңіз',guests:'Қонақ саны',note:'Тілектеріңіз...'},monthsNom:['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'],monthsGen:['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан'],weekdays:['Жексенбі','Дүйсенбі','Сейсенбі','Сәрсенбі','Бейсенбі','Жұма','Сенбі'],footerCityFallback:'Алматы'},ru:{eventLabel:'Проводы невесты',heroSubline:'Приглашаем на узату той',inviteGreeting:'Дорогие гости!',inviteNote:'Добро пожаловать',dateSectionTitle:'День торжества',dateTimeLabel:'Начало:',locationSectionTitle:'Место проведения',mapBtnText:'Открыть карту',ownersSectionTitle:'Шақырушылар',ownersNote:'Будем рады разделить этот день вместе',gallerySectionTitle:'Фотогалерея',galleryPlaceholder:'Фотография',rsvpTitle:'Подтвердите присутствие',rsvpSub:'Ваше присутствие для нас очень важно',rsvpSubmit:'Отправить',successTitle:'Спасибо!',successText:'Ваш ответ получен',labelName:'Ваше имя',labelPhone:'Телефон',labelGuests:'Количество гостей',labelNote:'Пожелание',placeholders:{name:'Ваше имя',phone:'Ваш телефон',guests:'Количество гостей',note:'Ваши пожелания...'},monthsNom:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],monthsGen:['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],weekdays:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],footerCityFallback:'Алматы'},en:{eventLabel:'Uzatu Celebration',heroSubline:'You are invited',inviteGreeting:'Dear Guests!',inviteNote:'Welcome',dateSectionTitle:'Celebration Day',dateTimeLabel:'Starts:',locationSectionTitle:'Venue',mapBtnText:'View Map',ownersSectionTitle:'Hosts',ownersNote:'We will be happy to celebrate with you',gallerySectionTitle:'Gallery',galleryPlaceholder:'Photo',rsvpTitle:'Please Confirm Your Presence',rsvpSub:'Your presence means a lot to us',rsvpSubmit:'Send',successTitle:'Thank you!',successText:'Your response has been received',labelName:'Full Name',labelPhone:'Phone',labelGuests:'Guests',labelNote:'Message',placeholders:{name:'Your name',phone:'Your phone',guests:'Guests',note:'Your wishes...'},monthsNom:['January','February','March','April','May','June','July','August','September','October','November','December'],monthsGen:['January','February','March','April','May','June','July','August','September','October','November','December'],weekdays:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],footerCityFallback:'Almaty'}};
+      var byId=function(id){return document.getElementById(id)};
+      var setText=function(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.textContent=value||''};
+      var esc=function(value){return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')};
+      var setHtml=function(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.innerHTML=esc(value).replace(/\n/g,'<br>')};
+      var pad2=function(v){return String(v).padStart(2,'0')};
+      var parseEventDate=function(value){if(!value)return null;var date=value instanceof Date?new Date(value.getTime()):new Date(value);if(Number.isNaN(date.getTime()))return null;return date};
+      var parseDate=function(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{dd:eventDate.getDate(),mm:eventDate.getMonth()+1,yy:eventDate.getFullYear()}}var parts=String((config&&config.day)||'').split('-').map(function(item){return parseInt(item,10)});return parts.length===3&&parts.every(Number.isFinite)?{dd:parts[0],mm:parts[1],yy:parts[2]}:{dd:25,mm:7,yy:2026}};
+      var parseTime=function(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{hh:eventDate.getHours(),mm:eventDate.getMinutes()}}var match=String((config&&config.hour)||'17:00').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);if(!match)return{hh:17,mm:0};var hh=parseInt(match[1],10),mm=parseInt(match[2]||'0',10),suffix=String(match[3]||'').toUpperCase();if(suffix==='PM'&&hh<12)hh+=12;if(suffix==='AM'&&hh===12)hh=0;return{hh:Number.isFinite(hh)?hh:17,mm:Number.isFinite(mm)?mm:0}};
+      var getLang=function(config){var lang=String((config&&config.lang)||'').toLowerCase();return COPY[lang]?lang:'kk'};
+      var getCopy=function(config){return COPY[getLang(config)]||COPY.kk};
+      var primaryName=function(config){return String((config&&((config.childName)||config.title||config.names&&config.names.child||config.names&&config.names.bride||config.names&&config.names.groom))||'Айгерім').trim()||'Айгерім'};
+      var splitOwners=function(value){var text=String(value||'').trim();if(!text)return{title:'',detail:''};var parts=text.indexOf('||')>=0?text.split('||'):text.split(/\r?\n/);parts=parts.map(function(item){return item.trim()}).filter(Boolean);return{title:parts[0]||'',detail:parts.slice(1).join('\n')}};
+      var placeParts=function(config){var raw=String((config&&config.location)||'').trim();var explicit=String((config&&(config.locationDetail||config.locationDetails||config.address))||'').trim();if(!raw)return{name:'',detail:explicit};if(explicit)return{name:raw,detail:explicit};if(raw.indexOf('\n')>=0){var lines=raw.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return{name:lines[0]||raw,detail:lines.slice(1).join('\n')}}if(raw.indexOf(' | ')>=0){var pipe=raw.split(' | ').map(function(item){return item.trim()}).filter(Boolean);return{name:pipe[0]||raw,detail:pipe.slice(1).join('\n')}}if(raw.indexOf(',')>=0){var comma=raw.split(',').map(function(item){return item.trim()}).filter(Boolean);return{name:comma[0]||raw,detail:comma.slice(1).join(', ')}}return{name:raw,detail:''}};
+      var formatHeroDate=function(config,copy){var d=parseDate(config),lang=getLang(config);if(lang==='ru')return d.dd+' '+copy.monthsGen[d.mm-1]+' '+d.yy; if(lang==='en')return copy.monthsNom[d.mm-1]+' '+d.dd+', '+d.yy; return d.dd+' '+copy.monthsGen[d.mm-1]+' '+d.yy};
+      var formatFooterDate=function(config){var d=parseDate(config);return pad2(d.dd)+'.'+pad2(d.mm)+'.'+d.yy};
+      var formatTime=function(config){var time=parseTime(config);return pad2(time.hh)+':'+pad2(time.mm)};
+      var galleryList=function(config){return Array.isArray(config.gallery)?config.gallery.filter(Boolean):[]};
+      function renderHero(config,copy){var hero=byId('heroPhoto');var heroImg=hero?(hero.querySelector('img')||byId('heroPhotoImg')):null;var heroSrc=config.heroPhotoUrl||config.previewPhotoUrl||config.heroPhoto||galleryList(config)[0]||DEFAULT_ASSETS.hero;if(heroImg){heroImg.src=heroSrc;heroImg.alt=primaryName(config)}else if(hero){hero.innerHTML='<img id="heroPhotoImg" src="'+heroSrc+'" alt="Hero">'}setText('heroName',primaryName(config));setText('heroNamesLine',primaryName(config));setText('heroDateLine',formatHeroDate(config,copy))}
+      function renderDateCard(config,copy){var d=parseDate(config);var lang=getLang(config);var weekday=copy.weekdays[new Date(d.yy,d.mm-1,d.dd).getDay()]||'';var weekdayLine=lang==='kk'?(weekday+', '+d.yy+' жыл'):(weekday+', '+d.yy);setText('dateCardMonth',copy.monthsNom[d.mm-1]||'');setText('dateCardDay',String(d.dd));setText('dateCardWeekday',weekdayLine);setText('dateCardTime',formatTime(config))}
+      function renderGallery(config,copy){var wrap=byId('gallerySlides');if(!wrap)return;var items=galleryList(config);wrap.innerHTML='';if(!items.length){for(var i=0;i<4;i+=1){var item=document.createElement('div');item.className='gallery-item reveal';item.setAttribute('data-reveal','');item.style.setProperty('--reveal-delay',Math.min(i*.06,.18).toFixed(2)+'s');var ph=document.createElement('div');ph.className='gallery-ph';ph.textContent=copy.galleryPlaceholder+' '+(i+1);item.appendChild(ph);wrap.appendChild(item)}return}items.slice(0,4).forEach(function(src,index){var item=document.createElement('div');item.className='gallery-item reveal';item.setAttribute('data-reveal','');item.style.setProperty('--reveal-delay',Math.min(index*.06,.18).toFixed(2)+'s');var img=document.createElement('img');img.src=src;img.alt='Gallery '+(index+1);item.appendChild(img);wrap.appendChild(item)})}
+      function applyCopy(config,copy){setText('heroSublineText',copy.heroSubline);setText('inviteGreeting',copy.inviteGreeting);setText('inviteNote',copy.inviteNote);setText('dateSectionTitle',copy.dateSectionTitle);setText('dateTimeLabel',copy.dateTimeLabel);setText('locationSectionTitle',copy.locationSectionTitle);setText('mapBtnText',copy.mapBtnText);setText('ownersSectionTitle',copy.ownersSectionTitle);setText('ownersNote',copy.ownersNote);setText('gallerySectionTitle',copy.gallerySectionTitle);setText('rsvpTitle',copy.rsvpTitle);setText('rsvpSub',copy.rsvpSub);setText('rsvpSubmit',copy.rsvpSubmit);setText('successTitle',copy.successTitle);setText('successText',copy.successText);setText('rNameLabel',copy.labelName);setText('rPhoneLabel',copy.labelPhone);setText('rGuestsLabel',copy.labelGuests);setText('rNoteLabel',copy.labelNote);setText('footerName',config.eventLabel||copy.eventLabel);if(byId('rName'))byId('rName').placeholder=copy.placeholders.name;if(byId('rPhone'))byId('rPhone').placeholder=copy.placeholders.phone;if(byId('rGuests'))byId('rGuests').placeholder=copy.placeholders.guests;if(byId('rNote'))byId('rNote').placeholder=copy.placeholders.note}
+      function applyVisualConfig(conf){var config=Object.assign({},typeof CONFIG!=='undefined'?CONFIG:{},window.CONFIG||{},conf||{});var copy=getCopy(config);var owners=splitOwners(config.toiOwners);var place=placeParts(config);window.CONFIG=config;document.documentElement.lang=getLang(config)==='kk'?'kk':getLang(config);document.title=primaryName(config)+' • '+(config.eventLabel||copy.eventLabel);applyCopy(config,copy);renderHero(config,copy);setHtml('eventText',config.description||'');renderDateCard(config,copy);setText('locationName',place.name||String(config.location||'').trim());var locSub=byId('locationSubline');if(locSub){locSub.textContent=place.detail||'';locSub.style.display=place.detail?'block':'none'}var ownersSection=byId('ownersSection');setText('ownersBigName',owners.title);var ownersDetail=byId('ownersDetail');if(ownersDetail){ownersDetail.textContent=owners.detail||'';ownersDetail.style.display=owners.detail?'block':'none'}if(ownersSection)ownersSection.style.display=owners.title?'block':'none';var mapBtnWrap=byId('mapBtnWrap'),mapBtn=byId('mapBtn');if(mapBtnWrap&&mapBtn){if(config.locationUrl){mapBtnWrap.style.display='flex';mapBtn.href=config.locationUrl;mapBtn.style.pointerEvents='auto';mapBtn.style.opacity='1'}else if(config.location){mapBtnWrap.style.display='flex';mapBtn.href='#';mapBtn.style.pointerEvents='none';mapBtn.style.opacity='0.55'}else{mapBtnWrap.style.display='none'}}renderGallery(config,copy);setText('footLine',primaryName(config));var footerDate=byId('footerDate');if(footerDate){var city=place.detail||copy.footerCityFallback;footerDate.textContent=city?(formatFooterDate(config)+' • '+city):formatFooterDate(config)}applyReveal()}
+      function applyReveal(){var nodes=Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));if(!nodes.length)return;if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){nodes.forEach(function(node){node.classList.add('visible')});return}if(!window.__uzatuTemplate5Observer){window.__uzatuTemplate5Observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');window.__uzatuTemplate5Observer.unobserve(entry.target)}})},{threshold:.14,rootMargin:'0px 0px -30px 0px'})}nodes.forEach(function(node){if(node.dataset.revealBound==='true')return;node.dataset.revealBound='true';window.__uzatuTemplate5Observer.observe(node)})}
+      window.submitRSVP=window.submitRSVP||function(){var name=byId('rName'),phone=byId('rPhone'),form=byId('rsvpForm'),success=byId('successMsg');if(!name||!phone||!form||!success)return;if(!String(name.value||'').trim()){name.focus();return}if(!String(phone.value||'').trim()){phone.focus();return}form.style.display='none';success.style.display='block'};
+      function queueInitialRender(){setTimeout(function(){setTimeout(function(){applyVisualConfig(window.CONFIG||CONFIG||{})},0)},0)}
+      if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',queueInitialRender,{once:true})}else{queueInitialRender()}
+      window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig;setTimeout(function(){window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig},0);
+      window.addEventListener('message',function(event){if(event.data&&event.data.type==='UPDATE_CONFIG'){setTimeout(function(){applyVisualConfig(event.data.config||window.CONFIG||CONFIG||{})},0)}})
+    })();
+  </script>
+</body>
+</html>

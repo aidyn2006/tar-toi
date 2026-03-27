@@ -1,0 +1,220 @@
+﻿<!doctype html>
+<!-- NO_PALETTE -->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Monochrome Muse Wedding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root{--wedding-white:#f9f8f6;--wedding-paper:#f9f8f6;--wedding-stone:#4d4d4d;--wedding-warm:#b0b0aa;--wedding-charcoal:#f2f2ed;--wedding-black:#050505;--wedding-line:rgba(242,242,237,.1);--font-display:"Playfair Display",Georgia,serif;--font-ceremonial:"Cormorant Garamond",Georgia,serif;--font-body:"Montserrat",Arial,sans-serif}
+    *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{min-height:100vh;display:flex;justify-content:center;background:#f9f8f6;color:var(--wedding-charcoal);font-family:var(--font-body);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}img{max-width:100%;display:block}
+    .page-root{width:100%;max-width:480px;min-height:100vh;background:var(--wedding-white);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 28px 72px rgba(100, 100, 100, 0.45)}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease;transition-delay:var(--reveal-delay,0s)}.reveal.visible{opacity:1;transform:translateY(0)}
+    .font-display{font-family:var(--font-display)}.font-ceremonial{font-family:var(--font-ceremonial)}.font-body{font-family:var(--font-body)}
+    .section-padding{padding:64px 32px}.section-padding-lg{padding:80px 32px}.section-overline{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--wedding-warm)}
+    .editorial-divider,.editorial-divider-wide{height:1px;margin:0 auto;background:var(--wedding-charcoal)}.editorial-divider{width:48px}.editorial-divider-wide{width:96px;background:var(--wedding-stone)}.editorial-frame{border:1px solid var(--wedding-stone)}
+    .hero{position:relative;min-height:85vh;overflow:hidden;background:var(--wedding-paper)}#heroPhoto{display:block;width:100%;height:85vh;object-fit:cover;object-position:center;filter:grayscale(1) contrast(1.08) brightness(.78);background:linear-gradient(135deg,#121212 0%,#232323 100%)}.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,5,5,.12) 24%,rgba(5,5,5,.24) 54%,rgba(5,5,5,.78) 100%)}.hero-content{position:absolute;left:0;right:0;bottom:0;padding:0 32px 48px;text-align:center;color:var(--wedding-charcoal)}.hero-copy-label{margin-bottom:18px;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:rgba(242,242,237,.78)}.hero-names{font-family:var(--font-ceremonial);font-size:54px;font-weight:300;line-height:1.02}.hero-names .amp{display:block;margin:8px 0 4px;font-size:28px;font-style:italic;color:rgba(242,242,237,.68)}#heroDateLine{margin-top:22px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,242,237,.74)}
+    .invitation-section{background:var(--wedding-white);text-align:center}.invitation-intro{margin-top:28px;font-family:var(--font-ceremonial);font-size:19px;line-height:1.95;color:var(--wedding-charcoal)}
+    .date-section{padding:0 32px 64px;background:var(--wedding-white)}.date-card{padding:36px 28px;text-align:center;background:var(--wedding-paper);position:relative;overflow:hidden}.date-card::before,.date-card::after{content:"";position:absolute;left:50%;transform:translateX(-50%);width:96px;height:1px;background:var(--wedding-stone)}.date-card::before{top:0}.date-card::after{bottom:0}#dateLabel{margin-bottom:18px;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--wedding-warm)}#dateDay{font-family:var(--font-display);font-size:66px;font-weight:300;line-height:1;color:var(--wedding-charcoal)}#dateMonthYear{margin-top:8px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--wedding-warm)}#dateWeekday{margin-top:18px;font-family:var(--font-ceremonial);font-size:28px;font-style:italic;color:var(--wedding-warm)}#dateTime{margin-top:4px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--wedding-charcoal)}
+    .event-section{background:var(--wedding-paper);text-align:center}.location-title{margin-top:18px;font-family:var(--font-display);font-size:31px;font-weight:500;line-height:1.26;color:var(--wedding-charcoal)}#locationDetails{margin-top:12px;font-family:var(--font-ceremonial);font-size:20px;font-style:italic;line-height:1.7;color:var(--wedding-warm)}.detail-stack{margin-top:28px;display:grid;gap:18px}.detail-label{margin-bottom:4px;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--wedding-warm)}.detail-value{font-family:var(--font-ceremonial);font-size:20px;color:var(--wedding-charcoal)}#mapBtnWrap{margin-top:32px}#mapBtn{display:inline-flex;align-items:center;justify-content:center;padding:14px 30px;border:1px solid var(--wedding-charcoal);background:transparent;color:var(--wedding-charcoal);font-size:10px;letter-spacing:.26em;text-transform:uppercase;text-decoration:none;transition:all .35s ease}#mapBtn:hover{background:var(--wedding-charcoal);color:var(--wedding-white)}
+    .gallery-section{padding:64px 0;background:var(--wedding-white)}.gallery-section .section-overline{text-align:center;margin-bottom:28px;padding:0 32px}#gallerySlides{display:flex;gap:12px;overflow-x:auto;padding:0 32px;scrollbar-width:none;-ms-overflow-style:none}#gallerySlides::-webkit-scrollbar{display:none}.gallery-slide{flex:0 0 200px}.gallery-slide .gallery-media{width:100%;height:280px;border:1px solid var(--wedding-stone);background:linear-gradient(135deg,#191919,#252525);overflow:hidden}.gallery-slide img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.06)}.gallery-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--wedding-warm)}
+    .owners-section{background:var(--wedding-paper);text-align:center}#ownersBigName{margin-top:26px;font-family:var(--font-display);font-size:28px;font-weight:500;line-height:1.34;color:var(--wedding-charcoal)}#ownersText{margin-top:16px;font-family:var(--font-ceremonial);font-size:20px;line-height:1.8;color:rgba(242,242,237,.82)}
+    .rsvp-section{background:var(--wedding-white)}.rsvp-head{text-align:center;margin-bottom:36px}.rsvp-title{font-family:var(--font-display);font-size:38px;font-weight:300;color:var(--wedding-charcoal)}.rsvp-subtitle{margin-top:10px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--wedding-warm)}#rsvpForm{margin-top:34px;display:flex;flex-direction:column;gap:18px}.field-label{display:block;margin-bottom:7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--wedding-warm)}#rsvpForm input,#rsvpForm textarea,#rsvpForm select{width:100%;padding:15px 16px;border:1px solid var(--wedding-stone);background:rgba(255,255,255,.02);color:var(--wedding-charcoal);font-family:var(--font-body);font-size:14px;outline:none;transition:border-color .3s ease,background .3s ease}#rsvpForm input:focus,#rsvpForm textarea:focus,#rsvpForm select:focus{border-color:var(--wedding-charcoal);background:rgba(255,255,255,.04)}#rsvpForm input::placeholder,#rsvpForm textarea::placeholder{color:rgba(176,176,170,.72)}#rsvpForm textarea{resize:none;min-height:92px}.submit-btn{width:100%;padding:16px;border:1px solid rgba(242,242,237,.18);background:var(--wedding-charcoal);color:var(--wedding-white);font-family:var(--font-body);font-size:10px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:opacity .35s ease,transform .35s ease}.submit-btn:hover{opacity:.9;transform:translateY(-1px)}#successMsg{display:none;padding-top:30px;text-align:center}.success-text{font-family:var(--font-ceremonial);font-size:28px;font-style:italic;color:var(--wedding-charcoal)}
+    .footer-section{padding:58px 32px;text-align:center;background:var(--wedding-black)}#footerName{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:rgba(242,242,237,.58)}#footLine{margin-top:26px;font-family:var(--font-ceremonial);font-size:36px;font-style:italic;font-weight:300;color:var(--wedding-charcoal)}#footerDate{margin-top:12px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:rgba(242,242,237,.48)}
+    @media (max-width:420px){.section-padding,.section-padding-lg,.footer-section{padding-left:24px;padding-right:24px}.date-section{padding-left:24px;padding-right:24px}.gallery-section .section-overline,#gallerySlides,.hero-content{padding-left:24px;padding-right:24px}.hero-names{font-size:44px}#dateDay{font-size:58px}.location-title{font-size:28px}.gallery-slide{flex-basis:180px}}
+  </style>
+</head>
+<body>
+  <script>
+    const CONFIG={lang:"kk",names:{bride:"Аружан",groom:"Данияр"},day:"28-12-2026",hour:"16:00",location:"The Grand Ballroom\n42 Fifth Avenue, New York, NY 10011",locationUrl:"",gallery:[],description:"Құрметті ағайын-туыс, құда-жекжат, дос-жаран! Сіздерді өміріміздегі ең маңызды күндердің біріне ортақ болып, қуанышымызды бірге бөлісуге шын жүректен шақырамыз.",toiOwners:"Сейітовтар әулеті",music:{title:"",artist:"",url:""}};
+  </script>
+  <div class="page-root">
+    <section class="hero">
+      <img id="heroPhoto" src="/template-assets/wedding-template12/template12-wedding-hero-bw.jpg" alt="Wedding couple">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="reveal visible">
+          <p class="hero-copy-label" id="heroLabel">The Wedding of</p>
+        </div>
+        <div class="reveal visible" style="--reveal-delay:.12s;">
+          <div class="hero-names" aria-label="Couple names">
+            <span id="hBride">Аружан</span>
+            <span class="amp">&amp;</span>
+            <span id="hGroom">Данияр</span>
+          </div>
+          <span id="heroNamesLine" style="display:none;">Аружан &amp; Данияр</span>
+        </div>
+        <div class="reveal visible" style="--reveal-delay:.22s;">
+          <div class="editorial-divider-wide"></div>
+          <div id="heroDateLine">28 желтоқсан 2026 • 16:00</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="invitation-section section-padding-lg">
+      <div class="reveal" data-reveal>
+        <p class="section-overline" id="inviteLabel">Қуанышымызға ортақ болыңыз</p>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.08s;">
+        <div class="editorial-divider"></div>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.16s;">
+        <p id="eventText" class="invitation-intro">Құрметті ағайын-туыс, құда-жекжат, дос-жаран! Сіздерді өміріміздегі ең маңызды күндердің біріне ортақ болып, қуанышымызды бірге бөлісуге шын жүректен шақырамыз.</p>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.24s;margin-top:30px;">
+        <div class="editorial-divider"></div>
+      </div>
+    </section>
+
+    <section class="date-section">
+      <div class="date-card editorial-frame reveal" data-reveal>
+        <div id="dateLabel">Save the Date</div>
+        <div id="dateDay">28</div>
+        <div id="dateMonthYear">December 2026</div>
+        <div class="editorial-divider-wide" style="margin-top:18px;"></div>
+        <div id="dateWeekday">Saturday</div>
+        <div id="dateTime">16:00</div>
+      </div>
+    </section>
+
+    <section class="event-section section-padding">
+      <div class="reveal" data-reveal>
+        <p class="section-overline" id="locationLabel">Мекенжай</p>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.08s;">
+        <h2 id="locationName" class="location-title">The Grand Ballroom</h2>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.14s;">
+        <p id="locationDetails">42 Fifth Avenue, New York, NY 10011</p>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.18s;">
+        <div class="editorial-divider"></div>
+      </div>
+      <div class="detail-stack reveal" data-reveal style="--reveal-delay:.24s;">
+        <div>
+          <p class="detail-label" id="ceremonyLabel">Ceremony</p>
+          <p class="detail-value" id="ceremonyValue">An intimate exchange of vows</p>
+        </div>
+        <div>
+          <p class="detail-label" id="receptionLabel">Reception</p>
+          <p class="detail-value" id="receptionValue">Dinner, music and celebration</p>
+        </div>
+      </div>
+      <div id="mapBtnWrap" class="reveal" data-reveal style="--reveal-delay:.3s;">
+        <a id="mapBtn" href="#" target="_blank" rel="noopener noreferrer">View Map</a>
+      </div>
+    </section>
+
+    <section class="gallery-section">
+      <div class="section-overline reveal" data-reveal id="galleryLabel">Our Moments</div>
+      <div id="gallerySlides"></div>
+    </section>
+
+    <section id="ownersSection" class="owners-section section-padding">
+      <div class="reveal" data-reveal>
+        <p class="section-overline" id="ownersLabel">With Love From</p>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.08s;">
+        <div class="editorial-divider"></div>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.16s;">
+        <h3 id="ownersBigName">The Families</h3>
+        <div id="ownersText"></div>
+      </div>
+    </section>
+
+    <section class="rsvp-section section-padding-lg">
+      <div class="rsvp-head reveal" data-reveal>
+        <p class="section-overline" id="rsvpLabel">RSVP</p>
+        <h2 class="rsvp-title" id="rsvpTitle">Please Confirm Your Presence</h2>
+        <p class="rsvp-subtitle" id="rsvpSubtitle">We would appreciate your reply in advance</p>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.08s;">
+        <div class="editorial-divider"></div>
+      </div>
+      <form id="rsvpForm" onsubmit="return false;" class="reveal" data-reveal style="--reveal-delay:.16s;">
+        <div>
+          <label class="field-label" id="rNameLabel" for="rName">Full Name</label>
+          <input id="rName" type="text" placeholder="Your name">
+        </div>
+        <div>
+          <label class="field-label" id="rPhoneLabel" for="rPhone">Phone</label>
+          <input id="rPhone" type="tel" placeholder="Phone number">
+        </div>
+        <div>
+          <label class="field-label" id="rGuestsLabel" for="rGuests">Number of Guests</label>
+          <select id="rGuests">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" id="rNoteLabel" for="rNote">Message</label>
+          <textarea id="rNote" rows="3" placeholder="Your wishes for the couple..."></textarea>
+        </div>
+        <div style="padding-top:4px;">
+          <button class="submit-btn" id="rsvpSubmitText" type="button" onclick="submitRSVP && submitRSVP()">Send RSVP</button>
+        </div>
+      </form>
+      <div id="successMsg">
+        <p class="success-text" id="successMsgText">Thank you for your response.</p>
+      </div>
+    </section>
+
+    <footer class="footer-section">
+      <div class="reveal" data-reveal>
+        <div id="footerName">Wedding Celebration</div>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.08s;">
+        <div class="editorial-divider-wide" style="background:rgba(239,235,228,.34);"></div>
+      </div>
+      <div class="reveal" data-reveal style="--reveal-delay:.16s;">
+        <div id="footLine">Аружан &amp; Данияр</div>
+        <div id="footerDate">28 • 12 • 2026</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var DEFAULT_ASSETS={hero:'/template-assets/wedding-template12/template12-wedding-hero-bw.jpg',gallery:['/template-assets/wedding-template12/wedding-gallery-1.jpg','/template-assets/wedding-template12/wedding-gallery-2.jpg','/template-assets/wedding-template12/wedding-gallery-3.jpg']};
+      var COPY={kk:{pageTitle:'Үйлену тойына шақыру',heroLabel:'Үйлену тойы',inviteLabel:'Қуанышымызға ортақ болыңыз',dateLabel:'Той күні',locationLabel:'Мекенжай',ceremonyLabel:'Салтанат',ceremonyValue:'Ант беру рәсімі',receptionLabel:'Той кеші',receptionValue:'Кешкі ас, музыка және мереке',mapButton:'Картадан көру',galleryLabel:'Біздің сәттер',galleryPlaceholder:'Фотосурет осы жерде көрсетіледі',ownersLabel:'Той иелері',rsvpLabel:'Жауап',rsvpTitle:'Қатысатыныңызды растаңыз',rsvpSubtitle:'Жауабыңызды алдын ала жіберсеңіздер қуанышты боламыз',nameLabel:'Аты-жөніңіз',namePlaceholder:'Атыңызды жазыңыз',phoneLabel:'Телефон',phonePlaceholder:'+7 (___) ___-__-__',guestsLabel:'Қонақ саны',noteLabel:'Тілек',notePlaceholder:'Тілегіңізді қалдырыңыз',submitText:'Жауап жіберу',successText:'Рақмет! Жауабыңыз қабылданды.',defaultDescription:'Құрметті ағайын-туыс, құда-жекжат, дос-жаран! Сіздерді өміріміздегі ең маңызды күндердің біріне ортақ болып, қуанышымызды бірге бөлісуге шын жүректен шақырамыз.',footerName:'Үйлену тойы',monthsNom:['Қаңтар','Ақпан','Наурыз','Сәуір','Мамыр','Маусым','Шілде','Тамыз','Қыркүйек','Қазан','Қараша','Желтоқсан'],monthsGen:['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан'],weekdays:['Жексенбі','Дүйсенбі','Сейсенбі','Сәрсенбі','Бейсенбі','Жұма','Сенбі'],heroAlt:'Жас жұп'},ru:{pageTitle:'Свадебное приглашение',heroLabel:'The Wedding of',inviteLabel:'Вы приглашены',dateLabel:'Дата торжества',locationLabel:'Локация',ceremonyLabel:'Церемония',ceremonyValue:'Трогательный обмен клятвами',receptionLabel:'Праздничный вечер',receptionValue:'Ужин, музыка и тёплая атмосфера',mapButton:'Открыть карту',galleryLabel:'Наши моменты',galleryPlaceholder:'Фотография появится здесь',ownersLabel:'С любовью от',rsvpLabel:'RSVP',rsvpTitle:'Подтвердите присутствие',rsvpSubtitle:'Будем благодарны за ваш ответ заранее',nameLabel:'Имя и фамилия',namePlaceholder:'Ваше имя',phoneLabel:'Телефон',phonePlaceholder:'+7 (___) ___-__-__',guestsLabel:'Количество гостей',noteLabel:'Пожелание',notePlaceholder:'Ваши пожелания...',submitText:'Отправить ответ',successText:'Спасибо! Ваш ответ получен.',defaultDescription:'Мы будем счастливы видеть вас рядом в один из самых важных дней нашей жизни и разделить с вами эту теплую радость.',footerName:'Свадебное торжество',monthsNom:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],monthsGen:['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],weekdays:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],heroAlt:'Молодожены'},en:{pageTitle:'Wedding Invitation',heroLabel:'The Wedding of',inviteLabel:'You Are Cordially Invited',dateLabel:'Save the Date',locationLabel:'Ceremony & Reception',ceremonyLabel:'Ceremony',ceremonyValue:'An intimate exchange of vows',receptionLabel:'Reception',receptionValue:'Dinner, music and celebration',mapButton:'View Map',galleryLabel:'Our Moments',galleryPlaceholder:'Photo will appear here',ownersLabel:'With Love From',rsvpLabel:'RSVP',rsvpTitle:'Please Confirm Your Presence',rsvpSubtitle:'We would appreciate your reply in advance',nameLabel:'Full Name',namePlaceholder:'Your name',phoneLabel:'Phone',phonePlaceholder:'Phone number',guestsLabel:'Number of Guests',noteLabel:'Message',notePlaceholder:'Your wishes for the couple...',submitText:'Send RSVP',successText:'Thank you for your response.',defaultDescription:'We would be honored by your presence as we celebrate one of the most meaningful days of our lives together.',footerName:'Wedding Celebration',monthsNom:['January','February','March','April','May','June','July','August','September','October','November','December'],monthsGen:['January','February','March','April','May','June','July','August','September','October','November','December'],weekdays:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],heroAlt:'Wedding couple'}};
+      var byId=function(id){return document.getElementById(id)};
+      var setText=function(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.textContent=value||''};
+      var esc=function(value){return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')};
+      var setHtml=function(id,value){var node=typeof id==='string'?byId(id):id;if(node)node.innerHTML=esc(value).replace(/\n/g,'<br>')};
+      var pad=function(v){return String(v).padStart(2,'0')};
+      var parseEventDate=function(value){if(!value)return null;var date=value instanceof Date?new Date(value.getTime()):new Date(value);if(Number.isNaN(date.getTime()))return null;return date};
+      var parseDate=function(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{dd:eventDate.getDate(),mm:eventDate.getMonth()+1,yy:eventDate.getFullYear()}}var parts=String((config&&config.day)||'').split('-').map(function(item){return parseInt(item,10)});return parts.length===3&&parts.every(Number.isFinite)?{dd:parts[0],mm:parts[1],yy:parts[2]}:{dd:28,mm:12,yy:2026}};
+      var parseTime=function(config){var eventDate=parseEventDate(config&&config.eventDate);if(eventDate){return{hh:eventDate.getHours(),mm:eventDate.getMinutes()}}var match=String((config&&config.hour)||'16:00').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);if(!match)return{hh:16,mm:0};var hh=parseInt(match[1],10),mm=parseInt(match[2]||'0',10),suffix=String(match[3]||'').toUpperCase();if(suffix==='PM'&&hh<12)hh+=12;if(suffix==='AM'&&hh===12)hh=0;return{hh:Number.isFinite(hh)?hh:16,mm:Number.isFinite(mm)?mm:0}};
+      var formatTime=function(time,lang){if(lang==='en'){var suffix=time.hh>=12?'PM':'AM';var hour=time.hh%12||12;return hour+':'+pad(time.mm)+' '+suffix}return pad(time.hh)+':'+pad(time.mm)};
+      var getLang=function(config){var lang=String((config&&config.lang)||'').toLowerCase();return COPY[lang]?lang:'kk'};
+      var getCopy=function(config){return COPY[getLang(config)]||COPY.kk};
+      var getNames=function(config){var names=(config&&config.names)||{};return{bride:String(names.bride||config.topic2||'Аружан').trim()||'Аружан',groom:String(names.groom||config.topic1||config.childName||'Данияр').trim()||'Данияр'}};
+      var joinNames=function(names){return[names.bride,names.groom].filter(Boolean).join(' & ')};
+      var splitOwners=function(value){var text=String(value||'').trim();if(!text)return{title:'',detail:''};var chunks=text.indexOf('||')>=0?text.split('||'):text.split(/\r?\n/);chunks=chunks.map(function(item){return item.trim()}).filter(Boolean);return{title:chunks[0]||'',detail:chunks.slice(1).join('\n')}};
+      var getPlaceParts=function(config){var raw=String((config&&config.location)||'').trim();var explicit=String((config&&(config.locationDetail||config.locationDetails||config.address))||'').trim();if(!raw)return{name:'',detail:explicit};if(explicit)return{name:raw,detail:explicit};if(raw.indexOf('\n')>=0){var lines=raw.split(/\r?\n/).map(function(item){return item.trim()}).filter(Boolean);return{name:lines[0]||raw,detail:lines.slice(1).join('\n')}}if(raw.indexOf(' | ')>=0){var parts=raw.split(' | ').map(function(item){return item.trim()}).filter(Boolean);return{name:parts[0]||raw,detail:parts.slice(1).join('\n')}}if(raw.indexOf(',')>=0){var comma=raw.split(',').map(function(item){return item.trim()}).filter(Boolean);return{name:comma[0]||raw,detail:comma.slice(1).join(', ')}}return{name:raw,detail:''}};
+      var heroDateLine=function(config,copy){var date=parseDate(config),time=parseTime(config),lang=getLang(config);if(lang==='ru')return date.dd+' '+copy.monthsGen[date.mm-1]+' '+date.yy+' • '+formatTime(time,lang);if(lang==='en')return copy.monthsNom[date.mm-1]+' '+date.dd+', '+date.yy+' • '+formatTime(time,lang);return date.dd+' '+copy.monthsGen[date.mm-1]+' '+date.yy+' • '+formatTime(time,lang)};
+      var footerDateLine=function(config){var date=parseDate(config);return pad(date.dd)+' • '+pad(date.mm)+' • '+date.yy};
+      var getGallery=function(config){var gallery=Array.isArray(config.gallery)?config.gallery.filter(Boolean):[];return gallery.length?gallery:DEFAULT_ASSETS.gallery.slice()};
+      function formatDateCard(config,copy){var date=parseDate(config),time=parseTime(config),weekday=copy.weekdays[new Date(date.yy,date.mm-1,date.dd).getDay()]||'';var lang=getLang(config);setText('dateLabel',copy.dateLabel);setText('dateDay',String(date.dd));if(lang==='en'){setText('dateMonthYear',(copy.monthsNom[date.mm-1]||'')+' '+date.yy)}else{setText('dateMonthYear',(copy.monthsNom[date.mm-1]||'')+' '+date.yy)}setText('dateWeekday',weekday);setText('dateTime',formatTime(time,lang))}
+      function renderGallery(config,copy){var wrap=byId('gallerySlides');if(!wrap)return;wrap.innerHTML='';getGallery(config).forEach(function(src,index){var slide=document.createElement('div');slide.className='gallery-slide reveal';slide.setAttribute('data-reveal','');slide.style.setProperty('--reveal-delay',Math.min(index*.08,.24).toFixed(2)+'s');var media=document.createElement('div');media.className='gallery-media';if(src){var img=document.createElement('img');img.src=src;img.alt=copy.heroAlt+' '+(index+1);img.loading='lazy';media.appendChild(img)}else{var ph=document.createElement('div');ph.className='gallery-placeholder';ph.textContent=copy.galleryPlaceholder;media.appendChild(ph)}slide.appendChild(media);wrap.appendChild(slide)})}
+      function applyCopy(config,copy){document.documentElement.lang=getLang(config)==='kk'?'kk':getLang(config);setText('heroLabel',config.eventLabel||copy.heroLabel);setText('inviteLabel',copy.inviteLabel);setText('locationLabel',copy.locationLabel);setText('ceremonyLabel',copy.ceremonyLabel);setText('ceremonyValue',copy.ceremonyValue);setText('receptionLabel',copy.receptionLabel);setText('receptionValue',copy.receptionValue);setText('galleryLabel',copy.galleryLabel);setText('ownersLabel',copy.ownersLabel);setText('rsvpLabel',copy.rsvpLabel);setText('rsvpTitle',copy.rsvpTitle);setText('rsvpSubtitle',copy.rsvpSubtitle);setText('rNameLabel',copy.nameLabel);setText('rPhoneLabel',copy.phoneLabel);setText('rGuestsLabel',copy.guestsLabel);setText('rNoteLabel',copy.noteLabel);setText('rsvpSubmitText',copy.submitText);setText('successMsgText',copy.successText);setText('footerName',config.eventLabel||copy.footerName);setText('mapBtn',copy.mapButton);if(byId('rName'))byId('rName').placeholder=copy.namePlaceholder;if(byId('rPhone'))byId('rPhone').placeholder=copy.phonePlaceholder;if(byId('rNote'))byId('rNote').placeholder=copy.notePlaceholder}
+      function applyVisualConfig(conf){var config=Object.assign({},typeof CONFIG!=='undefined'?CONFIG:{},window.CONFIG||{},conf||{});var copy=getCopy(config),names=getNames(config),owners=splitOwners(config.toiOwners),place=getPlaceParts(config),heroSource=config.heroPhotoUrl||config.previewPhotoUrl||config.heroPhoto||DEFAULT_ASSETS.hero||(getGallery(config)[0]||'');window.CONFIG=config;applyCopy(config,copy);setText('hBride',names.bride);setText('hGroom',names.groom);setText('heroNamesLine',joinNames(names));setText('heroDateLine',heroDateLine(config,copy));setHtml('eventText',config.description||copy.defaultDescription);formatDateCard(config,copy);setText('locationName',place.name||'');var locationDetails=byId('locationDetails');if(locationDetails){locationDetails.style.display=place.detail?'block':'none';locationDetails.innerHTML=place.detail?esc(place.detail).replace(/\n/g,'<br>'):''}var ownersSection=byId('ownersSection'),ownersBigName=byId('ownersBigName'),ownersText=byId('ownersText');if(ownersSection&&ownersBigName&&ownersText){if(owners.title){ownersSection.style.display='block';ownersBigName.textContent=owners.title;ownersText.style.display=owners.detail?'block':'none';ownersText.innerHTML=owners.detail?esc(owners.detail).replace(/\n/g,'<br>'):''}else{ownersSection.style.display='none'}}var mapBtnWrap=byId('mapBtnWrap'),mapBtn=byId('mapBtn');if(mapBtnWrap&&mapBtn){if(config.location||config.locationUrl){mapBtnWrap.style.display='block';mapBtn.href=config.locationUrl||'#';mapBtn.style.pointerEvents=config.locationUrl?'auto':'none';mapBtn.style.opacity=config.locationUrl?'1':'0.55'}else{mapBtnWrap.style.display='none'}}var heroImg=byId('heroPhoto');if(heroImg){heroImg.src=heroSource;heroImg.alt=copy.heroAlt}renderGallery(config,copy);setText('footLine',joinNames(names));setText('footerDate',footerDateLine(config));document.title=joinNames(names)||copy.pageTitle;applyReveal()}
+      function applyReveal(){var nodes=Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));if(!nodes.length)return;if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){nodes.forEach(function(node){node.classList.add('visible')});return}if(!window.__weddingTemplate12RevealObserver){window.__weddingTemplate12RevealObserver=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');window.__weddingTemplate12RevealObserver.unobserve(entry.target)}})},{threshold:.14,rootMargin:'0px 0px -36px 0px'})}nodes.forEach(function(node){if(node.dataset.revealBound==='true')return;node.dataset.revealBound='true';window.__weddingTemplate12RevealObserver.observe(node)})}
+      window.submitRSVP=window.submitRSVP||function(){var name=byId('rName'),phone=byId('rPhone'),form=byId('rsvpForm'),success=byId('successMsg');if(!name||!phone||!form||!success)return;if(!String(name.value||'').trim()){name.focus();return}if(!String(phone.value||'').trim()){phone.focus();return}form.style.display='none';success.style.display='block'};
+      function queueInitialRender(){setTimeout(function(){setTimeout(function(){applyVisualConfig(window.CONFIG||CONFIG||{})},0)},0)}
+      if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',queueInitialRender,{once:true})}else{queueInitialRender()}
+      window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig;
+      setTimeout(function(){window.__APPLY_DYNAMIC_CONFIG=applyVisualConfig},0);
+      window.addEventListener('message',function(event){if(event.data&&event.data.type==='UPDATE_CONFIG'){setTimeout(function(){applyVisualConfig(event.data.config||window.CONFIG||CONFIG||{})},0)}})
+    })();
+  </script>
+</body>
+</html>

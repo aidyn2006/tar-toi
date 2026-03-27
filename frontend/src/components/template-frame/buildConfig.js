@@ -128,10 +128,11 @@ export function normalizeProgramEntries(program) {
 
             const time = String(item.time || '').trim();
             const title = String(item.title || item.label || item.name || '').trim();
+            const desc = String(item.desc || item.description || item.subtitle || '').trim();
 
-            if (!time && !title) return null;
+            if (!time && !title && !desc) return null;
 
-            return { time, title };
+            return { time, title, desc };
         })
         .filter(Boolean);
 }
@@ -147,6 +148,7 @@ export function buildConfig(invite, lang = 'kk') {
     const supportsMusic = templateMeta?.features?.music ?? true;
     const supportsMap = templateMeta?.features?.map ?? true;
     const supportsProgram = templateMeta?.features?.program ?? false;
+    const singleName = hasPairNames ? '' : (bride || groom || '').trim();
 
     const musicResolved = resolveMusicTrack(invite);
 
@@ -159,7 +161,9 @@ export function buildConfig(invite, lang = 'kk') {
     const program = supportsProgram ? normalizeProgramEntries(invite?.program) : [];
 
     return {
-        names: { bride, groom },
+        names: { bride, groom, child: singleName },
+        childName: singleName,
+        personName: singleName,
         day: eventDate
             ? `${pad2(eventDate.getDate())}-${pad2(eventDate.getMonth() + 1)}-${eventDate.getFullYear()}`
             : '01-01-2027',

@@ -25,7 +25,7 @@ const ProgramSection = ({
                             key={`program-${index}`}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: isMobile ? '1fr' : '132px minmax(0, 1fr) 44px',
+                                gridTemplateColumns: isMobile ? '1fr' : '132px minmax(0, 1fr) minmax(0, 1fr) 44px',
                                 gap: '0.6rem',
                                 alignItems: 'center',
                             }}
@@ -42,6 +42,14 @@ const ProgramSection = ({
                                 value={item.title || ''}
                                 onChange={(e) => onChangeItem(index, 'title', e.target.value)}
                                 placeholder={tr('Мысалы: Қонақтарды қарсы алу', 'Например: Сбор гостей')}
+                                style={inputStyle}
+                            />
+
+                            <input
+                                type="text"
+                                value={item.desc || ''}
+                                onChange={(e) => onChangeItem(index, 'desc', e.target.value)}
+                                placeholder={tr('Мысалы: Тіркелу және сәлемдесу', 'Например: Регистрация и приветствие')}
                                 style={inputStyle}
                             />
 
