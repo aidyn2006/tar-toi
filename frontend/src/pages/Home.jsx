@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { useLang } from '../context/LanguageContext';
+import { SITE_META } from '../config/siteMeta';
 import Layout from '../components/layout/Layout';
 import SEO from '../components/SEO';
 import { categories } from '../config/categories';
@@ -69,10 +70,10 @@ const Home = () => {
         {
             '@context': 'https://schema.org',
             '@type': 'Organization',
-            name: 'Toiga Shaqyru',
+            name: SITE_META.brandName,
             url: `https://toi.com.kz${seo.canonical}`,
-            logo: 'https://toi.com.kz/logo.png',
-            sameAs: ['https://instagram.com/codejaz.kz'],
+            logo: SITE_META.publicLogoUrl,
+            sameAs: [SITE_META.instagramUrl],
             contactPoint: [
                 {
                     '@type': 'ContactPoint',
@@ -163,7 +164,7 @@ const Home = () => {
                                 marginBottom: '1.5rem',
                             }}
                         >
-                            {tr('✨ Жаңа мүмкіндіктер қосылды', '✨ Добавили новые функции')}
+                            {tr('Онлайн шақырту сервисі', 'Сервис онлайн-приглашений')}
                         </div>
 
                         <h1

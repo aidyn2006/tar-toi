@@ -7,6 +7,7 @@ import { useLang } from '../../context/LanguageContext';
 
 const Layout = ({ children }) => {
     const [modal, setModal] = useState(null);
+    const [modalReason, setModalReason] = useState('');
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
 
@@ -14,29 +15,35 @@ const Layout = ({ children }) => {
         const syncAuthModalFromUrl = () => {
             const params = new URLSearchParams(window.location.search);
             const authParam = params.get('auth');
+            const reasonParam = params.get('reason') || '';
             const hash = window.location.hash;
 
             if (authParam === 'login') {
                 setModal('login');
+                setModalReason(reasonParam);
                 return;
             }
 
             if (authParam === 'register') {
                 setModal('register');
+                setModalReason('');
                 return;
             }
 
             if (hash === '#login') {
                 setModal('login');
+                setModalReason('');
                 return;
             }
 
             if (hash === '#register') {
                 setModal('register');
+                setModalReason('');
                 return;
             }
 
             setModal(null);
+            setModalReason('');
         };
 
         syncAuthModalFromUrl();
@@ -52,6 +59,7 @@ const Layout = ({ children }) => {
 
     const handleCloseModal = () => {
         setModal(null);
+        setModalReason('');
 
         const url = new URL(window.location.href);
         url.hash = '';
@@ -62,12 +70,17 @@ const Layout = ({ children }) => {
         window.history.replaceState({}, '', `${url.pathname}${url.search}`);
     };
 
+    const handleOpenModal = (nextModal, reason = '') => {
+        setModal(nextModal);
+        setModalReason(reason);
+    };
+
     return (
         <div
             className="app-layout"
             style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
         >
-            <Header onAuthClick={setModal} />
+            <Header onAuthClick={handleOpenModal} />
 
             <main style={{ flex: 1 }}>
                 {children}
@@ -79,6 +92,7 @@ const Layout = ({ children }) => {
                 <AuthModal
                     onClose={handleCloseModal}
                     defaultMode={modal}
+                    reason={modalReason}
                 />
             )}
 
@@ -101,13 +115,13 @@ const Layout = ({ children }) => {
                 <div style={{ display: 'flex', gap: '0.65rem' }}>
                     <Button
                         variant="outline"
-                        onClick={() => setModal('login')}
+                        onClick={() => handleOpenModal('login')}
                         style={{ flex: 1, height: '2.95rem' }}
                     >
                         {tr('Кіру', 'Войти')}
                     </Button>
                     <Button
-                        onClick={() => setModal('register')}
+                        onClick={() => handleOpenModal('register')}
                         style={{ flex: 1, height: '2.95rem' }}
                     >
                         {tr('Тегін бастау', 'Начать')}

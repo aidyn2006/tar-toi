@@ -64,7 +64,25 @@ const getPostAuthRedirectPath = () => {
     }
 };
 
-const AuthModal = ({ onClose, defaultMode = 'login' }) => {
+const getReasonMessage = (reason, tr) => {
+    if (reason === 'session-expired') {
+        return tr(
+            'Сессияңыз аяқталды. Жалғастыру үшін қайта кіріңіз.',
+            'Сессия истекла. Войдите снова, чтобы продолжить.'
+        );
+    }
+
+    if (reason === 'unauthorized') {
+        return tr(
+            'Бұл бөлімге кіру үшін аккаунтқа кіріңіз.',
+            'Чтобы открыть этот раздел, войдите в аккаунт.'
+        );
+    }
+
+    return '';
+};
+
+const AuthModal = ({ onClose, defaultMode = 'login', reason = '' }) => {
     const [mode, setMode] = useState(defaultMode);
     const [phone, setPhone] = useState('');
     const [fullName, setFullName] = useState('');
@@ -77,6 +95,7 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
     const navigate = useNavigate();
     const { lang } = useLang();
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
+    const reasonMessage = mode === 'login' ? getReasonMessage(reason, tr) : '';
 
     const switchMode = (m) => {
         setMode(m);
@@ -277,6 +296,23 @@ const AuthModal = ({ onClose, defaultMode = 'login' }) => {
                 </div>
 
                 <form onSubmit={handleSubmit}>
+                    {reasonMessage && (
+                        <div
+                            style={{
+                                padding: '0.875rem 1rem',
+                                borderRadius: '0.875rem',
+                                marginBottom: '1rem',
+                                fontSize: '0.9rem',
+                                fontWeight: 500,
+                                background: '#fffbeb',
+                                color: '#92400e',
+                                border: '1px solid #fde68a',
+                            }}
+                        >
+                            {reasonMessage}
+                        </div>
+                    )}
+
                     {mode === 'register' && (
                         <Input
                             label={tr('Аты-жөніңіз', 'Атыңыз')}
