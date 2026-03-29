@@ -94,9 +94,9 @@ public class InviteServiceImpl implements InviteService {
     public InviteResponseDTO getPublicInvite(String slug) {
         Invite invite = inviteRepository.findBySlugAndIsDeletedFalse(slug)
                 .orElseThrow(() -> new NotFoundException("Invite not found"));
-        if (!invite.isActive()) {
-            throw new NotFoundException("Invite not found");
-        }
+//        if (!invite.isActive()) {
+//            throw new NotFoundException("Invite not found");
+//        }
         return mapToDTO(invite);
     }
 
