@@ -231,7 +231,8 @@ public class InviteServiceImpl implements InviteService {
     }
 
     private InviteResponseDTO mapToDTO(Invite invite) {
-        Map<String, Object> sanitized = sanitizePayloadForView(invite.getPayload());
+        Map<String, Object> payload = resolvePayload(invite);
+        Map<String, Object> sanitized = sanitizePayloadForView(payload);
         long responseCount = responseRepository.countByInviteIdAndAttendingTrueAndIsDeletedFalse(invite.getId());
 
         return new InviteResponseDTO(
@@ -242,6 +243,43 @@ public class InviteServiceImpl implements InviteService {
                 responseCount,
                 invite.isActive()
         );
+    }
+
+    /**
+     * Если payload пустой (старые записи до миграции) — читаем legacy-колонки из БД.
+     */
+    private Map<String, Object> resolvePayload(Invite invite) {
+        Map<String, Object> payload = invite.getPayload();
+        if (payload != null && !payload.isEmpty()) {
+            return payload;
+        }
+        return inviteRepository.findLegacyColumnsById(invite.getId())
+                .map(raw -> {
+                    Map<String, Object> built = new java.util.HashMap<>();
+                    putIfPresent(built, "title",           raw.get("title"));
+                    putIfPresent(built, "description",     raw.get("description"));
+                    putIfPresent(built, "template",        raw.get("template"));
+                    putIfPresent(built, "eventDate",       raw.get("event_date"));
+                    putIfPresent(built, "locationName",    raw.get("location_name"));
+                    putIfPresent(built, "locationUrl",     raw.get("location_url"));
+                    putIfPresent(built, "maxGuests",       raw.get("max_guests"));
+                    putIfPresent(built, "musicKey",        raw.get("music_key"));
+                    putIfPresent(built, "musicSource",     raw.get("music_source"));
+                    putIfPresent(built, "musicTitle",      raw.get("music_title"));
+                    putIfPresent(built, "musicUrl",        raw.get("music_url"));
+                    putIfPresent(built, "previewPhotoUrl", raw.get("preview_photo_url"));
+                    putIfPresent(built, "toiOwners",       raw.get("toi_owners"));
+                    putIfPresent(built, "topic1",          raw.get("topic1"));
+                    putIfPresent(built, "topic2",          raw.get("topic2"));
+                    return built;
+                })
+                .orElseGet(java.util.HashMap::new);
+    }
+
+    private void putIfPresent(Map<String, Object> map, String key, Object value) {
+        if (value != null) {
+            map.put(key, value);
+        }
     }
 
     private Map<String, Object> copyPayload(Map<String, Object> payload) {
