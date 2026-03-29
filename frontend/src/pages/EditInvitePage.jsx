@@ -395,8 +395,8 @@ const previewData = {
         if (!file) return;
         setUploadingPhoto(true);
         try {
-            const { path } = await uploadService.uploadImage(file, currentCategory);
-            setData(prev => ({ ...prev, previewPhotoUrl: path || prev.previewPhotoUrl }));
+            const { url } = await uploadService.uploadImage(file, currentCategory);
+            setData(prev => ({ ...prev, previewPhotoUrl: url || prev.previewPhotoUrl }));
         } catch (e) {
             alert(tr('Суретті жүктеу сәтсіз: ', 'Ошибка загрузки фото: ') + (e.response?.data?.error || e.message));
         } finally {
@@ -409,8 +409,8 @@ const previewData = {
         try {
             const uploads = [];
             for (const f of files) {
-                const { path } = await uploadService.uploadImage(f, currentCategory);
-                if (path) uploads.push(path);
+                const { url } = await uploadService.uploadImage(f, currentCategory);
+                if (url) uploads.push(url);
             }
             if (uploads.length) {
                 setData(prev => ({ ...prev, gallery: [...(prev.gallery || []), ...uploads] }));
@@ -508,10 +508,10 @@ const previewData = {
         if (!file) return;
         setUploadingAudio(true);
         try {
-            const { path } = await uploadService.uploadAudio(file, currentCategory);
+            const { url } = await uploadService.uploadAudio(file, currentCategory);
             setData(prev => ({
                 ...prev,
-                musicUrl: path,
+                musicUrl: url,
                 musicTitle: file.name.replace(/\.[^/.]+$/, '') || prev.musicTitle,
                 musicSource: MUSIC_SOURCE.UPLOAD,
                 musicKey: '',
