@@ -31,6 +31,7 @@ import {
     injectRsvp,
     injectRsvpApi,
 } from './injectRsvp';
+import { injectInteractionLock } from './injectInteractionLock';
 import {
     getCategoryFromTemplateId,
     resolveTemplateId,
@@ -70,11 +71,12 @@ export function buildTemplate2Html(
         inviteId = null,
         lang = 'kk',
         mode = 'edit',
+        lockInteractions = false,
     } = {}
 ) {
-    const palette = pickPalette(invite);
     const isViewMode = mode === 'view';
-    const config = { ...buildConfig(invite || {}, lang), autoplay: isViewMode };
+    const palette = pickPalette(invite);
+    const config = { ...buildConfig(invite || {}, lang), autoplay: isViewMode && !lockInteractions };
     const tplKey = resolveTemplateId(
         invite?.template,
         getCategoryFromTemplateId(invite?.template)
@@ -102,7 +104,11 @@ export function buildTemplate2Html(
         });
     }
 
-    html = applyTemplateEnhancements(html, { isViewMode });
+    if (lockInteractions) {
+        html = injectInteractionLock(html);
+    }
+
+    html = applyTemplateEnhancements(html, { isViewMode: isViewMode && !lockInteractions });
     html = injectLiveBridge(html);
     html = localizeTemplate(html, lang);
 

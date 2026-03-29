@@ -22,6 +22,7 @@ const Template2Frame = ({
     lang = 'kk',
     mobileZoom = false,
     mode = 'edit',
+    lockInteractions = false,
 }) => {
     const iframeRef = useRef(null);
     const [html, setHtml] = useState('');
@@ -56,6 +57,7 @@ const Template2Frame = ({
                     inviteId,
                     lang,
                     mode,
+                    lockInteractions,
                 });
 
                 setHtml(fullHtml);
@@ -75,6 +77,7 @@ const Template2Frame = ({
         inviteId,
         lang,
         mode,
+        lockInteractions,
         invite?.previewPhotoUrl,
         invite?.gallery,
         invite?.musicUrl,

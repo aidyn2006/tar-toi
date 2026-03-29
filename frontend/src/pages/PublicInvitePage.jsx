@@ -15,6 +15,7 @@ const PublicInvitePage = () => {
     const tr = (kk, ru) => (lang === 'ru' ? ru : kk);
     const fallbackTitle = tr('Онлайн шақырту', 'Онлайн-приглашение');
     const pageTitle = invite?.title || fallbackTitle;
+    const isClosedInvite = invite?.isActive === false;
     const pageDescription = invite?.description || tr(
         'Бұл шақырту беті қонақтарға жіберуге арналған.',
         'Эта страница приглашения предназначена для отправки гостям.'
@@ -101,61 +102,86 @@ const PublicInvitePage = () => {
         <>
             <NoIndexSEO title={pageTitle} description={pageDescription} robots="noindex,follow" />
             <div style={{ width: '100%', height: '100vh', background: '#f7fff9', position: 'relative' }}>
-                {invite.isActive === false && (
+                {isClosedInvite && (
                     <div style={{
                         position: 'fixed',
-                        inset: 0,
+                        top: '1rem',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
                         zIndex: 1000,
-                        background: 'rgba(23,63,51,0.65)',
-                        backdropFilter: 'blur(8px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '1rem',
+                        width: 'min(92vw, 46rem)',
+                        pointerEvents: 'none',
                     }}>
                         <div style={{
-                            background: '#ffffff',
-                            borderRadius: '24px',
-                            padding: '2.5rem',
-                            width: '100%',
-                            maxWidth: '26rem',
-                            border: '1px solid #d7e9df',
-                            boxShadow: '0 24px 64px rgba(23,63,51,0.3)',
-                            textAlign: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.9rem',
+                            flexWrap: 'wrap',
+                            background: 'rgba(255,255,255,0.86)',
+                            backdropFilter: 'blur(12px)',
+                            borderRadius: '22px',
+                            padding: '0.9rem 1rem',
+                            border: '1px solid rgba(23,63,51,0.12)',
+                            boxShadow: '0 14px 36px rgba(23,63,51,0.16)',
+                            color: '#173f33',
+                            pointerEvents: 'auto',
                         }}>
-                            <div style={{ fontSize: '3.5rem', marginBottom: '1.25rem' }}>🔒</div>
-                            <h2 style={{ fontFamily: 'Unbounded, sans-serif', fontSize: '1.375rem', fontWeight: 700, color: '#173f33', marginBottom: '0.75rem' }}>
-                                {tr('Шақырту жабық', 'Приглашение закрыто')}
-                            </h2>
-                            <p style={{ color: '#1f5b46', fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-                                {tr('Доступ алу үшін ватсапқа жазыңыз', 'Чтобы получить доступ напишите на WhatsApp')}
-                            </p>
+                            <div style={{
+                                padding: '0.45rem 0.75rem',
+                                borderRadius: '999px',
+                                background: 'rgba(243, 201, 79, 0.24)',
+                                color: '#8a5a00',
+                                fontSize: '0.82rem',
+                                fontWeight: 800,
+                                letterSpacing: '0.04em',
+                                textTransform: 'uppercase',
+                            }}>
+                                {tr('Төленбеген', 'Не оплачено')}
+                            </div>
+                            <div style={{ flex: '1 1 15rem', minWidth: 0 }}>
+                                <div style={{ fontWeight: 800, fontSize: '0.98rem', marginBottom: '0.18rem' }}>
+                                    {tr('Шақырту тек көруге ашық', 'Приглашение открыто только для просмотра')}
+                                </div>
+                                <div style={{ color: '#1f5b46', fontSize: '0.92rem', lineHeight: 1.45, opacity: 0.82 }}>
+                                    {tr(
+                                        'Қарап шығуға болады, бірақ батырмалар мен жауап беру уақытша өшірілген.',
+                                        'Посмотреть приглашение можно, но кнопки и отправка ответа временно отключены.'
+                                    )}
+                                </div>
+                            </div>
                             <a
                                 href="https://wa.me/77766255581"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    display: 'flex',
+                                    display: 'inline-flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    gap: '0.75rem',
-                                    padding: '0.875rem 2rem',
+                                    gap: '0.55rem',
+                                    padding: '0.75rem 1rem',
                                     borderRadius: '999px',
                                     textDecoration: 'none',
                                     background: 'linear-gradient(110deg, #f3c94f, #f8da7b)',
                                     color: '#173f33',
                                     fontWeight: 800,
-                                    fontSize: '1rem',
-                                    boxShadow: '0 8px 20px rgba(31,91,70,0.14)',
-                                    marginBottom: '0.75rem',
+                                    fontSize: '0.92rem',
+                                    whiteSpace: 'nowrap',
+                                    boxShadow: '0 8px 20px rgba(31,91,70,0.12)',
                                 }}
                             >
-                                💬 WhatsApp: 8 776 625 55 81
+                                WhatsApp: 8 776 625 55 81
                             </a>
                         </div>
                     </div>
                 )}
-                <Template2Frame invite={invite} inviteId={invite.id} enableRsvp lang={lang} mode="view" />
+                <Template2Frame
+                    invite={invite}
+                    inviteId={isClosedInvite ? null : invite.id}
+                    enableRsvp={!isClosedInvite}
+                    lockInteractions={isClosedInvite}
+                    lang={lang}
+                    mode="view"
+                />
             </div>
         </>
     );

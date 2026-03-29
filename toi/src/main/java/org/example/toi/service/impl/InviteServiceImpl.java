@@ -94,9 +94,6 @@ public class InviteServiceImpl implements InviteService {
     public InviteResponseDTO getPublicInvite(String slug) {
         Invite invite = inviteRepository.findBySlugAndIsDeletedFalse(slug)
                 .orElseThrow(() -> new NotFoundException("Invite not found"));
-//        if (!invite.isActive()) {
-//            throw new NotFoundException("Invite not found");
-//        }
         return mapToDTO(invite);
     }
 
@@ -158,6 +155,9 @@ public class InviteServiceImpl implements InviteService {
                 .orElseThrow(() -> new NotFoundException("Invite not found"));
         if (invite.isDeleted()) {
             throw new NotFoundException("Invite not found");
+        }
+        if (!invite.isActive()) {
+            throw new ConflictException("Шақырту уақытша жабық. Қол жеткізу үшін WhatsApp-қа жазыңыз.");
         }
 
         int guests = request.getGuestsCount() == null || request.getGuestsCount() < 1 ? 1 : request.getGuestsCount();
