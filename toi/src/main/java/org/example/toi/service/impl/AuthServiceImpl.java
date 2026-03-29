@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.toi.common.exception.ConflictException;
 import org.example.toi.common.exception.ForbiddenException;
 import org.example.toi.dto.request.LoginRequest;
+import org.example.toi.dto.request.RefreshRequest;
 import org.example.toi.dto.request.RegisterRequest;
 import org.example.toi.dto.response.AuthResponse;
 import org.example.toi.entity.User;
@@ -64,7 +65,27 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Телефон немесе құпиясөз дұрыс емес");
         }
 
+        return buildResponse(user);
+    }
 
+    @Override
+    public AuthResponse refresh(RefreshRequest request) {
+        String phone;
+        try {
+            phone = jwtService.extractUsername(request.getRefreshToken());
+        } catch (Exception e) {
+            throw new ForbiddenException("Жарамсыз токен");
+        }
+        User user = userRepository.findByPhoneAndIsDeletedFalse(phone)
+                .orElseThrow(() -> new ForbiddenException("Жарамсыз токен"));
+        var springUser = new org.springframework.security.core.userdetails.User(
+                user.getPhone(),
+                user.getPasswordHash(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+        );
+        if (!jwtService.isTokenValid(request.getRefreshToken(), springUser)) {
+            throw new ForbiddenException("Жарамсыз токен");
+        }
         return buildResponse(user);
     }
 }

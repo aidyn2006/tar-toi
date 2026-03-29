@@ -1,15 +1,16 @@
 package org.example.toi.service.impl;
 
-import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.GetObjectArgs;
+import io.minio.GetObjectResponse;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.http.Method;
+import io.minio.StatObjectArgs;
+import io.minio.StatObjectResponse;
 import io.minio.messages.Item;
 import io.minio.Result;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,10 @@ public class MinioMediaStorageService implements MediaStorageService {
 
     @Value("${minio.presign-expiration-seconds:86400}")
     private long presignSeconds;
+
+    /** Базовый URL бэкенда для proxy-endpoint-а. */
+    @Value("${uploads.public-url:http://localhost:9191}")
+    private String backendPublicUrl;
 
     @Override
     public UploadFileResponse uploadImage(MultipartFile file, String category) throws IOException {
@@ -132,21 +137,54 @@ public class MinioMediaStorageService implements MediaStorageService {
         return sb.toString();
     }
 
-    private String buildPublicUrl(String objectName) throws IOException {
+    /**
+     * Возвращает URL через proxy-endpoint бэкенда.
+     * Так файлы всегда доступны через один порт (7171), без прямого доступа к MinIO.
+     */
+    private String buildPublicUrl(String objectName) {
+        // Если явно задан minio.public-url — используем его (например, CDN или MinIO с public bucket)
         if (publicUrl != null && !publicUrl.isBlank()) {
             return publicUrl.replaceAll("/+$", "") + "/" + objectName;
         }
+        // Иначе — через proxy-endpoint бэкенда: GET /api/v1/uploads/file/{objectName}
+        String base = backendPublicUrl.replaceAll("/+$", "");
+        return base + "/api/v1/uploads/file/" + objectName;
+    }
+
+    @Override
+    public InputStream streamFile(String objectName) throws IOException {
         try {
-            return minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
+            GetObjectResponse response = minioClient.getObject(
+                    GetObjectArgs.builder()
                             .bucket(bucket)
                             .object(objectName)
-                            .expiry((int) Math.min(presignSeconds, Duration.ofDays(7).getSeconds()))
                             .build()
             );
+            return response;
         } catch (Exception e) {
-            throw new IOException("Failed to generate presigned url", e);
+            throw new IOException("Failed to stream file from MinIO: " + objectName, e);
+        }
+    }
+
+    @Override
+    public String getContentType(String objectName) throws IOException {
+        try {
+            StatObjectResponse stat = minioClient.statObject(
+                    StatObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(objectName)
+                            .build()
+            );
+            return stat.contentType();
+        } catch (Exception e) {
+            // Fallback по расширению
+            if (objectName.matches(".*\\.(jpg|jpeg)$")) return "image/jpeg";
+            if (objectName.endsWith(".png"))  return "image/png";
+            if (objectName.endsWith(".webp")) return "image/webp";
+            if (objectName.endsWith(".gif"))  return "image/gif";
+            if (objectName.endsWith(".mp3"))  return "audio/mpeg";
+            if (objectName.endsWith(".ogg"))  return "audio/ogg";
+            return "application/octet-stream";
         }
     }
 

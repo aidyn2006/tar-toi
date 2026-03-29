@@ -3,6 +3,7 @@ package org.example.toi.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.toi.dto.request.LoginRequest;
+import org.example.toi.dto.request.RefreshRequest;
 import org.example.toi.dto.request.RegisterRequest;
 import org.example.toi.dto.response.AuthResponse;
 import org.example.toi.service.AuthService;
@@ -27,5 +28,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        return ResponseEntity.ok(authService.refresh(request));
     }
 }

@@ -1,5 +1,6 @@
 package org.example.toi.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        userPhone = jwtService.extractUsername(jwt);
+        try {
+            userPhone = jwtService.extractUsername(jwt);
+        } catch (JwtException | IllegalArgumentException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (userPhone != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userPhone);
             if (userDetails.isAccountNonExpired()
