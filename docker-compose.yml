@@ -36,15 +36,46 @@ services:
       DB_USERNAME: "toi_user"
       DB_PASSWORD: "toi_pass"
       MINIO_ENDPOINT: "http://minio:9000"
-      MINIO_ACCESS_KEY: "${MINIO_ROOT_USER:-minioadmin}"
-      MINIO_SECRET_KEY: "${MINIO_ROOT_PASSWORD:-minioadmin123}"
-      MINIO_BUCKET: "${MINIO_BUCKET:-uploads}"
-      MINIO_PUBLIC_URL: "http://localhost:9000/${MINIO_BUCKET:-uploads}"
+      MINIO_ACCESS_KEY: "minioadmin"
+      MINIO_SECRET_KEY: "minioadmin123"
+      MINIO_BUCKET: "uploads"
+      MINIO_PUBLIC_URL: ""
     depends_on:
       db:
         condition: service_healthy
+      minio:
+        condition: service_started
+      minio-setup:
+        condition: service_completed_successfully
     restart: unless-stopped
 
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    container_name: toi-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin123"
+    ports:
+      - "9000:9000"
+      - "9099:9001"
+    volumes:
+      - toi_minio_data:/data
+    restart: unless-stopped
+
+  minio-setup:
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+    container_name: toi-minio-setup
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      set -e;
+      until mc alias set myminio http://minio:9000 minioadmin minioadmin123; do sleep 2; done;
+      mc mb --ignore-existing myminio/uploads;
+      mc anonymous set download myminio/uploads;
+      "
+    restart: "no"
 
   frontend:
     build:
@@ -56,7 +87,6 @@ services:
       - backend
     restart: unless-stopped
     
-
 
 
 
