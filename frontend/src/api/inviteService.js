@@ -35,6 +35,8 @@ export const inviteService = {
 
     deleteInvite: (id) => apiClient.delete(`/invites/${id}`).then((r) => r.data),
 
+    toggleActive: (id) => apiClient.patch(`/invites/${id}/toggle-active`).then((r) => r.data),
+
     updateInvite: (id, payload) => apiClient
         .put(`/invites/${id}`, wrapPayload(payload))
         .then((r) => normalizeInviteResponse(r.data)),

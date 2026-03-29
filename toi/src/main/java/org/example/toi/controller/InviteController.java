@@ -70,4 +70,11 @@ public class InviteController {
         inviteService.deleteInvite(id);
         return ResponseEntity.noContent().build();
     }
+
+    /** PATCH /api/v1/invites/{id}/toggle-active — activate/deactivate (owner only) */
+    @PatchMapping("/{id}/toggle-active")
+    public ResponseEntity<Void> toggleActive(@PathVariable UUID id) {
+        inviteService.toggleActive(id);
+        return ResponseEntity.ok().build();
+    }
 }

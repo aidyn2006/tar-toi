@@ -337,7 +337,7 @@ const AdminPanel = () => {
     };
 
     const toggleInviteActive = async (id) => {
-        await adminService.toggleInviteActive(id);
+        await inviteService.toggleActive(id);
         loadInvites();
     };
 
