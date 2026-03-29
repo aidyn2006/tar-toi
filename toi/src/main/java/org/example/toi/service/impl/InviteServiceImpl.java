@@ -208,8 +208,14 @@ public class InviteServiceImpl implements InviteService {
     @Override
     @Transactional
     public void toggleActive(UUID id) {
+        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
+        User owner = userRepository.findByPhoneAndIsDeletedFalse(phone)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         Invite invite = inviteRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException("Invite not found"));
+        if (!invite.getOwner().getId().equals(owner.getId()) && owner.getRole() != Role.ADMIN) {
+            throw new ForbiddenException("Access denied");
+        }
         invite.setActive(!invite.isActive());
         inviteRepository.save(invite);
     }
